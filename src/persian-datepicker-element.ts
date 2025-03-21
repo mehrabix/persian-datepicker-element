@@ -1,4 +1,10 @@
 import { PersianDate } from './persian-date';
+import { 
+  PersianDatePickerElementOptions, 
+  PersianDateChangeEvent,
+  DateTuple,
+  CSSVariableMap
+} from './types';
 
 // Import the CSS as a string
 const styles = `:host {
@@ -262,26 +268,6 @@ input:focus {
 }
 `;
 
-export interface PersianDatePickerElementOptions {
-  /** Color for selected dates and highlights */
-  primaryColor?: string;
-  /** Text direction (true for RTL, false for LTR) */
-  rtl?: boolean;
-  /** Placeholder text for the input field */
-  placeholder?: string;
-  /** Date format pattern (YYYY = year, MM = month, DD = day) */
-  format?: string;
-  /** Custom CSS variables to override default styling */
-  cssVariables?: Record<string, string>;
-}
-
-export interface PersianDateChangeEvent extends CustomEvent {
-  detail: {
-    jalali: [number, number, number];
-    gregorian: [number, number, number];
-  };
-}
-
 /**
  * Jalali Date Picker Web Component
  * 
@@ -310,7 +296,7 @@ export class PersianDatePickerElement extends HTMLElement {
   private jalaliYear: number;
   private jalaliMonth: number;
   private jalaliDay: number;
-  private selectedDate: [number, number, number] | null;
+  private selectedDate: DateTuple | null;
   private options: PersianDatePickerElementOptions;
 
   static get observedAttributes() {
@@ -393,19 +379,13 @@ export class PersianDatePickerElement extends HTMLElement {
 
   /**
    * Apply custom CSS variables to the component
-   * @param variables Object containing CSS variable names and values
    */
-  private applyCustomCssVariables(variables: Record<string, string>) {
-    if (!this.shadowRoot) return;
+  private applyCustomCssVariables(variables: CSSVariableMap): void {
+    if (!variables) return;
     
-    // Type cast 'this' to HTMLElement to access style property
-    const hostElement = this as unknown as HTMLElement;
-    
-    for (const [name, value] of Object.entries(variables)) {
-      // If the variable doesn't have the prefix, add it
-      const cssVarName = name.startsWith('--jdp-') ? name : `--jdp-${name}`;
-      hostElement.style.setProperty(cssVarName, value);
-    }
+    Object.entries(variables).forEach(([key, value]) => {
+      this.style.setProperty(key, value);
+    });
   }
 
   // Handle attribute changes
@@ -564,17 +544,22 @@ export class PersianDatePickerElement extends HTMLElement {
     this.input.value = formattedDate;
   }
 
-  // Public methods for programmatic usage
-  public setValue(year: number, month: number, day: number) {
+  /**
+   * Sets the date value programmatically
+   */
+  public setValue(year: number, month: number, day: number): void {
+    this.selectedDate = [year, month, day];
     this.jalaliYear = year;
     this.jalaliMonth = month;
     this.jalaliDay = day;
-    this.selectedDate = [year, month, day];
     this.formatAndSetValue();
     this.renderCalendar();
   }
 
-  public getValue(): [number, number, number] | null {
+  /**
+   * Gets the currently selected date as a tuple [year, month, day]
+   */
+  public getValue(): DateTuple | null {
     return this.selectedDate;
   }
 
