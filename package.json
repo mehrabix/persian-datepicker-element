@@ -1,5 +1,5 @@
 {
-  "name": "jalali-date-picker",
+  "name": "persian-datepicker-element",
   "version": "1.0.0",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/jalali-date-picker.js",
@@ -23,7 +23,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "serve": "pnpm exec serve"
+    "serve": "pnpm exec serve",
+    "prepublishOnly": "pnpm run test && pnpm run build"
   },
   "keywords": [
     "jalali",
@@ -33,10 +34,22 @@
     "datepicker",
     "calendar",
     "webcomponent",
-    "custom-element"
+    "custom-element",
+    "rtl",
+    "persian-calendar",
+    "web-component",
+    "shadow-dom"
   ],
-  "author": "",
+  "author": "Ahmad Mehrabi",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mehrabix/persian-datepicker-element.git"
+  },
+  "homepage": "https://github.com/mehrabix/persian-datepicker-element#readme",
+  "bugs": {
+    "url": "https://github.com/mehrabix/persian-datepicker-element/issues"
+  },
   "devDependencies": {
     "@rspack/cli": "^1.2.8",
     "@rspack/core": "^1.2.8",

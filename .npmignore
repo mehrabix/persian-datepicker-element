@@ -1,0 +1,46 @@
+# Development and build files
+node_modules/
+.vscode/
+.idea/
+.git/
+.github/
+.gitignore
+.npmrc
+.DS_Store
+*.log
+*.lock
+.editorconfig
+
+# Source files (since we publish only dist)
+src/
+examples/
+demo/
+api/
+
+# Test files
+coverage/
+jest.config.js
+jest.setup.js
+**/*.test.ts
+**/*.spec.ts
+**/__tests__/
+**/__mocks__/
+
+# Config files
+tsconfig.json
+rspack.config.js
+.eslintrc.js
+.prettierrc
+.babelrc
+webpack.config.js
+
+# Scripts
+*.js
+!dist/*.js
+
+# Other
+screenshots/
+docs/
+.env*
+tmp/
+temp/ 

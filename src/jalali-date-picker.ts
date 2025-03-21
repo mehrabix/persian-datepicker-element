@@ -283,7 +283,7 @@ export interface JalaliDateChangeEvent extends CustomEvent {
 }
 
 /**
- * Jalali Date Picker Web Component
+ * Persian Date Picker Element Web Component
  * 
  * A customizable date picker that follows the Jalali (Persian) calendar.
  * 

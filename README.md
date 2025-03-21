@@ -1,8 +1,8 @@
-# Jalali Date Picker
+# Persian Date Picker Element | تقویم انتخاب تاریخ جلالی
 
-A modern and customizable Jalali (Persian/Shamsi) date picker web component with shadcn-like styling.
+یک کامپوننت وب مدرن و قابل شخصی‌سازی برای انتخاب تاریخ جلالی (شمسی) با طراحی مشابه کامپوننت‌های shadcn.
 
-## Features
+## Features | ویژگی‌ها
 
 - Clean, modern UI similar to shadcn components
 - Accurate Jalali (Shamsi) calendar with proper month lengths and leap years
@@ -12,11 +12,52 @@ A modern and customizable Jalali (Persian/Shamsi) date picker web component with
 - Works with any framework or vanilla JavaScript
 - TypeScript support
 
-## Installation
+<div dir="rtl">
 
+- رابط کاربری تمیز و مدرن مشابه کامپوننت‌های shadcn
+- تقویم جلالی (شمسی) دقیق با طول ماه‌های صحیح و سال‌های کبیسه
+- پشتیبانی کامل از راست به چپ (RTL)
+- قابلیت شخصی‌سازی بالا با متغیرهای CSS
+- سبک و بدون وابستگی
+- سازگار با هر فریم‌ورک یا جاوااسکریپت خالص
+- پشتیبانی از TypeScript
+
+</div>
+
+## Installation | نصب
+
+Install with npm:
 ```bash
-npm install jalali-date-picker
+npm install persian-datepicker-element
 ```
+
+Or with yarn:
+```bash
+yarn add persian-datepicker-element
+```
+
+Or with pnpm:
+```bash
+pnpm add persian-datepicker-element
+```
+
+<div dir="rtl">
+
+### نصب با npm:
+```bash
+npm install persian-datepicker-element
+```
+
+### یا با yarn:
+```bash
+yarn add persian-datepicker-element
+```
+
+### یا با pnpm:
+```bash
+pnpm add persian-datepicker-element
+```
+</div>
 
 ## Usage
 
@@ -24,7 +65,7 @@ npm install jalali-date-picker
 
 ```html
 <!-- Include the script -->
-<script src="node_modules/jalali-date-picker/dist/jalali-date-picker.min.js"></script>
+<script src="node_modules/persian-datepicker-element/dist/jalali-date-picker.min.js"></script>
 
 <!-- Use the component -->
 <jalali-date-picker></jalali-date-picker>
@@ -34,7 +75,7 @@ npm install jalali-date-picker
 
 ```javascript
 // Import the component
-import 'jalali-date-picker';
+import 'persian-datepicker-element';
 
 // Use it in your HTML
 // <jalali-date-picker></jalali-date-picker>
@@ -43,7 +84,7 @@ import 'jalali-date-picker';
 ### With TypeScript
 
 ```typescript
-import { JalaliDatePicker, JalaliDate } from 'jalali-date-picker';
+import { JalaliDatePicker, JalaliDate } from 'persian-datepicker-element';
 
 // Access to the class for type checking or programmatic usage
 const datePicker = document.querySelector('jalali-date-picker') as JalaliDatePicker;
@@ -104,7 +145,7 @@ document.querySelector('jalali-date-picker').addEventListener('change', (event) 
 The package also exports a `JalaliDate` utility for converting between Jalali and Gregorian dates:
 
 ```javascript
-import { JalaliDate } from 'jalali-date-picker';
+import { JalaliDate } from 'persian-datepicker-element';
 
 // Convert Gregorian to Jalali
 const jalaliDate = JalaliDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
@@ -113,9 +154,11 @@ const jalaliDate = JalaliDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
 const gregorianDate = JalaliDate.jalaliToGregorian(1402, 1, 1); // [2023, 3, 21]
 ```
 
-## Advanced Styling
+## Advanced Styling | شخصی‌سازی پیشرفته
 
 The component uses CSS variables for comprehensive styling. You can override any of these variables to customize the appearance:
+
+این کامپوننت از متغیرهای CSS برای شخصی‌سازی جامع استفاده می‌کند. شما می‌توانید هر یک از این متغیرها را برای تغییر ظاهر بازنویسی کنید:
 
 ```css
 jalali-date-picker {
@@ -150,65 +193,67 @@ jalali-date-picker {
 }
 ```
 
-### All Available CSS Variables
+### All Available CSS Variables | تمام متغیرهای CSS موجود
 
-| Category | Variable | Description |
-|----------|----------|-------------|
-| **Color scheme** | `--jdp-primary` | Primary color for selected items |
-| | `--jdp-primary-hover` | Hover state color for primary elements |
-| | `--jdp-primary-foreground` | Text color on primary background |
-| **Neutral colors** | `--jdp-background` | Background color |
-| | `--jdp-foreground` | Text color |
-| | `--jdp-muted` | Muted background color |
-| | `--jdp-muted-foreground` | Muted text color |
-| | `--jdp-border` | Border color |
-| | `--jdp-ring` | Focus ring color |
-| **Typography** | `--jdp-font-family` | Font family |
-| | `--jdp-font-size` | Base font size |
-| | `--jdp-line-height` | Line height |
-| | `--jdp-font-weight` | Normal font weight |
-| | `--jdp-font-weight-medium` | Medium font weight |
-| | `--jdp-day-name-font-size` | Day name font size |
-| | `--jdp-day-name-font-weight` | Day name font weight |
-| | `--jdp-day-font-size` | Day cell font size |
-| | `--jdp-day-font-weight` | Day cell font weight |
-| | `--jdp-month-year-font-size` | Month/year header font size |
-| | `--jdp-month-year-font-weight` | Month/year header font weight |
-| **Input field** | `--jdp-input-padding-x` | Horizontal padding |
-| | `--jdp-input-padding-y` | Vertical padding |
-| | `--jdp-input-border-width` | Border width |
-| | `--jdp-input-border-color` | Border color |
-| | `--jdp-input-border-radius` | Border radius |
-| | `--jdp-input-focus-ring-width` | Focus ring width |
-| | `--jdp-input-focus-ring-color` | Focus ring color |
-| **Calendar popup** | `--jdp-calendar-width` | Calendar popup width |
-| | `--jdp-calendar-padding` | Calendar padding |
-| | `--jdp-calendar-border-width` | Calendar border width |
-| | `--jdp-calendar-border-color` | Calendar border color |
-| | `--jdp-calendar-border-radius` | Calendar border radius |
-| | `--jdp-calendar-shadow` | Calendar shadow |
-| | `--jdp-calendar-z-index` | Calendar z-index |
-| **Navigation buttons** | `--jdp-nav-button-size` | Size of nav buttons |
-| | `--jdp-nav-button-bg` | Button background |
-| | `--jdp-nav-button-bg-hover` | Button hover background |
-| | `--jdp-nav-arrow-size` | Arrow size |
-| | `--jdp-nav-arrow-thickness` | Arrow thickness |
-| | `--jdp-nav-arrow-color` | Arrow color |
-| **Day grid** | `--jdp-day-cell-size` | Size of day cells |
-| | `--jdp-day-cell-margin` | Margin between day cells |
-| | `--jdp-day-cell-border-radius` | Border radius of day cells |
-| **States** | `--jdp-day-hover-bg` | Day hover background |
-| | `--jdp-day-selected-bg` | Selected day background |
-| | `--jdp-day-selected-color` | Selected day text color |
-| | `--jdp-day-today-border-color` | Today indicator border color |
-| | `--jdp-day-today-border-width` | Today indicator border width |
-| | `--jdp-day-disabled-opacity` | Opacity for disabled days |
-| **Animations** | `--jdp-transition-duration` | Duration of transitions |
-| | `--jdp-fade-from-y` | Vertical offset for fade animations |
+| Category | Variable | Description | توضیحات |
+|----------|----------|-------------|---------|
+| **Color scheme** | `--jdp-primary` | Primary color for selected items | رنگ اصلی برای آیتم‌های انتخاب شده |
+| | `--jdp-primary-hover` | Hover state color for primary elements | رنگ حالت هاور برای عناصر اصلی |
+| | `--jdp-primary-foreground` | Text color on primary background | رنگ متن روی پس‌زمینه اصلی |
+| **Neutral colors** | `--jdp-background` | Background color | رنگ پس‌زمینه |
+| | `--jdp-foreground` | Text color | رنگ متن |
+| | `--jdp-muted` | Muted background color | رنگ پس‌زمینه کمرنگ |
+| | `--jdp-muted-foreground` | Muted text color | رنگ متن کمرنگ |
+| | `--jdp-border` | Border color | رنگ حاشیه |
+| | `--jdp-ring` | Focus ring color | رنگ حلقه فوکوس |
+| **Typography** | `--jdp-font-family` | Font family | خانواده فونت |
+| | `--jdp-font-size` | Base font size | اندازه پایه فونت |
+| | `--jdp-line-height` | Line height | ارتفاع خط |
+| | `--jdp-font-weight` | Normal font weight | وزن عادی فونت |
+| | `--jdp-font-weight-medium` | Medium font weight | وزن متوسط فونت |
+| | `--jdp-day-name-font-size` | Day name font size | اندازه فونت نام روز |
+| | `--jdp-day-name-font-weight` | Day name font weight | وزن فونت نام روز |
+| | `--jdp-day-font-size` | Day cell font size | اندازه فونت سلول روز |
+| | `--jdp-day-font-weight` | Day cell font weight | وزن فونت سلول روز |
+| | `--jdp-month-year-font-size` | Month/year header font size | اندازه فونت سرصفحه ماه/سال |
+| | `--jdp-month-year-font-weight` | Month/year header font weight | وزن فونت سرصفحه ماه/سال |
+| **Input field** | `--jdp-input-padding-x` | Horizontal padding | فاصله‌گذاری افقی |
+| | `--jdp-input-padding-y` | Vertical padding | فاصله‌گذاری عمودی |
+| | `--jdp-input-border-width` | Border width | عرض حاشیه |
+| | `--jdp-input-border-color` | Border color | رنگ حاشیه |
+| | `--jdp-input-border-radius` | Border radius | شعاع گوشه حاشیه |
+| | `--jdp-input-focus-ring-width` | Focus ring width | عرض حلقه فوکوس |
+| | `--jdp-input-focus-ring-color` | Focus ring color | رنگ حلقه فوکوس |
+| **Calendar popup** | `--jdp-calendar-width` | Calendar popup width | عرض تقویم بازشو |
+| | `--jdp-calendar-padding` | Calendar padding | فاصله‌گذاری تقویم |
+| | `--jdp-calendar-border-width` | Calendar border width | عرض حاشیه تقویم |
+| | `--jdp-calendar-border-color` | Calendar border color | رنگ حاشیه تقویم |
+| | `--jdp-calendar-border-radius` | Calendar border radius | شعاع گوشه حاشیه تقویم |
+| | `--jdp-calendar-shadow` | Calendar shadow | سایه تقویم |
+| | `--jdp-calendar-z-index` | Calendar z-index | شاخص z تقویم |
+| **Navigation buttons** | `--jdp-nav-button-size` | Size of nav buttons | اندازه دکمه‌های ناوبری |
+| | `--jdp-nav-button-bg` | Button background | پس‌زمینه دکمه |
+| | `--jdp-nav-button-bg-hover` | Button hover background | پس‌زمینه دکمه در حالت هاور |
+| | `--jdp-nav-arrow-size` | Arrow size | اندازه فلش |
+| | `--jdp-nav-arrow-thickness` | Arrow thickness | ضخامت فلش |
+| | `--jdp-nav-arrow-color` | Arrow color | رنگ فلش |
+| **Day grid** | `--jdp-day-cell-size` | Size of day cells | اندازه سلول‌های روز |
+| | `--jdp-day-cell-margin` | Margin between day cells | حاشیه بین سلول‌های روز |
+| | `--jdp-day-cell-border-radius` | Border radius of day cells | شعاع گوشه سلول‌های روز |
+| **States** | `--jdp-day-hover-bg` | Day hover background | پس‌زمینه روز در حالت هاور |
+| | `--jdp-day-selected-bg` | Selected day background | پس‌زمینه روز انتخاب شده |
+| | `--jdp-day-selected-color` | Selected day text color | رنگ متن روز انتخاب شده |
+| | `--jdp-day-today-border-color` | Today indicator border color | رنگ حاشیه نشانگر امروز |
+| | `--jdp-day-today-border-width` | Today indicator border width | عرض حاشیه نشانگر امروز |
+| | `--jdp-day-disabled-opacity` | Opacity for disabled days | شفافیت برای روزهای غیرفعال |
+| **Animations** | `--jdp-transition-duration` | Duration of transitions | مدت‌زمان انتقال‌ها |
+| | `--jdp-fade-from-y` | Vertical offset for fade animations | آفست عمودی برای انیمیشن‌های محو |
 
-## Example: Custom Theme
+## Example: Custom Theme | مثال: تم سفارشی
 
 Here's an example of a custom theme with a dark mode appearance:
+
+در اینجا مثالی از یک تم سفارشی با ظاهر حالت تاریک آورده شده است:
 
 ```css
 /* Dark Mode Theme */
@@ -231,6 +276,6 @@ jalali-date-picker.dark-theme {
 }
 ```
 
-## License
+## License | مجوز
 
 MIT 

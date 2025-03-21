@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jalali Date Picker - Theme Switcher</title>
+  <title>Persian Date Picker Element - Theme Switcher</title>
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -249,8 +249,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>Jalali Date Picker - Theme Switcher</h1>
-    <p>This example demonstrates how to dynamically change the appearance of the Jalali Date Picker using CSS variables.</p>
+    <h1>Persian Date Picker Element - Theme Switcher</h1>
+    <p>This example demonstrates how to dynamically change the appearance of the Persian Date Picker Element using CSS variables.</p>
     
     <div class="theme-container">
       <div class="theme-switch-container">
@@ -423,10 +423,48 @@ picker.className = 'dark-theme'; // After defining CSS rules for .dark-theme</co
     themeToggle.addEventListener('change', () => {
       document.body.classList.toggle('dark', themeToggle.checked);
       
+      // Get the current active theme (if one is set)
+      let currentThemeStyles = {};
+      const activePrimaryColor = picker.style.getPropertyValue('--jdp-primary');
+      if (activePrimaryColor) {
+        // Save some of the current theme settings that we want to preserve
+        currentThemeStyles = {
+          '--jdp-primary': activePrimaryColor,
+          '--jdp-primary-hover': picker.style.getPropertyValue('--jdp-primary-hover') || adjustColor(activePrimaryColor, -20),
+          '--jdp-ring': picker.style.getPropertyValue('--jdp-ring') || activePrimaryColor,
+          '--jdp-border-radius': picker.style.getPropertyValue('--jdp-border-radius'),
+          '--jdp-input-border-radius': picker.style.getPropertyValue('--jdp-input-border-radius'),
+          '--jdp-day-cell-border-radius': picker.style.getPropertyValue('--jdp-day-cell-border-radius'),
+          '--jdp-font-size': picker.style.getPropertyValue('--jdp-font-size'),
+          '--jdp-input-border-width': picker.style.getPropertyValue('--jdp-input-border-width')
+        };
+      }
+      
       if (themeToggle.checked) {
-        applyTheme({...themes.dark, ...themes.blue});
+        // Apply dark theme base styles but preserve the current theme's primary colors and other settings
+        const darkModeWithCurrentTheme = {
+          // Dark mode background styles
+          '--jdp-background': themes.dark['--jdp-background'],
+          '--jdp-foreground': themes.dark['--jdp-foreground'],
+          '--jdp-muted': themes.dark['--jdp-muted'],
+          '--jdp-muted-foreground': themes.dark['--jdp-muted-foreground'],
+          '--jdp-border': themes.dark['--jdp-border'],
+          '--jdp-input-border-color': themes.dark['--jdp-input-border-color'],
+          '--jdp-calendar-shadow': themes.dark['--jdp-calendar-shadow'],
+          '--jdp-day-hover-bg': themes.dark['--jdp-day-hover-bg'],
+          
+          // Preserve current theme colors if they exist
+          ...currentThemeStyles
+        };
+        
+        applyTheme(darkModeWithCurrentTheme);
       } else {
-        applyTheme(defaultTheme);
+        // If we have current theme styles, apply only those, otherwise apply default
+        if (Object.keys(currentThemeStyles).length > 0) {
+          applyTheme({...defaultTheme, ...currentThemeStyles});
+        } else {
+          applyTheme(defaultTheme);
+        }
       }
     });
     
@@ -458,15 +496,46 @@ picker.className = 'dark-theme'; // After defining CSS rules for .dark-theme</co
         } else {
           const theme = themes[themeName];
           if (theme) {
-            applyTheme(theme);
+            // If dark mode is enabled, we need to preserve dark mode background styles
+            if (themeToggle.checked && themeName !== 'dark') {
+              // Apply dark theme but with the selected theme's primary colors
+              const darkModeWithTheme = {
+                // Dark mode background styles
+                '--jdp-background': themes.dark['--jdp-background'],
+                '--jdp-foreground': themes.dark['--jdp-foreground'],
+                '--jdp-muted': themes.dark['--jdp-muted'],
+                '--jdp-muted-foreground': themes.dark['--jdp-muted-foreground'],
+                '--jdp-border': themes.dark['--jdp-border'],
+                '--jdp-input-border-color': themes.dark['--jdp-input-border-color'],
+                '--jdp-calendar-shadow': themes.dark['--jdp-calendar-shadow'],
+                '--jdp-day-hover-bg': themes.dark['--jdp-day-hover-bg'],
+                
+                // Selected theme's primary colors and other specific settings
+                '--jdp-primary': theme['--jdp-primary'],
+                '--jdp-primary-hover': theme['--jdp-primary-hover'],
+                '--jdp-primary-foreground': theme['--jdp-primary-foreground'] || '#ffffff',
+                '--jdp-ring': theme['--jdp-ring'] || theme['--jdp-primary'],
+                '--jdp-border-radius': theme['--jdp-border-radius'],
+                '--jdp-input-border-radius': theme['--jdp-input-border-radius'],
+                '--jdp-day-cell-border-radius': theme['--jdp-day-cell-border-radius'],
+                '--jdp-nav-button-border-radius': theme['--jdp-nav-button-border-radius'],
+                '--jdp-font-size': theme['--jdp-font-size'],
+                '--jdp-input-border-width': theme['--jdp-input-border-width'],
+                '--jdp-input-padding-x': theme['--jdp-input-padding-x'],
+                '--jdp-input-padding-y': theme['--jdp-input-padding-y']
+              };
+              
+              applyTheme(darkModeWithTheme);
+            } else {
+              applyTheme(theme);
+            }
             
             // If it's the dark theme, enable the toggle
             if (themeName === 'dark') {
               document.body.classList.add('dark');
               themeToggle.checked = true;
-            } else {
+            } else if (!themeToggle.checked) {
               document.body.classList.remove('dark');
-              themeToggle.checked = false;
             }
           }
         }

@@ -1,7 +1,7 @@
 import '../index';  // Import the main entry point which should register the component
 import { wait, simulateKeyEvent, dispatchEvent, findByText } from './test-utils';
 
-describe('Jalali Date Picker Integration', () => {
+describe('Persian Date Picker Element Integration', () => {
   beforeEach(() => {
     // Set up a test environment for each test
     document.body.innerHTML = '<jalali-date-picker></jalali-date-picker>';
