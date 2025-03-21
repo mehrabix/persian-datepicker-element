@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jalali Date Picker - Basic Usage</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
+      direction: rtl;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: #0f172a;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 32px 0 16px;
+      color: #334155;
+    }
+
+    p {
+      margin-bottom: 16px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .example {
+      margin-bottom: 40px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .example-label {
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #f1f5f9;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    pre {
+      background-color: #f1f5f9;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 14px;
+      margin: 20px 0;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    .link {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #0891b2;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    .link:hover {
+      background-color: #0e7490;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Jalali Date Picker - Basic Usage</h1>
+    <p>Simple examples of how to use the Jalali Date Picker component with different configurations.</p>
+    
+    <div class="example">
+      <h2>Basic Usage</h2>
+      <div class="example-label">Default configuration:</div>
+      <jalali-date-picker id="basic-picker"></jalali-date-picker>
+      <div class="result">Selected date: <span id="basic-result">None</span></div>
+      
+      <pre><code>&lt;jalali-date-picker id="basic-picker"&gt;&lt;/jalali-date-picker&gt;</code></pre>
+    </div>
+    
+    <div class="example">
+      <h2>Custom Placeholder</h2>
+      <div class="example-label">With a custom placeholder:</div>
+      <jalali-date-picker id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"></jalali-date-picker>
+      <div class="result">Selected date: <span id="placeholder-result">None</span></div>
+      
+      <pre><code>&lt;jalali-date-picker id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"&gt;&lt;/jalali-date-picker&gt;</code></pre>
+    </div>
+    
+    <div class="example">
+      <h2>Custom Format</h2>
+      <div class="example-label">With a custom date format:</div>
+      <jalali-date-picker id="format-picker" format="YYYY-MM-DD"></jalali-date-picker>
+      <div class="result">Selected date: <span id="format-result">None</span></div>
+      
+      <pre><code>&lt;jalali-date-picker id="format-picker" format="YYYY-MM-DD"&gt;&lt;/jalali-date-picker&gt;</code></pre>
+    </div>
+    
+    <div class="example">
+      <h2>Initial Value</h2>
+      <div class="example-label">With a programmatically set initial value:</div>
+      <jalali-date-picker id="initial-picker"></jalali-date-picker>
+      <div class="result">Selected date: <span id="initial-result">None</span></div>
+      
+      <pre><code>// Set initial value programmatically 
+const initialPicker = document.getElementById('initial-picker');
+initialPicker.setValue(1403, 3, 15);</code></pre>
+    </div>
+    
+    <div class="example">
+      <h2>Listen For Changes</h2>
+      <div class="example-label">With event listener for changes:</div>
+      <jalali-date-picker id="event-picker"></jalali-date-picker>
+      <div class="result">
+        Jalali Date: <span id="jalali-result">None</span><br>
+        Gregorian Date: <span id="gregorian-result">None</span>
+      </div>
+      
+      <pre><code>document.getElementById('event-picker').addEventListener('change', (event) => {
+  const { jalali, gregorian } = event.detail;
+  document.getElementById('jalali-result').textContent = jalali.join('/');
+  document.getElementById('gregorian-result').textContent = gregorian.join('/');
+});</code></pre>
+    </div>
+    
+    <div class="example">
+      <h2>Custom Styling</h2>
+      <div class="example-label">With custom styling:</div>
+      <jalali-date-picker 
+        id="styled-picker" 
+        style="
+          --jdp-primary: #8b5cf6;
+          --jdp-primary-hover: #7c3aed;
+          --jdp-border-radius: 0.75rem;
+          --jdp-font-size: 15px;
+        "
+      ></jalali-date-picker>
+      <div class="result">Selected date: <span id="styled-result">None</span></div>
+      
+      <pre><code>&lt;jalali-date-picker 
+  id="styled-picker" 
+  style="
+    --jdp-primary: #8b5cf6;
+    --jdp-primary-hover: #7c3aed;
+    --jdp-border-radius: 0.75rem;
+    --jdp-font-size: 15px;
+  "
+&gt;&lt;/jalali-date-picker&gt;</code></pre>
+    </div>
+    
+    <a href="customization.html" class="link">View More Styling Examples →</a>
+  </div>
+
+  <script src="../dist/jalali-date-picker.js"></script>
+  <script>
+    // Basic picker
+    document.getElementById('basic-picker').addEventListener('change', (event) => {
+      document.getElementById('basic-result').textContent = event.detail.jalali.join('/');
+    });
+    
+    // Placeholder picker
+    document.getElementById('placeholder-picker').addEventListener('change', (event) => {
+      document.getElementById('placeholder-result').textContent = event.detail.jalali.join('/');
+    });
+    
+    // Format picker
+    document.getElementById('format-picker').addEventListener('change', (event) => {
+      document.getElementById('format-result').textContent = event.detail.jalali.join('/');
+    });
+    
+    // Initial value picker
+    const initialPicker = document.getElementById('initial-picker');
+    initialPicker.setValue(1403, 3, 15);
+    document.getElementById('initial-result').textContent = '1403/3/15';
+    
+    initialPicker.addEventListener('change', (event) => {
+      document.getElementById('initial-result').textContent = event.detail.jalali.join('/');
+    });
+    
+    // Event listener picker
+    document.getElementById('event-picker').addEventListener('change', (event) => {
+      const { jalali, gregorian } = event.detail;
+      document.getElementById('jalali-result').textContent = jalali.join('/');
+      document.getElementById('gregorian-result').textContent = gregorian.join('/');
+    });
+    
+    // Styled picker
+    document.getElementById('styled-picker').addEventListener('change', (event) => {
+      document.getElementById('styled-result').textContent = event.detail.jalali.join('/');
+    });
+  </script>
+</body>
+</html> 

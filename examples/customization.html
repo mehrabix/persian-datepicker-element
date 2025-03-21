@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jalali Date Picker - Styling Examples</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
+      direction: rtl;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: #0f172a;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 32px 0 16px;
+      color: #334155;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .example-item {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .example-label {
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    pre {
+      background-color: #f1f5f9;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 14px;
+      margin: 20px 0;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Theme Examples */
+    jalali-date-picker.default-theme {
+      width: 100%;
+    }
+
+    jalali-date-picker.blue-theme {
+      width: 100%;
+      --jdp-primary: #3b82f6;
+      --jdp-primary-hover: #2563eb;
+      --jdp-primary-foreground: #ffffff;
+      --jdp-ring: #60a5fa;
+    }
+
+    jalali-date-picker.green-theme {
+      width: 100%;
+      --jdp-primary: #10b981;
+      --jdp-primary-hover: #059669;
+      --jdp-primary-foreground: #ffffff;
+      --jdp-ring: #34d399;
+      --jdp-font-family: 'Samim', 'Vazir', system-ui, sans-serif;
+      --jdp-font-size: 15px;
+      --jdp-border-radius: 0.75rem;
+    }
+
+    jalali-date-picker.purple-theme {
+      width: 100%;
+      --jdp-primary: #8b5cf6;
+      --jdp-primary-hover: #7c3aed;
+      --jdp-primary-foreground: #ffffff;
+      --jdp-ring: #a78bfa;
+      --jdp-input-padding-y: 12px;
+      --jdp-input-padding-x: 16px;
+      --jdp-border-radius: 0.375rem;
+    }
+
+    jalali-date-picker.orange-theme {
+      width: 100%;
+      --jdp-primary: #f97316;
+      --jdp-primary-hover: #ea580c;
+      --jdp-primary-foreground: #ffffff;
+      --jdp-ring: #fb923c;
+      --jdp-border-radius: 0;
+      --jdp-input-border-width: 2px;
+      --jdp-input-border-color: #fdba74;
+      --jdp-input-focus-ring-width: 0;
+    }
+
+    jalali-date-picker.dark-theme {
+      width: 100%;
+      --jdp-primary: #4f46e5;
+      --jdp-primary-hover: #6366f1;
+      --jdp-primary-foreground: #ffffff;
+      
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-ring: #4f46e5;
+      
+      --jdp-calendar-shadow: 0px 10px 30px -5px rgba(2, 6, 23, 0.5);
+      --jdp-day-hover-bg: #334155;
+      
+      --jdp-input-border-color: #475569;
+      --jdp-day-selected-bg: #4f46e5;
+    }
+
+    jalali-date-picker.custom-layout {
+      width: 100%;
+      --jdp-primary: #0891b2;
+      --jdp-primary-hover: #0e7490;
+      
+      --jdp-calendar-width: 320px;
+      --jdp-day-cell-size: 38px;
+      --jdp-font-size: 16px;
+      --jdp-day-font-size: 14px;
+      --jdp-month-year-font-size: 18px;
+      --jdp-spacing-md: 24px;
+      
+      --jdp-nav-button-size: 36px;
+      --jdp-nav-arrow-size: 10px;
+      --jdp-nav-arrow-thickness: 3px;
+      
+      --jdp-transition-duration: 0.3s;
+    }
+
+    jalali-date-picker.minimal-theme {
+      width: 100%;
+      --jdp-primary: #000000;
+      --jdp-primary-hover: #333333;
+      --jdp-primary-foreground: #ffffff;
+      
+      --jdp-border: #e2e8f0;
+      --jdp-ring: #000000;
+      
+      --jdp-border-radius: 2px;
+      --jdp-input-border-width: 1px;
+      --jdp-input-border-radius: 2px;
+      
+      --jdp-day-cell-border-radius: 0;
+      --jdp-nav-button-border-radius: 0;
+      
+      --jdp-day-selected-bg: #000000;
+      --jdp-day-today-border-color: #000000;
+      
+      --jdp-calendar-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Jalali Date Picker - Styling Examples</h1>
+    <p>This page demonstrates the various styling possibilities of the Jalali Date Picker component using CSS variables.</p>
+
+    <pre><code>// Basic example of setting CSS variables
+jalali-date-picker {
+  --jdp-primary: #3b82f6;
+  --jdp-border-radius: 0.75rem;
+  --jdp-font-family: 'Vazir', sans-serif;
+}</code></pre>
+
+    <h2>Color Themes</h2>
+    <div class="example-grid">
+      <div class="example-item">
+        <div class="example-label">Default Theme</div>
+        <jalali-date-picker class="default-theme" placeholder="تاریخ پیش‌فرض"></jalali-date-picker>
+      </div>
+      
+      <div class="example-item">
+        <div class="example-label">Blue Theme</div>
+        <jalali-date-picker class="blue-theme" placeholder="تم آبی"></jalali-date-picker>
+      </div>
+      
+      <div class="example-item">
+        <div class="example-label">Green Theme</div>
+        <jalali-date-picker class="green-theme" placeholder="تم سبز"></jalali-date-picker>
+      </div>
+      
+      <div class="example-item">
+        <div class="example-label">Purple Theme</div>
+        <jalali-date-picker class="purple-theme" placeholder="تم بنفش"></jalali-date-picker>
+      </div>
+      
+      <div class="example-item">
+        <div class="example-label">Orange Theme</div>
+        <jalali-date-picker class="orange-theme" placeholder="تم نارنجی"></jalali-date-picker>
+      </div>
+      
+      <div class="example-item">
+        <div class="example-label">Dark Theme</div>
+        <jalali-date-picker class="dark-theme" placeholder="تم تاریک"></jalali-date-picker>
+      </div>
+    </div>
+
+    <h2>Layout Variations</h2>
+    <div class="example-grid">
+      <div class="example-item">
+        <div class="example-label">Custom Spacing & Sizing</div>
+        <jalali-date-picker class="custom-layout" placeholder="سایز و فاصله‌های سفارشی"></jalali-date-picker>
+      </div>
+      
+      <div class="example-item">
+        <div class="example-label">Minimal Design</div>
+        <jalali-date-picker class="minimal-theme" placeholder="طراحی مینیمال"></jalali-date-picker>
+      </div>
+    </div>
+
+    <h2>HTML Attribute Example</h2>
+    <div class="example-grid">
+      <div class="example-item">
+        <div class="example-label">Using HTML attributes</div>
+        <jalali-date-picker 
+          placeholder="تنظیم با ویژگی‌های HTML" 
+          primary-color="#e11d48" 
+          border-radius="8px"
+          font-family="Tahoma, sans-serif"
+        ></jalali-date-picker>
+      </div>
+    </div>
+  </div>
+
+  <script src="../dist/jalali-date-picker.js"></script>
+</body>
+</html> 
