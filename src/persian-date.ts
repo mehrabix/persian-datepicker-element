@@ -1,7 +1,7 @@
 /**
  * Jalali (Shamsi) Calendar utilities
  */
-export const JalaliDate = {
+export const PersianDate = {
   g_days_in_month: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
   j_days_in_month: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29],
   

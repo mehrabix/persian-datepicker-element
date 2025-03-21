@@ -1,10 +1,10 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
-  "main": "dist/jalali-date-picker.js",
-  "module": "dist/jalali-date-picker.esm.js",
-  "unpkg": "dist/jalali-date-picker.min.js",
+  "main": "dist/persian-datepicker-element.js",
+  "module": "dist/persian-datepicker-element.esm.js",
+  "unpkg": "dist/persian-datepicker-element.min.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
@@ -13,10 +13,10 @@
   "scripts": {
     "build": "pnpm run build:clean && pnpm run build:prod && pnpm run build:dev && pnpm run build:esm && pnpm run minify && pnpm run cleanup",
     "build:clean": "set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && rspack",
-    "build:prod": "set NODE_ENV=production && set OUTPUT_FILE=jalali-date-picker.min.js && set MINIFY=true && rspack",
-    "build:dev": "set NODE_ENV=development && set OUTPUT_FILE=jalali-date-picker.js && set MINIFY=false && rspack",
-    "build:esm": "set NODE_ENV=production && set OUTPUT_FILE=jalali-date-picker.esm.js && set MODULE_TYPE=module && set MINIFY=true && rspack",
-    "minify": "node minify.js jalali-date-picker.min.js && node minify.js jalali-date-picker.esm.js",
+    "build:prod": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.min.js && set MINIFY=true && rspack",
+    "build:dev": "set NODE_ENV=development && set OUTPUT_FILE=persian-datepicker-element.js && set MINIFY=false && rspack",
+    "build:esm": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.esm.js && set MODULE_TYPE=module && set MINIFY=true && rspack",
+    "minify": "node minify.js persian-datepicker-element.min.js && node minify.js persian-datepicker-element.esm.js",
     "cleanup": "node cleanup-dist.js",
     "dev": "set NODE_ENV=development && rspack serve",
     "analyze": "set NODE_ENV=production && set BUNDLE_ANALYZE=true && rspack",

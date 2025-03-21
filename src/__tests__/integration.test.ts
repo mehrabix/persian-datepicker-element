@@ -1,20 +1,20 @@
-import '../index';  // Import the main entry point which should register the component
-import { wait, simulateKeyEvent, dispatchEvent, findByText } from './test-utils';
+import '../index'; // Import the main entry point which should register the component
+import { dispatchEvent, simulateKeyEvent, wait } from './test-utils';
 
 describe('Persian Date Picker Element Integration', () => {
   beforeEach(() => {
     // Set up a test environment for each test
-    document.body.innerHTML = '<jalali-date-picker></jalali-date-picker>';
+    document.body.innerHTML = '<persian-datepicker-element></persian-datepicker-element>';
   });
 
   test('component renders in page without errors', () => {
-    const pickerElement = document.querySelector('jalali-date-picker');
+    const pickerElement = document.querySelector('persian-datepicker-element');
     expect(pickerElement).not.toBeNull();
     expect(pickerElement?.shadowRoot).not.toBeNull();
   });
 
   test('handles attribute changes', async () => {
-    const pickerElement = document.querySelector('jalali-date-picker') as HTMLElement;
+    const pickerElement = document.querySelector('persian-datepicker-element') as HTMLElement;
     
     // Set the placeholder attribute
     pickerElement.setAttribute('placeholder', 'تاریخ تولد');
@@ -27,7 +27,7 @@ describe('Persian Date Picker Element Integration', () => {
   });
 
   test.skip('component correctly handles date selection and emits events', async () => {
-    const pickerElement = document.querySelector('jalali-date-picker') as HTMLElement;
+    const pickerElement = document.querySelector('persian-datepicker-element') as HTMLElement;
     let eventCalled = false;
     
     pickerElement.addEventListener('datechange', () => {
@@ -56,7 +56,7 @@ describe('Persian Date Picker Element Integration', () => {
   });
 
   test('component properly navigates between months', async () => {
-    const pickerElement = document.querySelector('jalali-date-picker') as HTMLElement;
+    const pickerElement = document.querySelector('persian-datepicker-element') as HTMLElement;
     
     // Open the calendar
     const input = pickerElement.shadowRoot?.querySelector('input') as HTMLInputElement;
@@ -90,7 +90,7 @@ describe('Persian Date Picker Element Integration', () => {
   });
 
   test.skip('component is accessible via keyboard', async () => {
-    const pickerElement = document.querySelector('jalali-date-picker') as HTMLElement;
+    const pickerElement = document.querySelector('persian-datepicker-element') as HTMLElement;
     
     // Focus the input
     const input = pickerElement.shadowRoot?.querySelector('input') as HTMLInputElement;

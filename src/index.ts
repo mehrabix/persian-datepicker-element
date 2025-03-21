@@ -1,18 +1,18 @@
 // Import the custom element class
-import { JalaliDatePicker } from './jalali-date-picker';
+import { PersianDatePickerElement } from './persian-datepicker-element';
 // Import the utility class
-import { JalaliDate } from './jalali-date';
+import { PersianDate } from './persian-date';
 // Import types directly
-import type { JalaliDatePickerOptions, JalaliDateChangeEvent } from './jalali-date-picker';
+import type { PersianDatePickerElementOptions, PersianDateChangeEvent } from './persian-datepicker-element';
 
 // Define the custom element
-if (!customElements.get('jalali-date-picker')) {
-  customElements.define('jalali-date-picker', JalaliDatePicker);
+if (!customElements.get('persian-datepicker-element')) {
+  customElements.define('persian-datepicker-element', PersianDatePickerElement);
 }
 
 // Export the classes and types
-export { JalaliDatePicker, JalaliDate };
-export type { JalaliDatePickerOptions, JalaliDateChangeEvent };
+export { PersianDatePickerElement, PersianDate };
+export type { PersianDatePickerElementOptions, PersianDateChangeEvent };
 
 // Default export for convenient usage
-export default JalaliDatePicker; 
+export default PersianDatePickerElement; 

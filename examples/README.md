@@ -1,8 +1,8 @@
-# Persian Date Picker Element Examples | نمونه‌های تقویم تاریخ جلالی
+# Persian Date Picker Element Examples | نمونه‌های تقویم تاریخ شمسی
 
 This directory contains examples that demonstrate various features and customization options of the Persian Date Picker Element component.
 
-این دایرکتوری شامل نمونه‌هایی است که ویژگی‌ها و گزینه‌های شخصی‌سازی مختلف کامپوننت تقویم تاریخ جلالی را نشان می‌دهد.
+این دایرکتوری شامل نمونه‌هایی است که ویژگی‌ها و گزینه‌های شخصی‌سازی مختلف کامپوننت تقویم تاریخ شمسی را نشان می‌دهد.
 
 ## Examples Overview | بررسی اجمالی نمونه‌ها
 
@@ -10,7 +10,7 @@ This directory contains examples that demonstrate various features and customiza
 
 This example shows the basic usage of the Persian Date Picker Element component, including:
 
-این نمونه استفاده پایه از کامپوننت تقویم تاریخ جلالی را نشان می‌دهد، از جمله:
+این نمونه استفاده پایه از کامپوننت تقویم تاریخ شمسی را نشان می‌دهد، از جمله:
 
 - Default configuration
 - Setting a custom placeholder

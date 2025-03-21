@@ -1,19 +1,19 @@
-import { JalaliDatePicker, JalaliDateChangeEvent } from '../jalali-date-picker';
-import { JalaliDate } from '../jalali-date';
-import { wait, dispatchEvent, simulateKeyEvent } from './test-utils';
+import { PersianDate } from '../persian-date';
+import { PersianDatePickerElement } from '../persian-datepicker-element';
+import { dispatchEvent, wait } from './test-utils';
 
 // Define the custom element before running tests
-if (!customElements.get('jalali-date-picker')) {
-  customElements.define('jalali-date-picker', JalaliDatePicker);
+if (!customElements.get('persian-datepicker-element')) {
+  customElements.define('persian-datepicker-element', PersianDatePickerElement);
 }
 
-describe('JalaliDatePicker', () => {
-  let picker: JalaliDatePicker;
+describe('PersianDatePickerElement', () => {
+  let picker: PersianDatePickerElement;
   
   beforeEach(() => {
     // Create a new instance for each test
     document.body.innerHTML = '';
-    picker = document.createElement('jalali-date-picker') as JalaliDatePicker;
+    picker = document.createElement('persian-datepicker-element') as PersianDatePickerElement;
     document.body.appendChild(picker);
   });
   
@@ -22,8 +22,8 @@ describe('JalaliDatePicker', () => {
   });
 
   test('component should be defined', () => {
-    expect(customElements.get('jalali-date-picker')).toBeDefined();
-    expect(picker).toBeInstanceOf(JalaliDatePicker);
+    expect(customElements.get('persian-datepicker-element')).toBeDefined();
+    expect(picker).toBeInstanceOf(PersianDatePickerElement);
   });
   
   test('should render the input field', () => {
@@ -76,13 +76,13 @@ describe('JalaliDatePicker', () => {
     
     // Get the current month view
     const today = new Date();
-    const jalaliToday = JalaliDate.gregorianToJalali(
+    const jalaliToday = PersianDate.gregorianToJalali(
       today.getFullYear(),
       today.getMonth() + 1,
       today.getDate()
     );
     
-    const daysInMonth = JalaliDate.getDaysInMonth(jalaliToday[0], jalaliToday[1]);
+    const daysInMonth = PersianDate.getDaysInMonth(jalaliToday[0], jalaliToday[1]);
     const daysElements = picker.shadowRoot?.querySelectorAll('.day:not(.empty)');
     
     expect(daysElements?.length).toBe(daysInMonth);

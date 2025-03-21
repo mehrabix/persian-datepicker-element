@@ -15,7 +15,7 @@ The project uses the following testing tools:
 Tests are organized into several categories:
 
 1. **Utility Tests**: Tests for the Jalali date utility functions (`src/__tests__/jalali-date.test.ts`)
-2. **Component Tests**: Tests for the Persian Date Picker Element web component (`src/__tests__/jalali-date-picker.test.ts`)
+2. **Component Tests**: Tests for the Persian Date Picker Element web component (`src/__tests__/persian-datepicker-element.test.ts`)
 3. **Integration Tests**: Tests for how the component interacts with the page (`src/__tests__/integration.test.ts`)
 4. **Utility Function Tests**: Tests for testing utility functions (`src/__tests__/test-utils.test.ts`)
 

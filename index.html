@@ -55,26 +55,27 @@
 </head>
 <body>
   <div class="container">
-    <h1>تقویم شمسی (جلالی)</h1>
-    <p>این صفحه برای تست همه نسخه های کامپوننت تقویم جلالی می‌باشد.</p>
+    <h1>تقویم شمسی
+</h1>
+    <p>این صفحه برای تست همه نسخه های کامپوننت تقویم شمسی می‌باشد.</p>
     
     <div class="versions">
       <div class="version">
         <h2>نسخه توسعه</h2>
-        <div class="file-info">dist/jalali-date-picker.js (17.39 KB)</div>
-        <jalali-date-picker id="dev-picker"></jalali-date-picker>
+        <div class="file-info">dist/persian-datepicker-element.js (17.39 KB)</div>
+        <persian-datepicker-element id="dev-picker"></persian-datepicker-element>
       </div>
       
       <div class="version">
         <h2>نسخه تولید (UMD)</h2>
-        <div class="file-info">dist/jalali-date-picker.min.js (9.98 KB)</div>
-        <jalali-date-picker id="prod-picker"></jalali-date-picker>
+        <div class="file-info">dist/persian-datepicker-element.min.js (9.98 KB)</div>
+        <persian-datepicker-element id="prod-picker"></persian-datepicker-element>
       </div>
       
       <div class="version">
         <h2>نسخه ESM</h2>
-        <div class="file-info">dist/jalali-date-picker.esm.js (9.98 KB)</div>
-        <jalali-date-picker id="esm-picker"></jalali-date-picker>
+        <div class="file-info">dist/persian-datepicker-element.esm.js (9.98 KB)</div>
+        <persian-datepicker-element id="esm-picker"></persian-datepicker-element>
       </div>
     </div>
 
@@ -84,21 +85,21 @@
   </div>
 
   <!-- Start with development version -->
-  <script src="dist/jalali-date-picker.js" type="text/javascript"></script>
+  <script src="dist/persian-datepicker-element.js" type="text/javascript"></script>
   
   <script>
     // Function to toggle between script versions for testing
     function toggleScript() {
       const button = document.getElementById('switch-script');
-      const currentScript = document.querySelector('script[src^="dist/jalali-date-picker"]');
+      const currentScript = document.querySelector('script[src^="dist/persian-datepicker-element"]');
       const currentSrc = currentScript.getAttribute('src');
       
       let newSrc;
       if (currentSrc.includes('min.js')) {
-        newSrc = 'dist/jalali-date-picker.js';
+        newSrc = 'dist/persian-datepicker-element.js';
         button.textContent = 'بارگذاری با نسخه UMD تولید';
       } else {
-        newSrc = 'dist/jalali-date-picker.min.js';
+        newSrc = 'dist/persian-datepicker-element.min.js';
         button.textContent = 'بارگذاری با نسخه توسعه';
       }
       
@@ -112,7 +113,7 @@
       document.body.appendChild(newScript);
       
       // Clear all pickers
-      document.querySelectorAll('jalali-date-picker').forEach(picker => {
+      document.querySelectorAll('persian-datepicker-element').forEach(picker => {
         picker.innerHTML = '';
       });
       

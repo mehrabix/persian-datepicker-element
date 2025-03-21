@@ -85,7 +85,7 @@
       color: #cbd5e1;
     }
 
-    jalali-date-picker {
+    persian-datepicker-element {
       width: 100%;
       display: block;
     }
@@ -261,7 +261,7 @@
 <body>
   <div class="container">
     <h1>Persian Date Picker Element</h1>
-    <p>این مثال قابلیت‌های شخصی‌سازی ظاهری تقویم جلالی را نشان می‌دهد</p>
+    <p>این مثال قابلیت‌های شخصی‌سازی ظاهری تقویم شمسی را نشان می‌دهد</p>
 
     <div class="theme-container">
       <div class="theme-toggles">
@@ -311,12 +311,12 @@
 
     <div class="form-group">
       <label for="birthdate">تاریخ تولد:</label>
-      <jalali-date-picker id="birthdate" placeholder="انتخاب تاریخ تولد"></jalali-date-picker>
+      <persian-datepicker-element id="birthdate" placeholder="انتخاب تاریخ تولد"></persian-datepicker-element>
     </div>
 
     <div class="form-group">
       <label for="joinDate">تاریخ عضویت:</label>
-      <jalali-date-picker id="joinDate" format="YYYY/MM/DD" placeholder="تاریخ عضویت"></jalali-date-picker>
+      <persian-datepicker-element id="joinDate" format="YYYY/MM/DD" placeholder="تاریخ عضویت"></persian-datepicker-element>
     </div>
 
     <div class="result">
@@ -329,10 +329,10 @@
     </div>
   </div>
 
-  <script src="../dist/jalali-date-picker.js"></script>
+  <script src="../dist/persian-datepicker-element.js"></script>
   <script>
     // Get all date pickers
-    const datePickers = document.querySelectorAll('jalali-date-picker');
+    const datePickers = document.querySelectorAll('persian-datepicker-element');
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     const themeButtons = document.querySelectorAll('.theme-btn');
     

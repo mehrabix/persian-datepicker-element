@@ -3,7 +3,7 @@ const fs = require('fs');
 
 // Environment variables
 const isProduction = process.env.NODE_ENV === 'production';
-const outputFileName = process.env.OUTPUT_FILE || (isProduction ? 'jalali-date-picker.min.js' : 'jalali-date-picker.js');
+const outputFileName = process.env.OUTPUT_FILE || (isProduction ? 'persian-datepicker-element.min.js' : 'persian-datepicker-element.js');
 const shouldMinify = process.env.MINIFY !== 'false';
 const moduleType = process.env.MODULE_TYPE || 'umd';
 const shouldAnalyze = process.env.BUNDLE_ANALYZE === 'true';
@@ -29,7 +29,7 @@ const config = {
     library: moduleType === 'module' 
       ? { type: 'module' }
       : {
-          name: 'JalaliDatePicker',
+          name: 'PersianDatePickerElement',
           type: 'umd',
           export: 'default',
         },

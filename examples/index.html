@@ -96,34 +96,34 @@
     <div class="example">
       <h2>Basic Usage</h2>
       <div class="example-label">Default configuration:</div>
-      <jalali-date-picker id="basic-picker"></jalali-date-picker>
+      <persian-datepicker-element id="basic-picker"></persian-datepicker-element>
       <div class="result">Selected date: <span id="basic-result">None</span></div>
       
-      <pre><code>&lt;jalali-date-picker id="basic-picker"&gt;&lt;/jalali-date-picker&gt;</code></pre>
+      <pre><code>&lt;persian-datepicker-element id="basic-picker"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
     
     <div class="example">
       <h2>Custom Placeholder</h2>
       <div class="example-label">With a custom placeholder:</div>
-      <jalali-date-picker id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"></jalali-date-picker>
+      <persian-datepicker-element id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"></persian-datepicker-element>
       <div class="result">Selected date: <span id="placeholder-result">None</span></div>
       
-      <pre><code>&lt;jalali-date-picker id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"&gt;&lt;/jalali-date-picker&gt;</code></pre>
+      <pre><code>&lt;persian-datepicker-element id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
     
     <div class="example">
       <h2>Custom Format</h2>
       <div class="example-label">With a custom date format:</div>
-      <jalali-date-picker id="format-picker" format="YYYY-MM-DD"></jalali-date-picker>
+      <persian-datepicker-element id="format-picker" format="YYYY-MM-DD"></persian-datepicker-element>
       <div class="result">Selected date: <span id="format-result">None</span></div>
       
-      <pre><code>&lt;jalali-date-picker id="format-picker" format="YYYY-MM-DD"&gt;&lt;/jalali-date-picker&gt;</code></pre>
+      <pre><code>&lt;persian-datepicker-element id="format-picker" format="YYYY-MM-DD"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
     
     <div class="example">
       <h2>Initial Value</h2>
       <div class="example-label">With a programmatically set initial value:</div>
-      <jalali-date-picker id="initial-picker"></jalali-date-picker>
+      <persian-datepicker-element id="initial-picker"></persian-datepicker-element>
       <div class="result">Selected date: <span id="initial-result">None</span></div>
       
       <pre><code>// Set initial value programmatically 
@@ -134,7 +134,7 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     <div class="example">
       <h2>Listen For Changes</h2>
       <div class="example-label">With event listener for changes:</div>
-      <jalali-date-picker id="event-picker"></jalali-date-picker>
+      <persian-datepicker-element id="event-picker"></persian-datepicker-element>
       <div class="result">
         Jalali Date: <span id="jalali-result">None</span><br>
         Gregorian Date: <span id="gregorian-result">None</span>
@@ -150,7 +150,7 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     <div class="example">
       <h2>Custom Styling</h2>
       <div class="example-label">With custom styling:</div>
-      <jalali-date-picker 
+      <persian-datepicker-element 
         id="styled-picker" 
         style="
           --jdp-primary: #8b5cf6;
@@ -158,10 +158,10 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
           --jdp-border-radius: 0.75rem;
           --jdp-font-size: 15px;
         "
-      ></jalali-date-picker>
+      ></persian-datepicker-element>
       <div class="result">Selected date: <span id="styled-result">None</span></div>
       
-      <pre><code>&lt;jalali-date-picker 
+      <pre><code>&lt;persian-datepicker-element 
   id="styled-picker" 
   style="
     --jdp-primary: #8b5cf6;
@@ -169,13 +169,13 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     --jdp-border-radius: 0.75rem;
     --jdp-font-size: 15px;
   "
-&gt;&lt;/jalali-date-picker&gt;</code></pre>
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
     
     <a href="customization.html" class="link">View More Styling Examples →</a>
   </div>
 
-  <script src="../dist/jalali-date-picker.js"></script>
+  <script src="../dist/persian-datepicker-element.js"></script>
   <script>
     // Basic picker
     document.getElementById('basic-picker').addEventListener('change', (event) => {

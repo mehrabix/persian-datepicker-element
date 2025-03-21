@@ -1,6 +1,6 @@
-# Persian Date Picker Element | تقویم انتخاب تاریخ جلالی
+# Persian Date Picker Element | تقویم انتخاب تاریخ شمسی
 
-یک کامپوننت وب مدرن و قابل شخصی‌سازی برای انتخاب تاریخ جلالی (شمسی) با طراحی مشابه کامپوننت‌های shadcn.
+یک کامپوننت وب مدرن و قابل شخصی‌سازی برای انتخاب تاریخ شمسی (شمسی) با طراحی مشابه کامپوننت‌های shadcn.
 
 ## Features | ویژگی‌ها
 
@@ -15,7 +15,8 @@
 <div dir="rtl">
 
 - رابط کاربری تمیز و مدرن مشابه کامپوننت‌های shadcn
-- تقویم جلالی (شمسی) دقیق با طول ماه‌های صحیح و سال‌های کبیسه
+- تقویم شمسی
+ دقیق با طول ماه‌های صحیح و سال‌های کبیسه
 - پشتیبانی کامل از راست به چپ (RTL)
 - قابلیت شخصی‌سازی بالا با متغیرهای CSS
 - سبک و بدون وابستگی
@@ -65,10 +66,10 @@ pnpm add persian-datepicker-element
 
 ```html
 <!-- Include the script -->
-<script src="node_modules/persian-datepicker-element/dist/jalali-date-picker.min.js"></script>
+<script src="node_modules/persian-datepicker-element/dist/persian-datepicker-element.min.js"></script>
 
 <!-- Use the component -->
-<jalali-date-picker></jalali-date-picker>
+<persian-datepicker-element></persian-datepicker-element>
 ```
 
 ### With ES Modules
@@ -78,16 +79,16 @@ pnpm add persian-datepicker-element
 import 'persian-datepicker-element';
 
 // Use it in your HTML
-// <jalali-date-picker></jalali-date-picker>
+// <persian-datepicker-element></persian-datepicker-element>
 ```
 
 ### With TypeScript
 
 ```typescript
-import { JalaliDatePicker, JalaliDate } from 'persian-datepicker-element';
+import { PersianDatePicker, JalaliDate } from 'persian-datepicker-element';
 
 // Access to the class for type checking or programmatic usage
-const datePicker = document.querySelector('jalali-date-picker') as JalaliDatePicker;
+const datePicker = document.querySelector('persian-datepicker-element') as PersianDatePicker;
 
 // Programmatically set a date (year, month, day)
 datePicker.setValue(1402, 12, 25);
@@ -101,7 +102,7 @@ const selectedDate = datePicker.getValue(); // Returns [year, month, day] or nul
 You can customize the date picker using the following attributes:
 
 ```html
-<jalali-date-picker
+<persian-datepicker-element
   placeholder="انتخاب تاریخ تولد"
   format="YYYY/MM/DD"
   primary-color="#0891b2"
@@ -112,7 +113,7 @@ You can customize the date picker using the following attributes:
   border-radius="0.5rem"
   font-family="Vazir, sans-serif"
   rtl="true"
-></jalali-date-picker>
+></persian-datepicker-element>
 ```
 
 | Attribute          | Type    | Default       | Description                              |
@@ -133,7 +134,7 @@ You can customize the date picker using the following attributes:
 The component dispatches a `change` event when a date is selected:
 
 ```javascript
-document.querySelector('jalali-date-picker').addEventListener('change', (event) => {
+document.querySelector('persian-datepicker-element').addEventListener('change', (event) => {
   const { jalali, gregorian } = event.detail;
   console.log('Selected Jalali date:', jalali); // [year, month, day]
   console.log('Equivalent Gregorian date:', gregorian); // [year, month, day]
@@ -161,7 +162,7 @@ The component uses CSS variables for comprehensive styling. You can override any
 این کامپوننت از متغیرهای CSS برای شخصی‌سازی جامع استفاده می‌کند. شما می‌توانید هر یک از این متغیرها را برای تغییر ظاهر بازنویسی کنید:
 
 ```css
-jalali-date-picker {
+persian-datepicker-element {
   /* Color scheme */
   --jdp-primary: #3b82f6;
   --jdp-primary-hover: #2563eb;
@@ -257,7 +258,7 @@ Here's an example of a custom theme with a dark mode appearance:
 
 ```css
 /* Dark Mode Theme */
-jalali-date-picker.dark-theme {
+persian-datepicker-element.dark-theme {
   --jdp-primary: #4f46e5;
   --jdp-primary-hover: #6366f1;
   --jdp-primary-foreground: #ffffff;

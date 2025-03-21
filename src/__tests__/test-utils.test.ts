@@ -1,4 +1,4 @@
-import { wait, dispatchEvent, simulateKeyEvent, findByText } from './test-utils';
+import { findByText, wait } from './test-utils';
 
 describe('Test utilities', () => {
   test('wait should return a Promise', () => {

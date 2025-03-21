@@ -1,4 +1,4 @@
-import { JalaliDate } from './jalali-date';
+import { PersianDate } from './persian-date';
 
 // Import the CSS as a string
 const styles = `:host {
@@ -262,7 +262,7 @@ input:focus {
 }
 `;
 
-export interface JalaliDatePickerOptions {
+export interface PersianDatePickerElementOptions {
   /** Color for selected dates and highlights */
   primaryColor?: string;
   /** Text direction (true for RTL, false for LTR) */
@@ -275,7 +275,7 @@ export interface JalaliDatePickerOptions {
   cssVariables?: Record<string, string>;
 }
 
-export interface JalaliDateChangeEvent extends CustomEvent {
+export interface PersianDateChangeEvent extends CustomEvent {
   detail: {
     jalali: [number, number, number];
     gregorian: [number, number, number];
@@ -283,25 +283,25 @@ export interface JalaliDateChangeEvent extends CustomEvent {
 }
 
 /**
- * Persian Date Picker Element Web Component
+ * Jalali Date Picker Web Component
  * 
  * A customizable date picker that follows the Jalali (Persian) calendar.
  * 
  * Usage:
  * ```html
  * <!-- Basic usage -->
- * <jalali-date-picker></jalali-date-picker>
+ * <persian-datepicker-element></persian-datepicker-element>
  * 
  * <!-- With attributes -->
- * <jalali-date-picker placeholder="انتخاب تاریخ" format="YYYY/MM/DD"></jalali-date-picker>
+ * <persian-datepicker-element placeholder="انتخاب تاریخ" format="YYYY/MM/DD"></persian-datepicker-element>
  * 
  * <!-- With styling customization -->
- * <jalali-date-picker style="--jdp-primary: #3b82f6; --jdp-font-family: 'Vazir', sans-serif;"></jalali-date-picker>
+ * <persian-datepicker-element style="--jdp-primary: #3b82f6; --jdp-font-family: 'Vazir', sans-serif;"></persian-datepicker-element>
  * ```
  * 
- * @element jalali-date-picker
+ * @element persian-datepicker-element
  */
-export class JalaliDatePicker extends HTMLElement {
+export class PersianDatePickerElement extends HTMLElement {
   private input: HTMLInputElement;
   private calendar: HTMLDivElement;
   private monthYearLabel: HTMLSpanElement;
@@ -311,7 +311,7 @@ export class JalaliDatePicker extends HTMLElement {
   private jalaliMonth: number;
   private jalaliDay: number;
   private selectedDate: [number, number, number] | null;
-  private options: JalaliDatePickerOptions;
+  private options: PersianDatePickerElementOptions;
 
   static get observedAttributes() {
     return [
@@ -329,7 +329,7 @@ export class JalaliDatePicker extends HTMLElement {
     ];
   }
 
-  constructor(options: JalaliDatePickerOptions = {}) {
+  constructor(options: PersianDatePickerElementOptions = {}) {
     super();
     this.options = options;
     const shadow = this.attachShadow({ mode: "open" });
@@ -360,7 +360,7 @@ export class JalaliDatePicker extends HTMLElement {
 
     // Get today's Jalali date
     const today = new Date();
-    const jalaliToday = JalaliDate.gregorianToJalali(
+    const jalaliToday = PersianDate.gregorianToJalali(
       today.getFullYear(),
       today.getMonth() + 1,
       today.getDate()
@@ -480,18 +480,18 @@ export class JalaliDatePicker extends HTMLElement {
 
   renderCalendar() {
     // Display month and year in Persian format
-    this.monthYearLabel.textContent = `${JalaliDate.getMonthName(this.jalaliMonth)} ${this.jalaliYear}`;
+    this.monthYearLabel.textContent = `${PersianDate.getMonthName(this.jalaliMonth)} ${this.jalaliYear}`;
 
     // Clear previous days
     this.daysContainer.innerHTML = "";
 
     // Get first day of month and number of days
-    const firstDayOfMonth = JalaliDate.getDayOfWeek(this.jalaliYear, this.jalaliMonth, 1);
-    const daysInMonth = JalaliDate.getDaysInMonth(this.jalaliYear, this.jalaliMonth);
+    const firstDayOfMonth = PersianDate.getDayOfWeek(this.jalaliYear, this.jalaliMonth, 1);
+    const daysInMonth = PersianDate.getDaysInMonth(this.jalaliYear, this.jalaliMonth);
     
     // Get today's date for highlighting
     const today = new Date();
-    const jalaliToday = JalaliDate.gregorianToJalali(
+    const jalaliToday = PersianDate.gregorianToJalali(
       today.getFullYear(), 
       today.getMonth() + 1, 
       today.getDate()
@@ -542,10 +542,10 @@ export class JalaliDatePicker extends HTMLElement {
     this.dispatchEvent(new CustomEvent("change", {
       detail: {
         jalali: this.selectedDate,
-        gregorian: JalaliDate.jalaliToGregorian(this.jalaliYear, this.jalaliMonth, this.jalaliDay)
+        gregorian: PersianDate.jalaliToGregorian(this.jalaliYear, this.jalaliMonth, this.jalaliDay)
       },
       bubbles: true
-    }) as JalaliDateChangeEvent);
+    }) as PersianDateChangeEvent);
     
     this.toggleCalendar();
     this.renderCalendar();

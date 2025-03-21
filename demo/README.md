@@ -1,8 +1,8 @@
-# Persian Date Picker Element Demo | نمایش تقویم تاریخ جلالی
+# Persian Date Picker Element Demo | نمایش تقویم تاریخ شمسی
 
 This directory contains a simple demo of the Persian Date Picker Element component.
 
-این دایرکتوری شامل یک نمایش ساده از کامپوننت تقویم تاریخ جلالی است.
+این دایرکتوری شامل یک نمایش ساده از کامپوننت تقویم تاریخ شمسی است.
 
 ## Features Demonstrated | ویژگی‌های نمایش داده شده
 
