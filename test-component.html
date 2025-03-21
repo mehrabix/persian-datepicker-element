@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Test</title>
+  <style>
+    body {
+      font-family: Tahoma, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 2rem;
+      margin: 0;
+      direction: rtl;
+    }
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: #f8fafc;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .component-test {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+    h2 {
+      margin-top: 0;
+    }
+    .debug-info {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #f1f5f9;
+      border-radius: 8px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>Component Test</h1>
+    
+    <div class="component-test">
+      <h2>1. Script Registration Check</h2>
+      <div id="registration-status">Checking registration status...</div>
+    </div>
+    
+    <div class="component-test">
+      <h2>2. Manual Creation</h2>
+      <div id="manual-creation">
+        <button id="create-datepicker">Create Date Picker</button>
+        <button id="create-timepicker">Create Time Picker</button>
+        <div id="manual-components"></div>
+      </div>
+    </div>
+    
+    <div class="component-test">
+      <h2>3. HTML Declaration</h2>
+      <div>
+        <h3>Date Picker:</h3>
+        <persian-datepicker-element id="html-datepicker"></persian-datepicker-element>
+      </div>
+      <div style="margin-top: 1rem;">
+        <h3>Time Picker:</h3>
+        <persian-timepicker-element id="html-timepicker"></persian-timepicker-element>
+      </div>
+    </div>
+    
+    <div class="debug-info">
+      <h3>Debug Information:</h3>
+      <div id="debug-output"></div>
+    </div>
+  </div>
+
+  <!-- Load Components -->
+  <script src="dist/persian-datepicker-element.js"></script>
+  <script src="dist/persian-timepicker-element.js"></script>
+  
+  <script>
+    // Fix for the date picker component - register using the correct name with space
+    (function() {
+      try {
+        // Check if the component is correctly registered first
+        if (!customElements.get('persian-datepicker-element')) {
+          console.log('Trying to register date picker component with the correct name...');
+          
+          // Check for the correct variable name (with space at the end)
+          const DatePickerClass = window["PersianDatepickerElement "];
+          
+          if (DatePickerClass) {
+            console.log('Found datepicker class with name "PersianDatepickerElement " (note the space)');
+            customElements.define('persian-datepicker-element', DatePickerClass);
+            console.log('Successfully registered persian-datepicker-element');
+          } else {
+            console.error('Could not find datepicker class in window object with expected name');
+            
+            // Try to find any related classes as a fallback
+            const persianProps = Object.keys(window).filter(key => 
+              key.toLowerCase().includes('persian') || 
+              key.toLowerCase().includes('datepicker')
+            );
+            
+            if (persianProps.length > 0) {
+              console.log('Found related properties:', persianProps);
+              
+              // Try the constructor properties
+              for (const prop of persianProps) {
+                if (typeof window[prop] === 'function') {
+                  try {
+                    console.log(`Trying to register with ${prop}`);
+                    customElements.define('persian-datepicker-element', window[prop]);
+                    console.log(`Successfully registered with ${prop}`);
+                    break;
+                  } catch (e) {
+                    console.log(`Failed to register with ${prop}:`, e.message);
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error in date picker registration fix:', err);
+      }
+    })();
+    
+    // Debug logging function
+    function log(message) {
+      const debugOutput = document.getElementById('debug-output');
+      const entry = document.createElement('div');
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      debugOutput.appendChild(entry);
+      console.log(message);
+    }
+    
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', () => {
+      log('DOM loaded');
+      
+      // Check registration
+      setTimeout(() => {
+        const datePickerDefined = customElements.get('persian-datepicker-element') !== undefined;
+        const timePickerDefined = customElements.get('persian-timepicker-element') !== undefined;
+        
+        document.getElementById('registration-status').innerHTML = `
+          <div>Date Picker Registered: ${datePickerDefined ? '✅ Yes' : '❌ No'}</div>
+          <div>Time Picker Registered: ${timePickerDefined ? '✅ Yes' : '❌ No'}</div>
+        `;
+        
+        log(`Date Picker registered: ${datePickerDefined}`);
+        log(`Time Picker registered: ${timePickerDefined}`);
+        
+        // Try to register manually if not defined
+        if (!datePickerDefined) {
+          try {
+            // Try to get the class from the global object
+            const possibleNames = [
+              'PersianDatePickerElement',
+              'PersianDatepickerElement',
+              'window.PersianDatePickerElement',
+              'window.PersianDatepickerElement',
+              'window["PersianDatepickerElement "]' // Note the space at the end
+            ];
+            
+            log('Trying to find date picker class...');
+            for (const name of possibleNames) {
+              try {
+                const ClassRef = eval(name);
+                if (ClassRef) {
+                  log(`Found class with name: ${name}`);
+                  customElements.define('persian-datepicker-element', ClassRef);
+                  log('Manually registered date picker');
+                  break;
+                }
+              } catch (err) {
+                log(`Not found with name: ${name}`);
+              }
+            }
+            
+            // If still not registered, try one more approach with direct window property access
+            if (!customElements.get('persian-datepicker-element')) {
+              log('Trying direct window property access...');
+              const directClass = window["PersianDatepickerElement "];
+              if (directClass) {
+                log('Found class with direct window property access');
+                customElements.define('persian-datepicker-element', directClass);
+                log('Registered date picker with direct access');
+              }
+            }
+          } catch (err) {
+            log(`Error manually registering date picker: ${err.message}`);
+          }
+        }
+      }, 500);
+      
+      // Manual creation buttons
+      document.getElementById('create-datepicker').addEventListener('click', () => {
+        try {
+          const DatePickerClass = customElements.get('persian-datepicker-element');
+          if (DatePickerClass) {
+            const picker = new DatePickerClass();
+            document.getElementById('manual-components').appendChild(picker);
+            log('Date picker manually created');
+          } else {
+            log('Date picker not registered, cannot create');
+          }
+        } catch (err) {
+          log(`Error creating date picker: ${err.message}`);
+        }
+      });
+      
+      document.getElementById('create-timepicker').addEventListener('click', () => {
+        try {
+          const TimePickerClass = customElements.get('persian-timepicker-element');
+          if (TimePickerClass) {
+            const picker = new TimePickerClass();
+            document.getElementById('manual-components').appendChild(picker);
+            log('Time picker manually created');
+          } else {
+            log('Time picker not registered, cannot create');
+          }
+        } catch (err) {
+          log(`Error creating time picker: ${err.message}`);
+        }
+      });
+    });
+  </script>
+</body>
+</html> 

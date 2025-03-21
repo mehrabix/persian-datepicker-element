@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Persian Time Picker Test</title>
+  <style>
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+  </style>
+  <script type="module" src="../dist/persian-timepicker-element.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const timePicker = document.getElementById('time-picker');
+      const output = document.getElementById('output');
+      
+      timePicker.addEventListener('timeChange', (e) => {
+        console.log('Time changed:', e.detail);
+        output.textContent = `Selected time: ${e.detail.timeString}`;
+      });
+      
+      document.getElementById('set-time-btn').addEventListener('click', () => {
+        timePicker.setValue(14, 30, 0);
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Simple Time Picker Test</h1>
+  
+  <persian-timepicker-element id="time-picker" placeholder="انتخاب زمان"></persian-timepicker-element>
+  
+  <div id="output" style="margin-top: 10px;"></div>
+  
+  <button id="set-time-btn">Set to 14:30</button>
+</body>
+</html> 

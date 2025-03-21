@@ -1,30 +1,14 @@
-// Import the custom element class
-import { PersianDatePickerElement } from './persian-datepicker-element';
-// Import the utility class
-import { PersianDate } from './persian-date';
-// Import types from types directory
-import type { 
-  PersianDatePickerElementOptions, 
-  PersianDateChangeEvent,
-  DateTuple,
-  CSSVariableKey,
-  CSSVariableMap
-} from './types';
+/**
+ * Persian Web Components Collection
+ * A collection of web components for Persian (Jalali) UI elements
+ */
 
-// Define the custom element
-if (!customElements.get('persian-datepicker-element')) {
-  customElements.define('persian-datepicker-element', PersianDatePickerElement);
-}
+// Export utility classes
+export * from './utils/persian-date';
 
-// Export the classes and types
-export { PersianDatePickerElement, PersianDate };
-export type { 
-  PersianDatePickerElementOptions, 
-  PersianDateChangeEvent,
-  DateTuple,
-  CSSVariableKey,
-  CSSVariableMap
-};
+// Export all components
+export * from './components/persian-datepicker-element';
+export * from './components/persian-timepicker-element';
 
-// Default export for convenient usage
-export default PersianDatePickerElement; 
+// For backward compatibility, re-export the date picker as default
+export { PersianDatePickerElement as default } from './components/persian-datepicker-element'; 

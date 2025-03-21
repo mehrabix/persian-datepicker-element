@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Persian Date Picker Element - Test All Versions</title>
+  <title>Persian UI Components - Date Picker & Time Picker</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-      text-align: center;
+      font-family: Tahoma, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #f9fafb;
       color: #374151;
       padding: 2rem;
@@ -15,34 +14,99 @@
       direction: rtl;
     }
 
-    h1, h2 {
+    h1, h2, h3 {
       font-weight: 600;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #0891b2;
     }
 
     h2 {
       margin-bottom: 1rem;
       margin-top: 2rem;
+      color: #0e7490;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+
+    h3 {
+      margin-top: 1.5rem;
+      color: #0369a1;
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 2rem;
     }
 
-    .versions {
-      display: flex;
-      justify-content: space-between;
+    .component-section {
+      margin-bottom: 3rem;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      padding: 2rem;
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 2rem;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .example-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      background-color: #f8fafc;
+    }
+
+    .example-title {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      color: #0e7490;
+    }
+
+    .example-description {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+
+    .code-sample {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    .version-section {
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .versions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
     }
 
     .version {
-      flex: 1;
-      padding: 1.5rem;
+      padding: 1rem;
       border-radius: 8px;
       background-color: white;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .file-info {
@@ -51,76 +115,623 @@
       margin-bottom: 1rem;
       text-align: left;
     }
+    
+    .custom-styles {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #f1f5f9;
+      border-radius: 8px;
+    }
+    
+    .custom-datepicker {
+      --jdp-primary: #6d28d9;
+      --jdp-primary-hover: #5b21b6;
+      --jdp-primary-foreground: #ffffff;
+      --jdp-background: #ffffff;
+      --jdp-foreground: #1e293b;
+      --jdp-border-radius: 12px;
+    }
+    
+    .custom-timepicker {
+      --jtp-primary: #e11d48;
+      --jtp-primary-hover: #be123c;
+      --jtp-primary-foreground: #ffffff;
+      --jtp-background: #ffffff;
+      --jtp-foreground: #1e293b;
+      --jtp-border-radius: 12px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>تقویم شمسی
-</h1>
-    <p>این صفحه برای تست همه نسخه های کامپوننت تقویم شمسی می‌باشد.</p>
+    <h1>کامپوننت‌های UI فارسی</h1>
+    <p style="text-align: center">مجموعه ای از کامپوننت‌های وب با پشتیبانی از تقویم شمسی (جلالی)</p>
     
-    <div class="versions">
-      <div class="version">
-        <h2>نسخه توسعه</h2>
-        <div class="file-info">dist/persian-datepicker-element.js (17.39 KB)</div>
-        <persian-datepicker-element id="dev-picker"></persian-datepicker-element>
-      </div>
+    <!-- Date Picker Section -->
+    <div class="component-section">
+      <h2>تقویم انتخاب تاریخ شمسی</h2>
+      <p>کامپوننت انتخاب تاریخ شمسی قابل تنظیم، با امکان نمایش تقویم جلالی</p>
       
-      <div class="version">
-        <h2>نسخه تولید (UMD)</h2>
-        <div class="file-info">dist/persian-datepicker-element.min.js (9.98 KB)</div>
-        <persian-datepicker-element id="prod-picker"></persian-datepicker-element>
-      </div>
-      
-      <div class="version">
-        <h2>نسخه ESM</h2>
-        <div class="file-info">dist/persian-datepicker-element.esm.js (9.98 KB)</div>
-        <persian-datepicker-element id="esm-picker"></persian-datepicker-element>
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="example-title">استفاده پایه</div>
+          <div class="example-description">پیکربندی پیش‌فرض بدون تنظیمات اضافی</div>
+          <persian-datepicker-element id="basic-datepicker"></persian-datepicker-element>
+          <div class="code-sample">
+&lt;persian-datepicker-element&gt;&lt;/persian-datepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">تنظیم جایگزین</div>
+          <div class="example-description">استفاده از جایگزین (placeholder) سفارشی</div>
+          <persian-datepicker-element 
+            id="placeholder-datepicker"
+            placeholder="تاریخ تولد">
+          </persian-datepicker-element>
+          <div class="code-sample">
+&lt;persian-datepicker-element 
+  placeholder="تاریخ تولد"&gt;
+&lt;/persian-datepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">فرمت نمایش تاریخ</div>
+          <div class="example-description">تغییر نحوه نمایش تاریخ (YYYY/MM/DD)</div>
+          <persian-datepicker-element 
+            id="format-datepicker"
+            format="YYYY/MM/DD">
+          </persian-datepicker-element>
+          <div class="code-sample">
+&lt;persian-datepicker-element 
+  format="YYYY/MM/DD"&gt;
+&lt;/persian-datepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">مقدار پیش‌فرض</div>
+          <div class="example-description">تنظیم یک تاریخ به عنوان مقدار پیش‌فرض</div>
+          <persian-datepicker-element 
+            id="default-value-datepicker"
+            value="1402/04/24">
+          </persian-datepicker-element>
+          <div class="code-sample">
+&lt;persian-datepicker-element 
+  value="1402/04/24"&gt;
+&lt;/persian-datepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">محدودیت تاریخ</div>
+          <div class="example-description">تعیین حداقل و حداکثر تاریخ قابل انتخاب</div>
+          <persian-datepicker-element 
+            id="min-max-datepicker"
+            min-date="1400/01/01"
+            max-date="1402/12/29">
+          </persian-datepicker-element>
+          <div class="code-sample">
+&lt;persian-datepicker-element 
+  min-date="1400/01/01"
+  max-date="1402/12/29"&gt;
+&lt;/persian-datepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">غیرفعال</div>
+          <div class="example-description">نمایش انتخابگر تاریخ در حالت غیرفعال</div>
+          <persian-datepicker-element 
+            id="disabled-datepicker"
+            disabled>
+          </persian-datepicker-element>
+          <div class="code-sample">
+&lt;persian-datepicker-element 
+  disabled&gt;
+&lt;/persian-datepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">سفارشی‌سازی استایل</div>
+          <div class="example-description">تغییر رنگ‌ها و گوشه‌های انتخابگر تاریخ</div>
+          <persian-datepicker-element 
+            id="custom-style-datepicker"
+            class="custom-datepicker"
+            placeholder="انتخاب با استایل سفارشی">
+          </persian-datepicker-element>
+          <div class="code-sample">
+&lt;style&gt;
+  .custom-datepicker {
+    --jdp-primary: #6d28d9;
+    --jdp-primary-hover: #5b21b6;
+    --jdp-primary-foreground: #ffffff;
+    --jdp-background: #ffffff;
+    --jdp-foreground: #1e293b;
+    --jdp-border-radius: 12px;
+  }
+&lt;/style&gt;
+
+&lt;persian-datepicker-element 
+  class="custom-datepicker"
+  placeholder="انتخاب با استایل سفارشی"&gt;
+&lt;/persian-datepicker-element&gt;</div>
+        </div>
       </div>
     </div>
+    
+    <!-- Time Picker Section -->
+    <div class="component-section">
+      <h2>انتخابگر زمان</h2>
+      <p>کامپوننت انتخاب زمان با پشتیبانی از فرمت 12 و 24 ساعته</p>
+      
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="example-title">استفاده پایه</div>
+          <div class="example-description">پیکربندی پیش‌فرض بدون تنظیمات اضافی</div>
+          <persian-timepicker-element id="basic-timepicker"></persian-timepicker-element>
+          <div class="code-sample">
+&lt;persian-timepicker-element&gt;&lt;/persian-timepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">تنظیم جایگزین</div>
+          <div class="example-description">استفاده از جایگزین (placeholder) سفارشی</div>
+          <persian-timepicker-element 
+            id="placeholder-timepicker"
+            placeholder="زمان جلسه">
+          </persian-timepicker-element>
+          <div class="code-sample">
+&lt;persian-timepicker-element 
+  placeholder="زمان جلسه"&gt;
+&lt;/persian-timepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">فرمت 24 ساعته</div>
+          <div class="example-description">نمایش زمان در فرمت 24 ساعته</div>
+          <persian-timepicker-element 
+            id="24hour-timepicker"
+            use-24-hour-format="true">
+          </persian-timepicker-element>
+          <div class="code-sample">
+&lt;persian-timepicker-element 
+  use-24-hour-format="true"&gt;
+&lt;/persian-timepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">نمایش ثانیه</div>
+          <div class="example-description">فعال کردن نمایش و انتخاب ثانیه</div>
+          <persian-timepicker-element 
+            id="seconds-timepicker"
+            show-seconds="true">
+          </persian-timepicker-element>
+          <div class="code-sample">
+&lt;persian-timepicker-element 
+  show-seconds="true"&gt;
+&lt;/persian-timepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">مقدار پیش‌فرض</div>
+          <div class="example-description">تنظیم یک زمان به عنوان مقدار پیش‌فرض</div>
+          <persian-timepicker-element 
+            id="default-value-timepicker"
+            default-time="14:30">
+          </persian-timepicker-element>
+          <div class="code-sample">
+&lt;persian-timepicker-element 
+  default-time="14:30"&gt;
+&lt;/persian-timepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">غیرفعال</div>
+          <div class="example-description">نمایش انتخابگر زمان در حالت غیرفعال</div>
+          <persian-timepicker-element 
+            id="disabled-timepicker"
+            disabled>
+          </persian-timepicker-element>
+          <div class="code-sample">
+&lt;persian-timepicker-element 
+  disabled&gt;
+&lt;/persian-timepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">سفارشی‌سازی استایل</div>
+          <div class="example-description">تغییر رنگ‌ها و گوشه‌های انتخابگر زمان</div>
+          <persian-timepicker-element 
+            id="custom-style-timepicker"
+            class="custom-timepicker"
+            placeholder="انتخاب با استایل سفارشی">
+          </persian-timepicker-element>
+          <div class="code-sample">
+&lt;style&gt;
+  .custom-timepicker {
+    --jtp-primary: #e11d48;
+    --jtp-primary-hover: #be123c;
+    --jtp-primary-foreground: #ffffff;
+    --jtp-background: #ffffff;
+    --jtp-foreground: #1e293b;
+    --jtp-border-radius: 12px;
+  }
+&lt;/style&gt;
 
-    <div style="margin-top: 2rem;">
-      <button id="switch-script" onclick="toggleScript()">بارگذاری با نسخه UMD تولید</button>
+&lt;persian-timepicker-element 
+  class="custom-timepicker"
+  placeholder="انتخاب با استایل سفارشی"&gt;
+&lt;/persian-timepicker-element&gt;</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">ترکیب ویژگی‌ها</div>
+          <div class="example-description">استفاده از چندین ویژگی همزمان</div>
+          <persian-timepicker-element 
+            id="combined-timepicker"
+            use-24-hour-format="true" 
+            show-seconds="true"
+            default-time="15:45:30"
+            placeholder="انتخاب دقیق زمان">
+          </persian-timepicker-element>
+          <div class="code-sample">
+&lt;persian-timepicker-element 
+  use-24-hour-format="true" 
+  show-seconds="true"
+  default-time="15:45:30"
+  placeholder="انتخاب دقیق زمان"&gt;
+&lt;/persian-timepicker-element&gt;</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- JavaScript API Section -->
+    <div class="component-section">
+      <h2>استفاده از API در جاوااسکریپت</h2>
+      <p>دسترسی و کار با کامپوننت‌ها از طریق جاوااسکریپت</p>
+      
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="example-title">دریافت رویدادها</div>
+          <div class="example-description">گوش دادن به رویدادهای تغییر تاریخ و زمان</div>
+          <persian-datepicker-element id="events-datepicker"></persian-datepicker-element>
+          <p id="date-event-output" style="color: #0891b2; margin-top: 10px; font-size: 0.9rem;">رویداد: منتظر انتخاب تاریخ...</p>
+          
+          <persian-timepicker-element id="events-timepicker" style="margin-top: 15px;"></persian-timepicker-element>
+          <p id="time-event-output" style="color: #0891b2; margin-top: 10px; font-size: 0.9rem;">رویداد: منتظر انتخاب زمان...</p>
+          
+          <div class="code-sample">
+const datePicker = document.querySelector('#events-datepicker');
+datePicker.addEventListener('change', (e) => {
+  console.log('تاریخ انتخاب شده (شمسی):', e.detail.jalali);
+  console.log('تاریخ انتخاب شده (میلادی):', e.detail.gregorian);
+});
+
+const timePicker = document.querySelector('#events-timepicker');
+timePicker.addEventListener('timeChange', (e) => {
+  console.log('زمان انتخاب شده:', e.detail.timeString);
+  console.log('ساعت:', e.detail.hour);
+  console.log('دقیقه:', e.detail.minute);
+});</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">متدهای API برای تاریخ</div>
+          <div class="example-description">استفاده از متدهای API برای کار با تقویم شمسی</div>
+          <persian-datepicker-element id="api-datepicker"></persian-datepicker-element>
+          <div style="margin-top: 15px;">
+            <button id="get-date-btn" style="margin-right: 5px;">دریافت تاریخ</button>
+            <button id="set-date-btn" style="margin-right: 5px;">تنظیم به امروز</button>
+            <button id="clear-date-btn">پاک کردن</button>
+          </div>
+          <div class="code-sample">
+const apiDatePicker = document.querySelector('#api-datepicker');
+
+// دریافت تاریخ انتخاب شده
+const getDateValue = () => {
+  const value = apiDatePicker.getValue();
+  alert(JSON.stringify(value, null, 2));
+};
+
+// تنظیم تاریخ به امروز
+const setDateToToday = () => {
+  const today = new Date();
+  apiDatePicker.setValue(today);
+};
+
+// پاک کردن تاریخ
+const clearDate = () => {
+  apiDatePicker.clear();
+};</div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-title">متدهای API برای زمان</div>
+          <div class="example-description">استفاده از متدهای API برای کار با انتخابگر زمان</div>
+          <persian-timepicker-element id="api-timepicker"></persian-timepicker-element>
+          <div style="margin-top: 15px;">
+            <button id="get-time-btn" style="margin-right: 5px;">دریافت زمان</button>
+            <button id="set-time-btn" style="margin-right: 5px;">تنظیم به 14:30</button>
+            <button id="clear-time-btn">پاک کردن</button>
+          </div>
+          <div class="code-sample">
+const apiTimePicker = document.querySelector('#api-timepicker');
+
+// دریافت زمان انتخاب شده
+const getTimeValue = () => {
+  const value = apiTimePicker.getValue();
+  alert(JSON.stringify(value, null, 2));
+};
+
+// تنظیم زمان به 14:30
+const setTimeTo1430 = () => {
+  apiTimePicker.setValue(14, 30, 0);
+};
+
+// پاک کردن زمان
+const clearTime = () => {
+  apiTimePicker.clear();
+};</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Versions Section -->
+    <div class="version-section">
+      <h2>نسخه‌های کامپوننت</h2>
+      <p>این صفحه با استفاده از نسخه‌های مختلف کامپوننت‌ها بارگذاری شده است.</p>
+      
+      <div class="versions">
+        <div class="version">
+          <h3>انتخابگر تاریخ شمسی</h3>
+          <div class="file-info">dist/persian-datepicker-element.js (22.58 KB)</div>
+          <div class="file-info">dist/persian-datepicker-element.min.js (13.78 KB)</div>
+          <div class="file-info">dist/persian-datepicker-element.esm.js (13.78 KB)</div>
+        </div>
+        
+        <div class="version">
+          <h3>انتخابگر زمان</h3>
+          <div class="file-info">dist/persian-timepicker-element.js (24.21 KB)</div>
+          <div class="file-info">dist/persian-timepicker-element.min.js (14.13 KB)</div>
+          <div class="file-info">dist/persian-timepicker-element.esm.js (14.13 KB)</div>
+        </div>
+        
+        <div class="version">
+          <h3>توضیحات فنی</h3>
+          <div>تمامی کامپوننت‌ها به صورت Web Components پیاده‌سازی شده‌اند.</div>
+          <div>قابل استفاده در تمام فریمورک‌های جاوااسکریپت</div>
+          <div>با پشتیبانی مرورگرهای مدرن</div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 2rem;">
+        <button id="switch-script">تغییر به نسخه توسعه</button>
+      </div>
     </div>
   </div>
 
-  <!-- Start with development version -->
+  <!-- Load Components -->
   <script src="dist/persian-datepicker-element.js" type="text/javascript"></script>
+  <script src="dist/persian-timepicker-element.js" type="text/javascript"></script>
   
   <script>
-    // Function to toggle between script versions for testing
-    function toggleScript() {
-      const button = document.getElementById('switch-script');
-      const currentScript = document.querySelector('script[src^="dist/persian-datepicker-element"]');
-      const currentSrc = currentScript.getAttribute('src');
+    // Based on debugging, we found the component is exported with a specific name
+    // This script registers the datepicker from the correct global variable name
+    (function() {
+      console.log('Attempting to register datepicker from window["PersianDatepickerElement "]');
       
-      let newSrc;
-      if (currentSrc.includes('min.js')) {
-        newSrc = 'dist/persian-datepicker-element.js';
-        button.textContent = 'بارگذاری با نسخه UMD تولید';
-      } else {
-        newSrc = 'dist/persian-datepicker-element.min.js';
-        button.textContent = 'بارگذاری با نسخه توسعه';
+      try {
+        // Check if the component is correctly registered first
+        if (!customElements.get('persian-datepicker-element')) {
+          // Check if we can find the component class in the window object
+          // The space in the name is intentional, it's how Webpack exports it
+          const DatePickerClass = window["PersianDatepickerElement "];
+          
+          if (DatePickerClass) {
+            console.log('Found datepicker class with name "PersianDatepickerElement " (note the space)');
+            customElements.define('persian-datepicker-element', DatePickerClass);
+            console.log('Successfully registered persian-datepicker-element');
+          } else {
+            console.error('Could not find datepicker class in window object');
+            
+            // Try to find any related classes
+            const persianProps = Object.keys(window).filter(key => 
+              key.toLowerCase().includes('persian') || 
+              key.toLowerCase().includes('datepicker')
+            );
+            
+            if (persianProps.length > 0) {
+              console.log('Found related properties:', persianProps);
+              
+              // Try the first one that looks like a class
+              for (const prop of persianProps) {
+                if (typeof window[prop] === 'function') {
+                  try {
+                    console.log(`Trying to register with ${prop}`);
+                    customElements.define('persian-datepicker-element', window[prop]);
+                    console.log(`Successfully registered with ${prop}`);
+                    break;
+                  } catch (e) {
+                    console.log(`Failed to register with ${prop}:`, e.message);
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error registering datepicker:', err);
+      }
+    })();
+    
+    // Force component registration
+    (function() {
+      // Define the custom element directly
+      try {
+        // For the datepicker
+        if (!customElements.get('persian-datepicker-element')) {
+          console.log('Date picker not registered, attempting manual registration');
+          
+          // Try different possible locations for the class
+          const datepickerClass = 
+            window.PersianDatepickerElement || 
+            window.PersianDatePickerElement || 
+            window.PersianDatepickerElement_ || 
+            window["PersianDatepickerElement "];  // Note the space in the name - webpack issue
+          
+          if (datepickerClass) {
+            console.log('Found date picker class, registering manually');
+            customElements.define('persian-datepicker-element', datepickerClass);
+            console.log('Date picker registered manually');
+          } else {
+            console.error('Could not find date picker class in window object');
+            console.log('Available window properties:', Object.keys(window).filter(k => k.includes('Persian')));
+          }
+        }
+      } catch (err) {
+        console.error('Error registering date picker:', err);
+      }
+    })();
+    
+    // Ensure components are registered
+    (function() {
+      // Check if we can access the exported classes
+      try {
+        // For UMD builds, the components may be attached to window
+        const datepickerClass = window.PersianDatepickerElement || window.PersianDatePickerElement;
+        const timepickerClass = window.PersianTimepickerElement || window.PersianTimePickerElement;
+        
+        console.log('Date picker class found in window:', !!datepickerClass);
+        console.log('Time picker class found in window:', !!timepickerClass);
+        
+        // Register components if they're not already registered
+        if (datepickerClass && !customElements.get('persian-datepicker-element')) {
+          console.log('Manually registering date picker element');
+          customElements.define('persian-datepicker-element', datepickerClass);
+        }
+        
+        if (timepickerClass && !customElements.get('persian-timepicker-element')) {
+          console.log('Manually registering time picker element');
+          customElements.define('persian-timepicker-element', timepickerClass);
+        }
+      } catch (err) {
+        console.error('Error registering components:', err);
+      }
+    })();
+    
+    // Debug info section
+    console.log('Debug info:');
+    console.log('Date picker defined:', customElements.get('persian-datepicker-element') !== undefined);
+    console.log('Time picker defined:', customElements.get('persian-timepicker-element') !== undefined);
+    
+    // Create a debug output element
+    const debugDiv = document.createElement('div');
+    debugDiv.style.padding = '1rem';
+    debugDiv.style.margin = '1rem 0';
+    debugDiv.style.backgroundColor = '#f87171';
+    debugDiv.style.color = 'white';
+    debugDiv.style.borderRadius = '8px';
+    debugDiv.innerHTML = `
+      <h3>اطلاعات رفع اشکال</h3>
+      <p id="debug-date-picker">وضعیت تقویم تاریخ: در حال بررسی...</p>
+      <p id="debug-time-picker">وضعیت انتخابگر زمان: در حال بررسی...</p>
+      <div id="debug-errors"></div>
+    `;
+    document.querySelector('.container').prepend(debugDiv);
+    
+    // Check component registration
+    setTimeout(() => {
+      document.getElementById('debug-date-picker').textContent = 
+        `وضعیت تقویم تاریخ: ${customElements.get('persian-datepicker-element') ? 'ثبت شده' : 'ثبت نشده!'}`;
+      document.getElementById('debug-time-picker').textContent = 
+        `وضعیت انتخابگر زمان: ${customElements.get('persian-timepicker-element') ? 'ثبت شده' : 'ثبت نشده!'}`;
+      
+      // Try to manually instantiate components
+      try {
+        const datepicker = new (customElements.get('persian-datepicker-element'))();
+        const timepicker = new (customElements.get('persian-timepicker-element'))();
+        document.getElementById('debug-errors').innerHTML += '<p style="color: #10b981">نمونه‌سازی دستی: موفق</p>';
+      } catch (err) {
+        document.getElementById('debug-errors').innerHTML += 
+          `<p>خطا در نمونه‌سازی دستی: ${err.message}</p>`;
+      }
+    }, 500);
+
+    // Event handling for date picker
+    document.querySelector('#events-datepicker').addEventListener('change', (e) => {
+      document.querySelector('#date-event-output').textContent = 
+        `رویداد: تاریخ ${e.detail.jalali.join('/')} انتخاب شد`;
+    });
+    
+    // Event handling for time picker
+    document.querySelector('#events-timepicker').addEventListener('timeChange', (e) => {
+      document.querySelector('#time-event-output').textContent = 
+        `رویداد: زمان ${e.detail.timeString} انتخاب شد`;
+    });
+    
+    // Date API example buttons
+    document.querySelector('#get-date-btn').addEventListener('click', () => {
+      const value = document.querySelector('#api-datepicker').getValue();
+      alert(`تاریخ شمسی: ${value.jalali.join('/')}\nتاریخ میلادی: ${value.gregorian.join('/')}`);
+    });
+    
+    document.querySelector('#set-date-btn').addEventListener('click', () => {
+      const today = new Date();
+      document.querySelector('#api-datepicker').setValue(today);
+    });
+    
+    document.querySelector('#clear-date-btn').addEventListener('click', () => {
+      document.querySelector('#api-datepicker').clear();
+    });
+    
+    // Time API example buttons
+    document.querySelector('#get-time-btn').addEventListener('click', () => {
+      const value = document.querySelector('#api-timepicker').getValue();
+      alert(`ساعت: ${value.hour}\nدقیقه: ${value.minute}\nثانیه: ${value.second}\nقالب: ${value.isAM ? 'ق.ظ' : 'ب.ظ'}`);
+    });
+    
+    document.querySelector('#set-time-btn').addEventListener('click', () => {
+      document.querySelector('#api-timepicker').setValue(14, 30, 0);
+    });
+    
+    document.querySelector('#clear-time-btn').addEventListener('click', () => {
+      document.querySelector('#api-timepicker').clear();
+    });
+    
+    // Script toggler
+    document.querySelector('#switch-script').addEventListener('click', () => {
+      let usingDevelopment = true;
+      const button = document.querySelector('#switch-script');
+      
+      // Check current scripts
+      const datePickerScript = document.querySelector('script[src*="persian-datepicker-element"]');
+      if (datePickerScript.src.includes('min.js')) {
+        usingDevelopment = false;
       }
       
-      // Remove current script
-      currentScript.remove();
+      // Remove current scripts
+      document.querySelectorAll('script[src*="persian-datepicker-element"], script[src*="persian-timepicker-element"]')
+        .forEach(script => script.remove());
       
-      // Add new script
-      const newScript = document.createElement('script');
-      newScript.src = newSrc;
-      newScript.type = 'text/javascript';
-      document.body.appendChild(newScript);
+      // Add new scripts
+      if (usingDevelopment) {
+        // Switch to production
+        addScript('dist/persian-datepicker-element.min.js');
+        addScript('dist/persian-timepicker-element.min.js');
+        button.textContent = 'تغییر به نسخه توسعه';
+      } else {
+        // Switch to development
+        addScript('dist/persian-datepicker-element.js');
+        addScript('dist/persian-timepicker-element.js');
+        button.textContent = 'تغییر به نسخه تولید';
+      }
       
-      // Clear all pickers
-      document.querySelectorAll('persian-datepicker-element').forEach(picker => {
-        picker.innerHTML = '';
-      });
-      
-      // Reload page after a short delay
-      setTimeout(() => {
-        location.reload();
-      }, 1000);
+      // Reload page after scripts are loaded
+      setTimeout(() => location.reload(), 500);
+    });
+    
+    function addScript(src) {
+      const script = document.createElement('script');
+      script.src = src;
+      script.type = 'text/javascript';
+      document.body.appendChild(script);
     }
   </script>
 </body>

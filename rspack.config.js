@@ -8,28 +8,71 @@ const shouldMinify = process.env.MINIFY !== 'false';
 const moduleType = process.env.MODULE_TYPE || 'umd';
 const shouldAnalyze = process.env.BUNDLE_ANALYZE === 'true';
 
+// The component that is being built (default to main package)
+const componentName = process.env.COMPONENT_NAME || 'persian-datepicker-element';
+
 // Clean the dist directory if this is the first build step
 if (process.env.CLEAN_DIST === 'true') {
   fs.rmdirSync(path.resolve(__dirname, 'dist'), { recursive: true, force: true });
 }
 
-// Create a clean version of the output filename without any spaces
-const cleanOutputFileName = outputFileName.trim();
+// Create component-specific output filename
+const getOutputFileName = () => {
+  // Format: component-name.min.js or component-name.js
+  const baseFileName = outputFileName.startsWith(componentName) 
+    ? outputFileName 
+    : outputFileName.replace(/^(.*?)(\.min)?\.js$/, `${componentName}$2.js`);
+  
+  return baseFileName.trim(); // Ensure no spaces
+};
+
+// Get the proper entry point based on component name
+const getEntryPoint = () => {
+  // Remove any extra spaces that might be in the component name
+  const cleanComponentName = componentName.trim();
+  
+  if (cleanComponentName === 'persian-datepicker-element') {
+    return './src/index.ts'; // Main package entry point
+  }
+  
+  // Individual component entry points - specific component imports
+  if (cleanComponentName === 'persian-timepicker-element') {
+    console.log('Building the Persian Time Picker component individually');
+    return './src/components/persian-timepicker-element/index.ts';
+  }
+  
+  // Generic component path
+  const componentPath = `./src/components/${cleanComponentName}/index.ts`;
+  
+  // Log for debugging
+  console.log(`Component path: ${componentPath}`);
+  console.log(`Checking if exists: ${path.resolve(__dirname, componentPath)}`);
+  
+  // Verify the component path exists
+  if (!fs.existsSync(path.resolve(__dirname, componentPath))) {
+    console.error(`Error: Component path not found: ${componentPath}`);
+    process.exit(1);
+  }
+  
+  return componentPath;
+};
 
 /**
  * @type {import('@rspack/cli').Configuration}
  */
 const config = {
-  entry: './src/index.ts',
+  entry: getEntryPoint(),
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: cleanOutputFileName,
+    filename: getOutputFileName(),
     // Ensure proper source map file names
     sourceMapFilename: '[file].map',
     library: moduleType === 'module' 
       ? { type: 'module' }
       : {
-          name: 'PersianDatePickerElement',
+          name: componentName.split('-').map(part => 
+            part.charAt(0).toUpperCase() + part.slice(1)
+          ).join(''),
           type: 'umd',
           export: 'default',
         },

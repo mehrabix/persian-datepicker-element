@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persian Time Picker Example</title>
+  <style>
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    
+    h1, h2 {
+      color: #333;
+    }
+    
+    .example-container {
+      margin-bottom: 30px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .code-block {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    
+    .custom-time-picker {
+      --tp-primary-color: #8a2be2;
+      --tp-text-color: #333;
+      --tp-bg-color: #fff;
+      --tp-border-color: #d0d0d0;
+      --tp-border-radius: 8px;
+      --tp-font-size: 14px;
+    }
+    
+    .dark-theme {
+      --tp-primary-color: #bb86fc;
+      --tp-text-color: #e0e0e0;
+      --tp-bg-color: #1e1e1e;
+      --tp-border-color: #444;
+      --tp-hover-bg-color: #333;
+      --tp-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .debug-info {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+  </style>
+  <!-- Load the time picker component before using it -->
+  <script type="module" src="../dist/persian-timepicker-element.js"></script>
+  <script type="module">
+    document.addEventListener('DOMContentLoaded', () => {
+      // Debug info
+      console.log('DOM loaded, setting up time pickers');
+      
+      // Function to log element existence
+      const checkElement = (id) => {
+        const element = document.getElementById(id);
+        console.log(`Element ${id}: ${element ? 'Found' : 'Not found'}`);
+        return element;
+      };
+      
+      // Example of getting time values programmatically
+      const timePicker1 = checkElement('time-picker-1');
+      
+      if (timePicker1) {
+        console.log('Adding event listener to time-picker-1');
+        
+        timePicker1.addEventListener('timeChange', (e) => {
+          console.log('Time changed:', e.detail);
+          const output = document.getElementById('time-output');
+          if (output) {
+            output.textContent = `Selected time: ${e.detail.timeString}`;
+          }
+          
+          // Update debug info
+          const debugInfo = document.getElementById('debug-info');
+          if (debugInfo) {
+            debugInfo.textContent = `Event: timeChange
+Detail: ${JSON.stringify(e.detail, null, 2)}`;
+          }
+        });
+        
+        // Example of setting time programmatically
+        const setTimeBtn = document.getElementById('set-time-btn');
+        if (setTimeBtn) {
+          setTimeBtn.addEventListener('click', () => {
+            console.log('Setting time to 14:30:00');
+            timePicker1.hour = 14;
+            timePicker1.minute = 30;
+            timePicker1.second = 0;
+            timePicker1.updateDisplay();
+          });
+        }
+      } else {
+        console.error('Time picker element with ID "time-picker-1" not found');
+      }
+      
+      // Check other time pickers
+      checkElement('time-picker-2');
+      checkElement('time-picker-3');
+      checkElement('time-picker-4');
+    });
+  </script>
+</head>
+<body>
+  <h1>Persian Time Picker Examples</h1>
+  
+  <div class="example-container">
+    <h2>Default Time Picker</h2>
+    <persian-timepicker-element id="time-picker-1"></persian-timepicker-element>
+    <div id="time-output" style="margin-top: 10px; font-weight: bold;"></div>
+    <button id="set-time-btn">Set to 14:30</button>
+    <div id="debug-info" class="debug-info">No events yet</div>
+    
+    <div class="code-block">
+      <pre><code>&lt;persian-timepicker-element&gt;&lt;/persian-timepicker-element&gt;</code></pre>
+    </div>
+  </div>
+  
+  <div class="example-container">
+    <h2>Custom Configuration</h2>
+    <persian-timepicker-element 
+      id="time-picker-2"
+      class="custom-time-picker"
+      show-seconds="true" 
+      use-24-hour-format="false"
+      hour="10" 
+      minute="15" 
+      second="30"
+      label="انتخاب زمان جلسه"
+      placeholder="لطفا زمان را انتخاب کنید">
+    </persian-timepicker-element>
+    
+    <div class="code-block">
+      <pre><code>&lt;persian-timepicker-element 
+  class="custom-time-picker"
+  show-seconds="true" 
+  use-24-hour-format="false"
+  hour="10" 
+  minute="15" 
+  second="30"
+  label="انتخاب زمان جلسه"
+  placeholder="لطفا زمان را انتخاب کنید"&gt;
+&lt;/persian-timepicker-element&gt;</code></pre>
+    </div>
+  </div>
+  
+  <div class="example-container">
+    <h2>Dark Theme</h2>
+    <persian-timepicker-element 
+      id="time-picker-3"
+      class="dark-theme"
+      show-seconds="true">
+    </persian-timepicker-element>
+    
+    <div class="code-block">
+      <pre><code>&lt;persian-timepicker-element 
+  class="dark-theme"
+  show-seconds="true"&gt;
+&lt;/persian-timepicker-element&gt;</code></pre>
+    </div>
+  </div>
+  
+  <div class="example-container">
+    <h2>Disabled Time Picker</h2>
+    <persian-timepicker-element 
+      id="time-picker-4"
+      disabled="true">
+    </persian-timepicker-element>
+    
+    <div class="code-block">
+      <pre><code>&lt;persian-timepicker-element disabled="true"&gt;&lt;/persian-timepicker-element&gt;</code></pre>
+    </div>
+  </div>
+  
+  <div class="example-container">
+    <h2>JavaScript API</h2>
+    <div class="code-block">
+      <pre><code>// Import the component
+import { PersianTimePickerElement } from '../dist/persian-timepicker-element.js';
+
+// Get reference to the element
+const timePicker = document.getElementById('time-picker-1');
+
+// Listen for time changes
+timePicker.addEventListener('timeChange', (e) => {
+  console.log('Hour:', e.detail.hour);
+  console.log('Minute:', e.detail.minute);
+  console.log('Second:', e.detail.second);
+  console.log('Formatted time:', e.detail.timeString);
+  console.log('Is AM:', e.detail.isAM);
+});
+
+// Set time programmatically
+timePicker.hour = 14;
+timePicker.minute = 30;
+timePicker.second = 0;
+timePicker.updateDisplay();
+
+// Get current time values
+const currentHour = timePicker.hour;
+const currentMinute = timePicker.minute;
+const currentSecond = timePicker.second;</code></pre>
+    </div>
+  </div>
+</body>
+</html> 

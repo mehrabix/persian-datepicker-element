@@ -84,7 +84,7 @@ describe('Persian UI Components Integration', () => {
       await wait();
       
       // Check if the placeholder was applied
-      const input = pickerElement!.shadowRoot!.querySelector('input') as HTMLInputElement;
+      const input = pickerElement!.shadowRoot!.querySelector('#time-input') as HTMLInputElement;
       expect(input.placeholder).toBe('زمان جلسه');
     });
 

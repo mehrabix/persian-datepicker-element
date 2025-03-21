@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Picker Debug</title>
+  <style>
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f0f9ff;
+    }
+    
+    .debug-box {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .output {
+      background-color: #f1f5f9;
+      padding: 1rem;
+      border-radius: 4px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      margin: 1rem 0;
+      max-height: 300px;
+      overflow: auto;
+    }
+    
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #0ea5e9;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 0.5rem;
+    }
+    
+    button:hover {
+      background-color: #0284c7;
+    }
+    
+    h1, h2 {
+      color: #0c4a6e;
+    }
+  </style>
+</head>
+<body>
+  <div class="debug-box">
+    <h1>Date Picker Debug</h1>
+    
+    <div>
+      <h2>1. Check if script is loaded</h2>
+      <button id="check-script">Check Script</button>
+      <div id="script-output" class="output">Click the button to check if the script is loaded...</div>
+    </div>
+    
+    <div>
+      <h2>2. Examine Window Object</h2>
+      <button id="examine-window">Examine Window</button>
+      <div id="window-output" class="output">Click the button to examine window object...</div>
+    </div>
+    
+    <div>
+      <h2>3. Manual Registration</h2>
+      <button id="register-component">Register Component</button>
+      <div id="register-output" class="output">Click the button to attempt manual registration...</div>
+    </div>
+    
+    <div>
+      <h2>4. Create Component</h2>
+      <button id="create-component">Create Component</button>
+      <div id="component-container"></div>
+    </div>
+  </div>
+  
+  <!-- Auto-fix registration on load -->
+  <script>
+    // Automatic fix for datepicker registration issue
+    (function() {
+      console.log('Auto-fixing datepicker registration on page load');
+      
+      function attemptRegistration() {
+        try {
+          if (!customElements.get('persian-datepicker-element')) {
+            console.log('Looking for datepicker class with space at the end of name');
+            const DatePickerClass = window["PersianDatepickerElement "];
+            
+            if (DatePickerClass) {
+              console.log('Found datepicker class with name "PersianDatepickerElement " (note the space)');
+              customElements.define('persian-datepicker-element', DatePickerClass);
+              console.log('Successfully registered persian-datepicker-element');
+              return true;
+            } else {
+              console.log('Could not find datepicker class with space at the end');
+              return false;
+            }
+          } else {
+            console.log('Datepicker already registered');
+            return true;
+          }
+        } catch (err) {
+          console.error('Error during auto-fix:', err);
+          return false;
+        }
+      }
+      
+      // Try registration after script is loaded
+      setTimeout(attemptRegistration, 300);
+    })();
+  </script>
+  
+  <!-- Load component -->
+  <script>
+    // Load the script programmatically to ensure we can track when it's loaded
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+          console.log(`Script loaded: ${src}`);
+          
+          // Try to immediately register the component after load
+          setTimeout(() => {
+            try {
+              if (!customElements.get('persian-datepicker-element')) {
+                console.log('Attempting post-load registration');
+                const DatePickerClass = window["PersianDatepickerElement "];
+                if (DatePickerClass) {
+                  customElements.define('persian-datepicker-element', DatePickerClass);
+                  console.log('Post-load registration successful');
+                }
+              }
+            } catch (e) {
+              console.error('Post-load registration failed:', e);
+            }
+            resolve(true);
+          }, 100);
+        };
+        script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+        document.body.appendChild(script);
+      });
+    }
+    
+    // Add log capability
+    function log(elementId, message) {
+      const output = document.getElementById(elementId);
+      output.textContent += message + '\n';
+    }
+    
+    // Load our script
+    loadScript('dist/persian-datepicker-element.js')
+      .then(() => log('script-output', '✅ Script loaded successfully'))
+      .catch(err => log('script-output', `❌ Error loading script: ${err.message}`));
+      
+    // Check script button
+    document.getElementById('check-script').addEventListener('click', () => {
+      const output = document.getElementById('script-output');
+      output.textContent = '';
+      
+      // Look for script tag
+      const scriptTags = document.querySelectorAll('script');
+      let found = false;
+      
+      scriptTags.forEach(script => {
+        if (script.src.includes('persian-datepicker-element')) {
+          found = true;
+          log('script-output', `✅ Found script: ${script.src}`);
+        }
+      });
+      
+      if (!found) {
+        log('script-output', '❌ No date picker script found');
+      }
+      
+      // Check if any custom elements are defined
+      log('script-output', `\nCustom element registration status:`);
+      log('script-output', `- persian-datepicker-element registered: ${customElements.get('persian-datepicker-element') !== undefined}`);
+    });
+    
+    // Examine window button
+    document.getElementById('examine-window').addEventListener('click', () => {
+      const output = document.getElementById('window-output');
+      output.textContent = '';
+      
+      // Look for specific name with space at the end
+      try {
+        const spaceClass = window["PersianDatepickerElement "];
+        if (spaceClass) {
+          log('window-output', '✅ Found "PersianDatepickerElement " (with space at end)');
+          log('window-output', `- Type: ${typeof spaceClass}`);
+          log('window-output', `- Is constructor: ${!!spaceClass.prototype}`);
+          log('window-output', `- Extends HTMLElement: ${spaceClass.prototype instanceof HTMLElement}`);
+        } else {
+          log('window-output', '❌ "PersianDatepickerElement " (with space) not found');
+        }
+      } catch (e) {
+        log('window-output', `Error checking space name: ${e.message}`);
+      }
+      
+      // Look for Persian-related properties on window
+      const persianProps = Object.getOwnPropertyNames(window).filter(prop => 
+        prop.toLowerCase().includes('persian') || 
+        prop.toLowerCase().includes('date') || 
+        prop.toLowerCase().includes('picker')
+      );
+      
+      if (persianProps.length > 0) {
+        log('window-output', '\n✅ Found Persian-related properties on window:');
+        persianProps.forEach(prop => {
+          log('window-output', `- ${prop}: ${typeof window[prop]}`);
+          
+          if (typeof window[prop] === 'function') {
+            try {
+              log('window-output', `  • Is constructor: ${!!window[prop].prototype}`);
+              log('window-output', `  • Extends HTMLElement: ${window[prop].prototype instanceof HTMLElement}`);
+            } catch (e) {
+              log('window-output', `  • Error checking prototype: ${e.message}`);
+            }
+          }
+        });
+      } else {
+        log('window-output', '❌ No Persian-related properties found on window');
+      }
+      
+      // Examine all window properties for debugging
+      log('window-output', '\nLooking for any properties with "persian" in the name:');
+      const allWindowProps = Object.getOwnPropertyNames(window);
+      
+      for (const prop of allWindowProps) {
+        // Some property keys have extra spaces, check these specifically
+        if (prop.includes(' ') && (prop.toLowerCase().includes('persian') || prop.toLowerCase().includes('date'))) {
+          log('window-output', `Found property with space: "${prop}" (${typeof window[prop]})`);
+        }
+      }
+    });
+    
+    // Register component button
+    document.getElementById('register-component').addEventListener('click', () => {
+      const output = document.getElementById('register-output');
+      output.textContent = '';
+      
+      try {
+        if (customElements.get('persian-datepicker-element')) {
+          log('register-output', '✅ Component is already registered');
+        } else {
+          // First, try with the known issue (space at the end)
+          log('register-output', 'Attempting to register with "PersianDatepickerElement " (with space):');
+          
+          try {
+            const spaceClass = window["PersianDatepickerElement "];
+            if (spaceClass) {
+              log('register-output', '✅ Found class with space in name!');
+              customElements.define('persian-datepicker-element', spaceClass);
+              log('register-output', '✅ Successfully registered component with space class!');
+              return;
+            } else {
+              log('register-output', '❌ Class with space not found');
+            }
+          } catch (e) {
+            log('register-output', `Error with space class: ${e.message}`);
+          }
+          
+          // List possible class names to try
+          const possibleClasses = [
+            'PersianDatePickerElement',
+            'PersianDatepickerElement',
+            'window.PersianDatePickerElement',
+            'window.PersianDatepickerElement',
+            'window["PersianDatepickerElement "]'
+          ];
+          
+          log('register-output', '\nAttempting to find the component class:');
+          
+          let foundClass = null;
+          
+          for (const className of possibleClasses) {
+            try {
+              const classRef = eval(className);
+              if (classRef) {
+                log('register-output', `✅ Found class with name: ${className}`);
+                foundClass = classRef;
+                break;
+              }
+            } catch (e) {
+              log('register-output', `❌ Not found with name: ${className}`);
+            }
+          }
+          
+          if (foundClass) {
+            customElements.define('persian-datepicker-element', foundClass);
+            log('register-output', '✅ Successfully registered component!');
+          } else {
+            log('register-output', '❌ Could not find component class');
+            
+            // Advanced: try to find by checking all window properties
+            log('register-output', '\nSearching all window properties:');
+            const windowKeys = Object.getOwnPropertyNames(window);
+            
+            for (const key of windowKeys) {
+              if (key.toLowerCase().includes('persian') || key.toLowerCase().includes('date')) {
+                try {
+                  if (typeof window[key] === 'function' && window[key].prototype) {
+                    log('register-output', `Found potential class: ${key}`);
+                    
+                    // Try to register it
+                    try {
+                      customElements.define('persian-datepicker-element', window[key]);
+                      log('register-output', `✅ Successfully registered with ${key}!`);
+                      break;
+                    } catch (e) {
+                      log('register-output', `Failed to register with ${key}: ${e.message}`);
+                    }
+                  }
+                } catch (e) {
+                  // Skip this property
+                }
+              }
+            }
+          }
+        }
+      } catch (e) {
+        log('register-output', `❌ Error during registration: ${e.message}`);
+      }
+    });
+    
+    // Create component button
+    document.getElementById('create-component').addEventListener('click', () => {
+      const container = document.getElementById('component-container');
+      container.innerHTML = '';
+      
+      try {
+        // Try to create the element
+        const datePicker = document.createElement('persian-datepicker-element');
+        container.appendChild(datePicker);
+        container.insertAdjacentHTML('beforeend', '<p>Component created - check if it renders correctly above</p>');
+      } catch (e) {
+        container.innerHTML = `<p style="color:red">Error creating component: ${e.message}</p>`;
+      }
+    });
+  </script>
+</body>
+</html> 

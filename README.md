@@ -1,282 +1,218 @@
-# Persian Date Picker Element | تقویم انتخاب تاریخ شمسی
+# Persian Date Picker & Time Picker Web Components
 
-یک کامپوننت وب مدرن و قابل شخصی‌سازی برای انتخاب تاریخ شمسی (شمسی) با طراحی مشابه کامپوننت‌های shadcn.
+A collection of Web Components for Persian (Jalali) calendar date and time selection.
 
-## Features | ویژگی‌ها
+## Features
 
-- Clean, modern UI similar to shadcn components
-- Accurate Jalali (Shamsi) calendar with proper month lengths and leap years
+### Persian Date Picker
+- Fully customizable Persian (Jalali) calendar date picker
+- Built as a native Web Component for maximum compatibility
+- Lightweight with no dependencies
+- Extensive CSS customization options
+- Date conversion utilities included
+
+### Persian Time Picker
+- Customizable time picker for Persian UI
+- 12-hour and 24-hour format support
+- Optional seconds display
+- Keyboard navigation
 - Full RTL support
-- Highly customizable styling with CSS variables
-- Lightweight and dependency-free
-- Works with any framework or vanilla JavaScript
-- TypeScript support
+- Multiple styling options through CSS variables
 
-<div dir="rtl">
+## Installation
 
-- رابط کاربری تمیز و مدرن مشابه کامپوننت‌های shadcn
-- تقویم شمسی
- دقیق با طول ماه‌های صحیح و سال‌های کبیسه
-- پشتیبانی کامل از راست به چپ (RTL)
-- قابلیت شخصی‌سازی بالا با متغیرهای CSS
-- سبک و بدون وابستگی
-- سازگار با هر فریم‌ورک یا جاوااسکریپت خالص
-- پشتیبانی از TypeScript
-
-</div>
-
-## Installation | نصب
-
-Install with npm:
 ```bash
-npm install persian-datepicker-element
+npm install persian-datepicker-webcomponents
 ```
-
-Or with yarn:
-```bash
-yarn add persian-datepicker-element
-```
-
-Or with pnpm:
-```bash
-pnpm add persian-datepicker-element
-```
-
-<div dir="rtl">
-
-### نصب با npm:
-```bash
-npm install persian-datepicker-element
-```
-
-### یا با yarn:
-```bash
-yarn add persian-datepicker-element
-```
-
-### یا با pnpm:
-```bash
-pnpm add persian-datepicker-element
-```
-</div>
 
 ## Usage
 
-### Basic Usage
+### Date Picker
 
 ```html
-<!-- Include the script -->
-<script src="node_modules/persian-datepicker-element/dist/persian-datepicker-element.min.js"></script>
+<!-- Import as script -->
+<script type="module" src="path/to/persian-datepicker-element.js"></script>
 
-<!-- Use the component -->
+<!-- Basic usage -->
 <persian-datepicker-element></persian-datepicker-element>
-```
 
-### With ES Modules
+<!-- With attributes -->
+<persian-datepicker-element 
+  placeholder="تاریخ تولد" 
+  format="YYYY/MM/DD">
+</persian-datepicker-element>
+```
 
 ```javascript
-// Import the component
-import 'persian-datepicker-element';
+// Import in JavaScript
+import { PersianDatePickerElement } from 'persian-datepicker-webcomponents';
 
-// Use it in your HTML
-// <persian-datepicker-element></persian-datepicker-element>
-```
-
-### With TypeScript
-
-```typescript
-import { PersianDatePicker, JalaliDate } from 'persian-datepicker-element';
-
-// Access to the class for type checking or programmatic usage
-const datePicker = document.querySelector('persian-datepicker-element') as PersianDatePicker;
-
-// Programmatically set a date (year, month, day)
-datePicker.setValue(1402, 12, 25);
-
-// Get the selected date
-const selectedDate = datePicker.getValue(); // Returns [year, month, day] or null
-```
-
-## Attributes
-
-You can customize the date picker using the following attributes:
-
-```html
-<persian-datepicker-element
-  placeholder="انتخاب تاریخ تولد"
-  format="YYYY/MM/DD"
-  primary-color="#0891b2"
-  primary-hover="#0e7490"
-  background-color="#ffffff"
-  foreground-color="#1e293b"
-  border-color="#e2e8f0"
-  border-radius="0.5rem"
-  font-family="Vazir, sans-serif"
-  rtl="true"
-></persian-datepicker-element>
-```
-
-| Attribute          | Type    | Default       | Description                              |
-|--------------------|---------|---------------|------------------------------------------|
-| `placeholder`      | String  | "انتخاب تاریخ"  | Input placeholder text                    |
-| `format`           | String  | "YYYY/MM/DD"  | Date format                              |
-| `primary-color`    | String  | "#0891b2"     | Primary color for selections             |
-| `primary-hover`    | String  | "#0e7490"     | Hover color for interactive elements     |
-| `background-color` | String  | "#ffffff"     | Background color of the component        |
-| `foreground-color` | String  | "#1e293b"     | Text color of the component              |
-| `border-color`     | String  | "#e2e8f0"     | Border color for elements                |
-| `border-radius`    | String  | "0.5rem"      | Border radius for rounded corners        |
-| `font-family`      | String  | System fonts  | Font family for text                     |
-| `rtl`              | Boolean | true          | Right-to-left support                    |
-
-## Events
-
-The component dispatches a `change` event when a date is selected:
-
-```javascript
-document.querySelector('persian-datepicker-element').addEventListener('change', (event) => {
-  const { jalali, gregorian } = event.detail;
-  console.log('Selected Jalali date:', jalali); // [year, month, day]
-  console.log('Equivalent Gregorian date:', gregorian); // [year, month, day]
+// Listen for date change events
+const datePicker = document.querySelector('persian-datepicker-element');
+datePicker.addEventListener('change', (e) => {
+  console.log('Selected date (Jalali):', e.detail.jalali);
+  console.log('Selected date (Gregorian):', e.detail.gregorian);
 });
 ```
 
-## JalaliDate Utility
+### Time Picker
 
-The package also exports a `JalaliDate` utility for converting between Jalali and Gregorian dates:
+```html
+<!-- Import as script -->
+<script type="module" src="path/to/persian-timepicker-element.js"></script>
 
-```javascript
-import { JalaliDate } from 'persian-datepicker-element';
+<!-- Basic usage -->
+<persian-timepicker-element></persian-timepicker-element>
 
-// Convert Gregorian to Jalali
-const jalaliDate = JalaliDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
-
-// Convert Jalali to Gregorian
-const gregorianDate = JalaliDate.jalaliToGregorian(1402, 1, 1); // [2023, 3, 21]
+<!-- With attributes -->
+<persian-timepicker-element 
+  placeholder="زمان جلسه"
+  use-24-hour-format="true" 
+  show-seconds="true">
+</persian-timepicker-element>
 ```
 
-## Advanced Styling | شخصی‌سازی پیشرفته
+```javascript
+// Import in JavaScript
+import { PersianTimePickerElement } from 'persian-datepicker-webcomponents';
 
-The component uses CSS variables for comprehensive styling. You can override any of these variables to customize the appearance:
+// Listen for time change events
+const timePicker = document.querySelector('persian-timepicker-element');
+timePicker.addEventListener('timeChange', (e) => {
+  console.log('Selected time:', e.detail.timeString);
+  console.log('Hour:', e.detail.hour);
+  console.log('Minute:', e.detail.minute);
+});
+```
 
-این کامپوننت از متغیرهای CSS برای شخصی‌سازی جامع استفاده می‌کند. شما می‌توانید هر یک از این متغیرها را برای تغییر ظاهر بازنویسی کنید:
+## Configuration
+
+### Date Picker Attributes
+
+| Attribute    | Type    | Default    | Description                                  |
+|--------------|---------|------------|----------------------------------------------|
+| placeholder  | string  | "انتخاب تاریخ" | Placeholder text for the input              |
+| format       | string  | "YYYY/MM/DD" | Format for the displayed date                |
+| value        | string  | null       | Initial value (e.g., "1402/04/24")            |
+| disabled     | boolean | false      | Whether the date picker is disabled           |
+| min-date     | string  | null       | Minimum selectable date (e.g., "1400/01/01")  |
+| max-date     | string  | null       | Maximum selectable date (e.g., "1410/12/29")  |
+
+### Time Picker Attributes
+
+| Attribute           | Type    | Default        | Description                             |
+|---------------------|---------|----------------|-----------------------------------------|
+| placeholder         | string  | "انتخاب زمان"    | Placeholder text for the input          |
+| hour                | number  | Current hour   | Initial hour value                      |
+| minute              | number  | Current minute | Initial minute value                    |
+| second              | number  | Current second | Initial second value                    |
+| use-24-hour-format  | boolean | false          | Whether to use 24-hour format           |
+| show-seconds        | boolean | false          | Whether to show seconds selection       |
+| disabled            | boolean | false          | Whether the time picker is disabled      |
+| rtl                 | boolean | true           | Whether to use RTL layout               |
+| default-time        | string  | null           | Initial time (e.g., "14:30" or "02:30 ب.ظ") |
+
+## Styling
+
+Both components support extensive customization through CSS variables.
+
+### Date Picker CSS Variables
 
 ```css
 persian-datepicker-element {
-  /* Color scheme */
-  --jdp-primary: #3b82f6;
-  --jdp-primary-hover: #2563eb;
+  --jdp-primary: #0891b2;
+  --jdp-primary-hover: #0e7490;
   --jdp-primary-foreground: #ffffff;
-  
-  /* Neutral colors */
   --jdp-background: #ffffff;
   --jdp-foreground: #1e293b;
   --jdp-muted: #f1f5f9;
   --jdp-muted-foreground: #64748b;
   --jdp-border: #e2e8f0;
   --jdp-ring: #0284c7;
-  
-  /* Typography */
-  --jdp-font-family: 'Vazir', sans-serif;
-  --jdp-font-size: 14px;
-  --jdp-line-height: 1.5;
-  --jdp-font-weight: 400;
-  
-  /* Spacing */
-  --jdp-spacing-xs: 4px;
-  --jdp-spacing-sm: 8px;
-  --jdp-spacing-md: 16px;
-  --jdp-spacing-lg: 24px;
-  
-  /* Layout */
-  --jdp-border-radius: 0.5rem;
-  --jdp-direction: rtl;
+  --jdp-border-radius: 6px;
+  --jdp-font-family: Tahoma, Arial, sans-serif;
 }
 ```
 
-### All Available CSS Variables | تمام متغیرهای CSS موجود
-
-| Category | Variable | Description | توضیحات |
-|----------|----------|-------------|---------|
-| **Color scheme** | `--jdp-primary` | Primary color for selected items | رنگ اصلی برای آیتم‌های انتخاب شده |
-| | `--jdp-primary-hover` | Hover state color for primary elements | رنگ حالت هاور برای عناصر اصلی |
-| | `--jdp-primary-foreground` | Text color on primary background | رنگ متن روی پس‌زمینه اصلی |
-| **Neutral colors** | `--jdp-background` | Background color | رنگ پس‌زمینه |
-| | `--jdp-foreground` | Text color | رنگ متن |
-| | `--jdp-muted` | Muted background color | رنگ پس‌زمینه کمرنگ |
-| | `--jdp-muted-foreground` | Muted text color | رنگ متن کمرنگ |
-| | `--jdp-border` | Border color | رنگ حاشیه |
-| | `--jdp-ring` | Focus ring color | رنگ حلقه فوکوس |
-| **Typography** | `--jdp-font-family` | Font family | خانواده فونت |
-| | `--jdp-font-size` | Base font size | اندازه پایه فونت |
-| | `--jdp-line-height` | Line height | ارتفاع خط |
-| | `--jdp-font-weight` | Normal font weight | وزن عادی فونت |
-| | `--jdp-font-weight-medium` | Medium font weight | وزن متوسط فونت |
-| | `--jdp-day-name-font-size` | Day name font size | اندازه فونت نام روز |
-| | `--jdp-day-name-font-weight` | Day name font weight | وزن فونت نام روز |
-| | `--jdp-day-font-size` | Day cell font size | اندازه فونت سلول روز |
-| | `--jdp-day-font-weight` | Day cell font weight | وزن فونت سلول روز |
-| | `--jdp-month-year-font-size` | Month/year header font size | اندازه فونت سرصفحه ماه/سال |
-| | `--jdp-month-year-font-weight` | Month/year header font weight | وزن فونت سرصفحه ماه/سال |
-| **Input field** | `--jdp-input-padding-x` | Horizontal padding | فاصله‌گذاری افقی |
-| | `--jdp-input-padding-y` | Vertical padding | فاصله‌گذاری عمودی |
-| | `--jdp-input-border-width` | Border width | عرض حاشیه |
-| | `--jdp-input-border-color` | Border color | رنگ حاشیه |
-| | `--jdp-input-border-radius` | Border radius | شعاع گوشه حاشیه |
-| | `--jdp-input-focus-ring-width` | Focus ring width | عرض حلقه فوکوس |
-| | `--jdp-input-focus-ring-color` | Focus ring color | رنگ حلقه فوکوس |
-| **Calendar popup** | `--jdp-calendar-width` | Calendar popup width | عرض تقویم بازشو |
-| | `--jdp-calendar-padding` | Calendar padding | فاصله‌گذاری تقویم |
-| | `--jdp-calendar-border-width` | Calendar border width | عرض حاشیه تقویم |
-| | `--jdp-calendar-border-color` | Calendar border color | رنگ حاشیه تقویم |
-| | `--jdp-calendar-border-radius` | Calendar border radius | شعاع گوشه حاشیه تقویم |
-| | `--jdp-calendar-shadow` | Calendar shadow | سایه تقویم |
-| | `--jdp-calendar-z-index` | Calendar z-index | شاخص z تقویم |
-| **Navigation buttons** | `--jdp-nav-button-size` | Size of nav buttons | اندازه دکمه‌های ناوبری |
-| | `--jdp-nav-button-bg` | Button background | پس‌زمینه دکمه |
-| | `--jdp-nav-button-bg-hover` | Button hover background | پس‌زمینه دکمه در حالت هاور |
-| | `--jdp-nav-arrow-size` | Arrow size | اندازه فلش |
-| | `--jdp-nav-arrow-thickness` | Arrow thickness | ضخامت فلش |
-| | `--jdp-nav-arrow-color` | Arrow color | رنگ فلش |
-| **Day grid** | `--jdp-day-cell-size` | Size of day cells | اندازه سلول‌های روز |
-| | `--jdp-day-cell-margin` | Margin between day cells | حاشیه بین سلول‌های روز |
-| | `--jdp-day-cell-border-radius` | Border radius of day cells | شعاع گوشه سلول‌های روز |
-| **States** | `--jdp-day-hover-bg` | Day hover background | پس‌زمینه روز در حالت هاور |
-| | `--jdp-day-selected-bg` | Selected day background | پس‌زمینه روز انتخاب شده |
-| | `--jdp-day-selected-color` | Selected day text color | رنگ متن روز انتخاب شده |
-| | `--jdp-day-today-border-color` | Today indicator border color | رنگ حاشیه نشانگر امروز |
-| | `--jdp-day-today-border-width` | Today indicator border width | عرض حاشیه نشانگر امروز |
-| | `--jdp-day-disabled-opacity` | Opacity for disabled days | شفافیت برای روزهای غیرفعال |
-| **Animations** | `--jdp-transition-duration` | Duration of transitions | مدت‌زمان انتقال‌ها |
-| | `--jdp-fade-from-y` | Vertical offset for fade animations | آفست عمودی برای انیمیشن‌های محو |
-
-## Example: Custom Theme | مثال: تم سفارشی
-
-Here's an example of a custom theme with a dark mode appearance:
-
-در اینجا مثالی از یک تم سفارشی با ظاهر حالت تاریک آورده شده است:
+### Time Picker CSS Variables
 
 ```css
-/* Dark Mode Theme */
-persian-datepicker-element.dark-theme {
-  --jdp-primary: #4f46e5;
-  --jdp-primary-hover: #6366f1;
-  --jdp-primary-foreground: #ffffff;
-  
-  --jdp-background: #1e1e2f;
-  --jdp-foreground: #e2e8f0;
-  --jdp-muted: #334155;
-  --jdp-muted-foreground: #94a3b8;
-  --jdp-border: #475569;
-  --jdp-ring: #4f46e5;
-  
-  --jdp-calendar-shadow: 0px 10px 30px -5px rgba(2, 6, 23, 0.5);
-  --jdp-day-hover-bg: #334155;
-  
-  --jdp-font-family: 'Samim', 'Vazir', sans-serif;
+persian-timepicker-element {
+  --jtp-primary: #0891b2;
+  --jtp-primary-hover: #0e7490;
+  --jtp-primary-foreground: #ffffff;
+  --jtp-background: #ffffff;
+  --jtp-foreground: #1e293b;
+  --jtp-muted: #f1f5f9;
+  --jtp-muted-foreground: #64748b;
+  --jtp-border: #e2e8f0;
+  --jtp-ring: #0284c7;
+  --jtp-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --jtp-font-size: 14px;
+  --jtp-border-radius: 6px;
 }
 ```
 
-## License | مجوز
+## Project Structure
+
+The project is organized as follows:
+
+```
+/
+├── dist/                  # Built components
+│   ├── persian-datepicker-element.js
+│   ├── persian-datepicker-element.min.js
+│   ├── persian-datepicker-element.esm.js
+│   ├── persian-timepicker-element.js
+│   ├── persian-timepicker-element.min.js
+│   └── persian-timepicker-element.esm.js
+├── src/
+│   ├── components/        # Component source code
+│   │   ├── persian-datepicker-element/
+│   │   └── persian-timepicker-element/
+│   ├── utils/             # Shared utilities
+│   └── __test-utils__/    # Test utilities
+├── examples/              # Usage examples
+└── tests/                 # Tests
+```
+
+## Examples
+
+See the `/examples` directory for complete usage examples:
+- `datepicker-example.html` - Examples of using the date picker
+- `timepicker-example.html` - Examples of using the time picker
+
+## Development
+
+Requirements:
+- Node.js 14+
+- npm 7+
+
+```bash
+# Install dependencies
+npm install
+
+# Build all components
+npm run build
+
+# Build individual components
+npm run build:datepicker
+npm run build:timepicker
+
+# Run the development server
+npm run serve
+
+# Run tests
+npm test
+```
+
+## Browser Support
+
+- Chrome/Edge 67+
+- Firefox 63+
+- Safari 10.1+
+- Opera 54+
+
+## License
 
 MIT 
