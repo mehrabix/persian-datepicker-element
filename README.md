@@ -1,11 +1,11 @@
 # Persian Date Picker Element | تقویم انتخاب تاریخ شمسی
 
-یک کامپوننت وب مدرن و قابل شخصی‌سازی برای انتخاب تاریخ شمسی (شمسی) با طراحی مشابه کامپوننت‌های shadcn.
+یک کامپوننت وب مدرن و قابل شخصی‌سازی برای انتخاب تاریخ شمسی با طراحی مشابه کامپوننت‌های shadcn.
 
 ## Features | ویژگی‌ها
 
 - Clean, modern UI similar to shadcn components
-- Accurate Jalali (Shamsi) calendar with proper month lengths and leap years
+- Accurate Persian (Shamsi) calendar with proper month lengths and leap years
 - Full RTL support
 - Highly customizable styling with CSS variables
 - Lightweight and dependency-free
@@ -15,8 +15,7 @@
 <div dir="rtl">
 
 - رابط کاربری تمیز و مدرن مشابه کامپوننت‌های shadcn
-- تقویم شمسی
- دقیق با طول ماه‌های صحیح و سال‌های کبیسه
+- تقویم شمسی دقیق با طول ماه‌های صحیح و سال‌های کبیسه
 - پشتیبانی کامل از راست به چپ (RTL)
 - قابلیت شخصی‌سازی بالا با متغیرهای CSS
 - سبک و بدون وابستگی
@@ -85,16 +84,37 @@ import 'persian-datepicker-element';
 ### With TypeScript
 
 ```typescript
-import { PersianDatePicker, JalaliDate } from 'persian-datepicker-element';
+import { PersianDatePickerElement, PersianDate } from 'persian-datepicker-element';
 
 // Access to the class for type checking or programmatic usage
-const datePicker = document.querySelector('persian-datepicker-element') as PersianDatePicker;
+const datePicker = document.querySelector('persian-datepicker-element') as PersianDatePickerElement;
 
 // Programmatically set a date (year, month, day)
 datePicker.setValue(1402, 12, 25);
 
 // Get the selected date
 const selectedDate = datePicker.getValue(); // Returns [year, month, day] or null
+```
+
+### Using DateTuple Type
+
+```typescript
+import { PersianDate, type DateTuple } from 'persian-datepicker-element';
+
+// Convert Gregorian to Persian
+const gregorianDate = new Date(2023, 11, 25); // December 25, 2023
+const [year, month, day]: DateTuple = PersianDate.gregorianToPersian(
+  gregorianDate.getFullYear(), 
+  gregorianDate.getMonth() + 1, 
+  gregorianDate.getDate()
+);
+console.log(`Persian date: ${year}/${month}/${day}`); // Output: Persian date: 1402/10/4
+
+// Convert Persian to Gregorian
+const persianDate: DateTuple = [1402, 12, 25]; // 1402/12/25 (Persian)
+const [gYear, gMonth, gDay] = PersianDate.persianToGregorian(...persianDate);
+const date = new Date(gYear, gMonth - 1, gDay);
+console.log(`Gregorian date: ${date.toLocaleDateString()}`); // Output: Gregorian date: 3/15/2024
 ```
 
 ## Attributes
@@ -277,6 +297,35 @@ persian-datepicker-element.dark-theme {
 }
 ```
 
+## Advanced Customization
+
+You can also customize the component using CSS Variable types in TypeScript:
+
+```typescript
+import { 
+  PersianDatePickerElement, 
+  type CSSVariableKey, 
+  type CSSVariableMap 
+} from 'persian-datepicker-element';
+
+const picker = document.querySelector('persian-datepicker-element') as PersianDatePickerElement;
+
+// Using CSSVariableKey for specific variables
+picker.style.setProperty('--jdp-primary' as CSSVariableKey, '#3b82f6');
+
+// Using CSSVariableMap to set multiple variables
+const customTheme: Partial<CSSVariableMap> = {
+  '--jdp-primary': '#3b82f6',
+  '--jdp-primary-hover': '#2563eb',
+  '--jdp-background': '#f8fafc',
+  '--jdp-font-family': '"Vazir", sans-serif'
+};
+
+Object.entries(customTheme).forEach(([key, value]) => {
+  picker.style.setProperty(key as CSSVariableKey, value);
+});
+```
+
 ## License | مجوز
 
-MIT 
+MIT
