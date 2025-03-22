@@ -1,0 +1,3 @@
+[submodule "src/data/persian-calendar-repo"]
+	path = src/data/persian-calendar-repo
+	url = https://github.com/persian-calendar/persian-calendar.git

@@ -1,4 +1,5 @@
 import { PersianDate } from './persian-date';
+import { EventUtils } from './utils/event-utils';
 import { 
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,
@@ -20,6 +21,11 @@ const styles = `:host {
   --jdp-muted-foreground: #64748b;
   --jdp-border: #e2e8f0;
   --jdp-ring: #0284c7;
+  
+  /* Holiday colors */
+  --jdp-holiday-color: #ef4444;
+  --jdp-holiday-bg: #fee2e2;
+  --jdp-holiday-hover-bg: #fecaca;
   
   /* Typography */
   --jdp-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -243,6 +249,7 @@ input:focus {
   cursor: pointer;
   transition: var(--jdp-transition-duration) ease;
   margin: var(--jdp-day-cell-margin);
+  position: relative;
 }
 
 .day:hover:not(.empty):not(.disabled) {
@@ -265,6 +272,62 @@ input:focus {
 .day.disabled {
   opacity: var(--jdp-day-disabled-opacity);
   cursor: not-allowed;
+}
+
+/* Holiday styles */
+.day.holiday:not(.selected) {
+  color: var(--jdp-holiday-color);
+  background-color: var(--jdp-holiday-bg);
+  font-weight: var(--jdp-font-weight-medium);
+}
+
+.day.holiday:hover:not(.selected):not(.disabled) {
+  background-color: var(--jdp-holiday-hover-bg);
+}
+
+.day.friday {
+  color: var(--jdp-holiday-color);
+}
+
+.event-tooltip {
+  position: absolute;
+  background: var(--jdp-background);
+  border: 1px solid var(--jdp-border);
+  border-radius: var(--jdp-border-radius);
+  padding: var(--jdp-spacing-sm);
+  width: 200px;
+  box-shadow: var(--jdp-calendar-shadow);
+  z-index: 100;
+  text-align: right;
+  font-size: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--jdp-transition-duration) ease;
+  pointer-events: none;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.day:hover .event-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.event-item {
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--jdp-border);
+}
+
+.event-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.event-item.holiday {
+  color: var(--jdp-holiday-color);
 }
 `;
 
@@ -298,12 +361,14 @@ export class PersianDatePickerElement extends HTMLElement {
   private jalaliDay: number;
   private selectedDate: DateTuple | null;
   private options: PersianDatePickerElementOptions;
+  private showHolidays: boolean = true;
 
   static get observedAttributes() {
     return [
       'placeholder', 
       'rtl', 
       'format', 
+      'show-holidays',
       // CSS variable attributes
       'primary-color', 
       'primary-hover',
@@ -311,7 +376,9 @@ export class PersianDatePickerElement extends HTMLElement {
       'foreground-color',
       'border-color',
       'border-radius',
-      'font-family'
+      'font-family',
+      'holiday-color',
+      'holiday-bg'
     ];
   }
 
@@ -384,7 +451,7 @@ export class PersianDatePickerElement extends HTMLElement {
     if (!variables) return;
     
     Object.entries(variables).forEach(([key, value]) => {
-      this.style.setProperty(key, value);
+      this.style.setProperty(key, String(value));
     });
   }
 
@@ -400,7 +467,9 @@ export class PersianDatePickerElement extends HTMLElement {
       'foreground-color': '--jdp-foreground',
       'border-color': '--jdp-border',
       'border-radius': '--jdp-border-radius',
-      'font-family': '--jdp-font-family'
+      'font-family': '--jdp-font-family',
+      'holiday-color': '--jdp-holiday-color',
+      'holiday-bg': '--jdp-holiday-bg'
     };
     
     switch (name) {
@@ -412,6 +481,12 @@ export class PersianDatePickerElement extends HTMLElement {
           const rtl = newValue !== null && newValue !== 'false';
           // Type cast 'this' to HTMLElement to access style property
           (this as unknown as HTMLElement).style.setProperty('--jdp-direction', rtl ? 'rtl' : 'ltr');
+        }
+        break;
+      case 'show-holidays':
+        this.showHolidays = newValue !== null && newValue !== 'false';
+        if (this.calendar) {
+          this.renderCalendar();
         }
         break;
       default:
@@ -507,6 +582,42 @@ export class PersianDatePickerElement extends HTMLElement {
         dayElement.classList.add("selected");
       }
       
+      // Check if the day is a holiday
+      if (this.showHolidays) {
+        // Check if it's Friday (6th day in JavaScript's getDay, where 0 is Sunday)
+        const dayOfWeek = PersianDate.getDayOfWeek(this.jalaliYear, this.jalaliMonth, i);
+        if (dayOfWeek === 5) { // Friday
+          dayElement.classList.add("friday");
+        }
+        
+        // Check if it's a holiday from events.json
+        if (EventUtils.isHoliday(this.jalaliMonth, i)) {
+          dayElement.classList.add("holiday");
+          
+          // Add tooltip with event titles
+          const eventTitles = EventUtils.getAllEventTitles(this.jalaliMonth, i);
+          if (eventTitles.length > 0) {
+            const tooltip = document.createElement("div");
+            tooltip.classList.add("event-tooltip");
+            
+            eventTitles.forEach(title => {
+              const eventItem = document.createElement("div");
+              eventItem.classList.add("event-item");
+              
+              // Add 'holiday' class to highlight holiday events
+              if (EventUtils.getHolidayTitles(this.jalaliMonth, i).includes(title)) {
+                eventItem.classList.add("holiday");
+              }
+              
+              eventItem.textContent = title;
+              tooltip.appendChild(eventItem);
+            });
+            
+            dayElement.appendChild(tooltip);
+          }
+        }
+      }
+      
       this.daysContainer.appendChild(dayElement);
     }
   }
@@ -522,7 +633,9 @@ export class PersianDatePickerElement extends HTMLElement {
     this.dispatchEvent(new CustomEvent("change", {
       detail: {
         jalali: this.selectedDate,
-        gregorian: PersianDate.jalaliToGregorian(this.jalaliYear, this.jalaliMonth, this.jalaliDay)
+        gregorian: PersianDate.jalaliToGregorian(this.jalaliYear, this.jalaliMonth, this.jalaliDay),
+        isHoliday: EventUtils.isHoliday(this.jalaliMonth, day),
+        events: EventUtils.getEvents(this.jalaliMonth, day)
       },
       bubbles: true
     }) as PersianDateChangeEvent);
@@ -561,6 +674,22 @@ export class PersianDatePickerElement extends HTMLElement {
    */
   public getValue(): DateTuple | null {
     return this.selectedDate;
+  }
+
+  /**
+   * Checks if the currently selected date is a holiday
+   */
+  public isSelectedDateHoliday(): boolean {
+    if (!this.selectedDate) return false;
+    return EventUtils.isHoliday(this.selectedDate[1], this.selectedDate[2]);
+  }
+
+  /**
+   * Gets events for the currently selected date
+   */
+  public getSelectedDateEvents(): any[] {
+    if (!this.selectedDate) return [];
+    return EventUtils.getEvents(this.selectedDate[1], this.selectedDate[2]);
   }
 
   public clear() {

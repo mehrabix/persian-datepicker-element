@@ -1,12 +1,77 @@
 /**
- * Type definitions for Persian Date Picker Element
+ * Types for Persian Date Picker
  */
 
-// Export all types
-export { PersianDatePickerElementOptions } from './persian-datepicker-options';
-export { PersianDateChangeEvent } from './persian-date-change-event';
-export { DateTuple } from './date-tuple';
+/**
+ * Event data for Persian calendar
+ */
+export interface PersianEvent {
+  /** Title of the event in Persian */
+  title: string;
+  /** Month number (1-12) */
+  month: number;
+  /** Day number (1-31) */
+  day: number;
+  /** Category or type of the event (e.g., "Iran", "Religious") */
+  type: string;
+  /** Whether this event is a holiday */
+  holiday?: boolean;
+}
 
-// Export CSS variable types
-export type CSSVariableKey = `--jdp-${string}`;
-export type CSSVariableMap = Record<CSSVariableKey, string>; 
+/**
+ * A date represented as [year, month, day]
+ */
+export type DateTuple = [number, number, number];
+
+/**
+ * Map of CSS variable names to their values
+ */
+export interface CSSVariableMap {
+  [key: string]: string;
+}
+
+/**
+ * Options for the Persian date picker element
+ */
+export interface PersianDatePickerElementOptions {
+  /** Placeholder text for the date input */
+  placeholder?: string;
+  /** Format string for displaying the date */
+  format?: string;
+  /** Whether the date picker should use RTL layout */
+  rtl?: boolean;
+  /** Whether to show holidays in the calendar */
+  showHolidays?: boolean;
+  /** Custom CSS variables */
+  cssVariables?: CSSVariableMap;
+}
+
+/**
+ * Event dispatched when a date is selected
+ */
+export interface PersianDateChangeEvent extends CustomEvent {
+  detail: {
+    /** Selected date in Jalali calendar format */
+    jalali: DateTuple;
+    /** Selected date converted to Gregorian format */
+    gregorian: DateTuple;
+    /** Whether the selected date is a holiday */
+    isHoliday: boolean;
+    /** Events associated with the selected date */
+    events: PersianEvent[];
+  };
+}
+
+export interface PersianDate {
+  year: number;
+  month: number;
+  day: number;
+}
+
+export interface EventsData {
+  meta: {
+    version: string;
+    source: string;
+  };
+  events: PersianEvent[];
+} 

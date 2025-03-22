@@ -7,8 +7,8 @@ import type {
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,
   DateTuple,
-  CSSVariableKey,
-  CSSVariableMap
+  CSSVariableMap,
+  PersianEvent
 } from './types';
 
 // Define the custom element
@@ -22,8 +22,8 @@ export type {
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,
   DateTuple,
-  CSSVariableKey,
-  CSSVariableMap
+  CSSVariableMap,
+  PersianEvent
 };
 
 // Default export for convenient usage
