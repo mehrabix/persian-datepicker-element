@@ -256,6 +256,24 @@
     body.dark .more-examples a:hover {
       background-color: #0891b2;
     }
+    
+    .holiday-options {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e2e8f0;
+      transition: border-color 0.3s;
+    }
+    
+    body.dark .holiday-options {
+      border-color: #334155;
+    }
+    
+    .holiday-types-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 1.5rem;
+    }
   </style>
 </head>
 <body>
@@ -318,10 +336,54 @@
       <label for="joinDate">تاریخ عضویت:</label>
       <persian-datepicker-element id="joinDate" format="YYYY/MM/DD" placeholder="تاریخ عضویت"></persian-datepicker-element>
     </div>
+    
+    <div class="holiday-options">
+      <h2>انواع تعطیلات</h2>
+      <p>با استفاده از ویژگی holiday-types می‌توانید نوع تعطیلات نمایش داده شده را مشخص کنید</p>
+      
+      <div class="holiday-types-container">
+        <div class="form-group">
+          <label for="iran-holidays">فقط تعطیلات ایران:</label>
+          <persian-datepicker-element 
+            id="iran-holidays" 
+            holiday-types="Iran" 
+            placeholder="فقط تعطیلات ایران">
+          </persian-datepicker-element>
+        </div>
+        
+        <div class="form-group">
+          <label for="religious-holidays">فقط تعطیلات مذهبی:</label>
+          <persian-datepicker-element 
+            id="religious-holidays" 
+            holiday-types="Religious" 
+            placeholder="فقط تعطیلات مذهبی">
+          </persian-datepicker-element>
+        </div>
+        
+        <div class="form-group">
+          <label for="afghanistan-holidays">تعطیلات افغانستان:</label>
+          <persian-datepicker-element 
+            id="afghanistan-holidays" 
+            holiday-types="Afghanistan" 
+            placeholder="تعطیلات افغانستان">
+          </persian-datepicker-element>
+        </div>
+        
+        <div class="form-group">
+          <label for="all-holidays">همه تعطیلات:</label>
+          <persian-datepicker-element 
+            id="all-holidays" 
+            holiday-types="Iran,Religious,Afghanistan" 
+            placeholder="همه تعطیلات">
+          </persian-datepicker-element>
+        </div>
+      </div>
+    </div>
 
     <div class="result">
       <p><strong>تاریخ انتخاب شده (شمسی):</strong> <span id="jalali-result">-</span></p>
       <p><strong>تاریخ میلادی معادل:</strong> <span id="gregorian-result">-</span></p>
+      <p><strong>رویدادها:</strong> <span id="events-result">-</span></p>
     </div>
 
     <div class="more-examples">
@@ -329,7 +391,7 @@
     </div>
   </div>
 
-  <script src="../dist/persian-datepicker-element.js"></script>
+  <script type="module" src="../dist/persian-datepicker-element.js"></script>
   <script>
     // Get all date pickers
     const datePickers = document.querySelectorAll('persian-datepicker-element');
@@ -415,17 +477,30 @@
       });
     }
 
+    // Format events for display
+    function formatEvents(events) {
+      if (!events || events.length === 0) return 'هیچ رویدادی وجود ندارد';
+      
+      return events.map(event => {
+        const holidayMark = event.holiday ? '🔴 ' : '';
+        return `${holidayMark}${event.title} (${event.type})`;
+      }).join(' | ');
+    }
+
     // Handle date selection for demo
     datePickers.forEach(picker => {
       picker.addEventListener('change', event => {
         const jalaliDate = event.detail.jalali;
         const gregorianDate = event.detail.gregorian;
+        const events = event.detail.events;
         
         document.getElementById('jalali-result').textContent = 
           `${jalaliDate[0]}/${jalaliDate[1].toString().padStart(2, '0')}/${jalaliDate[2].toString().padStart(2, '0')}`;
         
         document.getElementById('gregorian-result').textContent = 
           `${gregorianDate[0]}/${gregorianDate[1].toString().padStart(2, '0')}/${gregorianDate[2].toString().padStart(2, '0')}`;
+          
+        document.getElementById('events-result').textContent = formatEvents(events);
       });
     });
 

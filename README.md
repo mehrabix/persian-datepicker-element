@@ -7,6 +7,7 @@
 - Clean, modern UI similar to shadcn components
 - Accurate Persian (Shamsi) calendar with proper month lengths and leap years
 - Full RTL support
+- Iranian holidays and events display with customization options
 - Highly customizable styling with CSS variables
 - Lightweight and dependency-free
 - Works with any framework or vanilla JavaScript
@@ -17,6 +18,7 @@
 - رابط کاربری تمیز و مدرن مشابه کامپوننت‌های shadcn
 - تقویم شمسی دقیق با طول ماه‌های صحیح و سال‌های کبیسه
 - پشتیبانی کامل از راست به چپ (RTL)
+- نمایش تعطیلات و رویدادهای ایران با قابلیت شخصی‌سازی
 - قابلیت شخصی‌سازی بالا با متغیرهای CSS
 - سبک و بدون وابستگی
 - سازگار با هر فریم‌ورک یا جاوااسکریپت خالص
@@ -133,21 +135,25 @@ You can customize the date picker using the following attributes:
   border-radius="0.5rem"
   font-family="Vazir, sans-serif"
   rtl="true"
+  holiday-types="Iran,Religious"
+  show-holidays="true"
 ></persian-datepicker-element>
 ```
 
-| Attribute          | Type    | Default       | Description                              |
-|--------------------|---------|---------------|------------------------------------------|
-| `placeholder`      | String  | "انتخاب تاریخ"  | Input placeholder text                    |
-| `format`           | String  | "YYYY/MM/DD"  | Date format                              |
-| `primary-color`    | String  | "#0891b2"     | Primary color for selections             |
-| `primary-hover`    | String  | "#0e7490"     | Hover color for interactive elements     |
-| `background-color` | String  | "#ffffff"     | Background color of the component        |
-| `foreground-color` | String  | "#1e293b"     | Text color of the component              |
-| `border-color`     | String  | "#e2e8f0"     | Border color for elements                |
-| `border-radius`    | String  | "0.5rem"      | Border radius for rounded corners        |
-| `font-family`      | String  | System fonts  | Font family for text                     |
-| `rtl`              | Boolean | true          | Right-to-left support                    |
+| Attribute          | Type    | Default         | Description                              |
+|--------------------|---------|-----------------|------------------------------------------|
+| `placeholder`      | String  | "انتخاب تاریخ"    | Input placeholder text                   |
+| `format`           | String  | "YYYY/MM/DD"    | Date format                              |
+| `primary-color`    | String  | "#0891b2"       | Primary color for selections             |
+| `primary-hover`    | String  | "#0e7490"       | Hover color for interactive elements     |
+| `background-color` | String  | "#ffffff"       | Background color of the component        |
+| `foreground-color` | String  | "#1e293b"       | Text color of the component              |
+| `border-color`     | String  | "#e2e8f0"       | Border color for elements                |
+| `border-radius`    | String  | "0.5rem"        | Border radius for rounded corners        |
+| `font-family`      | String  | System fonts    | Font family for text                     |
+| `rtl`              | Boolean | true            | Right-to-left support                    |
+| `show-holidays`    | Boolean | true            | Show holiday indicators                  |
+| `holiday-types`    | String  | "Iran,Religious"| Comma-separated list of holiday types    |
 
 ## Events
 
@@ -155,11 +161,55 @@ The component dispatches a `change` event when a date is selected:
 
 ```javascript
 document.querySelector('persian-datepicker-element').addEventListener('change', (event) => {
-  const { jalali, gregorian } = event.detail;
+  const { jalali, gregorian, isHoliday, events } = event.detail;
   console.log('Selected Jalali date:', jalali); // [year, month, day]
   console.log('Equivalent Gregorian date:', gregorian); // [year, month, day]
+  console.log('Is this date a holiday?', isHoliday);
+  console.log('Events on this date:', events);
 });
 ```
+
+## Holiday Types Feature
+
+The datepicker supports filtering holidays by type:
+
+```html
+<!-- Show only Iranian holidays -->
+<persian-datepicker-element holiday-types="Iran"></persian-datepicker-element>
+
+<!-- Show only religious holidays -->
+<persian-datepicker-element holiday-types="Religious"></persian-datepicker-element>
+
+<!-- Show multiple holiday types -->
+<persian-datepicker-element holiday-types="Iran,Religious,International"></persian-datepicker-element>
+
+<!-- Show all holiday types, including those normally excluded (like Afghanistan) -->
+<persian-datepicker-element holiday-types="all"></persian-datepicker-element>
+```
+
+By default, the component shows holidays of types "Iran" and "Religious", and excludes "Afghanistan" holidays. You can customize this behavior programmatically:
+
+```javascript
+// Set holiday types
+datePicker.setHolidayTypes(['Iran', 'Religious']); // Array format
+datePicker.setHolidayTypes('Iran,Religious');      // String format
+datePicker.setHolidayTypes('all');                 // Special value to include all types
+
+// Get current holiday types
+const types = datePicker.getHolidayTypes();
+
+// Check if all types are being shown (including excluded types)
+const showingAll = datePicker.isShowingAllTypes();
+```
+
+### Available Holiday Types
+
+The component includes the following holiday types:
+
+- `Iran`: Official Iranian holidays
+- `Religious`: Islamic religious occasions
+- `International`: International days and events
+- `Afghanistan`: Afghanistan-specific holidays (excluded by default)
 
 ## PersianDate Utility
 
@@ -169,7 +219,7 @@ The package also exports a `PersianDate` utility for converting between Jalali a
 import { PersianDate } from 'persian-datepicker-element';
 
 // Convert Gregorian to Jalali
-const PersianDate = PersianDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
+const persianDate = PersianDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
 
 // Convert Jalali to Gregorian
 const gregorianDate = PersianDate.jalaliToGregorian(1402, 1, 1); // [2023, 3, 21]
@@ -195,6 +245,11 @@ persian-datepicker-element {
   --jdp-muted-foreground: #64748b;
   --jdp-border: #e2e8f0;
   --jdp-ring: #0284c7;
+  
+  /* Holiday colors */
+  --jdp-holiday-color: #ef4444;
+  --jdp-holiday-bg: #fee2e2;
+  --jdp-holiday-hover-bg: #fecaca;
   
   /* Typography */
   --jdp-font-family: 'Vazir', sans-serif;
@@ -227,6 +282,9 @@ persian-datepicker-element {
 | | `--jdp-muted-foreground` | Muted text color | رنگ متن کمرنگ |
 | | `--jdp-border` | Border color | رنگ حاشیه |
 | | `--jdp-ring` | Focus ring color | رنگ حلقه فوکوس |
+| **Holiday colors** | `--jdp-holiday-color` | Holiday text color | رنگ متن تعطیلات |
+| | `--jdp-holiday-bg` | Holiday background color | رنگ پس‌زمینه تعطیلات |
+| | `--jdp-holiday-hover-bg` | Holiday hover background | رنگ پس‌زمینه هاور تعطیلات |
 | **Typography** | `--jdp-font-family` | Font family | خانواده فونت |
 | | `--jdp-font-size` | Base font size | اندازه پایه فونت |
 | | `--jdp-line-height` | Line height | ارتفاع خط |
@@ -290,6 +348,10 @@ persian-datepicker-element.dark-theme {
   --jdp-border: #475569;
   --jdp-ring: #4f46e5;
   
+  --jdp-holiday-color: #f87171;
+  --jdp-holiday-bg: rgba(239, 68, 68, 0.15);
+  --jdp-holiday-hover-bg: rgba(239, 68, 68, 0.25);
+  
   --jdp-calendar-shadow: 0px 10px 30px -5px rgba(2, 6, 23, 0.5);
   --jdp-day-hover-bg: #334155;
   
@@ -324,6 +386,9 @@ const customTheme: Partial<CSSVariableMap> = {
 Object.entries(customTheme).forEach(([key, value]) => {
   picker.style.setProperty(key as CSSVariableKey, value);
 });
+
+// Setting holiday types programmatically
+picker.setHolidayTypes(['Iran', 'Religious']);
 ```
 
 ## License | مجوز

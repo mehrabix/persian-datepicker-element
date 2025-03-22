@@ -44,6 +44,8 @@ export interface PersianDatePickerElementOptions {
   showHolidays?: boolean;
   /** Custom CSS variables */
   cssVariables?: CSSVariableMap;
+  /** Types of holidays to display (e.g. 'Iran', 'Religious') */
+  holidayTypes?: string[] | string;
 }
 
 /**

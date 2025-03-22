@@ -1,5 +1,5 @@
 import { PersianDate } from './persian-date';
-import { EventUtils } from './utils/event-utils';
+import { EventUtils, EXCLUDED_TYPES } from './utils/event-utils';
 import { 
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,
@@ -329,7 +329,22 @@ input:focus {
 .event-item.holiday {
   color: var(--jdp-holiday-color);
 }
+
+.event-type-label {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-right: 4px;
+  background-color: var(--jdp-muted);
+  color: var(--jdp-muted-foreground);
+}
 `;
+
+/**
+ * Default holiday types to show in the datepicker
+ */
+const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
 
 /**
  * Jalali Date Picker Web Component
@@ -343,6 +358,12 @@ input:focus {
  * 
  * <!-- With attributes -->
  * <persian-datepicker-element placeholder="انتخاب تاریخ" format="YYYY/MM/DD"></persian-datepicker-element>
+ * 
+ * <!-- With holiday types -->
+ * <persian-datepicker-element holiday-types="Iran,Religious"></persian-datepicker-element>
+ * 
+ * <!-- With all holiday types -->
+ * <persian-datepicker-element holiday-types="all"></persian-datepicker-element>
  * 
  * <!-- With styling customization -->
  * <persian-datepicker-element style="--jdp-primary: #3b82f6; --jdp-font-family: 'Vazir', sans-serif;"></persian-datepicker-element>
@@ -362,6 +383,8 @@ export class PersianDatePickerElement extends HTMLElement {
   private selectedDate: DateTuple | null;
   private options: PersianDatePickerElementOptions;
   private showHolidays: boolean = true;
+  private holidayTypes: string[] = [...DEFAULT_HOLIDAY_TYPES];
+  private includeAllTypes: boolean = false;
 
   static get observedAttributes() {
     return [
@@ -369,6 +392,7 @@ export class PersianDatePickerElement extends HTMLElement {
       'rtl', 
       'format', 
       'show-holidays',
+      'holiday-types',
       // CSS variable attributes
       'primary-color', 
       'primary-hover',
@@ -393,6 +417,11 @@ export class PersianDatePickerElement extends HTMLElement {
     // Apply any custom CSS variables provided in options
     if (options.cssVariables) {
       this.applyCustomCssVariables(options.cssVariables);
+    }
+
+    // Set holiday types if provided in options
+    if (options.holidayTypes) {
+      this.setHolidayTypes(options.holidayTypes);
     }
 
     // Get DOM references
@@ -455,6 +484,49 @@ export class PersianDatePickerElement extends HTMLElement {
     });
   }
 
+  /**
+   * Sets the holiday types to be displayed
+   * @param types Holiday types as a string (comma-separated) or an array of strings
+   */
+  setHolidayTypes(types: string | string[]): void {
+    if (typeof types === 'string') {
+      // Special case for "all" which includes all types including excluded ones
+      if (types.toLowerCase() === 'all') {
+        this.includeAllTypes = true;
+        this.holidayTypes = [...EventUtils.getEventTypes()]; // Get all available types
+        return;
+      }
+      
+      // Parse comma-separated values
+      this.holidayTypes = types.split(',').map(t => t.trim()).filter(Boolean);
+    } else if (Array.isArray(types)) {
+      this.holidayTypes = [...types];
+    } else {
+      this.holidayTypes = [...DEFAULT_HOLIDAY_TYPES];
+    }
+    
+    this.includeAllTypes = false;
+    
+    // If the calendar is already rendered, update it
+    if (this.calendar) {
+      this.renderCalendar();
+    }
+  }
+  
+  /**
+   * Gets the current holiday types being displayed
+   */
+  getHolidayTypes(): string[] {
+    return [...this.holidayTypes];
+  }
+  
+  /**
+   * Checks if all types (including excluded ones) are being shown
+   */
+  isShowingAllTypes(): boolean {
+    return this.includeAllTypes;
+  }
+
   // Handle attribute changes
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (oldValue === newValue) return;
@@ -485,6 +557,17 @@ export class PersianDatePickerElement extends HTMLElement {
         break;
       case 'show-holidays':
         this.showHolidays = newValue !== null && newValue !== 'false';
+        if (this.calendar) {
+          this.renderCalendar();
+        }
+        break;
+      case 'holiday-types':
+        if (newValue) {
+          this.setHolidayTypes(newValue);
+        } else {
+          this.holidayTypes = [...DEFAULT_HOLIDAY_TYPES];
+          this.includeAllTypes = false;
+        }
         if (this.calendar) {
           this.renderCalendar();
         }
@@ -590,26 +673,37 @@ export class PersianDatePickerElement extends HTMLElement {
           dayElement.classList.add("friday");
         }
         
-        // Check if it's a holiday from events.json
-        if (EventUtils.isHoliday(this.jalaliMonth, i)) {
+        // Check if it's a holiday from events.json based on holiday types
+        if (EventUtils.isHoliday(this.jalaliMonth, i, this.holidayTypes, this.includeAllTypes)) {
           dayElement.classList.add("holiday");
           
           // Add tooltip with event titles
-          const eventTitles = EventUtils.getAllEventTitles(this.jalaliMonth, i);
-          if (eventTitles.length > 0) {
+          const events = EventUtils.getEvents(this.jalaliMonth, i, this.holidayTypes, this.includeAllTypes);
+          if (events.length > 0) {
             const tooltip = document.createElement("div");
             tooltip.classList.add("event-tooltip");
             
-            eventTitles.forEach(title => {
+            events.forEach(event => {
               const eventItem = document.createElement("div");
               eventItem.classList.add("event-item");
               
               // Add 'holiday' class to highlight holiday events
-              if (EventUtils.getHolidayTitles(this.jalaliMonth, i).includes(title)) {
+              if (event.holiday) {
                 eventItem.classList.add("holiday");
               }
               
-              eventItem.textContent = title;
+              // Add type label
+              const typeLabel = document.createElement("span");
+              typeLabel.classList.add("event-type-label");
+              typeLabel.textContent = event.type;
+              
+              eventItem.appendChild(typeLabel);
+              
+              // Add event title
+              const titleSpan = document.createElement("span");
+              titleSpan.textContent = event.title;
+              eventItem.appendChild(titleSpan);
+              
               tooltip.appendChild(eventItem);
             });
             
@@ -629,13 +723,16 @@ export class PersianDatePickerElement extends HTMLElement {
     // Format date as YYYY/MM/DD or custom format
     this.formatAndSetValue();
     
+    // Get all events for the selected date
+    const events = EventUtils.getEvents(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes);
+    
     // Dispatch change event
     this.dispatchEvent(new CustomEvent("change", {
       detail: {
         jalali: this.selectedDate,
         gregorian: PersianDate.jalaliToGregorian(this.jalaliYear, this.jalaliMonth, this.jalaliDay),
-        isHoliday: EventUtils.isHoliday(this.jalaliMonth, day),
-        events: EventUtils.getEvents(this.jalaliMonth, day)
+        isHoliday: EventUtils.isHoliday(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes),
+        events: events
       },
       bubbles: true
     }) as PersianDateChangeEvent);
@@ -681,7 +778,7 @@ export class PersianDatePickerElement extends HTMLElement {
    */
   public isSelectedDateHoliday(): boolean {
     if (!this.selectedDate) return false;
-    return EventUtils.isHoliday(this.selectedDate[1], this.selectedDate[2]);
+    return EventUtils.isHoliday(this.selectedDate[1], this.selectedDate[2], this.holidayTypes, this.includeAllTypes);
   }
 
   /**
@@ -689,9 +786,12 @@ export class PersianDatePickerElement extends HTMLElement {
    */
   public getSelectedDateEvents(): any[] {
     if (!this.selectedDate) return [];
-    return EventUtils.getEvents(this.selectedDate[1], this.selectedDate[2]);
+    return EventUtils.getEvents(this.selectedDate[1], this.selectedDate[2], this.holidayTypes, this.includeAllTypes);
   }
 
+  /**
+   * Clears the selected date
+   */
   public clear() {
     this.selectedDate = null;
     this.input.value = '';

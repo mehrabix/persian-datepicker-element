@@ -16,4 +16,7 @@ export interface PersianDatePickerElementOptions {
   
   /** Custom CSS variables to override default styling */
   cssVariables?: Record<string, string>;
+  
+  /** Types of holidays to display (e.g. 'Iran', 'Religious') */
+  holidayTypes?: string[] | string;
 } 
