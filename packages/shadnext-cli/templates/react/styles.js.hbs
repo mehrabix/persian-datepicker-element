@@ -1,0 +1,105 @@
+import styled from 'styled-components';
+
+/**
+ * Styled components for the {{componentName}}
+ * Generated from the {{originalName}} web component
+ */
+
+export const Container = styled.div`
+  position: relative;
+  width: 100%;
+  font-family: 'Vazirmatn', 'Tahoma', Arial, sans-serif;
+  direction: ${props => props.rtl ? 'rtl' : 'ltr'};
+`;
+
+export const Input = styled.input.attrs({
+  type: 'text',
+  readOnly: true
+})`
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  outline: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  
+  &:focus {
+    border-color: ${props => props.primaryColor || '#3b82f6'};
+    box-shadow: 0 0 0 1px ${props => props.primaryColor || '#3b82f6'};
+  }
+`;
+
+export const CalendarPopup = styled.div`
+  position: absolute;
+  top: calc(100% + 4px);
+  ${props => props.rtl ? 'right' : 'left'}: 0;
+  width: 300px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  overflow: hidden;
+`;
+
+export const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: ${props => props.primaryColor || '#3b82f6'};
+  color: white;
+  
+  button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+`;
+
+export const WeekdayHeader = styled.div`
+  text-align: center;
+  font-size: 0.75rem;
+  color: #64748b;
+  padding: 6px 0;
+`;
+
+export const DayButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-radius: 50%;
+  margin: 2px;
+  
+  /* Current month vs other month */
+  color: ${props => props.currentMonth ? '#0f172a' : '#94a3b8'};
+  
+  /* Selected state */
+  background: ${props => props.selected ? props.primaryColor || '#3b82f6' : 'transparent'};
+  color: ${props => props.selected ? 'white' : props.currentMonth ? '#0f172a' : '#94a3b8'};
+  
+  /* Today state */
+  font-weight: ${props => props.today ? 'bold' : 'normal'};
+  border: ${props => props.today ? `1px solid ${props.primaryColor || '#3b82f6'}` : 'none'};
+  
+  &:hover {
+    background: ${props => props.selected ? props.primaryColor || '#3b82f6' : '#f1f5f9'};
+  }
+`; 

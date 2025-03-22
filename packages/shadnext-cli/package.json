@@ -1,0 +1,61 @@
+{
+  "name": "@shadnext/cli",
+  "version": "0.1.0",
+  "description": "CLI for ShadNext Persian UI components",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "shadnext": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc && powershell -Command \"Copy-Item -Recurse -Force templates dist/\"",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "test": "jest"
+  },
+  "keywords": [
+    "cli",
+    "react",
+    "angular",
+    "persian",
+    "datepicker",
+    "timepicker",
+    "jalali"
+  ],
+  "author": "ShadNext Team",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "handlebars": "^4.7.8",
+    "inquirer": "^9.2.12",
+    "ora": "^7.0.1"
+  },
+  "devDependencies": {
+    "@oclif/core": "^4.2.10",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "oclif": {
+    "commands": "./dist/commands",
+    "bin": "shadnext",
+    "plugins": [
+      "@oclif/plugin-help"
+    ],
+    "topics": {
+      "react": {
+        "description": "Commands for integrating with React projects"
+      },
+      "angular": {
+        "description": "Commands for integrating with Angular projects"
+      }
+    }
+  }
+}

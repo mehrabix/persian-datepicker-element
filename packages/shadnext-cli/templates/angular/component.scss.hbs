@@ -1,0 +1,167 @@
+:host {
+  display: block;
+  width: 100%;
+  font-family: 'Vazirmatn', 'Tahoma', Arial, sans-serif;
+}
+
+.shadnext-persian-datepicker-wrapper {
+  position: relative;
+  width: 100%;
+  
+  // Default theme variables
+  --primary-color: #3b82f6;
+  --background-color: #ffffff;
+  --text-color: #0f172a;
+  --border-color: #e2e8f0;
+  --hover-color: #f1f5f9;
+  --border-radius: 0.375rem;
+  
+  &.rtl {
+    direction: rtl;
+  }
+  
+  &.dark-theme {
+    --background-color: #1e293b;
+    --text-color: #e2e8f0;
+    --border-color: #475569;
+    --hover-color: #334155;
+  }
+  
+  // Pass the CSS variables to the web component
+  shadnext-persian-datepicker {
+    --primary-color: var(--primary-color);
+    --background-color: var(--background-color);
+    --text-color: var(--text-color);
+    --border-color: var(--border-color);
+    --hover-color: var(--hover-color);
+    width: 100%;
+    display: block;
+  }
+}
+
+.shadnext-{{kebabCaseName}}-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.shadnext-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  
+  input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    outline: none;
+    
+    &:focus {
+      border-color: var(--primary-color);
+    }
+  }
+  
+  .calendar-toggle {
+    position: absolute;
+    left: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    
+    .calendar-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+.calendar-container {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 300px;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  padding: 12px;
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    
+    button {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-size: 14px;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    
+    .current-month {
+      font-weight: bold;
+      color: var(--text-color);
+    }
+  }
+  
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+    
+    .weekday {
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--text-color);
+      padding: 4px 0;
+    }
+  }
+  
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    
+    .day {
+      text-align: center;
+      font-size: 14px;
+      padding: 6px 0;
+      cursor: pointer;
+      border-radius: 4px;
+      color: var(--text-color);
+      
+      &:hover {
+        background-color: var(--hover-color);
+      }
+      
+      &.selected {
+        background-color: var(--selected-color);
+        color: var(--primary-color);
+        font-weight: bold;
+      }
+      
+      &.today {
+        border: 1px solid var(--primary-color);
+      }
+      
+      &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+} 

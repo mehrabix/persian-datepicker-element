@@ -1,0 +1,168 @@
+import React, { useState, useEffect, useRef } from 'react';
+{{#if styled}}
+import { Container, Input, CalendarPopup, Header, WeekdayHeader, DayButton } from './styles';
+{{else}}
+import './styles.css';
+{{/if}}
+
+/**
+ * {{componentName}} - A React component version of the {{originalName}} web component
+ * 
+ * This component was generated using the shadnext CLI.
+ * It provides the same functionality as the original web component but with a React API.
+ */
+const {{componentName}} = ({
+  value,
+  onChange,
+  placeholder = 'انتخاب تاریخ',
+  rtl = true,
+  primaryColor = '#3b82f6',
+  className = '',
+  ...props
+}) => {
+  // State
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [viewDate, setViewDate] = useState(null);
+  const containerRef = useRef(null);
+  
+  // Event handlers
+  useEffect(() => {
+    // Initialize component
+    // You would need to implement the proper initialization here
+    
+    // Handle outside clicks to close the calendar
+    const handleOutsideClick = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+  
+  // Handle open/close
+  const toggleCalendar = () => {
+    setIsOpen(!isOpen);
+  };
+  
+  // Calendar navigation
+  const goToNextMonth = () => {
+    // Implement next month logic
+  };
+  
+  const goToPrevMonth = () => {
+    // Implement previous month logic
+  };
+  
+  // Day selection
+  const selectDay = (day) => {
+    // Implement day selection logic
+    if (onChange) {
+      onChange({
+        // Return appropriate date information
+      });
+    }
+  };
+  
+  {{#if styled}}
+  return (
+    <Container ref={containerRef} rtl={rtl} className={className} {...props}>
+      <Input
+        type="text"
+        readOnly
+        placeholder={placeholder}
+        value={selectedDate || ''}
+        onClick={toggleCalendar}
+      />
+      
+      {isOpen && (
+        <CalendarPopup rtl={rtl}>
+          <Header primaryColor={primaryColor}>
+            <button onClick={goToPrevMonth}>{rtl ? '›' : '‹'}</button>
+            <div>Header text here</div>
+            <button onClick={goToNextMonth}>{rtl ? '‹' : '›'}</button>
+          </Header>
+          
+          <div className="calendar-grid">
+            {/* Weekday headers */}
+            {['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'].map((day, index) => (
+              <WeekdayHeader key={index}>{day}</WeekdayHeader>
+            ))}
+            
+            {/* Calendar days - you would generate these dynamically */}
+            {[...Array(30)].map((_, index) => (
+              <DayButton 
+                key={index} 
+                onClick={() => selectDay(index + 1)}
+                selected={false}
+                today={false}
+                primaryColor={primaryColor}
+              >
+                {index + 1}
+              </DayButton>
+            ))}
+          </div>
+        </CalendarPopup>
+      )}
+    </Container>
+  );
+  {{else}}
+  return (
+    <div 
+      className={`shadnext-{{componentName}}-container ${className}`}
+      ref={containerRef} 
+      style={{ direction: rtl ? 'rtl' : 'ltr' }}
+      {...props}
+    >
+      <input
+        className="shadnext-{{componentName}}-input"
+        type="text"
+        readOnly
+        placeholder={placeholder}
+        value={selectedDate || ''}
+        onClick={toggleCalendar}
+        style={{ 
+          '--primary-color': primaryColor 
+        }}
+      />
+      
+      {isOpen && (
+        <div className="shadnext-calendar-popup">
+          <div className="shadnext-header" style={{ background: primaryColor }}>
+            <button onClick={goToPrevMonth}>{rtl ? '›' : '‹'}</button>
+            <div>Header text here</div>
+            <button onClick={goToNextMonth}>{rtl ? '‹' : '›'}</button>
+          </div>
+          
+          <div className="shadnext-calendar-grid">
+            {/* Weekday headers */}
+            {['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'].map((day, index) => (
+              <div key={index} className="shadnext-weekday">{day}</div>
+            ))}
+            
+            {/* Calendar days - you would generate these dynamically */}
+            {[...Array(30)].map((_, index) => (
+              <div 
+                key={index} 
+                className="shadnext-day"
+                onClick={() => selectDay(index + 1)}
+                style={{
+                  '--primary-color': primaryColor
+                }}
+              >
+                {index + 1}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+  {{/if}}
+};
+
+export default {{componentName}}; 

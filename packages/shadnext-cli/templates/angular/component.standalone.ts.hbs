@@ -1,0 +1,46 @@
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: '{{selector}}',
+  templateUrl: './{{kebabCaseName}}.component.html',
+  styleUrls: ['./{{kebabCaseName}}.component.scss'],
+  standalone: true,
+  imports: [CommonModule, FormsModule]
+})
+export class {{componentName}}Component implements OnInit {
+  // Properties matching the web component API
+  @Input() date: string = '';
+  @Input() placeholder: string = 'انتخاب تاریخ';
+  @Input() format: string = 'YYYY/MM/DD';
+  @Input() theme: 'light' | 'dark' = 'light';
+  @Input() locale: 'fa' | 'en' = 'fa';
+  
+  @Output() dateSelected = new EventEmitter<string>();
+  
+  // Internal state
+  isOpen: boolean = false;
+  
+  constructor() {}
+  
+  ngOnInit(): void {
+    // Initialize component
+    this.setupTheme();
+  }
+  
+  setupTheme(): void {
+    // Apply the selected theme
+    document.documentElement.setAttribute('data-theme', this.theme);
+  }
+  
+  toggleCalendar(): void {
+    this.isOpen = !this.isOpen;
+  }
+  
+  selectDate(dateStr: string): void {
+    this.date = dateStr;
+    this.dateSelected.emit(dateStr);
+    this.isOpen = false;
+  }
+} 

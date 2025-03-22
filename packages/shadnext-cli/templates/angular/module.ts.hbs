@@ -1,0 +1,14 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { {{componentName}}Component } from './{{kebabCaseName}}.component';
+
+@NgModule({
+  declarations: [{{componentName}}Component],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
+  exports: [{{componentName}}Component]
+})
+export class {{componentName}}Module { } 

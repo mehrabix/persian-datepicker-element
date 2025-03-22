@@ -1,0 +1,50 @@
+{
+  "name": "@shadnext/persian-timepicker-element",
+  "version": "1.0.0",
+  "description": "A modern Persian (Shamsi) Time Picker web component with shadcn-like styling",
+  "main": "dist/persian-timepicker-element.js",
+  "module": "dist/persian-timepicker-element.esm.js",
+  "unpkg": "dist/persian-timepicker-element.min.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "npm run build:clean && npm run build:prod && npm run build:dev && npm run build:esm && npm run minify && npm run cleanup",
+    "build:clean": "set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && rspack",
+    "build:prod": "set NODE_ENV=production && set OUTPUT_FILE=persian-timepicker-element.min.js && set MINIFY=true && rspack",
+    "build:dev": "set NODE_ENV=development && set OUTPUT_FILE=persian-timepicker-element.js && set MINIFY=false && rspack",
+    "build:esm": "set NODE_ENV=production && set OUTPUT_FILE=persian-timepicker-element.esm.js && set MODULE_TYPE=module && set MINIFY=true && rspack",
+    "minify": "node ../../scripts/minify.js persian-timepicker-element.min.js && node ../../scripts/minify.js persian-timepicker-element.esm.js",
+    "cleanup": "node ../../scripts/cleanup-dist.js",
+    "dev": "set NODE_ENV=development && rspack serve"
+  },
+  "keywords": [
+    "jalali",
+    "shamsi",
+    "persian",
+    "time",
+    "timepicker",
+    "clock",
+    "webcomponent",
+    "custom-element",
+    "rtl",
+    "web-component",
+    "shadow-dom"
+  ],
+  "author": "Ahmad Mehrabi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mehrabix/persian-components.git",
+    "directory": "packages/persian-timepicker-element"
+  },
+  "homepage": "https://github.com/mehrabix/persian-components#readme",
+  "bugs": {
+    "url": "https://github.com/mehrabix/persian-components/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+} 

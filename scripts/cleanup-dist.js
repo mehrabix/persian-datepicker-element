@@ -1,73 +1,61 @@
 /**
- * Cleanup Dist Directory
- * 
- * This script removes temporary/placeholder files from the dist directory
- * and ensures proper file structure.
+ * Dist Directory Cleanup Script
+ * Cleans up filenames in the dist directory and removes temporary files.
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const distDir = path.resolve(__dirname, '..', 'dist');
+// Get the dist directory path
+const cwd = process.cwd();
+const distPath = path.resolve(cwd, 'dist');
 
 // Check if dist directory exists
-if (!fs.existsSync(distDir)) {
-  console.log('Dist directory does not exist, nothing to clean up.');
-  process.exit(0);
+if (!fs.existsSync(distPath)) {
+  console.error(`Error: Dist directory not found at ${distPath}`);
+  process.exit(1);
 }
 
-console.log('Cleaning up dist directory...');
+console.log('Cleaning up filenames in dist directory...');
 
-// Files to remove
+// Check for files with spaces in their names
+let filesCleaned = false;
+fs.readdirSync(distPath).forEach(file => {
+  if (file.includes(' ')) {
+    const newFileName = file.replace(/\s+/g, '');
+    fs.renameSync(
+      path.join(distPath, file),
+      path.join(distPath, newFileName)
+    );
+    console.log(`Renamed: "${file}" -> "${newFileName}"`);
+    filesCleaned = true;
+  }
+});
+
+if (!filesCleaned) {
+  console.log('No files needed cleaning. All filenames are already clean.');
+}
+
+// Remove any placeholder or temporary files
 const filesToRemove = [
   'placeholder.js',
   'placeholder.js.map'
 ];
 
-// Remove temporary files
-let removedCount = 0;
 filesToRemove.forEach(file => {
-  const filePath = path.join(distDir, file);
+  const filePath = path.join(distPath, file);
   if (fs.existsSync(filePath)) {
-    try {
-      fs.unlinkSync(filePath);
-      console.log(`Removed: ${file}`);
-      removedCount++;
-    } catch (err) {
-      console.error(`Error removing ${file}: ${err.message}`);
-    }
+    fs.unlinkSync(filePath);
+    console.log(`Removed temporary file: ${file}`);
   }
 });
 
-// Check for and fix any map file references
-const jsFiles = fs.readdirSync(distDir).filter(file => file.endsWith('.js'));
-let fixedMapCount = 0;
-
-jsFiles.forEach(file => {
-  const filePath = path.join(distDir, file);
-  try {
-    let content = fs.readFileSync(filePath, 'utf8');
-    
-    // Look for sourcemap comment and ensure it points to the correct file
-    const sourceMappingMatch = content.match(/\/\/# sourceMappingURL=(.+)$/m);
-    if (sourceMappingMatch) {
-      const currentMapFile = sourceMappingMatch[1];
-      const expectedMapFile = `${file}.map`;
-      
-      if (currentMapFile !== expectedMapFile) {
-        // Fix the source map URL
-        content = content.replace(
-          /\/\/# sourceMappingURL=.+$/m,
-          `//# sourceMappingURL=${expectedMapFile}`
-        );
-        fs.writeFileSync(filePath, content);
-        console.log(`Fixed sourcemap reference in ${file}`);
-        fixedMapCount++;
-      }
-    }
-  } catch (err) {
-    console.error(`Error processing ${file}: ${err.message}`);
-  }
-});
-
-console.log(`\nCleanup complete! Removed ${removedCount} temporary files and fixed ${fixedMapCount} sourcemap references.`); 
+// List all files in the dist directory with their sizes
+console.log('\nCurrent files in dist directory:');
+fs.readdirSync(distPath)
+  .filter(file => file.endsWith('.js'))
+  .forEach(file => {
+    const filePath = path.join(distPath, file);
+    const stats = fs.statSync(filePath);
+    console.log(`- ${file} (${(stats.size / 1024).toFixed(2)} KB)`);
+  }); 

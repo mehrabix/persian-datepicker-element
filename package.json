@@ -1,30 +1,23 @@
 {
-  "name": "persian-datepicker-element",
-  "version": "1.0.4",
-  "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
-  "main": "dist/persian-datepicker-element.js",
-  "module": "dist/persian-datepicker-element.esm.js",
-  "unpkg": "dist/persian-datepicker-element.min.js",
-  "types": "dist/types/index.d.ts",
-  "files": [
-    "dist"
+  "name": "shadnext-persian-components",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Modern Persian (Shamsi) UI components with shadcn-like styling",
+  "workspaces": [
+    "packages/*"
   ],
-  "sideEffects": false,
   "scripts": {
-    "build": "pnpm run build:datepicker && pnpm run build:timepicker",
-    "build:datepicker": "set COMPONENT_NAME=persian-datepicker-element && pnpm run build:component",
-    "build:timepicker": "set COMPONENT_NAME=persian-timepicker-element && pnpm run build:component",
-    "build:component": "node scripts/build-component.js",
-    "build:clean": "set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && rspack",
-    "build:prod": "set NODE_ENV=production && set OUTPUT_FILE=%COMPONENT_NAME%.min.js && set MINIFY=true && rspack",
-    "build:dev": "set NODE_ENV=development && set OUTPUT_FILE=%COMPONENT_NAME%.js && set MINIFY=false && rspack",
-    "build:esm": "set NODE_ENV=production && set OUTPUT_FILE=%COMPONENT_NAME%.esm.js && set MODULE_TYPE=module && set MINIFY=true && rspack",
-    "minify": "node scripts/minify.js",
-    "cleanup": "node scripts/cleanup-dist.js",
-    "dev": "set NODE_ENV=development && rspack serve",
-    "analyze": "set NODE_ENV=production && set BUNDLE_ANALYZE=true && rspack",
+    "build": "pnpm -r run build",
+    "build:datepicker": "pnpm --filter @shadnext/persian-datepicker-element run build",
+    "build:timepicker": "pnpm --filter @shadnext/persian-timepicker-element run build",
+    "build:cli": "pnpm --filter @shadnext/cli run build",
+    "clean": "rimraf packages/*/dist",
     "test": "jest",
-    "serve": "pnpm exec serve"
+    "dev": "pnpm --filter @shadnext/persian-datepicker-element run dev",
+    "serve": "pnpm exec serve",
+    "publish": "lerna publish --no-private",
+    "version": "lerna version",
+    "react-convert": "node scripts/convert-to-react.js"
   },
   "keywords": [
     "jalali",
@@ -44,11 +37,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mehrabix/persian-datepicker-element.git"
+    "url": "https://github.com/mehrabix/persian-components.git"
   },
-  "homepage": "https://github.com/mehrabix/persian-datepicker-element#readme",
+  "homepage": "https://github.com/mehrabix/persian-components#readme",
   "bugs": {
-    "url": "https://github.com/mehrabix/persian-datepicker-element/issues"
+    "url": "https://github.com/mehrabix/persian-components/issues"
   },
   "devDependencies": {
     "@rspack/cli": "^1.2.8",
@@ -59,6 +52,8 @@
     "css-loader": "^7.1.2",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "lerna": "^8.1.2",
+    "rimraf": "^5.0.5",
     "serve": "^14.2.4",
     "style-loader": "^4.0.0",
     "terser": "^5.30.1",

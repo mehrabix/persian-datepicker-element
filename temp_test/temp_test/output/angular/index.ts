@@ -1,0 +1,1 @@
+export { PersianDatePickerComponent, PersianDatePickerModule } from './persian-date-picker.component'; 

@@ -1,218 +1,197 @@
-# Persian Date Picker & Time Picker Web Components
+# Persian UI Components | کامپوننت‌های UI فارسی
 
-A collection of Web Components for Persian (Jalali) calendar date and time selection.
+A collection of modern UI components for Persian (Shamsi) calendar and time selection with shadcn-like styling.
 
-## Features
+## Components
 
-### Persian Date Picker
-- Fully customizable Persian (Jalali) calendar date picker
-- Built as a native Web Component for maximum compatibility
-- Lightweight with no dependencies
-- Extensive CSS customization options
-- Date conversion utilities included
+This monorepo contains the following components:
 
-### Persian Time Picker
-- Customizable time picker for Persian UI
-- 12-hour and 24-hour format support
-- Optional seconds display
-- Keyboard navigation
+- [@shadnext/persian-datepicker-element](./packages/persian-datepicker-element) - Persian Date Picker
+- [@shadnext/persian-timepicker-element](./packages/persian-timepicker-element) - Persian Time Picker
+
+## Features | ویژگی‌ها
+
+- Clean, modern UI similar to shadcn components
+- Accurate Persian (Shamsi) calendar with proper month lengths and leap years
 - Full RTL support
-- Multiple styling options through CSS variables
+- Highly customizable styling with CSS variables
+- Lightweight and dependency-free
+- Works with any framework or vanilla JavaScript
+- TypeScript support
 
-## Installation
+<div dir="rtl">
+
+- رابط کاربری تمیز و مدرن مشابه کامپوننت‌های shadcn
+- تقویم شمسی دقیق با طول ماه‌های صحیح و سال‌های کبیسه
+- پشتیبانی کامل از راست به چپ (RTL)
+- قابلیت شخصی‌سازی بالا با متغیرهای CSS
+- سبک و بدون وابستگی
+- سازگار با هر فریم‌ورک یا جاوااسکریپت خالص
+- پشتیبانی از TypeScript
+
+</div>
+
+## Installation | نصب
+
+### Date Picker
 
 ```bash
-npm install persian-datepicker-webcomponents
+npm install @shadnext/persian-datepicker-element
 ```
+
+### Time Picker
+
+```bash
+npm install @shadnext/persian-timepicker-element
+```
+
+<div dir="rtl">
+
+### نصب انتخابگر تاریخ:
+```bash
+npm install @shadnext/persian-datepicker-element
+```
+
+### نصب انتخابگر زمان:
+```bash
+npm install @shadnext/persian-timepicker-element
+```
+</div>
 
 ## Usage
 
 ### Date Picker
 
 ```html
-<!-- Import as script -->
-<script type="module" src="path/to/persian-datepicker-element.js"></script>
+<!-- Include the script -->
+<script src="node_modules/@shadnext/persian-datepicker-element/dist/persian-datepicker-element.min.js"></script>
 
-<!-- Basic usage -->
+<!-- Use the component -->
 <persian-datepicker-element></persian-datepicker-element>
-
-<!-- With attributes -->
-<persian-datepicker-element 
-  placeholder="تاریخ تولد" 
-  format="YYYY/MM/DD">
-</persian-datepicker-element>
-```
-
-```javascript
-// Import in JavaScript
-import { PersianDatePickerElement } from 'persian-datepicker-webcomponents';
-
-// Listen for date change events
-const datePicker = document.querySelector('persian-datepicker-element');
-datePicker.addEventListener('change', (e) => {
-  console.log('Selected date (Jalali):', e.detail.jalali);
-  console.log('Selected date (Gregorian):', e.detail.gregorian);
-});
 ```
 
 ### Time Picker
 
 ```html
-<!-- Import as script -->
-<script type="module" src="path/to/persian-timepicker-element.js"></script>
+<!-- Include the script -->
+<script src="node_modules/@shadnext/persian-timepicker-element/dist/persian-timepicker-element.min.js"></script>
 
-<!-- Basic usage -->
+<!-- Use the component -->
 <persian-timepicker-element></persian-timepicker-element>
-
-<!-- With attributes -->
-<persian-timepicker-element 
-  placeholder="زمان جلسه"
-  use-24-hour-format="true" 
-  show-seconds="true">
-</persian-timepicker-element>
 ```
+
+### With ES Modules
 
 ```javascript
-// Import in JavaScript
-import { PersianTimePickerElement } from 'persian-datepicker-webcomponents';
+// Import the Date Picker component
+import '@shadnext/persian-datepicker-element';
 
-// Listen for time change events
-const timePicker = document.querySelector('persian-timepicker-element');
-timePicker.addEventListener('timeChange', (e) => {
-  console.log('Selected time:', e.detail.timeString);
-  console.log('Hour:', e.detail.hour);
-  console.log('Minute:', e.detail.minute);
-});
+// Import the Time Picker component
+import '@shadnext/persian-timepicker-element';
 ```
 
-## Configuration
+### With TypeScript
 
-### Date Picker Attributes
+```typescript
+import { PersianDatePickerElement, PersianDate } from '@shadnext/persian-datepicker-element';
+import { PersianTimePickerElement } from '@shadnext/persian-timepicker-element';
 
-| Attribute    | Type    | Default    | Description                                  |
-|--------------|---------|------------|----------------------------------------------|
-| placeholder  | string  | "انتخاب تاریخ" | Placeholder text for the input              |
-| format       | string  | "YYYY/MM/DD" | Format for the displayed date                |
-| value        | string  | null       | Initial value (e.g., "1402/04/24")            |
-| disabled     | boolean | false      | Whether the date picker is disabled           |
-| min-date     | string  | null       | Minimum selectable date (e.g., "1400/01/01")  |
-| max-date     | string  | null       | Maximum selectable date (e.g., "1410/12/29")  |
+// Access to the class for type checking or programmatic usage
+const datePicker = document.querySelector('persian-datepicker-element') as PersianDatePickerElement;
+const timePicker = document.querySelector('persian-timepicker-element') as PersianTimePickerElement;
 
-### Time Picker Attributes
+// Programmatically set a date (year, month, day)
+datePicker.setValue(1402, 12, 25);
 
-| Attribute           | Type    | Default        | Description                             |
-|---------------------|---------|----------------|-----------------------------------------|
-| placeholder         | string  | "انتخاب زمان"    | Placeholder text for the input          |
-| hour                | number  | Current hour   | Initial hour value                      |
-| minute              | number  | Current minute | Initial minute value                    |
-| second              | number  | Current second | Initial second value                    |
-| use-24-hour-format  | boolean | false          | Whether to use 24-hour format           |
-| show-seconds        | boolean | false          | Whether to show seconds selection       |
-| disabled            | boolean | false          | Whether the time picker is disabled      |
-| rtl                 | boolean | true           | Whether to use RTL layout               |
-| default-time        | string  | null           | Initial time (e.g., "14:30" or "02:30 ب.ظ") |
+// Get the selected date
+const selectedDate = datePicker.getValue();
 
-## Styling
+// Set time
+timePicker.setValue(14, 30, 0);
+```
 
-Both components support extensive customization through CSS variables.
+## React Integration
 
-### Date Picker CSS Variables
+You can use these components with React in several ways:
 
-```css
-persian-datepicker-element {
-  --jdp-primary: #0891b2;
-  --jdp-primary-hover: #0e7490;
-  --jdp-primary-foreground: #ffffff;
-  --jdp-background: #ffffff;
-  --jdp-foreground: #1e293b;
-  --jdp-muted: #f1f5f9;
-  --jdp-muted-foreground: #64748b;
-  --jdp-border: #e2e8f0;
-  --jdp-ring: #0284c7;
-  --jdp-border-radius: 6px;
-  --jdp-font-family: Tahoma, Arial, sans-serif;
+### Option 1: Use as Web Components
+
+```jsx
+import React, { useRef, useEffect } from 'react';
+import '@shadnext/persian-datepicker-element';
+
+function MyDatePicker(props) {
+  const pickerRef = useRef(null);
+  
+  useEffect(() => {
+    if (pickerRef.current && props.onChange) {
+      pickerRef.current.addEventListener('value-changed', (e) => {
+        props.onChange(e.detail);
+      });
+      
+      return () => {
+        pickerRef.current.removeEventListener('value-changed', props.onChange);
+      };
+    }
+  }, [props.onChange]);
+  
+  return <persian-datepicker-element ref={pickerRef} />;
 }
 ```
 
-### Time Picker CSS Variables
+### Option 2: Copy Source Code for Full Customization
 
-```css
-persian-timepicker-element {
-  --jtp-primary: #0891b2;
-  --jtp-primary-hover: #0e7490;
-  --jtp-primary-foreground: #ffffff;
-  --jtp-background: #ffffff;
-  --jtp-foreground: #1e293b;
-  --jtp-muted: #f1f5f9;
-  --jtp-muted-foreground: #64748b;
-  --jtp-border: #e2e8f0;
-  --jtp-ring: #0284c7;
-  --jtp-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --jtp-font-size: 14px;
-  --jtp-border-radius: 6px;
-}
-```
-
-## Project Structure
-
-The project is organized as follows:
-
-```
-/
-├── dist/                  # Built components
-│   ├── persian-datepicker-element.js
-│   ├── persian-datepicker-element.min.js
-│   ├── persian-datepicker-element.esm.js
-│   ├── persian-timepicker-element.js
-│   ├── persian-timepicker-element.min.js
-│   └── persian-timepicker-element.esm.js
-├── src/
-│   ├── components/        # Component source code
-│   │   ├── persian-datepicker-element/
-│   │   └── persian-timepicker-element/
-│   ├── utils/             # Shared utilities
-│   └── __test-utils__/    # Test utilities
-├── examples/              # Usage examples
-└── tests/                 # Tests
-```
-
-## Examples
-
-See the `/examples` directory for complete usage examples:
-- `datepicker-example.html` - Examples of using the date picker
-- `timepicker-example.html` - Examples of using the time picker
-
-## Development
-
-Requirements:
-- Node.js 14+
-- npm 7+
+For complete control, you can copy the source code and convert it to a React component:
 
 ```bash
-# Install dependencies
-npm install
+# Use our conversion script
+node scripts/convert-to-react.js
 
-# Build all components
-npm run build
-
-# Build individual components
-npm run build:datepicker
-npm run build:timepicker
-
-# Run the development server
-npm run serve
-
-# Run tests
-npm test
+# This will create a react-components directory with the extracted code
 ```
 
-## Browser Support
+See the [React Integration Guide](./docs/REACT-INTEGRATION.md) for detailed instructions and examples.
 
-- Chrome/Edge 67+
-- Firefox 63+
-- Safari 10.1+
-- Opera 54+
+### CLI Tool for React Integration
 
-## License
+Use our CLI tool to easily add Persian UI components to your React project:
+
+```bash
+# Use npx to run without installing
+npx @shadnext/cli react add persian-datepicker-element
+
+# Or install globally
+npm install -g @shadnext/cli
+shadnext react add persian-datepicker-element
+```
+
+Options:
+- `--typescript` - Generate TypeScript files
+- `--styled` - Use styled-components instead of CSS
+- `--directory` - Specify a custom directory for the component (e.g. `--directory src/components/DatePicker`)
+
+The CLI will generate optimized React components that wrap the web components with a React-friendly API.
+
+### CLI Tool for Angular Integration
+
+Use our CLI tool to easily add Persian UI components to your Angular project:
+
+```bash
+# Use npx to run without installing
+npx @shadnext/cli angular add persian-datepicker-element
+
+# Or install globally
+npm install -g @shadnext/cli
+shadnext angular add persian-datepicker-element
+```
+
+Options:
+- `--standalone` - Generate a standalone component (Angular 14+)
+- `--module` - Specify an Angular module to add the component to
+- `--directory` - Specify a custom directory for the component (e.g. `--directory src/app/components/date-picker`)
+
+The CLI will generate optimized Angular components that wrap the web components with an Angular-friendly API, including proper bindings, template files, and styles.
+
+## License | مجوز
 
 MIT 

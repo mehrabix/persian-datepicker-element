@@ -1,75 +1,81 @@
-const path = require('path');
+/**
+ * Minification Script
+ * This script minifies JavaScript files using terser.
+ */
+
 const fs = require('fs');
-const { execSync } = require('child_process');
+const path = require('path');
+const { minify } = require('terser');
 
-// Get component name from environment or from command line
-const componentName = process.argv[2] || process.env.COMPONENT_NAME;
+// Get the filename to minify
+const filesToMinify = process.argv.slice(2);
 
-if (!componentName) {
-  console.error('Error: No component specified for minification');
-  console.error('Usage: node minify.js <component-name> or set COMPONENT_NAME environment variable');
+if (filesToMinify.length === 0) {
+  console.error('Error: Please provide at least one filename to minify');
   process.exit(1);
 }
 
-// Clean component name
-const cleanComponentName = componentName.trim().replace(/\.js$/, '');
-
-// Files to minify
-const filesToMinify = [
-  `${cleanComponentName}.min.js`,
-  `${cleanComponentName}.esm.js`
-];
-
-// Get the list of files in the dist directory
-const distPath = path.resolve(__dirname, '..', 'dist');
-const files = fs.readdirSync(distPath);
-
-// Function to find a file ignoring spaces
-const findFileIgnoringSpaces = (targetName) => {
-  // First try exact match
-  if (files.includes(targetName)) {
-    return targetName;
-  }
+async function minifyFile(filename) {
+  // Get the current working directory
+  const cwd = process.cwd();
+  const filePath = path.resolve(cwd, 'dist', filename);
   
-  // Then try ignoring spaces
-  const normalizedTarget = targetName.replace(/\s+/g, '');
-  return files.find(file => 
-    file.replace(/\s+/g, '') === normalizedTarget
-  );
-};
-
-// Minify each file
-filesToMinify.forEach(fileToMinify => {
-  const targetFile = findFileIgnoringSpaces(fileToMinify);
-
-  if (!targetFile) {
-    console.error(`Warning: File ${fileToMinify} not found in dist directory`);
-    console.log('Available files:', files);
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    console.error(`Error: File not found: ${filePath}`);
     return;
   }
-
-  const outputPath = path.resolve(distPath, targetFile);
-
-  // Get file size before minification
-  const statsBefore = fs.statSync(outputPath);
-  const sizeBefore = (statsBefore.size / 1024).toFixed(2);
-
-  console.log(`\nMinifying ${targetFile}...`);
-  console.log(`Original size: ${sizeBefore} KB`);
-
+  
+  console.log(`\nMinifying ${filename}...`);
+  
+  // Read the file
+  const code = fs.readFileSync(filePath, 'utf8');
+  const originalSize = (Buffer.byteLength(code, 'utf8') / 1024).toFixed(2);
+  console.log(`Original size: ${originalSize} KB`);
+  
   try {
-    // Use aggressive minification options for better results
-    const terserCmd = `pnpm exec terser "${outputPath}" --compress passes=2,drop_console=true --mangle --output "${outputPath}"`;
-    execSync(terserCmd, { stdio: 'inherit' });
+    // Minify the code
+    const result = await minify(code, {
+      sourceMap: true,
+      compress: {
+        ecma: 2020,
+        pure_getters: true,
+        passes: 3,
+      },
+      format: {
+        ecma: 2020,
+        comments: false,
+      },
+    });
     
-    // Get file size after minification
-    const statsAfter = fs.statSync(outputPath);
-    const sizeAfter = (statsAfter.size / 1024).toFixed(2);
-    const reduction = ((1 - statsAfter.size / statsBefore.size) * 100).toFixed(2);
+    if (!result.code) {
+      throw new Error('Minification produced no output');
+    }
     
-    console.log(`Minification complete!`);
-    console.log(`New size: ${sizeAfter} KB (${reduction}% reduction)`);
+    // Write the minified code back to the file
+    fs.writeFileSync(filePath, result.code);
+    
+    // Write the source map if generated
+    if (result.map) {
+      fs.writeFileSync(`${filePath}.map`, result.map);
+    }
+    
+    // Calculate the size reduction
+    const newSize = (Buffer.byteLength(result.code, 'utf8') / 1024).toFixed(2);
+    const reduction = (100 * (1 - newSize / originalSize)).toFixed(2);
+    
+    console.log('Minification complete!');
+    console.log(`New size: ${newSize} KB (${reduction}% reduction)`);
   } catch (error) {
-    console.error(`Error during minification of ${targetFile}:`, error.message);
+    console.error(`Error minifying ${filename}:`, error);
   }
-}); 
+}
+
+// Process each file
+async function processFiles() {
+  for (const file of filesToMinify) {
+    await minifyFile(file);
+  }
+}
+
+processFiles(); 

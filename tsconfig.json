@@ -9,7 +9,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "paths": {
+      "@shadnext/persian-datepicker-element": ["./packages/persian-datepicker-element/src"],
+      "@shadnext/persian-timepicker-element": ["./packages/persian-timepicker-element/src"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

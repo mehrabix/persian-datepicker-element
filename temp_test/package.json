@@ -1,0 +1,14 @@
+{
+  "name": "template-test",
+  "version": "1.0.0",
+  "description": "Test for shadnext-cli templates",
+  "type": "module",
+  "main": "test-templates.js",
+  "scripts": {
+    "test": "node test-templates.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "handlebars": "^4.7.8"
+  }
+} 
