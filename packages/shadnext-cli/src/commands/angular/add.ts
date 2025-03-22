@@ -120,10 +120,6 @@ export default class AngularAdd extends Command {
       { 
         src: 'component.scss.hbs', 
         dest: `${kebabCase(componentName)}.component.scss` 
-      },
-      { 
-        src: 'index.ts.hbs', 
-        dest: 'index.ts' 
       }
     ];
     
@@ -154,6 +150,11 @@ export default class AngularAdd extends Command {
       fs.writeFileSync(outputPath, output);
       this.log(`Created: ${outputPath}`);
     }
+    
+    // Handle index.ts separately using updateIndexFile
+    const options = { directory: outputDir, standalone };
+    const indexPath = await updateIndexFile(componentName, kebabCase(componentName), options);
+    this.log(`Updated: ${indexPath}`);
   }
 }
 
@@ -166,6 +167,7 @@ async function updateIndexFile(componentName: string, kebabName: string, options
   
   let indexContent = '';
   let existingExports: string[] = [];
+  let alreadyExported = false;
   
   // Check if index file already exists
   if (fs.existsSync(indexFilePath)) {
@@ -176,13 +178,31 @@ async function updateIndexFile(componentName: string, kebabName: string, options
     let match;
     
     while ((match = exportRegex.exec(indexContent)) !== null) {
+      const exportNames = match[1].split(',').map(name => name.trim());
+      const importPath = match[2];
+      
+      // Check if this component is already exported from the same path
+      const normalizedPath = importPath.replace(/^\.\//, '').replace(/\.(js|ts)$/, '');
+      const normalizedKebabName = kebabName.replace(/^\.\//, '').replace(/\.(js|ts)$/, '');
+      const componentExportName = componentName + 'Component';
+      const moduleExportName = componentName + 'Module';
+      
+      if ((exportNames.includes(componentExportName) || 
+           (!options.standalone && exportNames.includes(moduleExportName))) && 
+          (normalizedPath === normalizedKebabName || 
+           normalizedPath === './' + normalizedKebabName ||
+           normalizedPath === normalizedKebabName + '.component' ||
+           normalizedPath === './' + normalizedKebabName + '.component')) {
+        alreadyExported = true;
+      }
+      
       existingExports.push(match[0]);
     }
   }
   
   // Add new export if not already present
   const newExport = `export { ${componentName}Component${options.standalone ? '' : `, ${componentName}Module`} } from './${kebabName}.component';`;
-  if (!existingExports.some(exp => exp.includes(`{ ${componentName}Component`))) {
+  if (!alreadyExported) {
     existingExports.push(newExport);
   }
   

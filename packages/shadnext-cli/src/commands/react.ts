@@ -114,10 +114,9 @@ async function generateReactComponent(componentName: ComponentName, options: Rea
     const styleFileName = options.styled ? 
       `${pascalCaseName}.styles.${options.typescript ? 'ts' : 'js'}` : 
       `${pascalCaseName}.css`;
-    const indexPath = await updateIndexFile(componentName, pascalCaseName, options);
     
     // Check if files already exist
-    const filesToCheck = [componentFileName, styleFileName, indexPath];
+    const filesToCheck = [componentFileName, styleFileName];
     
     if (!options.force && (await Promise.all(filesToCheck.map(file => fs.pathExists(file)))).some(exists => exists)) {
       spinner.fail('Component files already exist. Use --force to overwrite.');
@@ -137,17 +136,13 @@ async function generateReactComponent(componentName: ComponentName, options: Rea
       path.join(templateDir, options.typescript ? 'styles.ts.hbs' : 'styles.js.hbs') : 
       path.join(templateDir, 'styles.css.hbs');
     
-    const indexTemplatePath = path.join(templateDir, options.typescript ? 'index.ts.hbs' : 'index.js.hbs');
-    
     // Read templates
     const componentTemplate = await fs.readFile(componentTemplatePath, 'utf8');
     const styleTemplate = await fs.readFile(styleTemplatePath, 'utf8');
-    const indexTemplate = await fs.readFile(indexTemplatePath, 'utf8');
     
     // Compile templates
     const compileComponent = Handlebars.compile(componentTemplate);
     const compileStyle = Handlebars.compile(styleTemplate);
-    const compileIndex = Handlebars.compile(indexTemplate);
     
     // Generate content
     const componentContent = compileComponent({
@@ -163,14 +158,10 @@ async function generateReactComponent(componentName: ComponentName, options: Rea
       originalName: componentName
     });
     
-    const indexContent = compileIndex({
-      componentName: pascalCaseName
-    });
-    
     // Write files
     await fs.writeFile(path.join(fullPath, componentFileName), componentContent);
     await fs.writeFile(path.join(fullPath, styleFileName), styleContent);
-    await fs.writeFile(indexPath, indexContent);
+    const indexPath = await updateIndexFile(pascalCaseName, pascalCaseName, options);
     
     // Get npm install command
     const installCommand = getNpmInstallCommand(componentName, options);
@@ -214,6 +205,7 @@ async function updateIndexFile(componentName: string, kebabName: string, options
   
   let indexContent = '';
   let existingExports: string[] = [];
+  let alreadyExported = false;
   
   // Check if index file already exists
   if (fs.existsSync(indexFilePath)) {
@@ -224,13 +216,25 @@ async function updateIndexFile(componentName: string, kebabName: string, options
     let match;
     
     while ((match = exportRegex.exec(indexContent)) !== null) {
+      const exportNames = match[1].split(',').map(name => name.trim());
+      const importPath = match[2];
+      
+      // Check if this component is already exported from the same path
+      const normalizedPath = importPath.replace(/^\.\//, '').replace(/\.(js|ts)$/, '');
+      const normalizedKebabName = kebabName.replace(/^\.\//, '').replace(/\.(js|ts)$/, '');
+      
+      if (exportNames.includes(componentName) && 
+          (normalizedPath === normalizedKebabName || normalizedPath === './' + normalizedKebabName)) {
+        alreadyExported = true;
+      }
+      
       existingExports.push(match[0]);
     }
   }
   
   // Add new export if not already present
   const newExport = `export { ${componentName} } from './${kebabName}';`;
-  if (!existingExports.some(exp => exp.includes(`{ ${componentName} }`))) {
+  if (!alreadyExported) {
     existingExports.push(newExport);
   }
   
