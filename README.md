@@ -183,22 +183,31 @@ The datepicker supports filtering holidays by type:
 <!-- Show multiple holiday types -->
 <persian-datepicker-element holiday-types="Iran,Religious,International"></persian-datepicker-element>
 
-<!-- Show all holiday types, including those normally excluded (like Afghanistan) -->
+<!-- Show Afghanistan holidays -->
+<persian-datepicker-element holiday-types="Afghanistan"></persian-datepicker-element>
+
+<!-- Show all holiday types -->
 <persian-datepicker-element holiday-types="all"></persian-datepicker-element>
 ```
 
-By default, the component shows holidays of types "Iran" and "Religious", and excludes "Afghanistan" holidays. You can customize this behavior programmatically:
+By default, the component shows holidays of types "Iran" and "Religious". You can customize this behavior programmatically:
 
 ```javascript
 // Set holiday types
 datePicker.setHolidayTypes(['Iran', 'Religious']); // Array format
 datePicker.setHolidayTypes('Iran,Religious');      // String format
+
+// Set specific holiday types
+datePicker.setHolidayTypes('Afghanistan');         // Show only Afghanistan holidays
+datePicker.setHolidayTypes('Iran,Afghanistan');    // Show both Iran and Afghanistan holidays
+
+// Show all holiday types
 datePicker.setHolidayTypes('all');                 // Special value to include all types
 
 // Get current holiday types
 const types = datePicker.getHolidayTypes();
 
-// Check if all types are being shown (including excluded types)
+// Check if all types are being shown
 const showingAll = datePicker.isShowingAllTypes();
 ```
 
@@ -207,9 +216,9 @@ const showingAll = datePicker.isShowingAllTypes();
 The component includes the following holiday types:
 
 - `Iran`: Official Iranian holidays
-- `Religious`: Islamic religious occasions
+- `Religious`: Islamic religious occasions and holidays
 - `International`: International days and events
-- `Afghanistan`: Afghanistan-specific holidays (excluded by default)
+- `Afghanistan`: Afghanistan-specific holidays
 
 ## PersianDate Utility
 

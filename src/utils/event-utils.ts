@@ -2,9 +2,6 @@ import { PersianEvent } from '../types';
 // Import the original JSON file from the Persian Calendar repo
 import persianCalendarData from '../data/persian-calendar-repo/PersianCalendar/data/events.json';
 
-// Types that are excluded by default
-export const EXCLUDED_TYPES = ['Afghanistan'];
-
 // Fallback events in case JSON loading fails
 const fallbackEvents: PersianEvent[] = [
   { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
@@ -20,18 +17,41 @@ const fallbackEvents: PersianEvent[] = [
  */
 function mapPersianCalendarEvents(): PersianEvent[] {
   try {
-    // The Persian Calendar repo has events under the "Persian Calendar" key
+    let allEvents: PersianEvent[] = [];
+    
+    // Process Persian Calendar events
     if (persianCalendarData && Array.isArray(persianCalendarData["Persian Calendar"])) {
-      return persianCalendarData["Persian Calendar"].map((event: any) => ({
+      const persianEvents = persianCalendarData["Persian Calendar"].map((event: any) => ({
         title: event.title,
         month: event.month,
         day: event.day,
         type: event.type,
         holiday: event.holiday
       }));
+      
+      allEvents = [...persianEvents];
     }
-    console.warn('Persian Calendar data not found in expected format, using fallback events');
-    return fallbackEvents;
+    
+    // Process Hijri Calendar events - Note: these are configured for the current year
+    // In a real app, these should be calculated each year based on Hijri-to-Persian conversion
+    if (persianCalendarData && Array.isArray(persianCalendarData["Hijri Calendar"])) {
+      const hijriEvents = persianCalendarData["Hijri Calendar"].map((event: any) => ({
+        title: event.title,
+        month: event.month,
+        day: event.day,
+        type: event.type,
+        holiday: event.holiday
+      }));
+      
+      allEvents = [...allEvents, ...hijriEvents];
+    }
+    
+    if (allEvents.length === 0) {
+      console.warn('Persian Calendar data not found in expected format, using fallback events');
+      return fallbackEvents;
+    }
+    
+    return allEvents;
   } catch (error) {
     console.error('Error mapping Persian Calendar events:', error);
     return fallbackEvents;
@@ -48,18 +68,13 @@ export const EventUtils = {
   /**
    * Returns all Persian calendar events mapped from the original JSON data
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
-   * @param includeAllTypes If true, includes all event types regardless of exclusion list
+   * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getAllEvents(eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
-    let filteredEvents = mappedEvents;
+    let filteredEvents = [...mappedEvents];
     
-    // Apply exclusion filter unless includeAllTypes is true
-    if (!includeAllTypes) {
-      filteredEvents = filteredEvents.filter(event => !EXCLUDED_TYPES.includes(event.type));
-    }
-    
-    // If event types are specified, filter by those types
-    if (eventTypes && eventTypes.length > 0) {
+    // If specific event types are provided and we're not including all types, filter by those types
+    if (eventTypes && eventTypes.length > 0 && !includeAllTypes) {
       filteredEvents = filteredEvents.filter(event => eventTypes.includes(event.type));
     }
     
@@ -71,7 +86,7 @@ export const EventUtils = {
    * @param month The month number (1-12)
    * @param day The day number (1-31)
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
-   * @param includeAllTypes If true, includes all event types regardless of exclusion list
+   * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getEvents(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
     const events = this.getAllEvents(eventTypes, includeAllTypes);
@@ -86,7 +101,7 @@ export const EventUtils = {
    * @param month The month number (1-12)
    * @param day The day number (1-31)
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
-   * @param includeAllTypes If true, includes all event types regardless of exclusion list
+   * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   isHoliday(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): boolean {
     const events = this.getEvents(month, day, eventTypes, includeAllTypes);
@@ -98,7 +113,7 @@ export const EventUtils = {
    * @param month The month number (1-12)
    * @param day The day number (1-31)
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
-   * @param includeAllTypes If true, includes all event types regardless of exclusion list
+   * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getHolidayTitles(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): string[] {
     const events = this.getEvents(month, day, eventTypes, includeAllTypes);
@@ -112,7 +127,7 @@ export const EventUtils = {
    * @param month The month number (1-12)
    * @param day The day number (1-31)
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
-   * @param includeAllTypes If true, includes all event types regardless of exclusion list
+   * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getAllEventTitles(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): string[] {
     const events = this.getEvents(month, day, eventTypes, includeAllTypes);
@@ -122,25 +137,23 @@ export const EventUtils = {
   /**
    * Gets events of a specific type
    * @param type The event type (e.g., 'Iran', 'Religious')
-   * @param includeAllTypes If true, includes events of this type even if it's in the exclusion list
+   * @param includeAllTypes If true, includes all event types
    * @param holidaysOnly If true, only returns holiday events
    */
   getEventsByType(type: string, includeAllTypes: boolean = false, holidaysOnly: boolean = false): PersianEvent[] {
-    // If the type is in the excluded list and includeAllTypes is false, return empty array
-    if (EXCLUDED_TYPES.includes(type) && !includeAllTypes) {
-      return [];
-    }
+    const events = includeAllTypes 
+      ? mappedEvents 
+      : mappedEvents.filter(event => event.type === type);
     
-    return mappedEvents.filter(event => 
-      event.type === type && 
-      (holidaysOnly ? event.holiday === true : true)
-    );
+    return holidaysOnly 
+      ? events.filter(event => event.holiday === true) 
+      : events;
   },
   
   /**
    * Get all holidays
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
-   * @param includeAllTypes If true, includes all event types regardless of exclusion list
+   * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getAllHolidays(eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
     const events = this.getAllEvents(eventTypes, includeAllTypes);
@@ -154,13 +167,6 @@ export const EventUtils = {
     const types = new Set<string>();
     mappedEvents.forEach(event => types.add(event.type));
     return Array.from(types);
-  },
-  
-  /**
-   * Get excluded event types
-   */
-  getExcludedTypes(): string[] {
-    return [...EXCLUDED_TYPES];
   },
 
   /**

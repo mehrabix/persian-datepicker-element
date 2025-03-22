@@ -1,5 +1,5 @@
 import { PersianDate } from './persian-date';
-import { EventUtils, EXCLUDED_TYPES } from './utils/event-utils';
+import { EventUtils } from './utils/event-utils';
 import { 
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,
@@ -490,7 +490,7 @@ export class PersianDatePickerElement extends HTMLElement {
    */
   setHolidayTypes(types: string | string[]): void {
     if (typeof types === 'string') {
-      // Special case for "all" which includes all types including excluded ones
+      // Special case for "all" which includes all types
       if (types.toLowerCase() === 'all') {
         this.includeAllTypes = true;
         this.holidayTypes = [...EventUtils.getEventTypes()]; // Get all available types
@@ -505,6 +505,7 @@ export class PersianDatePickerElement extends HTMLElement {
       this.holidayTypes = [...DEFAULT_HOLIDAY_TYPES];
     }
     
+    // Set includeAllTypes to false by default
     this.includeAllTypes = false;
     
     // If the calendar is already rendered, update it
