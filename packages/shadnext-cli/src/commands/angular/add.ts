@@ -155,4 +155,39 @@ export default class AngularAdd extends Command {
       this.log(`Created: ${outputPath}`);
     }
   }
+}
+
+/**
+ * Updates the index file, preserving existing exports and adding the new component
+ */
+async function updateIndexFile(componentName: string, kebabName: string, options: any) {
+  const indexFileDir = path.join(process.cwd(), options.directory || './components');
+  const indexFilePath = path.join(indexFileDir, 'index.ts');
+  
+  let indexContent = '';
+  let existingExports: string[] = [];
+  
+  // Check if index file already exists
+  if (fs.existsSync(indexFilePath)) {
+    indexContent = fs.readFileSync(indexFilePath, 'utf8');
+    
+    // Extract existing exports using regex
+    const exportRegex = /export\s*{\s*([^}]+)\s*}\s*from\s*['"]([^'"]+)['"]/g;
+    let match;
+    
+    while ((match = exportRegex.exec(indexContent)) !== null) {
+      existingExports.push(match[0]);
+    }
+  }
+  
+  // Add new export if not already present
+  const newExport = `export { ${componentName}Component${options.standalone ? '' : `, ${componentName}Module`} } from './${kebabName}.component';`;
+  if (!existingExports.some(exp => exp.includes(`{ ${componentName}Component`))) {
+    existingExports.push(newExport);
+  }
+  
+  // Write back all exports
+  fs.writeFileSync(indexFilePath, existingExports.join('\n') + '\n');
+  
+  return indexFilePath;
 } 

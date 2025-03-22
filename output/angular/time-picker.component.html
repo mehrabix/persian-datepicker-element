@@ -1,0 +1,12 @@
+<div 
+  class="shadnext-time-picker-wrapper "
+  [ngClass]="{
+    'rtl': rtl,
+    'dark-theme': theme === 'dark'
+  }"
+  [style.--primary-color]="primaryColor"
+>
+  <shadnext-time-picker-element
+    #timePickerElement
+  ></shadnext-time-picker-element>
+</div> 

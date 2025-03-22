@@ -1,27 +1,20 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, OnDestroy, NgModule } from '@angular/core';
-{{#if standalone}}
-import { CommonModule } from '@angular/common';
-{{/if}}
 
 // Import the web component
-import '@shadnext/{{kebabCaseName}}-element';
+import '@shadnext/';
 
 /**
- * {{componentName}} - An Angular component version of the {{kebabCaseName}} web component
+ * PersianDatePicker - An Angular component version of the  web component
  * 
  * This component was generated using the shadnext CLI.
  * It provides the same functionality as the original web component but with an Angular API.
  */
 @Component({
-  selector: 'app-{{kebabCase componentName}}',
-  templateUrl: './{{kebabCase componentName}}.component.html',
-  styleUrls: ['./{{kebabCase componentName}}.component.scss'],
-  {{#if standalone}}
-  standalone: true,
-  imports: [CommonModule],
-  {{/if}}
+  selector: 'app-persian-date-picker',
+  templateUrl: './persian-date-picker.component.html',
+  styleUrls: ['./persian-date-picker.component.scss'],
 })
-export class {{componentName}}Component implements AfterViewInit, OnChanges, OnDestroy {
+export class PersianDatePickerComponent implements AfterViewInit, OnChanges, OnDestroy {
   /** Selected date value */
   @Input() value: string | null = null;
   
@@ -46,7 +39,7 @@ export class {{componentName}}Component implements AfterViewInit, OnChanges, OnD
   /**
    * Reference to the web component element
    */
-  @ViewChild('{{camelCaseName}}Element') elementRef!: ElementRef;
+  @ViewChild('persianDatepicker') persianDatepickerRef!: ElementRef;
   
   /**
    * Event handler function reference for cleanup
@@ -64,9 +57,9 @@ export class {{componentName}}Component implements AfterViewInit, OnChanges, OnD
    * When inputs change, update the web component
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.elementRef?.nativeElement) return;
+    if (!this.persianDatepickerRef?.nativeElement) return;
     
-    const element = this.elementRef.nativeElement;
+    const element = this.persianDatepickerRef.nativeElement;
     
     if (changes['value'] && this.value) {
       element.setAttribute('date', this.value);
@@ -92,7 +85,7 @@ export class {{componentName}}Component implements AfterViewInit, OnChanges, OnD
    * Set up the web component and add event listeners
    */
   private setupWebComponent(): void {
-    const element = this.elementRef.nativeElement;
+    const element = this.persianDatepickerRef.nativeElement;
     
     // Set initial properties
     if (this.value) element.setAttribute('date', this.value);
@@ -113,7 +106,7 @@ export class {{componentName}}Component implements AfterViewInit, OnChanges, OnD
    * Remove event listeners
    */
   private removeEventListeners(): void {
-    const element = this.elementRef?.nativeElement;
+    const element = this.persianDatepickerRef?.nativeElement;
     if (element && this.dateSelectedHandler) {
       element.removeEventListener('dateSelected', this.dateSelectedHandler);
       this.dateSelectedHandler = null;
@@ -121,14 +114,12 @@ export class {{componentName}}Component implements AfterViewInit, OnChanges, OnD
   }
 }
 
-{{#unless standalone}}
 /**
- * Module for the {{componentName}} component
+ * Module for the PersianDatePicker component
  */
 @NgModule({
-  declarations: [{{componentName}}Component],
+  declarations: [PersianDatePickerComponent],
   imports: [],
-  exports: [{{componentName}}Component],
+  exports: [PersianDatePickerComponent],
 })
-export class {{componentName}}Module {}
-{{/unless}} 
+export class PersianDatePickerModule {}

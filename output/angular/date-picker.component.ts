@@ -1,27 +1,20 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, OnDestroy, NgModule } from '@angular/core';
-{{#if standalone}}
-import { CommonModule } from '@angular/common';
-{{/if}}
 
 // Import the web component
-import '@shadnext/{{kebabCaseName}}-element';
+import '@shadnext/date-picker-element';
 
 /**
- * {{componentName}} - An Angular component version of the {{kebabCaseName}} web component
+ * DatePicker - An Angular component version of the date-picker web component
  * 
  * This component was generated using the shadnext CLI.
  * It provides the same functionality as the original web component but with an Angular API.
  */
 @Component({
-  selector: 'app-{{kebabCase componentName}}',
-  templateUrl: './{{kebabCase componentName}}.component.html',
-  styleUrls: ['./{{kebabCase componentName}}.component.scss'],
-  {{#if standalone}}
-  standalone: true,
-  imports: [CommonModule],
-  {{/if}}
+  selector: 'app-date-picker',
+  templateUrl: './date-picker.component.html',
+  styleUrls: ['./date-picker.component.scss'],
 })
-export class {{componentName}}Component implements AfterViewInit, OnChanges, OnDestroy {
+export class DatePickerComponent implements AfterViewInit, OnChanges, OnDestroy {
   /** Selected date value */
   @Input() value: string | null = null;
   
@@ -46,7 +39,7 @@ export class {{componentName}}Component implements AfterViewInit, OnChanges, OnD
   /**
    * Reference to the web component element
    */
-  @ViewChild('{{camelCaseName}}Element') elementRef!: ElementRef;
+  @ViewChild('datePickerElement') elementRef!: ElementRef;
   
   /**
    * Event handler function reference for cleanup
@@ -121,14 +114,12 @@ export class {{componentName}}Component implements AfterViewInit, OnChanges, OnD
   }
 }
 
-{{#unless standalone}}
 /**
- * Module for the {{componentName}} component
+ * Module for the DatePicker component
  */
 @NgModule({
-  declarations: [{{componentName}}Component],
+  declarations: [DatePickerComponent],
   imports: [],
-  exports: [{{componentName}}Component],
+  exports: [DatePickerComponent],
 })
-export class {{componentName}}Module {}
-{{/unless}} 
+export class DatePickerModule {}

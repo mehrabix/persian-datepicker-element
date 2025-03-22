@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-{{#if styled}}
-import { Container } from './{{kebabCase componentName}}.styles';
-{{else}}
-import './{{kebabCase componentName}}.css';
-{{/if}}
+import './time-picker.css';
 
 /**
- * {{componentName}} - A React component wrapper for the Persian datepicker web component
+ * TimePicker - A React component wrapper for the Persian datepicker web component
  * 
  * This component was generated using the shadnext CLI.
  */
 
-interface {{componentName}}Props {
+interface TimePickerProps {
   value?: string;
   onChange?: (date: string) => void;
   placeholder?: string;
@@ -21,7 +17,7 @@ interface {{componentName}}Props {
   [key: string]: any;
 }
 
-export const {{componentName}}: React.FC<{{componentName}}Props> = ({
+export const TimePicker: React.FC<TimePickerProps> = ({
   value,
   onChange,
   placeholder = 'انتخاب تاریخ',
@@ -56,15 +52,6 @@ export const {{componentName}}: React.FC<{{componentName}}Props> = ({
     };
   }, [value, placeholder, onChange]);
   
-  {{#if styled}}
-  return (
-    <Container className={className} {...props}>
-      <shadnext-persian-datepicker 
-        ref={elementRef as React.RefObject<HTMLElement>}
-      />
-    </Container>
-  );
-  {{else}}
   return (
     <div className={`shadnext-persian-datepicker-wrapper ${className}`} {...props}>
       <shadnext-persian-datepicker 
@@ -72,5 +59,4 @@ export const {{componentName}}: React.FC<{{componentName}}Props> = ({
       />
     </div>
   );
-  {{/if}}
 }; 

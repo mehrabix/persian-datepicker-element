@@ -1,12 +1,12 @@
 <div 
-  class="shadnext-persian-datepicker-wrapper {{className}}"
+  class="shadnext-{{kebabCaseName}}-wrapper "
   [ngClass]="{
     'rtl': rtl,
     'dark-theme': theme === 'dark'
   }"
   [style.--primary-color]="primaryColor"
 >
-  <shadnext-persian-datepicker
-    #persianDatepicker
-  ></shadnext-persian-datepicker>
+  <shadnext-{{kebabCaseName}}-element
+    #{{camelCaseName}}Element
+  ></shadnext-{{kebabCaseName}}-element>
 </div> 

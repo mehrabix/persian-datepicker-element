@@ -1,27 +1,20 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, OnDestroy, NgModule } from '@angular/core';
-{{#if standalone}}
-import { CommonModule } from '@angular/common';
-{{/if}}
 
 // Import the web component
-import '@shadnext/{{kebabCaseName}}-element';
+import '@shadnext/time-picker-element';
 
 /**
- * {{componentName}} - An Angular component version of the {{kebabCaseName}} web component
+ * TimePicker - An Angular component version of the time-picker web component
  * 
  * This component was generated using the shadnext CLI.
  * It provides the same functionality as the original web component but with an Angular API.
  */
 @Component({
-  selector: 'app-{{kebabCase componentName}}',
-  templateUrl: './{{kebabCase componentName}}.component.html',
-  styleUrls: ['./{{kebabCase componentName}}.component.scss'],
-  {{#if standalone}}
-  standalone: true,
-  imports: [CommonModule],
-  {{/if}}
+  selector: 'app-time-picker',
+  templateUrl: './time-picker.component.html',
+  styleUrls: ['./time-picker.component.scss'],
 })
-export class {{componentName}}Component implements AfterViewInit, OnChanges, OnDestroy {
+export class TimePickerComponent implements AfterViewInit, OnChanges, OnDestroy {
   /** Selected date value */
   @Input() value: string | null = null;
   
@@ -46,7 +39,7 @@ export class {{componentName}}Component implements AfterViewInit, OnChanges, OnD
   /**
    * Reference to the web component element
    */
-  @ViewChild('{{camelCaseName}}Element') elementRef!: ElementRef;
+  @ViewChild('timePickerElement') elementRef!: ElementRef;
   
   /**
    * Event handler function reference for cleanup
@@ -121,14 +114,12 @@ export class {{componentName}}Component implements AfterViewInit, OnChanges, OnD
   }
 }
 
-{{#unless standalone}}
 /**
- * Module for the {{componentName}} component
+ * Module for the TimePicker component
  */
 @NgModule({
-  declarations: [{{componentName}}Component],
+  declarations: [TimePickerComponent],
   imports: [],
-  exports: [{{componentName}}Component],
+  exports: [TimePickerComponent],
 })
-export class {{componentName}}Module {}
-{{/unless}} 
+export class TimePickerModule {}

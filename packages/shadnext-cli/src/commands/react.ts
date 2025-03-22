@@ -114,14 +114,10 @@ async function generateReactComponent(componentName: ComponentName, options: Rea
     const styleFileName = options.styled ? 
       `${pascalCaseName}.styles.${options.typescript ? 'ts' : 'js'}` : 
       `${pascalCaseName}.css`;
-    const indexFileName = `index.${options.typescript ? 'ts' : 'js'}`;
-    
-    const componentPath = path.join(fullPath, componentFileName);
-    const stylePath = path.join(fullPath, styleFileName);
-    const indexPath = path.join(fullPath, indexFileName);
+    const indexPath = await updateIndexFile(componentName, pascalCaseName, options);
     
     // Check if files already exist
-    const filesToCheck = [componentPath, stylePath, indexPath];
+    const filesToCheck = [componentFileName, styleFileName, indexPath];
     
     if (!options.force && (await Promise.all(filesToCheck.map(file => fs.pathExists(file)))).some(exists => exists)) {
       spinner.fail('Component files already exist. Use --force to overwrite.');
@@ -172,8 +168,8 @@ async function generateReactComponent(componentName: ComponentName, options: Rea
     });
     
     // Write files
-    await fs.writeFile(componentPath, componentContent);
-    await fs.writeFile(stylePath, styleContent);
+    await fs.writeFile(path.join(fullPath, componentFileName), componentContent);
+    await fs.writeFile(path.join(fullPath, styleFileName), styleContent);
     await fs.writeFile(indexPath, indexContent);
     
     // Get npm install command
@@ -185,7 +181,7 @@ ${chalk.cyan('Location:')} ${chalk.white(fullPath)}
 ${chalk.cyan('Files created:')}
   ${chalk.white(componentFileName)}
   ${chalk.white(styleFileName)}
-  ${chalk.white(indexFileName)}
+  ${chalk.white(indexPath)}
 
 ${chalk.yellow('Next steps:')}
 1. Install the component: ${chalk.gray(installCommand)}
@@ -207,4 +203,39 @@ function getNpmInstallCommand(componentName: string, options: ReactOptions): str
   }
   
   return `npm install ${packageName}`;
+}
+
+/**
+ * Updates the index file, preserving existing exports and adding the new component
+ */
+async function updateIndexFile(componentName: string, kebabName: string, options: any) {
+  const indexFileDir = path.join(process.cwd(), options.directory || './components');
+  const indexFilePath = path.join(indexFileDir, 'index.ts');
+  
+  let indexContent = '';
+  let existingExports: string[] = [];
+  
+  // Check if index file already exists
+  if (fs.existsSync(indexFilePath)) {
+    indexContent = fs.readFileSync(indexFilePath, 'utf8');
+    
+    // Extract existing exports using regex
+    const exportRegex = /export\s*{\s*([^}]+)\s*}\s*from\s*['"]([^'"]+)['"]/g;
+    let match;
+    
+    while ((match = exportRegex.exec(indexContent)) !== null) {
+      existingExports.push(match[0]);
+    }
+  }
+  
+  // Add new export if not already present
+  const newExport = `export { ${componentName} } from './${kebabName}';`;
+  if (!existingExports.some(exp => exp.includes(`{ ${componentName} }`))) {
+    existingExports.push(newExport);
+  }
+  
+  // Write back all exports
+  fs.writeFileSync(indexFilePath, existingExports.join('\n') + '\n');
+  
+  return indexFilePath;
 } 
