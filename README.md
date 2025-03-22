@@ -161,18 +161,18 @@ document.querySelector('persian-datepicker-element').addEventListener('change', 
 });
 ```
 
-## JalaliDate Utility
+## PersianDate Utility
 
-The package also exports a `JalaliDate` utility for converting between Jalali and Gregorian dates:
+The package also exports a `PersianDate` utility for converting between Jalali and Gregorian dates:
 
 ```javascript
-import { JalaliDate } from 'persian-datepicker-element';
+import { PersianDate } from 'persian-datepicker-element';
 
 // Convert Gregorian to Jalali
-const jalaliDate = JalaliDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
+const PersianDate = PersianDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
 
 // Convert Jalali to Gregorian
-const gregorianDate = JalaliDate.jalaliToGregorian(1402, 1, 1); // [2023, 3, 21]
+const gregorianDate = PersianDate.jalaliToGregorian(1402, 1, 1); // [2023, 3, 21]
 ```
 
 ## Advanced Styling | شخصی‌سازی پیشرفته
