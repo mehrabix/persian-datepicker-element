@@ -1186,11 +1186,19 @@ class PersianDatePickerElement extends HTMLElement {
         }, { passive: true });
         // Touch move
         this.calendar.addEventListener('touchmove', (e) => {
-            moved = true;
-        }, { passive: true });
+            // Calculate the horizontal distance moved
+            const currentX = e.touches[0].clientX;
+            const diffX = currentX - startX;
+            // Only if we've moved significantly horizontally and the calendar is visible
+            if (Math.abs(diffX) > 10 && this.calendar.classList.contains("visible")) {
+                // Prevent page scrolling when we're intentionally swiping the calendar
+                e.preventDefault();
+                moved = true;
+            }
+        }, { passive: false }); // Important: passive must be false to allow preventDefault
         // Touch end
         this.calendar.addEventListener('touchend', (e) => {
-            if (!moved)
+            if (!moved || !this.calendar.classList.contains("visible"))
                 return;
             const endX = e.changedTouches[0].clientX;
             const endY = e.changedTouches[0].clientY;
