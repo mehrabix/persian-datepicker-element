@@ -152,7 +152,6 @@ input:focus {
   text-align: center;
   z-index: var(--jdp-calendar-z-index);
   touch-action: pan-y;
-  overflow: hidden;
 }
 
 .calendar.position-bottom {
@@ -199,7 +198,6 @@ input:focus {
 
 .days-wrapper {
   position: relative;
-  overflow: hidden;
 }
 
 .days {
@@ -344,16 +342,16 @@ input:focus {
   padding: var(--jdp-spacing-sm);
   width: 200px;
   box-shadow: var(--jdp-calendar-shadow);
-  z-index: 100;
+  z-index: calc(var(--jdp-calendar-z-index) + 1);
   text-align: right;
   font-size: 12px;
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--jdp-transition-duration) ease;
   pointer-events: none;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 120%;
+  right: 0;
+  transform: translateY(-5px);
 }
 
 .day:hover .event-tooltip {
