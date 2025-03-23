@@ -209,6 +209,7 @@ input:focus {
   overflow: visible; /* Allow event tooltips to be visible outside the container */
   z-index: 1; /* Ensure tooltips are visible above other elements */
   contain: layout; /* Improve performance */
+  isolation: isolate; /* Create new stacking context */
 }
 
 .days {
@@ -266,6 +267,7 @@ input:focus {
   position: relative; /* Required for tooltip positioning */
   z-index: 1; /* Base z-index */
   touch-action: manipulation; /* Improve touch behavior */
+  isolation: isolate; /* Create new stacking context for each day */
 }
 
 .day:hover {
@@ -399,23 +401,79 @@ input:focus {
   font-size: 12px;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--jdp-transition-duration) ease;
+  transition: opacity var(--jdp-transition-duration) ease, visibility var(--jdp-transition-duration) ease;
   pointer-events: none;
   bottom: 120%;
   right: 0;
   transform: translateY(-5px);
-  z-index: 999; /* Higher than anything else in the calendar */
+  z-index: 9999; /* Increased z-index to ensure it's always on top */
 }
 
-.day:hover .event-tooltip {
+.event-tooltip.tooltip-visible {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
+  background: var(--jdp-background);
+}
+
+/* Mobile-specific tooltip positioning */
+@media (max-width: 768px) {
+  .event-tooltip {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 300px;
+    max-height: 80vh;
+    overflow-y: auto;
+    bottom: auto;
+    right: auto;
+    background: var(--jdp-background);
+    z-index: 9999; /* Ensure high z-index on mobile too */
+  }
+
+  /* Add a semi-transparent overlay behind the tooltip */
+  .event-tooltip::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  /* Style the close button */
+  .tooltip-close-button {
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: var(--jdp-muted);
+    border: 1px solid var(--jdp-border);
+    border-radius: var(--jdp-border-radius);
+    font-size: 12px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    color: var(--jdp-foreground);
+    transition: all var(--jdp-transition-duration) ease;
+  }
+
+  .tooltip-close-button:hover {
+    background: var(--jdp-nav-button-bg-hover);
+  }
+
+  .tooltip-close-button:active {
+    transform: translateY(1px);
+  }
 }
 
 .event-item {
   margin-bottom: 4px;
   padding-bottom: 4px;
   border-bottom: 1px solid var(--jdp-border);
+  color: var(--jdp-foreground);
+  background: var(--jdp-background); /* Ensure event items have white background */
 }
 
 .event-item:last-child {
@@ -601,6 +659,7 @@ export class PersianDatePickerElement extends HTMLElement {
   private holidayTypes: string[] = [...DEFAULT_HOLIDAY_TYPES];
   private includeAllTypes: boolean = false;
   private isTransitioning: boolean = false;
+  private cachedEvents: Map<string, any[]> = new Map(); // Cache for event data
 
   static get observedAttributes() {
     return [
@@ -675,6 +734,9 @@ export class PersianDatePickerElement extends HTMLElement {
     this.jalaliMonth = jalaliToday[1];
     this.jalaliDay = jalaliToday[2];
     this.selectedDate = null;
+    
+    // Refresh events to ensure Hijri events are mapped to correct Jalali dates
+    EventUtils.refreshEvents();
 
     // Set placeholder if provided in options
     if (this.options.placeholder) {
@@ -698,7 +760,14 @@ export class PersianDatePickerElement extends HTMLElement {
     });
     
     yearSelect.addEventListener("change", () => {
+      const previousYear = this.jalaliYear;
       this.jalaliYear = parseInt(yearSelect.value);
+      
+      // If the year has changed, refresh the Hijri events
+      if (previousYear !== this.jalaliYear) {
+        EventUtils.refreshEvents();
+      }
+      
       this.renderCalendar();
     });
 
@@ -904,7 +973,7 @@ export class PersianDatePickerElement extends HTMLElement {
           </div>
           <div class="day-names" id="day-names"></div>
           <div class="days-wrapper">
-            <div class="days" id="days-container"></div>
+          <div class="days" id="days-container"></div>
           </div>
           <div class="footer">
             <button id="today-button" type="button" class="date-nav-button today-button ${todayButtonClass}">${todayButtonText}</button>
@@ -981,14 +1050,14 @@ export class PersianDatePickerElement extends HTMLElement {
       daysContainer.classList.add(slideClass);
       
       // Update month and year values
-      this.jalaliMonth = Number(this.jalaliMonth) + direction;
-      if (this.jalaliMonth < 1) {
-        this.jalaliMonth = 12;
-        this.jalaliYear--;
-      } else if (this.jalaliMonth > 12) {
-        this.jalaliMonth = 1;
-        this.jalaliYear++;
-      }
+    this.jalaliMonth = Number(this.jalaliMonth) + direction;
+    if (this.jalaliMonth < 1) {
+      this.jalaliMonth = 12;
+      this.jalaliYear--;
+    } else if (this.jalaliMonth > 12) {
+      this.jalaliMonth = 1;
+      this.jalaliYear++;
+    }
       
       // Use requestAnimationFrame for better timing
       requestAnimationFrame(() => {
@@ -1029,10 +1098,10 @@ export class PersianDatePickerElement extends HTMLElement {
     
     monthSelect.value = this.jalaliMonth.toString();
     yearSelect.value = this.jalaliYear.toString();
-    
+
     // Clear previous days
     this.daysContainer.innerHTML = "";
-    
+
     // Render the calendar content
     this.renderCalendarContent();
   }
@@ -1074,11 +1143,49 @@ export class PersianDatePickerElement extends HTMLElement {
         // Just let it propagate to handle in the calendar's touch handlers
       }, { passive: true });
       
+      // Add hover handler for desktop tooltips
+      dayElement.addEventListener("mouseenter", () => {
+        const tooltip = dayElement.querySelector('.event-tooltip');
+        if (tooltip) {
+          tooltip.classList.add("tooltip-visible");
+        }
+      });
+      
+      dayElement.addEventListener("mouseleave", () => {
+        const tooltip = dayElement.querySelector('.event-tooltip');
+        if (tooltip) {
+          tooltip.classList.remove("tooltip-visible");
+        }
+      });
+      
       // Add click listener with proper event handling
+      let lastTapTime = 0;
       dayElement.addEventListener("click", (e) => {
-        e.preventDefault();  // Prevent any default actions
-        e.stopPropagation(); // Stop event from propagating
-        this.selectDate(i);
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+          if (tapLength < 500 && tapLength > 0) {
+            // Double tap detected - show tooltip
+            const tooltip = dayElement.querySelector('.event-tooltip');
+            if (tooltip) {
+              const tooltips = this.shadowRoot?.querySelectorAll('.event-tooltip.tooltip-visible');
+              tooltips?.forEach(t => t.classList.remove("tooltip-visible"));
+              tooltip.classList.add("tooltip-visible");
+            }
+          } else {
+            // Single tap - select the date
+            this.selectDate(i);
+          }
+        } else {
+          // For non-mobile, just select the date
+          this.selectDate(i);
+        }
+        
+        lastTapTime = currentTime;
       });
       
       // Highlight today
@@ -1134,6 +1241,45 @@ export class PersianDatePickerElement extends HTMLElement {
               eventItem.appendChild(titleSpan);
               
               tooltip.appendChild(eventItem);
+            });
+            
+            // For mobile, add a close button to the tooltip
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+              const closeButton = document.createElement("button");
+              closeButton.textContent = "بستن";
+              closeButton.classList.add("tooltip-close-button");
+              
+              // Add event listeners that properly stop propagation
+              closeButton.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                tooltip.classList.remove("tooltip-visible");
+                // Remove the tooltip after animation
+                setTimeout(() => {
+                  tooltip.remove();
+                }, 200);
+              });
+              
+              closeButton.addEventListener("touchend", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                tooltip.classList.remove("tooltip-visible");
+                // Remove the tooltip after animation
+                setTimeout(() => {
+                  tooltip.remove();
+                }, 200);
+              }, { passive: false });
+              
+              tooltip.appendChild(closeButton);
+            }
+            
+            // Add focus handling to maintain tooltip styling
+            tooltip.addEventListener("focusin", () => {
+              tooltip.style.background = "var(--jdp-background)";
+            });
+            
+            tooltip.addEventListener("focusout", () => {
+              tooltip.style.background = "var(--jdp-background)";
             });
             
             dayElement.appendChild(tooltip);
@@ -1354,9 +1500,16 @@ export class PersianDatePickerElement extends HTMLElement {
       today.getDate()
     );
     
+    const previousYear = this.jalaliYear;
+    
     // Update current view to today's month/year
     this.jalaliYear = jalaliToday[0];
     this.jalaliMonth = jalaliToday[1];
+    
+    // If the year has changed, refresh the Hijri events
+    if (previousYear !== this.jalaliYear) {
+      EventUtils.refreshEvents();
+    }
     
     // Render the calendar with the new month/year
     this.renderCalendar();
@@ -1379,9 +1532,16 @@ export class PersianDatePickerElement extends HTMLElement {
         tomorrow.getDate()
     );
     
+    const previousYear = this.jalaliYear;
+    
     // Update current view to tomorrow's month/year
     this.jalaliYear = jalaliTomorrow[0];
     this.jalaliMonth = jalaliTomorrow[1];
+    
+    // If the year has changed, refresh the Hijri events
+    if (previousYear !== this.jalaliYear) {
+      EventUtils.refreshEvents();
+    }
     
     // Render the calendar with the new month/year
     this.renderCalendar();

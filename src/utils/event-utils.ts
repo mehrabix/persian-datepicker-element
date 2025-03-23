@@ -1,6 +1,9 @@
 import { PersianEvent } from '../types';
 // Import the original JSON file from the Persian Calendar repo
 import persianCalendarData from '../data/persian-calendar-repo/PersianCalendar/data/events.json';
+// Import the Hijri utilities for date conversion
+import HijriUtils from './hijri-utils';
+import { PersianDate } from '../persian-date';
 
 // Fallback events in case JSON loading fails
 const fallbackEvents: PersianEvent[] = [
@@ -32,17 +35,46 @@ function mapPersianCalendarEvents(): PersianEvent[] {
       allEvents = [...persianEvents];
     }
     
-    // Process Hijri Calendar events - Note: these are configured for the current year
-    // In a real app, these should be calculated each year based on Hijri-to-Persian conversion
+    // Process Hijri Calendar events - Convert them to current Jalali year
     if (persianCalendarData && Array.isArray(persianCalendarData["Hijri Calendar"])) {
-      const hijriEvents = persianCalendarData["Hijri Calendar"].map((event: any) => ({
-        title: event.title,
-        month: event.month,
-        day: event.day,
-        type: event.type,
-        holiday: event.holiday
-      }));
+      // Get current Jalali year
+      const today = new Date();
+      const jalaliToday = PersianDate.gregorianToJalali(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        today.getDate()
+      );
+      const currentJalaliYear = jalaliToday[0];
       
+      // Process each Hijri event
+      const hijriEvents: PersianEvent[] = [];
+      
+      persianCalendarData["Hijri Calendar"].forEach((event: any) => {
+        // Convert Hijri date to Jalali for current year
+        const jalaliDate = HijriUtils.getHijriEventDateInJalaliYear(
+          currentJalaliYear, 
+          event.month, 
+          event.day
+        );
+        
+        // Only add the event if it occurs in the current Jalali year
+        if (jalaliDate) {
+          const [jMonth, jDay] = jalaliDate;
+          
+          hijriEvents.push({
+            title: event.title,
+            month: jMonth,
+            day: jDay,
+            type: event.type,
+            holiday: event.holiday,
+            // Add original Hijri date for reference
+            originalHijriMonth: event.month,
+            originalHijriDay: event.day
+          });
+        }
+      });
+      
+      // Add converted Hijri events to all events
       allEvents = [...allEvents, ...hijriEvents];
     }
     
@@ -174,6 +206,24 @@ export const EventUtils = {
    */
   getSourceMetadata(): { [key: string]: string } {
     return persianCalendarData.Source || {};
+  },
+  
+  /**
+   * Refresh the events data to update Hijri calendar events for the current year
+   * This should be called when the component is initialized or the year changes
+   */
+  refreshEvents(): PersianEvent[] {
+    // Recalculate all events (especially Hijri events for current year)
+    const refreshedEvents = mapPersianCalendarEvents();
+    
+    // Replace the cached events with the new ones
+    while (mappedEvents.length > 0) {
+      mappedEvents.pop();
+    }
+    
+    refreshedEvents.forEach(event => mappedEvents.push(event));
+    
+    return [...mappedEvents];
   }
 };
 

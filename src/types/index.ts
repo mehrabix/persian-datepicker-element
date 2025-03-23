@@ -16,6 +16,10 @@ export interface PersianEvent {
   type: string;
   /** Whether this event is a holiday */
   holiday?: boolean;
+  /** Original Hijri month for converted events */
+  originalHijriMonth?: number;
+  /** Original Hijri day for converted events */
+  originalHijriDay?: number;
 }
 
 /**
