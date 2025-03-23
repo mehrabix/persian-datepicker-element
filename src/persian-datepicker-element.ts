@@ -151,13 +151,14 @@ input:focus {
   padding: var(--jdp-calendar-padding);
   text-align: center;
   z-index: var(--jdp-calendar-z-index);
-  touch-action: none; /* Prevent any default touch actions */
+  touch-action: manipulation; /* Allow pan-y but prevent browser handling of horizontal swipes */
   -webkit-overflow-scrolling: none; /* Prevent iOS scrolling */
   -webkit-user-select: none; /* Prevent text selection during swipe */
   user-select: none;
   transform: translateZ(0); /* Hardware acceleration */
   will-change: transform; /* Hint to browser */
   backface-visibility: hidden; /* Prevent flickering */
+  contain: layout style; /* Improve performance by isolating the container */
 }
 
 .calendar.position-bottom {
@@ -204,8 +205,10 @@ input:focus {
 
 .days-wrapper {
   position: relative;
-  touch-action: none; /* Prevent scroll on this element */
-  overflow: hidden; /* Hide overflow during animations */
+  touch-action: pan-y; /* Allow vertical scrolling but handle horizontal ourselves */
+  overflow: visible; /* Allow event tooltips to be visible outside the container */
+  z-index: 1; /* Ensure tooltips are visible above other elements */
+  contain: layout; /* Improve performance */
 }
 
 .days {
@@ -215,6 +218,13 @@ input:focus {
   will-change: transform, opacity; /* Hint to browser */
   transform: translateZ(0); /* Hardware acceleration */
   backface-visibility: hidden; /* Prevent flickering */
+  position: relative; /* Position for correct animation */
+  contain: layout; /* Improve performance */
+}
+
+.days.slide-left, .days.slide-right {
+  /* Keep animation isolated within container without cutting off tooltips */
+  isolation: isolate;
 }
 
 .days.slide-left {
@@ -226,13 +236,40 @@ input:focus {
 }
 
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-10%) translateZ(0); }
-  to { opacity: 1; transform: translateX(0) translateZ(0); }
+  from { 
+    opacity: 0; 
+    transform: translateX(-10%) translateZ(0);
+    pointer-events: none; /* Don't capture events during animation */ 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0) translateZ(0);
+    pointer-events: auto; /* Restore events after animation */  
+  }
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(10%) translateZ(0); }
-  to { opacity: 1; transform: translateX(0) translateZ(0); }
+  from { 
+    opacity: 0; 
+    transform: translateX(10%) translateZ(0); 
+    pointer-events: none; /* Don't capture events during animation */
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0) translateZ(0);
+    pointer-events: auto; /* Restore events after animation */ 
+  }
+}
+
+/* Ensure tooltips stay visible even during animations */
+.day {
+  position: relative; /* Required for tooltip positioning */
+  z-index: 1; /* Base z-index */
+  touch-action: manipulation; /* Improve touch behavior */
+}
+
+.day:hover {
+  z-index: 2; /* Raise z-index on hover to keep tooltip on top */
 }
 
 .nav-button {
@@ -359,7 +396,6 @@ input:focus {
   padding: var(--jdp-spacing-sm);
   width: 200px;
   box-shadow: var(--jdp-calendar-shadow);
-  z-index: calc(var(--jdp-calendar-z-index) + 1);
   text-align: right;
   font-size: 12px;
   opacity: 0;
@@ -369,6 +405,7 @@ input:focus {
   bottom: 120%;
   right: 0;
   transform: translateY(-5px);
+  z-index: 20; /* Higher than anything else in the calendar */
 }
 
 .day:hover .event-tooltip {
@@ -401,6 +438,88 @@ input:focus {
   background-color: var(--jdp-muted);
   color: var(--jdp-muted-foreground);
 }
+
+/* Today button styling */
+.footer {
+  margin-top: var(--jdp-spacing-md);
+  display: flex;
+  justify-content: space-between;
+}
+
+.date-nav-button {
+  background: var(--jdp-muted);
+  border: none;
+  border-radius: var(--jdp-border-radius);
+  padding: var(--jdp-spacing-xs) var(--jdp-spacing-md);
+  font-family: inherit;
+  font-size: var(--jdp-font-size);
+  color: var(--jdp-foreground);
+  cursor: pointer;
+  transition: all var(--jdp-transition-duration) ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.date-nav-button:hover {
+  background: var(--jdp-nav-button-bg-hover);
+}
+
+.date-nav-button:active {
+  transform: translateY(1px);
+}
+
+.today-button {
+  /* Inherits from date-nav-button */
+}
+
+.tomorrow-button {
+  /* Inherits from date-nav-button */
+}
+
+/* Month/Year selectors */
+.selectors-container {
+  display: flex;
+  gap: var(--jdp-spacing-xs);
+}
+
+.date-select {
+  background-color: var(--jdp-muted);
+  border: none;
+  border-radius: var(--jdp-border-radius);
+  color: var(--jdp-foreground);
+  font-family: inherit;
+  font-size: var(--jdp-font-size);
+  padding: var(--jdp-spacing-xs) var(--jdp-spacing-sm);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' fill='none'%3E%3Cpath fill='%2364748b' d='M0 0h12L6 6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 8px center;
+  padding-left: 24px;
+  text-align: center;
+  transition: background-color var(--jdp-transition-duration) ease;
+}
+
+.date-select:hover {
+  background-color: var(--jdp-nav-button-bg-hover);
+}
+
+.month-select {
+  width: 100px;
+}
+
+.year-select {
+  width: 70px;
+}
+
+/* RTL specific styles for selectors */
+:host([rtl="true"]) .date-select,
+:host([dir="rtl"]) .date-select {
+  background-position: right 8px center;
+  padding-right: 24px;
+  padding-left: var(--jdp-spacing-sm);
+}
 `;
 
 /**
@@ -412,6 +531,13 @@ const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
  * Jalali Date Picker Web Component
  * 
  * A customizable date picker that follows the Jalali (Persian) calendar.
+ * Features include:
+ * - Month and year dropdown navigation with 150-year range
+ * - Quick today and tomorrow navigation buttons
+ * - Touch gesture support for swiping between months
+ * - Holiday highlighting with customizable types
+ * - Full RTL support
+ * - Customizable styling
  * 
  * Usage:
  * ```html
@@ -427,16 +553,44 @@ const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
  * <!-- With all holiday types -->
  * <persian-datepicker-element holiday-types="all"></persian-datepicker-element>
  * 
+ * <!-- With custom Today button text -->
+ * <persian-datepicker-element today-button-text="Go to Today"></persian-datepicker-element>
+ * 
+ * <!-- With custom Tomorrow button text -->
+ * <persian-datepicker-element tomorrow-button-text="Next Day"></persian-datepicker-element>
+ * 
+ * <!-- With custom button styling -->
+ * <persian-datepicker-element today-button-class="primary rounded" tomorrow-button-class="secondary rounded"></persian-datepicker-element>
+ * 
  * <!-- With styling customization -->
  * <persian-datepicker-element style="--jdp-primary: #3b82f6; --jdp-font-family: 'Vazir', sans-serif;"></persian-datepicker-element>
  * ```
  * 
  * @element persian-datepicker-element
+ * 
+ * @attr {string} placeholder - Placeholder text for the input field
+ * @attr {string} format - Date format (e.g., "YYYY/MM/DD")
+ * @attr {boolean} rtl - Whether to use RTL direction
+ * @attr {boolean} show-holidays - Whether to highlight holidays
+ * @attr {string} holiday-types - Comma-separated list of holiday types to display
+ * @attr {string} today-button-text - Custom text for the Today button (default: "امروز")
+ * @attr {string} today-button-class - Additional CSS classes for the Today button
+ * @attr {string} tomorrow-button-text - Custom text for the Tomorrow button (default: "فردا")
+ * @attr {string} tomorrow-button-class - Additional CSS classes for the Tomorrow button
+ * @attr {string} primary-color - Primary color for selected dates
+ * @attr {string} primary-hover - Hover color for interactive elements
+ * @attr {string} background-color - Background color for the calendar
+ * @attr {string} foreground-color - Text color
+ * @attr {string} border-color - Border color
+ * @attr {string} border-radius - Border radius for rounded corners
+ * @attr {string} font-family - Font family
+ * @attr {string} holiday-color - Text color for holidays
+ * @attr {string} holiday-bg - Background color for holidays
  */
 export class PersianDatePickerElement extends HTMLElement {
   private input: HTMLInputElement;
   private calendar: HTMLDivElement;
-  private monthYearLabel: HTMLSpanElement;
+  private monthYearLabel: HTMLSelectElement;
   private daysContainer: HTMLDivElement;
   private dayNamesContainer: HTMLDivElement;
   private jalaliYear: number;
@@ -456,6 +610,10 @@ export class PersianDatePickerElement extends HTMLElement {
       'format', 
       'show-holidays',
       'holiday-types',
+      'today-button-text',
+      'today-button-class',
+      'tomorrow-button-text',
+      'tomorrow-button-class',
       // CSS variable attributes
       'primary-color', 
       'primary-hover',
@@ -490,9 +648,12 @@ export class PersianDatePickerElement extends HTMLElement {
     // Get DOM references
     this.input = shadow.getElementById("date-input") as HTMLInputElement;
     this.calendar = shadow.getElementById("calendar") as HTMLDivElement;
-    this.monthYearLabel = shadow.getElementById("month-year") as HTMLSpanElement;
+    this.monthYearLabel = shadow.getElementById("month-select") as HTMLSelectElement;
     this.daysContainer = shadow.getElementById("days-container") as HTMLDivElement;
     this.dayNamesContainer = shadow.getElementById("day-names") as HTMLDivElement;
+    
+    // Setup month and year selectors
+    this.setupMonthYearSelectors();
 
     // Initialize the day names (Saturday to Friday in Persian)
     const dayNames = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
@@ -525,6 +686,22 @@ export class PersianDatePickerElement extends HTMLElement {
     this.input.addEventListener("click", () => this.toggleCalendar());
     shadow.getElementById("prev-month")!.addEventListener("click", () => this.changeMonth(-1));
     shadow.getElementById("next-month")!.addEventListener("click", () => this.changeMonth(1));
+    shadow.getElementById("today-button")!.addEventListener("click", () => this.goToToday());
+    shadow.getElementById("tomorrow-button")!.addEventListener("click", () => this.goToTomorrow());
+    
+    // Add event listeners for month and year select dropdowns
+    const monthSelect = shadow.getElementById("month-select") as HTMLSelectElement;
+    const yearSelect = shadow.getElementById("year-select") as HTMLSelectElement;
+    
+    monthSelect.addEventListener("change", () => {
+      this.jalaliMonth = parseInt(monthSelect.value);
+      this.renderCalendar();
+    });
+    
+    yearSelect.addEventListener("change", () => {
+      this.jalaliYear = parseInt(yearSelect.value);
+      this.renderCalendar();
+    });
 
     // Close calendar when clicking outside
     document.addEventListener("click", (e) => {
@@ -639,6 +816,60 @@ export class PersianDatePickerElement extends HTMLElement {
           this.renderCalendar();
         }
         break;
+      case 'today-button-text':
+        // Update Today button text if it exists
+        if (this.shadowRoot) {
+          const todayButton = this.shadowRoot.getElementById('today-button');
+          if (todayButton) {
+            todayButton.textContent = newValue || 'امروز';
+          }
+        }
+        break;
+      case 'today-button-class':
+        // Update Today button class if it exists
+        if (this.shadowRoot) {
+          const todayButton = this.shadowRoot.getElementById('today-button');
+          if (todayButton) {
+            // Remove all classes except the base today-button class
+            todayButton.className = 'today-button';
+            // Add new classes if provided
+            if (newValue) {
+              newValue.split(' ').forEach(className => {
+                if (className.trim()) {
+                  todayButton.classList.add(className.trim());
+                }
+              });
+            }
+          }
+        }
+        break;
+      case 'tomorrow-button-text':
+        // Update Tomorrow button text if it exists
+        if (this.shadowRoot) {
+          const tomorrowButton = this.shadowRoot.getElementById('tomorrow-button');
+          if (tomorrowButton) {
+            tomorrowButton.textContent = newValue || 'فردا';
+          }
+        }
+        break;
+      case 'tomorrow-button-class':
+        // Update Tomorrow button class if it exists
+        if (this.shadowRoot) {
+          const tomorrowButton = this.shadowRoot.getElementById('tomorrow-button');
+          if (tomorrowButton) {
+            // Remove all classes except the base tomorrow-button class
+            tomorrowButton.className = 'tomorrow-button';
+            // Add new classes if provided
+            if (newValue) {
+              newValue.split(' ').forEach(className => {
+                if (className.trim()) {
+                  tomorrowButton.classList.add(className.trim());
+                }
+              });
+            }
+          }
+        }
+        break;
       default:
         // Handle CSS variable attributes
         if (cssVarMap[name] && this.shadowRoot) {
@@ -650,6 +881,15 @@ export class PersianDatePickerElement extends HTMLElement {
   }
 
   private render(shadow: ShadowRoot) {
+    // Get today button text from attribute or use default "امروز"
+    const todayButtonText = this.getAttribute('today-button-text') || 'امروز';
+    // Get any additional classes for the today button
+    const todayButtonClass = this.getAttribute('today-button-class') || '';
+    // Get tomorrow button text from attribute or use default "فردا"
+    const tomorrowButtonText = this.getAttribute('tomorrow-button-text') || 'فردا';
+    // Get any additional classes for the tomorrow button
+    const tomorrowButtonClass = this.getAttribute('tomorrow-button-class') || '';
+    
     shadow.innerHTML = `
       <style>${styles}</style>
       <div class="picker-container">
@@ -657,12 +897,19 @@ export class PersianDatePickerElement extends HTMLElement {
         <div class="calendar" id="calendar">
           <div class="header">
             <button id="prev-month" type="button" class="nav-button prev"></button>
-            <span class="month-year" id="month-year"></span>
+            <div class="selectors-container">
+              <select id="month-select" class="date-select month-select"></select>
+              <select id="year-select" class="date-select year-select"></select>
+            </div>
             <button id="next-month" type="button" class="nav-button next"></button>
           </div>
           <div class="day-names" id="day-names"></div>
           <div class="days-wrapper">
             <div class="days" id="days-container"></div>
+          </div>
+          <div class="footer">
+            <button id="today-button" type="button" class="date-nav-button today-button ${todayButtonClass}">${todayButtonText}</button>
+            <button id="tomorrow-button" type="button" class="date-nav-button tomorrow-button ${tomorrowButtonClass}">${tomorrowButtonText}</button>
           </div>
         </div>
       </div>
@@ -727,16 +974,12 @@ export class PersianDatePickerElement extends HTMLElement {
     
     // Cache reference to calendar elements
     const daysContainer = this.daysContainer;
-    const monthYearLabel = this.monthYearLabel;
     
-    // Schedule visual updates using requestAnimationFrame
+    // Use requestAnimationFrame for smoother animations
     requestAnimationFrame(() => {
       // Add transition class based on direction
       const slideClass = direction > 0 ? 'slide-left' : 'slide-right';
       daysContainer.classList.add(slideClass);
-      
-      // Start with fade effect for month/year label
-      monthYearLabel.classList.add('fade');
       
       // Update month and year values
       this.jalaliMonth = Number(this.jalaliMonth) + direction;
@@ -748,28 +991,45 @@ export class PersianDatePickerElement extends HTMLElement {
         this.jalaliYear++;
       }
       
-      // Set a timeout to actually update the calendar
-      setTimeout(() => {
-        // Update month and year label
-        monthYearLabel.textContent = `${PersianDate.getMonthName(this.jalaliMonth)} ${this.jalaliYear}`;
-        monthYearLabel.classList.remove('fade');
-        
-        // Clear days container and render new content
-        daysContainer.innerHTML = "";
-        this.renderCalendarContent();
-        
-        // Remove slide class after the animation duration
-        requestAnimationFrame(() => {
-          daysContainer.classList.remove(slideClass);
-          this.isTransitioning = false;
-        });
-      }, 200); // Shorter than the CSS animation duration for better feel
+      // Use requestAnimationFrame for better timing
+      requestAnimationFrame(() => {
+        // Set a timeout to actually update the calendar
+        setTimeout(() => {
+          // Update month and year selects
+          if (this.shadowRoot) {
+            const monthSelect = this.shadowRoot.getElementById("month-select") as HTMLSelectElement;
+            const yearSelect = this.shadowRoot.getElementById("year-select") as HTMLSelectElement;
+            
+            if (monthSelect) monthSelect.value = this.jalaliMonth.toString();
+            if (yearSelect) yearSelect.value = this.jalaliYear.toString();
+          }
+          
+          // Clear days container and render new content
+          daysContainer.innerHTML = "";
+          this.renderCalendarContent();
+          
+          // Remove slide class after the animation duration
+          requestAnimationFrame(() => {
+            daysContainer.classList.remove(slideClass);
+            // Set a brief timeout to ensure animation is truly done
+            setTimeout(() => {
+              this.isTransitioning = false;
+            }, 50);
+          });
+        }, 200); // Shorter than the CSS animation duration for better feel
+      });
     });
   }
 
   renderCalendar() {
-    // Display month and year in Persian format
-    this.monthYearLabel.textContent = `${PersianDate.getMonthName(this.jalaliMonth)} ${this.jalaliYear}`;
+    const shadow = this.shadowRoot!;
+    
+    // Update month and year select values
+    const monthSelect = shadow.getElementById("month-select") as HTMLSelectElement;
+    const yearSelect = shadow.getElementById("year-select") as HTMLSelectElement;
+    
+    monthSelect.value = this.jalaliMonth.toString();
+    yearSelect.value = this.jalaliYear.toString();
     
     // Clear previous days
     this.daysContainer.innerHTML = "";
@@ -990,16 +1250,10 @@ export class PersianDatePickerElement extends HTMLElement {
       isDragging = false;
       isSwiping = false;
       touchStartTime = Date.now();
-      
-      // Immediately set touch-action to none to ensure browser doesn't take over
-      this.calendar.style.touchAction = 'none';
-      
-      // Prevent any default action on touchstart
-      // e.preventDefault(); - Can't use preventDefault on touchstart with passive:true
     }, { passive: true });
     
-    // For the entire document, capture touchmove events
-    document.addEventListener('touchmove', (e: TouchEvent) => {
+    // For the entire calendar, capture touchmove events
+    this.calendar.addEventListener('touchmove', (e: TouchEvent) => {
       // Only process if calendar is visible
       if (!this.calendar.classList.contains("visible")) return;
       
@@ -1015,26 +1269,12 @@ export class PersianDatePickerElement extends HTMLElement {
         return;
       }
       
-      // Check if touch is within calendar bounds or very close
-      const calendarRect = this.calendar.getBoundingClientRect();
-      const touchX = e.touches[0].clientX;
-      const touchY = e.touches[0].clientY;
-      
-      const touchNearCalendar = 
-        touchX >= calendarRect.left - 20 && 
-        touchX <= calendarRect.right + 20 && 
-        touchY >= calendarRect.top - 20 && 
-        touchY <= calendarRect.bottom + 20;
-      
-      // If touch is within or near the calendar element's bounds
-      if (touchNearCalendar || this.calendar.contains(e.target as Node)) {
-        // If horizontal movement is greater than vertical movement and significant
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
-          // We have a horizontal swipe inside the calendar - prevent page scrolling
-          e.preventDefault();
-          isDragging = true;
-          isSwiping = true;
-        }
+      // If horizontal movement is greater than vertical movement and significant
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+        // We have a horizontal swipe inside the calendar - prevent page scrolling
+        e.preventDefault();
+        isDragging = true;
+        isSwiping = true;
       }
     }, { passive: false });
     
@@ -1087,5 +1327,112 @@ export class PersianDatePickerElement extends HTMLElement {
       isSwiping = false;
       isDragging = false;
     });
+    
+    // Improve performance by preventing events from being processed by the whole document
+    this.calendar.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+    }, { passive: true });
+    
+    // Improve month navigation performance
+    this.shadowRoot?.getElementById("prev-month")?.addEventListener("touchstart", (e) => {
+      e.stopPropagation();
+    }, { passive: true });
+    
+    this.shadowRoot?.getElementById("next-month")?.addEventListener("touchstart", (e) => {
+      e.stopPropagation();
+    }, { passive: true });
+  }
+
+  /**
+   * Navigate to today's date and select it
+   */
+  private goToToday(): void {
+    // Get today's date
+    const today = new Date();
+    const jalaliToday = PersianDate.gregorianToJalali(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      today.getDate()
+    );
+    
+    // Update current view to today's month/year
+    this.jalaliYear = jalaliToday[0];
+    this.jalaliMonth = jalaliToday[1];
+    
+    // Render the calendar with the new month/year
+    this.renderCalendar();
+    
+    // Select today's date
+    this.selectDate(jalaliToday[2]);
+  }
+
+  /**
+   * Navigate to tomorrow's date and select it
+   */
+  private goToTomorrow(): void {
+    // Get tomorrow's date (add 1 day to today)
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const jalaliTomorrow = PersianDate.gregorianToJalali(
+        tomorrow.getFullYear(),
+        tomorrow.getMonth() + 1,
+        tomorrow.getDate()
+    );
+    
+    // Update current view to tomorrow's month/year
+    this.jalaliYear = jalaliTomorrow[0];
+    this.jalaliMonth = jalaliTomorrow[1];
+    
+    // Render the calendar with the new month/year
+    this.renderCalendar();
+    
+    // Select tomorrow's date
+    this.selectDate(jalaliTomorrow[2]);
+  }
+
+  /**
+   * Setup month and year selector dropdowns
+   */
+  private setupMonthYearSelectors(): void {
+    const shadow = this.shadowRoot!;
+    const monthSelect = shadow.getElementById("month-select") as HTMLSelectElement;
+    const yearSelect = shadow.getElementById("year-select") as HTMLSelectElement;
+    
+    // Clear existing options
+    monthSelect.innerHTML = "";
+    yearSelect.innerHTML = "";
+    
+    // Add month options (1-12)
+    const persianMonths = [
+      "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
+      "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
+    ];
+    
+    persianMonths.forEach((month, index) => {
+      const option = document.createElement("option");
+      option.value = (index + 1).toString();
+      option.textContent = month;
+      monthSelect.appendChild(option);
+    });
+    
+    // Add year options (current year - 100 to current year + 50)
+    const today = new Date();
+    const jalaliToday = PersianDate.gregorianToJalali(
+      today.getFullYear(), 
+      today.getMonth() + 1, 
+      today.getDate()
+    );
+    
+    const currentJalaliYear = jalaliToday[0];
+    const startYear = currentJalaliYear - 100;
+    const endYear = currentJalaliYear + 50;
+    
+    for (let year = startYear; year <= endYear; year++) {
+      const option = document.createElement("option");
+      option.value = year.toString();
+      option.textContent = year.toString();
+      yearSelect.appendChild(option);
+    }
   }
 } 
