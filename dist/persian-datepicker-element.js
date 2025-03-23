@@ -478,7 +478,10 @@ input:focus {
   padding: var(--jdp-calendar-padding);
   text-align: center;
   z-index: var(--jdp-calendar-z-index);
-  touch-action: pan-y;
+  touch-action: none; /* Prevent any default touch actions */
+  -webkit-overflow-scrolling: none; /* Prevent iOS scrolling */
+  -webkit-user-select: none; /* Prevent text selection during swipe */
+  user-select: none;
 }
 
 .calendar.position-bottom {
@@ -525,6 +528,7 @@ input:focus {
 
 .days-wrapper {
   position: relative;
+  touch-action: none; /* Prevent scroll on this element */
 }
 
 .days {
@@ -564,6 +568,7 @@ input:focus {
   transition: all var(--jdp-transition-duration) ease;
   position: relative;
   z-index: 2;
+  touch-action: manipulation; /* Improve touch behavior */
 }
 
 .nav-button:hover {
@@ -622,6 +627,10 @@ input:focus {
   transition: var(--jdp-transition-duration) ease;
   margin: var(--jdp-day-cell-margin);
   position: relative;
+  touch-action: manipulation; /* Add touch action manipulation */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight color on mobile */
+  -webkit-user-select: none; /* Prevent text selection */
+  user-select: none;
 }
 
 .day:hover:not(.empty):not(.disabled) {
@@ -1047,7 +1056,16 @@ class PersianDatePickerElement extends HTMLElement {
             const dayElement = document.createElement("div");
             dayElement.classList.add("day");
             dayElement.textContent = i.toString();
-            dayElement.addEventListener("click", () => this.selectDate(i));
+            // Improve touch behavior on day elements
+            dayElement.addEventListener("touchstart", (e) => {
+                // Just let it propagate to handle in the calendar's touch handlers
+            }, { passive: true });
+            // Add click listener with proper event handling
+            dayElement.addEventListener("click", (e) => {
+                e.preventDefault(); // Prevent any default actions
+                e.stopPropagation(); // Stop event from propagating
+                this.selectDate(i);
+            });
             // Highlight today
             if (this.jalaliYear === jalaliToday[0] && this.jalaliMonth === jalaliToday[1] && i === jalaliToday[2]) {
                 dayElement.classList.add("today");
@@ -1176,42 +1194,70 @@ class PersianDatePickerElement extends HTMLElement {
     initTouchGestures() {
         let startX = 0;
         let startY = 0;
-        let moved = false;
-        const threshold = 50; // Minimum distance to be considered a swipe
-        // Touch start
+        let isDragging = false;
+        const threshold = 30; // Lower threshold for more responsive swipes
+        let touchStartTime = 0;
+        // Handle touch start - capture initial position
         this.calendar.addEventListener('touchstart', (e) => {
+            // Only handle touches when calendar is visible
+            if (!this.calendar.classList.contains("visible"))
+                return;
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
-            moved = false;
+            isDragging = false;
+            touchStartTime = Date.now();
         }, { passive: true });
-        // Touch move
-        this.calendar.addEventListener('touchmove', (e) => {
-            moved = true;
-        }, { passive: true });
-        // Touch end
-        this.calendar.addEventListener('touchend', (e) => {
-            if (!moved)
+        // Prevent default on touchmove to stop page scrolling
+        document.addEventListener('touchmove', (e) => {
+            // Only process if calendar is visible
+            if (!this.calendar.classList.contains("visible"))
                 return;
-            const endX = e.changedTouches[0].clientX;
-            const endY = e.changedTouches[0].clientY;
-            const diffX = endX - startX;
-            const diffY = endY - startY;
-            // Only recognize horizontal swipes (greater horizontal than vertical movement)
-            if (Math.abs(diffX) > Math.abs(diffY)) {
-                // Determine direction based on RTL mode
-                const isRTL = getComputedStyle(this).getPropertyValue('--jdp-direction').trim() === 'rtl';
-                // In RTL mode, swipe left moves to next month, swipe right moves to previous month
-                // In LTR mode, it's the opposite
-                if (Math.abs(diffX) > threshold) {
+            // Calculate how far we've moved
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const diffX = currentX - startX;
+            const diffY = currentY - startY;
+            // If touch is within the calendar element's bounds
+            if (e.target && this.calendar.contains(e.target)) {
+                // If horizontal movement is greater than vertical movement and significant
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                    // We have a horizontal swipe inside the calendar - prevent page scrolling
+                    e.preventDefault();
+                    isDragging = true;
+                }
+            }
+        }, { passive: false }); // Important: must not be passive to allow preventDefault
+        // Handle touch end - determine if it was a swipe
+        this.calendar.addEventListener('touchend', (e) => {
+            if (!this.calendar.classList.contains("visible"))
+                return;
+            const touchEndTime = Date.now();
+            const touchDuration = touchEndTime - touchStartTime;
+            // Only process if the touch was quick enough (< 300ms) or we detected dragging
+            if (touchDuration < 300 || isDragging) {
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                const diffX = endX - startX;
+                const diffY = endY - startY;
+                // Only consider horizontal movements that are larger than vertical movements
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+                    // Determine direction based on RTL mode
+                    const isRTL = getComputedStyle(this).getPropertyValue('--jdp-direction').trim() === 'rtl';
+                    // In RTL mode, swipe left moves to next month, swipe right moves to previous month
+                    // In LTR mode, it's the opposite
                     if ((isRTL && diffX < 0) || (!isRTL && diffX > 0)) {
+                        e.preventDefault(); // Prevent any default actions
                         this.changeMonth(1); // Next month
                     }
                     else if ((isRTL && diffX > 0) || (!isRTL && diffX < 0)) {
+                        e.preventDefault(); // Prevent any default actions
                         this.changeMonth(-1); // Previous month
                     }
                 }
             }
-        });
+        }, { passive: false }); // Must not be passive to allow preventDefault
+        // Prevent default touch action on the calendar element
+        this.calendar.style.touchAction = 'none';
     }
 }
 

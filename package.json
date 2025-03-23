@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.js",
   "module": "dist/persian-datepicker-element.esm.js",
@@ -10,6 +10,14 @@
     "dist"
   ],
   "sideEffects": false,
+  "changelog": {
+    "1.0.13": [
+      "Improved touch gesture handling to prevent unwanted page scrolling during calendar swipes",
+      "Added proper touch-action properties to all interactive elements",
+      "Fixed mobile swipe interactions to work more reliably",
+      "Improved touch event handling for smoother mobile experience"
+    ]
+  },
   "scripts": {
     "build": "pnpm run build:clean && pnpm run build:prod && pnpm run build:dev && pnpm run build:esm && pnpm run minify && pnpm run cleanup",
     "build:clean": "set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && rspack",
