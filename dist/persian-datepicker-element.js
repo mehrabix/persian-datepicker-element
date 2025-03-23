@@ -482,6 +482,9 @@ input:focus {
   -webkit-overflow-scrolling: none; /* Prevent iOS scrolling */
   -webkit-user-select: none; /* Prevent text selection during swipe */
   user-select: none;
+  transform: translateZ(0); /* Hardware acceleration */
+  will-change: transform; /* Hint to browser */
+  backface-visibility: hidden; /* Prevent flickering */
 }
 
 .calendar.position-bottom {
@@ -529,12 +532,16 @@ input:focus {
 .days-wrapper {
   position: relative;
   touch-action: none; /* Prevent scroll on this element */
+  overflow: hidden; /* Hide overflow during animations */
 }
 
 .days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   transition: transform var(--jdp-month-transition-duration) ease, opacity var(--jdp-month-transition-duration) ease;
+  will-change: transform, opacity; /* Hint to browser */
+  transform: translateZ(0); /* Hardware acceleration */
+  backface-visibility: hidden; /* Prevent flickering */
 }
 
 .days.slide-left {
@@ -546,13 +553,13 @@ input:focus {
 }
 
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-10%); }
-  to { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateX(-10%) translateZ(0); }
+  to { opacity: 1; transform: translateX(0) translateZ(0); }
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(10%); }
-  to { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateX(10%) translateZ(0); }
+  to { opacity: 1; transform: translateX(0) translateZ(0); }
 }
 
 .nav-button {
@@ -569,6 +576,7 @@ input:focus {
   position: relative;
   z-index: 2;
   touch-action: manipulation; /* Improve touch behavior */
+  will-change: transform, background-color; /* Optimize navigation button animations */
 }
 
 .nav-button:hover {
@@ -968,62 +976,73 @@ class PersianDatePickerElement extends HTMLElement {
     positionCalendar() {
         // Reset position classes
         this.calendar.classList.remove("position-bottom", "position-top");
-        // Make calendar temporarily visible but with opacity 0 to measure its height
-        this.calendar.style.opacity = "0";
-        this.calendar.style.display = "block";
-        // Get measurements
+        // Get measurements without causing reflow
         const inputRect = this.input.getBoundingClientRect();
-        const calendarHeight = this.calendar.offsetHeight;
         const windowHeight = window.innerHeight;
+        // Default to position-bottom (most common)
+        this.calendar.classList.add("position-bottom");
+        // Set display block but with visibility hidden to measure without showing
+        const originalVisibility = this.calendar.style.visibility;
+        const originalDisplay = this.calendar.style.display;
+        this.calendar.style.visibility = 'hidden';
+        this.calendar.style.display = 'block';
+        // Now we can measure once display is set
+        const calendarHeight = this.calendar.offsetHeight;
+        // Check if there's enough space below
         const spaceBelow = windowHeight - inputRect.bottom;
-        const spaceAbove = inputRect.top;
-        // Hide the calendar again
-        this.calendar.style.display = "";
-        this.calendar.style.opacity = "";
-        // Determine position
-        if (spaceBelow >= calendarHeight || spaceBelow >= spaceAbove) {
-            // Position below input
-            this.calendar.classList.add("position-bottom");
+        if (spaceBelow < calendarHeight) {
+            // Not enough space below, check if there's more space above
+            const spaceAbove = inputRect.top;
+            if (spaceAbove > spaceBelow || spaceAbove >= calendarHeight) {
+                // Switch to position-top
+                this.calendar.classList.remove("position-bottom");
+                this.calendar.classList.add("position-top");
+            }
         }
-        else {
-            // Position above input
-            this.calendar.classList.add("position-top");
-        }
+        // Restore original styles
+        this.calendar.style.visibility = originalVisibility;
+        this.calendar.style.display = originalDisplay;
     }
     changeMonth(direction) {
         // Prevent multiple transitions at once
         if (this.isTransitioning)
             return;
         this.isTransitioning = true;
-        // Add transition class based on direction
-        const slideClass = direction > 0 ? 'slide-left' : 'slide-right';
-        this.daysContainer.classList.add(slideClass);
-        // Start with fade effect for month/year label
-        this.monthYearLabel.classList.add('fade');
-        // Update month and year values
-        this.jalaliMonth = Number(this.jalaliMonth) + direction;
-        if (this.jalaliMonth < 1) {
-            this.jalaliMonth = 12;
-            this.jalaliYear--;
-        }
-        else if (this.jalaliMonth > 12) {
-            this.jalaliMonth = 1;
-            this.jalaliYear++;
-        }
-        // Set a timeout to actually update the calendar
-        setTimeout(() => {
-            // Update month and year label
-            this.monthYearLabel.textContent = `${PersianDate.getMonthName(this.jalaliMonth)} ${this.jalaliYear}`;
-            this.monthYearLabel.classList.remove('fade');
-            // Render the new month
-            this.daysContainer.innerHTML = "";
-            this.renderCalendarContent();
-            // Remove slide class after the animation duration
+        // Cache reference to calendar elements
+        const daysContainer = this.daysContainer;
+        const monthYearLabel = this.monthYearLabel;
+        // Schedule visual updates using requestAnimationFrame
+        requestAnimationFrame(() => {
+            // Add transition class based on direction
+            const slideClass = direction > 0 ? 'slide-left' : 'slide-right';
+            daysContainer.classList.add(slideClass);
+            // Start with fade effect for month/year label
+            monthYearLabel.classList.add('fade');
+            // Update month and year values
+            this.jalaliMonth = Number(this.jalaliMonth) + direction;
+            if (this.jalaliMonth < 1) {
+                this.jalaliMonth = 12;
+                this.jalaliYear--;
+            }
+            else if (this.jalaliMonth > 12) {
+                this.jalaliMonth = 1;
+                this.jalaliYear++;
+            }
+            // Set a timeout to actually update the calendar
             setTimeout(() => {
-                this.daysContainer.classList.remove(slideClass);
-                this.isTransitioning = false;
-            }, 50);
-        }, 250); // Slightly shorter than the CSS animation duration
+                // Update month and year label
+                monthYearLabel.textContent = `${PersianDate.getMonthName(this.jalaliMonth)} ${this.jalaliYear}`;
+                monthYearLabel.classList.remove('fade');
+                // Clear days container and render new content
+                daysContainer.innerHTML = "";
+                this.renderCalendarContent();
+                // Remove slide class after the animation duration
+                requestAnimationFrame(() => {
+                    daysContainer.classList.remove(slideClass);
+                    this.isTransitioning = false;
+                });
+            }, 200); // Shorter than the CSS animation duration for better feel
+        });
     }
     renderCalendar() {
         // Display month and year in Persian format
@@ -1195,19 +1214,26 @@ class PersianDatePickerElement extends HTMLElement {
         let startX = 0;
         let startY = 0;
         let isDragging = false;
-        const threshold = 30; // Lower threshold for more responsive swipes
+        const threshold = 20; // Even lower threshold for more responsive swipes
         let touchStartTime = 0;
+        let isSwiping = false;
         // Handle touch start - capture initial position
         this.calendar.addEventListener('touchstart', (e) => {
             // Only handle touches when calendar is visible
             if (!this.calendar.classList.contains("visible"))
                 return;
+            // Store initial touch position
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
             isDragging = false;
+            isSwiping = false;
             touchStartTime = Date.now();
+            // Immediately set touch-action to none to ensure browser doesn't take over
+            this.calendar.style.touchAction = 'none';
+            // Prevent any default action on touchstart
+            // e.preventDefault(); - Can't use preventDefault on touchstart with passive:true
         }, { passive: true });
-        // Prevent default on touchmove to stop page scrolling
+        // For the entire document, capture touchmove events
         document.addEventListener('touchmove', (e) => {
             // Only process if calendar is visible
             if (!this.calendar.classList.contains("visible"))
@@ -1217,24 +1243,41 @@ class PersianDatePickerElement extends HTMLElement {
             const currentY = e.touches[0].clientY;
             const diffX = currentX - startX;
             const diffY = currentY - startY;
-            // If touch is within the calendar element's bounds
-            if (e.target && this.calendar.contains(e.target)) {
+            // If we're already swiping, always prevent default
+            if (isSwiping) {
+                e.preventDefault();
+                return;
+            }
+            // Check if touch is within calendar bounds or very close
+            const calendarRect = this.calendar.getBoundingClientRect();
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+            const touchNearCalendar = touchX >= calendarRect.left - 20 &&
+                touchX <= calendarRect.right + 20 &&
+                touchY >= calendarRect.top - 20 &&
+                touchY <= calendarRect.bottom + 20;
+            // If touch is within or near the calendar element's bounds
+            if (touchNearCalendar || this.calendar.contains(e.target)) {
                 // If horizontal movement is greater than vertical movement and significant
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
                     // We have a horizontal swipe inside the calendar - prevent page scrolling
                     e.preventDefault();
                     isDragging = true;
+                    isSwiping = true;
                 }
             }
-        }, { passive: false }); // Important: must not be passive to allow preventDefault
+        }, { passive: false });
         // Handle touch end - determine if it was a swipe
         this.calendar.addEventListener('touchend', (e) => {
             if (!this.calendar.classList.contains("visible"))
                 return;
+            // Reset swiping state
+            const wasSwiping = isSwiping;
+            isSwiping = false;
             const touchEndTime = Date.now();
             const touchDuration = touchEndTime - touchStartTime;
-            // Only process if the touch was quick enough (< 300ms) or we detected dragging
-            if (touchDuration < 300 || isDragging) {
+            // Only process if the touch was quick (< 300ms) or we detected dragging
+            if ((touchDuration < 300 || isDragging) && !this.isTransitioning) {
                 const endX = e.changedTouches[0].clientX;
                 const endY = e.changedTouches[0].clientY;
                 const diffX = endX - startX;
@@ -1247,17 +1290,26 @@ class PersianDatePickerElement extends HTMLElement {
                     // In LTR mode, it's the opposite
                     if ((isRTL && diffX < 0) || (!isRTL && diffX > 0)) {
                         e.preventDefault(); // Prevent any default actions
+                        e.stopPropagation(); // Stop event from propagating
                         this.changeMonth(1); // Next month
                     }
                     else if ((isRTL && diffX > 0) || (!isRTL && diffX < 0)) {
                         e.preventDefault(); // Prevent any default actions
+                        e.stopPropagation(); // Stop event from propagating
                         this.changeMonth(-1); // Previous month
                     }
                 }
             }
-        }, { passive: false }); // Must not be passive to allow preventDefault
-        // Prevent default touch action on the calendar element
-        this.calendar.style.touchAction = 'none';
+            // If we were swiping, prevent any click events
+            if (wasSwiping) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        // Add a touchcancel handler to reset state
+        this.calendar.addEventListener('touchcancel', () => {
+            isSwiping = false;
+            isDragging = false;
+        });
     }
 }
 
