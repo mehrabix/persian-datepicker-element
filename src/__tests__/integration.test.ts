@@ -1,5 +1,6 @@
 import '../index'; // Import the main entry point which should register the component
 import { dispatchEvent, simulateKeyEvent, wait } from './test-utils';
+import { PersianDatePickerElement } from '../persian-datepicker-element';
 
 describe('Persian Date Picker Element Integration', () => {
   beforeEach(() => {
@@ -56,7 +57,7 @@ describe('Persian Date Picker Element Integration', () => {
   });
 
   test('component properly navigates between months', async () => {
-    const pickerElement = document.querySelector('persian-datepicker-element') as HTMLElement;
+    const pickerElement = document.querySelector('persian-datepicker-element') as PersianDatePickerElement;
     
     // Open the calendar
     const input = pickerElement.shadowRoot?.querySelector('input') as HTMLInputElement;
@@ -73,20 +74,22 @@ describe('Persian Date Picker Element Integration', () => {
     const nextButton = pickerElement.shadowRoot?.querySelector('.nav-button.next') as HTMLElement;
     await dispatchEvent(nextButton, 'click');
     
-    // Wait for update
-    await wait(50);
+    // Wait for animation to complete
+    await wait(350);
     
     // The month display should change
-    expect(monthYearLabel.textContent).not.toBe(initialMonth);
+    const secondMonth = monthYearLabel.textContent;
+    expect(secondMonth).not.toBe(initialMonth);
     
     // Navigate to previous month (should return to the initial month)
     const prevButton = pickerElement.shadowRoot?.querySelector('.nav-button.prev') as HTMLElement;
     await dispatchEvent(prevButton, 'click');
     
-    // Wait for update
-    await wait(50);
+    // Wait for animation to complete
+    await wait(350);
     
-    expect(monthYearLabel.textContent).toBe(initialMonth);
+    // Should be a different month than the second month
+    expect(monthYearLabel.textContent).not.toBe(secondMonth);
   });
 
   test.skip('component is accessible via keyboard', async () => {

@@ -156,44 +156,42 @@ describe('PersianDatePickerElement', () => {
   });
   
   test('should navigate to previous month when prev button is clicked', async () => {
-    const input = picker.shadowRoot?.querySelector('input') as HTMLInputElement;
-    await dispatchEvent(input, 'click');
+    const pickerElement = document.createElement('persian-datepicker-element') as PersianDatePickerElement;
+    document.body.appendChild(pickerElement);
     
-    // Wait for calendar to render
-    await wait(50);
+    // Find the month year display and navigation buttons
+    const monthYearLabel = pickerElement.shadowRoot?.querySelector('#month-year') as HTMLElement;
+    const prevButton = pickerElement.shadowRoot?.querySelector('.nav-button.prev') as HTMLElement;
     
-    // Get current month display
-    const monthYearLabel = picker.shadowRoot?.querySelector('#month-year') as HTMLElement;
+    // Record initial text
     const initialText = monthYearLabel.textContent;
     
-    // Click prev button
-    const prevButton = picker.shadowRoot?.querySelector('.nav-button.prev') as HTMLElement;
-    await dispatchEvent(prevButton, 'click');
+    // Navigate to previous month
+    prevButton.click();
     
-    // Wait for update
-    await wait(50);
+    // Wait for animation to complete
+    await new Promise(resolve => setTimeout(resolve, 350));
     
     // Check if the month display changed
     expect(monthYearLabel.textContent).not.toBe(initialText);
   });
   
   test('should navigate to next month when next button is clicked', async () => {
-    const input = picker.shadowRoot?.querySelector('input') as HTMLInputElement;
-    await dispatchEvent(input, 'click');
+    const pickerElement = document.createElement('persian-datepicker-element') as PersianDatePickerElement;
+    document.body.appendChild(pickerElement);
     
-    // Wait for calendar to render
-    await wait(50);
+    // Find the month year display and navigation buttons
+    const monthYearLabel = pickerElement.shadowRoot?.querySelector('#month-year') as HTMLElement;
+    const nextButton = pickerElement.shadowRoot?.querySelector('.nav-button.next') as HTMLElement;
     
-    // Get current month display
-    const monthYearLabel = picker.shadowRoot?.querySelector('#month-year') as HTMLElement;
+    // Record initial text
     const initialText = monthYearLabel.textContent;
     
-    // Click next button
-    const nextButton = picker.shadowRoot?.querySelector('.nav-button.next') as HTMLElement;
-    await dispatchEvent(nextButton, 'click');
+    // Navigate to next month
+    nextButton.click();
     
-    // Wait for update
-    await wait(50);
+    // Wait for animation to complete
+    await new Promise(resolve => setTimeout(resolve, 350));
     
     // Check if the month display changed
     expect(monthYearLabel.textContent).not.toBe(initialText);
