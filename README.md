@@ -403,3 +403,15 @@ picker.setHolidayTypes(['Iran', 'Religious']);
 ## License | مجوز
 
 MIT
+
+## Changelog
+
+### Version 1.0.12
+- Fixed touch swipe gestures to prevent page scrolling when swiping the calendar
+- Improved mobile experience by preventing swipe actions from affecting the whole page
+
+### Version 1.0.11
+- Initial public release
+- Support for Jalali (Persian) calendar
+- Holiday highlighting
+- Customizable styling with CSS variables

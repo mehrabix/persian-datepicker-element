@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { NgxPersianDatepickerComponent } from './ngx-persian-datepicker-element.component';
+import { NgxPersianDatepickerComponent } from './ngx-persian-datepicker.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('NgxPersianDatepickerComponent', () => {
   let component: NgxPersianDatepickerComponent;
@@ -8,7 +8,8 @@ describe('NgxPersianDatepickerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NgxPersianDatepickerComponent]
+      imports: [NgxPersianDatepickerComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
 

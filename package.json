@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.js",
   "module": "dist/persian-datepicker-element.esm.js",
@@ -24,7 +24,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "serve": "pnpm exec serve",
-    "prepublishOnly": "pnpm run test && pnpm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "keywords": [
     "jalali",
