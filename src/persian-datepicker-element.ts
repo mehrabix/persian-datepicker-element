@@ -95,6 +95,7 @@ const styles = `:host {
   /* Animations */
   --jdp-transition-duration: 0.2s;
   --jdp-fade-from-y: -4px;
+  --jdp-fade-from-y-reverse: 4px;
   
   /* Layout */
   --jdp-border-radius: 0.5rem;
@@ -140,7 +141,6 @@ input:focus {
 .calendar {
   display: none;
   position: absolute;
-  top: calc(100% + 5px);
   right: 0;
   width: var(--jdp-calendar-width);
   background: var(--jdp-background);
@@ -150,15 +150,30 @@ input:focus {
   padding: var(--jdp-calendar-padding);
   text-align: center;
   z-index: var(--jdp-calendar-z-index);
+  touch-action: pan-y;
+}
+
+.calendar.position-bottom {
+  top: calc(100% + 5px);
+  animation: fadeInFromTop var(--jdp-transition-duration) ease;
+}
+
+.calendar.position-top {
+  bottom: calc(100% + 5px);
+  animation: fadeInFromBottom var(--jdp-transition-duration) ease;
 }
 
 .calendar.visible {
   display: block;
-  animation: fadeIn var(--jdp-transition-duration) ease;
 }
 
-@keyframes fadeIn {
+@keyframes fadeInFromTop {
   from { opacity: 0; transform: translateY(var(--jdp-fade-from-y)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInFromBottom {
+  from { opacity: 0; transform: translateY(var(--jdp-fade-from-y-reverse)); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -470,6 +485,9 @@ export class PersianDatePickerElement extends HTMLElement {
       }
     });
 
+    // Touch swipe gestures for calendar navigation
+    this.initTouchGestures();
+
     this.renderCalendar();
   }
 
@@ -602,7 +620,46 @@ export class PersianDatePickerElement extends HTMLElement {
   }
 
   toggleCalendar() {
-    this.calendar.classList.toggle("visible");
+    if (this.calendar.classList.contains("visible")) {
+      // Hide calendar
+      this.calendar.classList.remove("visible", "position-bottom", "position-top");
+    } else {
+      // Show calendar with position calculation
+      this.positionCalendar();
+      this.calendar.classList.add("visible");
+    }
+  }
+
+  /**
+   * Calculate and set the optimal position for the calendar
+   */
+  private positionCalendar(): void {
+    // Reset position classes
+    this.calendar.classList.remove("position-bottom", "position-top");
+    
+    // Make calendar temporarily visible but with opacity 0 to measure its height
+    this.calendar.style.opacity = "0";
+    this.calendar.style.display = "block";
+    
+    // Get measurements
+    const inputRect = this.input.getBoundingClientRect();
+    const calendarHeight = this.calendar.offsetHeight;
+    const windowHeight = window.innerHeight;
+    const spaceBelow = windowHeight - inputRect.bottom;
+    const spaceAbove = inputRect.top;
+    
+    // Hide the calendar again
+    this.calendar.style.display = "";
+    this.calendar.style.opacity = "";
+    
+    // Determine position
+    if (spaceBelow >= calendarHeight || spaceBelow >= spaceAbove) {
+      // Position below input
+      this.calendar.classList.add("position-bottom");
+    } else {
+      // Position above input
+      this.calendar.classList.add("position-top");
+    }
   }
 
   changeMonth(direction: number) {
@@ -797,5 +854,54 @@ export class PersianDatePickerElement extends HTMLElement {
     this.selectedDate = null;
     this.input.value = '';
     this.renderCalendar();
+  }
+
+  /**
+   * Initialize touch gesture support for the calendar
+   */
+  private initTouchGestures(): void {
+    let startX: number = 0;
+    let startY: number = 0;
+    let moved: boolean = false;
+    const threshold = 50; // Minimum distance to be considered a swipe
+    
+    // Touch start
+    this.calendar.addEventListener('touchstart', (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      moved = false;
+    }, { passive: true });
+    
+    // Touch move
+    this.calendar.addEventListener('touchmove', (e: TouchEvent) => {
+      moved = true;
+    }, { passive: true });
+    
+    // Touch end
+    this.calendar.addEventListener('touchend', (e: TouchEvent) => {
+      if (!moved) return;
+      
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+      
+      const diffX = endX - startX;
+      const diffY = endY - startY;
+      
+      // Only recognize horizontal swipes (greater horizontal than vertical movement)
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        // Determine direction based on RTL mode
+        const isRTL = getComputedStyle(this).getPropertyValue('--jdp-direction').trim() === 'rtl';
+        
+        // In RTL mode, swipe left moves to next month, swipe right moves to previous month
+        // In LTR mode, it's the opposite
+        if (Math.abs(diffX) > threshold) {
+          if ((isRTL && diffX < 0) || (!isRTL && diffX > 0)) {
+            this.changeMonth(1); // Next month
+          } else if ((isRTL && diffX > 0) || (!isRTL && diffX < 0)) {
+            this.changeMonth(-1); // Previous month
+          }
+        }
+      }
+    });
   }
 } 
