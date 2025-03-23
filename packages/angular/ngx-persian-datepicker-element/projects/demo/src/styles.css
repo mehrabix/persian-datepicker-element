@@ -1,0 +1,58 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Global styles for the demo application */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2980b9;
+  --text-color: #333;
+  --background-color: #f8f9fa;
+  --border-color: #e2e8f0;
+  --success-color: #2ecc71;
+  --container-width: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  padding: 0;
+  margin: 0;
+}
+
+/* RTL support for the Persian DatePicker */
+[dir="rtl"] .container,
+.container[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Custom styling for the datepicker input */
+.custom-input {
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: var(--text-color);
+  transition: border-color 0.3s ease;
+}
+
+.custom-input:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Add some spacing between sections */
+app-root {
+  display: block;
+  padding: 20px 0;
+}
