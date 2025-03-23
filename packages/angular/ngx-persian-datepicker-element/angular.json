@@ -71,7 +71,7 @@
               "projects/demo/src/styles.css"
             ],
             "scripts": [
-              "node_modules/persian-datepicker-element/dist/persian-datepicker-element.js"
+              "node_modules/persian-datepicker-element/dist/persian-datepicker-element.min.js"
             ]
           },
           "configurations": {
@@ -131,7 +131,7 @@
               "projects/demo/src/styles.css"
             ],
             "scripts": [
-              "node_modules/persian-datepicker-element/dist/persian-datepicker-element.js"
+              "node_modules/persian-datepicker-element/dist/persian-datepicker-element.min.js"
             ]
           }
         }
