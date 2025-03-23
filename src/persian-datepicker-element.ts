@@ -96,6 +96,7 @@ const styles = `:host {
   --jdp-transition-duration: 0.2s;
   --jdp-fade-from-y: -4px;
   --jdp-fade-from-y-reverse: 4px;
+  --jdp-month-transition-duration: 0.3s;
   
   /* Layout */
   --jdp-border-radius: 0.5rem;
@@ -151,6 +152,7 @@ input:focus {
   text-align: center;
   z-index: var(--jdp-calendar-z-index);
   touch-action: pan-y;
+  overflow: hidden;
 }
 
 .calendar.position-bottom {
@@ -188,6 +190,40 @@ input:focus {
   font-weight: var(--jdp-month-year-font-weight);
   font-size: var(--jdp-month-year-font-size);
   color: var(--jdp-foreground);
+  transition: opacity var(--jdp-transition-duration) ease;
+}
+
+.month-year.fade {
+  opacity: 0;
+}
+
+.days-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  transition: transform var(--jdp-month-transition-duration) ease, opacity var(--jdp-month-transition-duration) ease;
+}
+
+.days.slide-left {
+  animation: slideInLeft var(--jdp-month-transition-duration) ease;
+}
+
+.days.slide-right {
+  animation: slideInRight var(--jdp-month-transition-duration) ease;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-10%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(10%); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .nav-button {
@@ -202,6 +238,7 @@ input:focus {
   justify-content: center;
   transition: all var(--jdp-transition-duration) ease;
   position: relative;
+  z-index: 2;
 }
 
 .nav-button:hover {
@@ -246,11 +283,6 @@ input:focus {
   color: var(--jdp-muted-foreground);
   padding: var(--jdp-spacing-xs) 0;
   text-align: center;
-}
-
-.days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
 }
 
 .day {
@@ -400,6 +432,7 @@ export class PersianDatePickerElement extends HTMLElement {
   private showHolidays: boolean = true;
   private holidayTypes: string[] = [...DEFAULT_HOLIDAY_TYPES];
   private includeAllTypes: boolean = false;
+  private isTransitioning: boolean = false;
 
   static get observedAttributes() {
     return [
@@ -613,7 +646,9 @@ export class PersianDatePickerElement extends HTMLElement {
             <button id="next-month" type="button" class="nav-button next"></button>
           </div>
           <div class="day-names" id="day-names"></div>
-          <div class="days" id="days-container"></div>
+          <div class="days-wrapper">
+            <div class="days" id="days-container"></div>
+          </div>
         </div>
       </div>
     `;
@@ -663,6 +698,18 @@ export class PersianDatePickerElement extends HTMLElement {
   }
 
   changeMonth(direction: number) {
+    // Prevent multiple transitions at once
+    if (this.isTransitioning) return;
+    this.isTransitioning = true;
+    
+    // Add transition class based on direction
+    const slideClass = direction > 0 ? 'slide-left' : 'slide-right';
+    this.daysContainer.classList.add(slideClass);
+    
+    // Start with fade effect for month/year label
+    this.monthYearLabel.classList.add('fade');
+    
+    // Update month and year values
     this.jalaliMonth = Number(this.jalaliMonth) + direction;
     if (this.jalaliMonth < 1) {
       this.jalaliMonth = 12;
@@ -671,16 +718,40 @@ export class PersianDatePickerElement extends HTMLElement {
       this.jalaliMonth = 1;
       this.jalaliYear++;
     }
-    this.renderCalendar();
+    
+    // Set a timeout to actually update the calendar
+    setTimeout(() => {
+      // Update month and year label
+      this.monthYearLabel.textContent = `${PersianDate.getMonthName(this.jalaliMonth)} ${this.jalaliYear}`;
+      this.monthYearLabel.classList.remove('fade');
+      
+      // Render the new month
+      this.daysContainer.innerHTML = "";
+      this.renderCalendarContent();
+      
+      // Remove slide class after the animation duration
+      setTimeout(() => {
+        this.daysContainer.classList.remove(slideClass);
+        this.isTransitioning = false;
+      }, 50);
+    }, 250); // Slightly shorter than the CSS animation duration
   }
 
   renderCalendar() {
     // Display month and year in Persian format
     this.monthYearLabel.textContent = `${PersianDate.getMonthName(this.jalaliMonth)} ${this.jalaliYear}`;
-
+    
     // Clear previous days
     this.daysContainer.innerHTML = "";
-
+    
+    // Render the calendar content
+    this.renderCalendarContent();
+  }
+  
+  /**
+   * Renders the calendar content for the current month
+   */
+  private renderCalendarContent(): void {
     // Get first day of month and number of days
     const firstDayOfMonth = PersianDate.getDayOfWeek(this.jalaliYear, this.jalaliMonth, 1);
     const daysInMonth = PersianDate.getDaysInMonth(this.jalaliYear, this.jalaliMonth);
