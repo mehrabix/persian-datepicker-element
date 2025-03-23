@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.js",
   "module": "dist/persian-datepicker-element.esm.js",
@@ -11,7 +11,7 @@
   ],
   "sideEffects": false,
   "changelog": {
-    "1.0.16": [
+    "1.0.17": [
       "Added 'Today' button ('امروز') at the bottom of the calendar for quick navigation to current day",
       "Added 'Tomorrow' (فردا) button for quick navigation to the next day",
       "Positioned Today and Tomorrow buttons at opposite ends for balanced layout",

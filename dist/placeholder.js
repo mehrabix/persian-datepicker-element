@@ -611,7 +611,6 @@ input:focus {
   justify-content: center;
   transition: all var(--jdp-transition-duration) ease;
   position: relative;
-  z-index: 2;
   touch-action: manipulation; /* Improve touch behavior */
   will-change: transform, background-color; /* Optimize navigation button animations */
 }
@@ -732,7 +731,7 @@ input:focus {
   bottom: 120%;
   right: 0;
   transform: translateY(-5px);
-  z-index: 20; /* Higher than anything else in the calendar */
+  z-index: 999; /* Higher than anything else in the calendar */
 }
 
 .day:hover .event-tooltip {
