@@ -1,0 +1,60 @@
+# Angular Persian Datepicker Element - Important Update (v1.0.16)
+
+## CSS Variables Approach Change
+
+In version 1.0.16, we've updated the way CSS variables are handled:
+
+1. Removed the `cssVariables` input property from the Angular component
+2. Removed the `CSSVariableMap` interface and related functionality
+3. Simplified the component by removing the CSS variables application logic
+
+### Styling the Datepicker
+
+Instead of passing CSS variables through the component input, you should now apply CSS variables directly in your CSS/SCSS:
+
+```css
+/* In your global styles or component styles */
+:root {
+  --jdp-primary: #3b82f6;
+  --jdp-primary-hover: #2563eb;
+  --jdp-ring: #60a5fa;
+  --jdp-border-radius: 0.5rem;
+}
+
+/* For dark mode */
+.dark-theme ngx-persian-datepicker-element {
+  --jdp-background: #1e1e2f;
+  --jdp-foreground: #e2e8f0;
+  --jdp-muted: #334155;
+  --jdp-muted-foreground: #94a3b8;
+  --jdp-border: #475569;
+  --jdp-input-border-color: #475569;
+  
+  /* Input field */
+  --jdp-input-bg: #1e1e2f;
+  --jdp-input-text: #e2e8f0;
+  
+  /* Calendar body */
+  --jdp-calendar-bg: #0f172a;
+  --jdp-day-text: #e2e8f0;
+}
+```
+
+### Example with Dark Mode
+
+```html
+<div [ngClass]="{'dark-theme': isDarkMode}">
+  <ngx-persian-datepicker-element
+    placeholderInput="Select a date"
+    formatInput="YYYY/MM/DD"
+    (dateChange)="onDateChange($event)">
+  </ngx-persian-datepicker-element>
+</div>
+```
+
+This approach:
+1. Provides better performance
+2. Follows standard CSS variable usage patterns
+3. Aligns with the updated Vue and React wrappers
+
+**Note:** If you were previously using the `cssVariables` input, you'll need to migrate to using CSS variables directly in your stylesheets. 

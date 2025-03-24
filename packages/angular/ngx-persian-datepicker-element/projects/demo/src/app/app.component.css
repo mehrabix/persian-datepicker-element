@@ -1,87 +1,374 @@
+:root {
+  --jdp-primary: #0891b2;
+  --jdp-primary-hover: #0e7490;
+  --jdp-primary-foreground: #ffffff;
+  --jdp-background: #ffffff;
+  --jdp-foreground: #1e293b;
+  --jdp-muted: #f1f5f9;
+  --jdp-muted-foreground: #64748b;
+  --jdp-border: #e2e8f0;
+  --jdp-ring: #0284c7;
+  --jdp-holiday-color: #ef4444;
+  --jdp-holiday-bg: #fee2e2;
+  --jdp-holiday-hover-bg: #fecaca;
+  --jdp-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --jdp-font-size: 14px;
+  --jdp-line-height: 1.5;
+  --jdp-font-weight: 400;
+  --jdp-font-weight-medium: 500;
+  --jdp-day-name-font-size: 12px;
+  --jdp-day-name-font-weight: 400;
+  --jdp-day-font-size: 13px;
+  --jdp-day-font-weight: 400;
+  --jdp-month-year-font-size: 14px;
+  --jdp-month-year-font-weight: 500;
+  --jdp-spacing-xs: 4px;
+  --jdp-spacing-sm: 8px;
+  --jdp-spacing-md: 16px;
+  --jdp-spacing-lg: 24px;
+  --jdp-input-padding-x: 14px;
+  --jdp-input-padding-y: 10px;
+  --jdp-input-border-width: 1px;
+  --jdp-input-border-color: var(--jdp-border);
+  --jdp-input-border-radius: var(--jdp-border-radius);
+  --jdp-input-focus-ring-width: 2px;
+  --jdp-input-focus-ring-color: rgba(2, 132, 199, 0.25);
+  --jdp-calendar-width: 280px;
+  --jdp-calendar-padding: var(--jdp-spacing-md);
+  --jdp-calendar-border-width: 1px;
+  --jdp-calendar-border-color: var(--jdp-border);
+  --jdp-calendar-border-radius: var(--jdp-border-radius);
+  --jdp-calendar-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2);
+  --jdp-calendar-z-index: 10;
+  --jdp-nav-button-size: 30px;
+  --jdp-nav-button-bg: var(--jdp-muted);
+  --jdp-nav-button-bg-hover: var(--jdp-border);
+  --jdp-nav-button-border-radius: var(--jdp-border-radius);
+  --jdp-nav-arrow-size: 8px;
+  --jdp-nav-arrow-thickness: 2px;
+  --jdp-nav-arrow-color: var(--jdp-foreground);
+  --jdp-day-cell-size: 32px;
+  --jdp-day-cell-margin: 1px;
+  --jdp-day-cell-border-radius: var(--jdp-border-radius);
+  --jdp-day-hover-bg: var(--jdp-muted);
+  --jdp-day-selected-bg: var(--jdp-primary);
+  --jdp-day-selected-color: var(--jdp-primary-foreground);
+  --jdp-day-today-border-color: var(--jdp-primary);
+  --jdp-day-today-border-width: 1px;
+  --jdp-day-disabled-opacity: 0.4;
+  --jdp-transition-duration: 0.2s;
+  --jdp-fade-from-y: -4px;
+  --jdp-fade-from-y-reverse: 4px;
+  --jdp-month-transition-duration: 0.3s;
+  --jdp-border-radius: 0.5rem;
+  --jdp-direction: rtl;
+  
+  /* Custom variables for the demo */
+  --text-color: #333;
+  --background-color: white;
+  --border-color: #e2e8f0;
+  --border-radius: 0.5rem;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --app-padding: 2rem;
+  --app-transition: all 0.3s ease;
+}
+
+/* Base app container */
+.app {
+  min-height: 100vh;
+  padding: var(--app-padding);
+  transition: var(--app-transition);
+  direction: rtl;
+}
+
+/* Apply dark mode styles to the datepicker and container elements */
+.app.dark {
+  background-color: #0f172a;
+  color: #e2e8f0;
+  --text-color: #e2e8f0;
+  --background-color: #1e293b;
+  --border-color: #334155;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+/* Light mode custom properties for datepickers */
+persian-datepicker-element {
+  --jdp-primary: #0891b2;
+  --jdp-primary-hover: #0e7490;
+  --jdp-primary-foreground: #ffffff;
+  --jdp-background: #ffffff;
+  --jdp-foreground: #1e293b;
+  --jdp-muted: #f1f5f9;
+  --jdp-muted-foreground: #64748b;
+  --jdp-border: #e2e8f0;
+  --jdp-input-border-color: #e2e8f0;
+  --jdp-ring: #0284c7;
+  transition: var(--app-transition);
+}
+
+/* Apply dark mode styles directly to the datepicker elements */
+.app.dark persian-datepicker-element {
+  --jdp-background: #1e1e2f;
+  --jdp-foreground: #e2e8f0;
+  --jdp-muted: #334155;
+  --jdp-muted-foreground: #94a3b8;
+  --jdp-border: #475569;
+  --jdp-input-border-color: #475569;
+  --jdp-calendar-shadow: 0px 10px 30px -5px rgba(2, 6, 23, 0.5);
+  --jdp-day-hover-bg: #334155;
+  
+  /* Input field */
+  --jdp-input-bg: #1e1e2f;
+  --jdp-input-text: #e2e8f0;
+  --jdp-input-placeholder: #94a3b8;
+  
+  /* Calendar body */
+  --jdp-calendar-bg: #0f172a;
+  --jdp-day-text: #e2e8f0;
+  --jdp-day-name-text: #94a3b8;
+  --jdp-header-bg: #1e293b;
+  --jdp-header-text: #e2e8f0;
+  
+  /* Keeping important properties consistent in dark mode */
+  --jdp-primary: #0891b2;
+  --jdp-primary-hover: #0e7490;
+  --jdp-primary-foreground: #ffffff;
+  --jdp-ring: #0891b2;
+}
+
+/* Apply the styles to the Angular wrapper for the web component */
+.app.dark ngx-persian-datepicker-element {
+  display: block;
+}
+
+/* Make sure the container applies dark mode styles to children */
+.app.dark ngx-persian-datepicker-element div,
+.app.dark ngx-persian-datepicker-element persian-datepicker-element {
+  background-color: var(--jdp-background);
+  color: var(--jdp-foreground);
+}
+
+/* Fix nested calendar popover in dark mode */
+.app.dark .jdp-calendar-container {
+  background-color: var(--jdp-calendar-bg);
+  border-color: var(--jdp-border);
+  box-shadow: var(--jdp-calendar-shadow);
+}
+
+.app.dark .jdp-header {
+  background-color: var(--jdp-header-bg);
+  color: var(--jdp-header-text);
+}
+
+.app.dark .jdp-day-name {
+  color: var(--jdp-day-name-text);
+}
+
+.app.dark .jdp-day {
+  color: var(--jdp-day-text);
+}
+
+.app.dark .jdp-day:hover {
+  background-color: var(--jdp-day-hover-bg);
+}
+
+.app.dark .jdp-day.jdp-selected {
+  background-color: var(--jdp-primary);
+  color: var(--jdp-primary-foreground);
+}
+
+.app.dark .jdp-holiday {
+  color: var(--jdp-holiday-color);
+  background-color: var(--jdp-holiday-bg);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f3f4f6;
+  color: var(--text-color);
+  transition: var(--app-transition);
+}
+
 .container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  direction: rtl;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 30px;
-  color: #0891b2;
+  color: var(--jdp-primary);
+  margin-bottom: 0.5rem;
+  transition: var(--app-transition);
 }
 
-.section {
-  margin-bottom: 40px;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+p {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 2rem;
+  transition: var(--app-transition);
 }
 
-h2 {
-  color: #0e7490;
-  margin-top: 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e2e8f0;
+.theme-container {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  transition: var(--app-transition);
 }
 
-.datepicker-container {
-  margin-bottom: 20px;
-  max-width: 400px;
+.theme-toggles {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
 }
 
-.output {
-  background-color: #f8fafc;
-  padding: 15px;
-  border-radius: 6px;
-  margin-top: 15px;
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
 }
 
-pre {
-  margin: 0;
-  white-space: pre-wrap;
-  font-family: monospace;
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--jdp-primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 1.5rem;
 }
 
-label {
+.form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0.5rem;
   font-weight: 500;
+  transition: var(--app-transition);
 }
 
-.btn {
-  background-color: #0891b2;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
+.holiday-options {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  transition: var(--app-transition);
 }
 
-.btn:hover {
-  background-color: #0e7490;
+.holiday-types-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
-.checkbox-group {
-  margin-bottom: 20px;
-  display: flex;
-  gap: 15px;
+.result {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  transition: var(--app-transition);
 }
 
-.checkbox-group label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
+.result p {
+  text-align: right;
+  margin-bottom: 0.5rem;
 }
 
-.checkbox-group input {
-  margin: 0;
+.result strong {
+  color: var(--jdp-primary);
+  transition: var(--app-transition);
+}
+
+/* Dark mode styles */
+.app.dark .theme-container,
+.app.dark .holiday-options,
+.app.dark .result {
+  background-color: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.app.dark .result p {
+  color: #e2e8f0;
+}
+
+.app.dark .result strong {
+  color: #60a5fa;
+}
+
+.app.dark h1 {
+  color: #60a5fa;
+}
+
+.app.dark p {
+  color: #94a3b8;
+}
+
+.app.dark .form-group label {
+  color: #e2e8f0;
+}
+
+.app.dark h2 {
+  color: #e2e8f0;
+}
+
+/* RTL specific adjustments */
+.app[dir="rtl"] input,
+.app[dir="rtl"] select,
+.app[dir="rtl"] textarea {
+  text-align: right;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  :root {
+    --app-padding: 1rem;
+  }
+  
+  .app {
+    padding: var(--app-padding);
+  }
+
+  .holiday-types-container {
+    grid-template-columns: 1fr;
+  }
 }

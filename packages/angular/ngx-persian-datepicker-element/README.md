@@ -7,6 +7,7 @@ An Angular wrapper for the Persian DatePicker Web Component. This package provid
 - Full integration with Angular's form system (Reactive Forms and Template-driven Forms)
 - Support for RTL layout
 - Customizable styling
+- Dark mode support
 - Holiday display support with multiple region options
 - Various date formatting options
 - Selection of different holiday types
@@ -314,3 +315,170 @@ onDateChange(event) {
 ## License
 
 MIT
+
+## Dark Mode Support
+
+The datepicker fully supports dark mode. You can implement dark mode using CSS variables:
+
+### Method 1: CSS Class Approach
+
+Add a `dark` class to your container, and define CSS variables for dark mode:
+
+```css
+/* Light mode (default) variables */
+:root {
+  --jdp-background: #ffffff;
+  --jdp-foreground: #1e293b;
+  --jdp-muted: #f1f5f9;
+  --jdp-muted-foreground: #64748b;
+  --jdp-border: #e2e8f0;
+  /* Add other variables as needed */
+}
+
+/* Dark mode variables */
+.dark persian-datepicker-element {
+  --jdp-background: #1e1e2f;
+  --jdp-foreground: #e2e8f0;
+  --jdp-muted: #334155;
+  --jdp-muted-foreground: #94a3b8;
+  --jdp-border: #475569;
+  --jdp-input-border-color: #475569;
+  --jdp-calendar-shadow: 0px 10px 30px -5px rgba(2, 6, 23, 0.5);
+  --jdp-day-hover-bg: #334155;
+  /* Add other dark mode variables */
+}
+```
+
+### Method 2: Programmatic Approach
+
+You can dynamically update the CSS variables when toggling dark mode:
+
+```typescript
+@Component({
+  // ...
+})
+export class AppComponent implements AfterViewInit {
+  @ViewChild('datepicker') datepicker!: NgxPersianDatepickerComponent;
+  isDarkMode = false;
+
+  // Dark theme variables
+  darkThemeVars = {
+    '--jdp-background': '#1e1e2f',
+    '--jdp-foreground': '#e2e8f0',
+    '--jdp-muted': '#334155',
+    '--jdp-muted-foreground': '#94a3b8',
+    '--jdp-border': '#475569',
+    '--jdp-input-border-color': '#475569',
+    '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
+    '--jdp-day-hover-bg': '#334155'
+  };
+
+  // Light theme variables
+  lightThemeVars = {
+    '--jdp-background': '#ffffff',
+    '--jdp-foreground': '#1e293b',
+    '--jdp-muted': '#f1f5f9',
+    '--jdp-muted-foreground': '#64748b',
+    '--jdp-border': '#e2e8f0',
+    '--jdp-input-border-color': '#e2e8f0'
+  };
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    const themeVars = this.isDarkMode ? this.darkThemeVars : this.lightThemeVars;
+    
+    // Apply variables to the datepicker
+    if (this.datepicker) {
+      this.datepicker.applyThemeVariables(themeVars);
+    }
+  }
+}
+```
+
+```html
+<div [ngClass]="{'dark': isDarkMode}">
+  <button (click)="toggleDarkMode()">Toggle Dark Mode</button>
+  <ngx-persian-datepicker-element #datepicker></ngx-persian-datepicker-element>
+</div>
+```
+
+### System Dark Mode Detection
+
+You can also detect and respond to the user's system preference:
+
+```typescript
+constructor() {
+  // Check system preference
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  this.isDarkMode = mediaQuery.matches;
+  
+  // Listen for changes
+  mediaQuery.addEventListener('change', (e) => {
+    this.isDarkMode = e.matches;
+    this.applyTheme();
+  });
+}
+
+applyTheme() {
+  const themeVars = this.isDarkMode ? this.darkThemeVars : this.lightThemeVars;
+  if (this.datepicker) {
+    this.datepicker.applyThemeVariables(themeVars);
+  }
+}
+```
+
+## RTL Support
+
+The datepicker has built-in RTL (Right-to-Left) support for Persian and Arabic languages:
+
+### Using the rtlInput property
+
+```html
+<ngx-persian-datepicker-element
+  rtlInput="true"
+  placeholderInput="انتخاب تاریخ">
+</ngx-persian-datepicker-element>
+```
+
+### Setting RTL for the entire application
+
+You can set RTL direction for your entire application:
+
+```html
+<!-- In app.component.html -->
+<div dir="rtl">
+  <!-- Your app content -->
+  <ngx-persian-datepicker-element></ngx-persian-datepicker-element>
+</div>
+```
+
+Or using Angular binding:
+
+```html
+<div [dir]="'rtl'">
+  <!-- Your app content -->
+</div>
+```
+
+## CSS Variables Reference
+
+The datepicker uses CSS variables for styling. Here's a complete list of the available variables:
+
+| Variable | Description | Default Value |
+|----------|-------------|---------------|
+| `--jdp-primary` | Primary color | `#0891b2` |
+| `--jdp-primary-hover` | Primary hover color | `#0e7490` |
+| `--jdp-primary-foreground` | Text color on primary background | `#ffffff` |
+| `--jdp-background` | Background color | `#ffffff` |
+| `--jdp-foreground` | Text color | `#1e293b` |
+| `--jdp-muted` | Muted background color | `#f1f5f9` |
+| `--jdp-muted-foreground` | Text color on muted background | `#64748b` |
+| `--jdp-border` | Border color | `#e2e8f0` |
+| `--jdp-input-border-color` | Input border color | `var(--jdp-border)` |
+| `--jdp-holiday-color` | Holiday text color | `#ef4444` |
+| `--jdp-holiday-bg` | Holiday background color | `#fee2e2` |
+| `--jdp-holiday-hover-bg` | Holiday hover background color | `#fecaca` |
+| `--jdp-border-radius` | Border radius for elements | `0.5rem` |
+| `--jdp-direction` | Text direction | `rtl` |
+
+For a full list of all CSS variables, check out the [component implementation](projects/ngx-persian-datepicker-element/src/lib/ngx-persian-datepicker.component.ts).

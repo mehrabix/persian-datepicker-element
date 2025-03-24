@@ -21,10 +21,7 @@ import {
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 // Import local type definitions
-import {
-  CSSVariableMap,
-  DateTuple
-} from './persian-datepicker-types';
+import { DateTuple } from './persian-datepicker-types';
 
 // Import the web component
 // This import ensures the web component script is included in the bundle
@@ -84,8 +81,8 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
   private readonly zone = inject(NgZone);
   private readonly injector = inject(Injector);
 
-  // Web component reference
-  private readonly elementSignal = signal<HTMLElement | null>(null);
+  // Web component reference - expose it to be accessed from parent components
+  readonly elementSignal = signal<HTMLElement | null>(null);
 
   // Form control implementation as signals
   private readonly onChangeSignal = signal<(value: any) => void>(() => {});
@@ -108,7 +105,7 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
   readonly fontFamily = input<string | undefined>(undefined, { alias: 'fontFamilyInput' });
   readonly holidayColor = input<string | undefined>(undefined, { alias: 'holidayColorInput' });
   readonly holidayBg = input<string | undefined>(undefined, { alias: 'holidayBgInput' });
-  readonly cssVariables = input<CSSVariableMap | undefined>(undefined, { alias: 'cssVariablesInput' });
+  
   // #endregion
 
   // #region Outputs
@@ -130,6 +127,19 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
 
     // Create effects for each input to update attributes when they change
     this.setupInputEffects();
+  }
+
+  /**
+   * Apply theme variables to the datepicker element
+   * @param variables Object containing CSS variable names and values
+   */
+  applyThemeVariables(variables: Record<string, string>) {
+    const element = this.elementSignal();
+    if (!element) return;
+    
+    for (const [prop, value] of Object.entries(variables)) {
+      element.style.setProperty(prop, value);
+    }
   }
 
   /**
@@ -176,85 +186,7 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
       }
     });
 
-    // Primary Color
-    effect(() => {
-      const value = this.primaryColor();
-      if (value !== undefined) {
-        this.updateStyle('--jdp-primary', value);
-      }
-    });
 
-    // Primary Hover Color
-    effect(() => {
-      const value = this.primaryHover();
-      if (value !== undefined) {
-        this.updateStyle('--jdp-primary-hover', value);
-      }
-    });
-
-    // Background Color
-    effect(() => {
-      const value = this.backgroundColor();
-      if (value !== undefined) {
-        this.updateStyle('--jdp-background', value);
-      }
-    });
-
-    // Foreground Color
-    effect(() => {
-      const value = this.foregroundColor();
-      if (value !== undefined) {
-        this.updateStyle('--jdp-foreground', value);
-      }
-    });
-
-    // Border Color
-    effect(() => {
-      const value = this.borderColor();
-      if (value !== undefined) {
-        this.updateStyle('--jdp-border', value);
-      }
-    });
-
-    // Border Radius
-    effect(() => {
-      const value = this.borderRadius();
-      if (value !== undefined) {
-        this.updateStyle('--jdp-border-radius', value);
-      }
-    });
-
-    // Font Family
-    effect(() => {
-      const value = this.fontFamily();
-      if (value !== undefined) {
-        this.updateStyle('--jdp-font-family', value);
-      }
-    });
-
-    // Holiday Color
-    effect(() => {
-      const value = this.holidayColor();
-      if (value !== undefined) {
-        this.updateStyle('--jdp-holiday-color', value);
-      }
-    });
-
-    // Holiday Background
-    effect(() => {
-      const value = this.holidayBg();
-      if (value !== undefined) {
-        this.updateStyle('--jdp-holiday-bg', value);
-      }
-    });
-
-    // CSS Variables
-    effect(() => {
-      const value = this.cssVariables();
-      if (value !== undefined) {
-        this.applyCssVariables(value);
-      }
-    });
   }
 
   ngOnInit() {
@@ -304,13 +236,6 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
     }
   }
 
-  // Helper method to update styles
-  private updateStyle(name: string, value: string | undefined) {
-    const element = this.elementSignal();
-    if (element && value !== undefined) {
-      element.style.setProperty(name, value);
-    }
-  }
 
   // Helper method specifically for holiday types
   private updateHolidayTypesAttribute(value: string | string[] | undefined) {
@@ -321,15 +246,6 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
     }
   }
 
-  // Helper method to apply CSS variables
-  private applyCssVariables(variables: CSSVariableMap | undefined) {
-    const element = this.elementSignal();
-    if (element && variables) {
-      Object.entries(variables).forEach(([key, value]) => {
-        element.style.setProperty(key, String(value));
-      });
-    }
-  }
 
   ngOnDestroy() {
     // Clean up event listeners
@@ -442,14 +358,7 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
       element.style.setProperty('--jdp-holiday-bg', holidayBg);
     }
     
-    // Apply custom CSS variables
-    const cssVariables = this.cssVariables();
-    if (cssVariables !== undefined) {
-      Object.entries(cssVariables).forEach(([key, value]) => {
-        element.style.setProperty(key, String(value));
-      });
-    }
-    
+
     // Set disabled state
     if (this.disabledSignal()) {
       element.setAttribute('disabled', '');
@@ -510,3 +419,4 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
   }
   // #endregion
 }
+

@@ -332,119 +332,104 @@
 <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
-<div class="demo-container">
-  <header>
-    <h1>{{ title }}</h1>
-    <p class="subtitle">A Beautiful Persian (Jalali) Date Picker for Angular Applications</p>
-  </header>
+<div class="app" [ngClass]="{'dark': isDarkMode}" [dir]="'rtl'">
+  <div class="container">
+    <h1>Persian Date Picker Element</h1>
+    <p>این مثال قابلیت‌های شخصی‌سازی ظاهری تقویم شمسی را نشان می‌دهد</p>
 
-  <!-- Basic Usage Section -->
-  <section class="demo-section">
-    <h2>Basic Usage</h2>
-    <div class="demo-result">
-      <ngx-persian-datepicker-element 
-        placeholder="انتخاب تاریخ" 
-        format="YYYY/MM/DD" 
-        (dateChange)="onDateChange($event)">
-      </ngx-persian-datepicker-element>
+    <div class="theme-container">
+      <div class="theme-toggles">
+        <h2 style="margin: 0">حالت تاریک</h2>
+        <label class="theme-switch">
+          <input type="checkbox" [checked]="isDarkMode" (change)="toggleDarkMode()">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>تاریخ تولد:</label>
+      <ngx-persian-datepicker-element
+        id="birthdate"
+        placeholderInput="انتخاب تاریخ تولد"
+        formatInput="YYYY/MM/DD"
+        [(ngModel)]="birthdate"
+        (dateChange)="handleDateChange($event)"
+        #datepicker1
+      ></ngx-persian-datepicker-element>
+    </div>
+
+    <div class="form-group">
+      <label>تاریخ عضویت:</label>
+      <ngx-persian-datepicker-element
+        id="joinDate"
+        formatInput="YYYY/MM/DD"
+        placeholderInput="تاریخ عضویت"
+        [(ngModel)]="joinDate"
+        (dateChange)="handleDateChange($event)"
+        #datepicker2
+      ></ngx-persian-datepicker-element>
     </div>
     
-    <div class="demo-controls">
-      <h3>Selected Date:</h3>
-      <pre *ngIf="selectedDate">{{ selectedDate | json }}</pre>
-      <p *ngIf="!selectedDate">No date selected yet</p>
-    </div>
-  </section>
-
-  <!-- Reactive Forms Section -->
-  <section class="demo-section">
-    <h2>With Reactive Forms</h2>
-    <form [formGroup]="dateForm" class="demo-form">
-      <div class="demo-result">
-        <ngx-persian-datepicker-element formControlName="date"></ngx-persian-datepicker-element>
-      </div>
+    <div class="holiday-options">
+      <h2>انواع تعطیلات</h2>
+      <p>با استفاده از ویژگی holiday-types می‌توانید نوع تعطیلات نمایش داده شده را مشخص کنید</p>
       
-      <div class="demo-controls">
-        <h3>Form Value:</h3>
-        <pre>{{ dateForm.value | json }}</pre>
+      <div class="holiday-types-container">
+        <div class="form-group">
+          <label>فقط تعطیلات ایران:</label>
+          <ngx-persian-datepicker-element
+            id="iran-holidays"
+            holidayTypesInput="Iran"
+            placeholderInput="فقط تعطیلات ایران"
+            [(ngModel)]="iranHolidays"
+            (dateChange)="handleDateChange($event)"
+            #datepicker3
+          ></ngx-persian-datepicker-element>
+        </div>
+        
+        <div class="form-group">
+          <label>فقط تعطیلات مذهبی:</label>
+          <ngx-persian-datepicker-element
+            id="religious-holidays"
+            holidayTypesInput="Religious"
+            placeholderInput="فقط تعطیلات مذهبی"
+            [(ngModel)]="religiousHolidays"
+            (dateChange)="handleDateChange($event)"
+            #datepicker4
+          ></ngx-persian-datepicker-element>
+        </div>
+        
+        <div class="form-group">
+          <label>تعطیلات افغانستان:</label>
+          <ngx-persian-datepicker-element
+            id="afghanistan-holidays"
+            holidayTypesInput="Afghanistan"
+            placeholderInput="تعطیلات افغانستان"
+            [(ngModel)]="afghanistanHolidays"
+            (dateChange)="handleDateChange($event)"
+            #datepicker5
+          ></ngx-persian-datepicker-element>
+        </div>
+        
+        <div class="form-group">
+          <label>همه تعطیلات:</label>
+          <ngx-persian-datepicker-element
+            id="all-holidays"
+            holidayTypesInput="Iran,Religious,Afghanistan"
+            placeholderInput="همه تعطیلات"
+            [(ngModel)]="allHolidays"
+            (dateChange)="handleDateChange($event)"
+            #datepicker6
+          ></ngx-persian-datepicker-element>
+        </div>
       </div>
-    </form>
-  </section>
+    </div>
 
-  <!-- Holiday Types Section -->
-  <section class="demo-section">
-    <h2>Holiday Types</h2>
-    <div class="checkbox-group">
-      <label>
-        <input type="checkbox" [checked]="selectedHolidayTypes['Iran']" (change)="toggleHolidayType('Iran')">
-        Iran
-      </label>
-      <label>
-        <input type="checkbox" [checked]="selectedHolidayTypes['Religious']" (change)="toggleHolidayType('Religious')">
-        Religious
-      </label>
-      <label>
-        <input type="checkbox" [checked]="selectedHolidayTypes['National']" (change)="toggleHolidayType('National')">
-        National
-      </label>
-      <label>
-        <input type="checkbox" [checked]="selectedHolidayTypes['Afghanistan']" (change)="toggleHolidayType('Afghanistan')">
-        Afghanistan
-      </label>
+    <div class="result">
+      <p><strong>تاریخ انتخاب شده (شمسی):</strong> <span id="jalali-result">{{ selectedJalali }}</span></p>
+      <p><strong>تاریخ میلادی معادل:</strong> <span id="gregorian-result">{{ selectedGregorian }}</span></p>
+      <p><strong>رویدادها:</strong> <span id="events-result">{{ selectedEvents }}</span></p>
     </div>
-    
-    <div class="demo-controls">
-      <h3>Current Selection</h3>
-      <p>Selected Types: {{ currentHolidayTypes.join(', ') }}</p>
-    </div>
-    
-    <div class="demo-result">
-      <ngx-persian-datepicker-element 
-        placeholder="انتخاب تاریخ با انواع تعطیلات" 
-        format="YYYY/MM/DD" 
-        [showHolidaysInput]="true"
-        [holidayTypesInput]="currentHolidayTypes" 
-        (dateChange)="onDateChange($event)">
-      </ngx-persian-datepicker-element>
-    </div>
-  </section>
-
-  <!-- Custom Styling Section -->
-  <section class="demo-section">
-    <h2>Custom Styling</h2>
-    <div class="demo-result">
-      <ngx-persian-datepicker-element 
-        placeholder="تاریخ سفارشی" 
-        format="YYYY/MM/DD"
-        primaryColor="#9c27b0" 
-        primaryHover="#7b1fa2"
-        backgroundColor="#f5f0fa"
-        foregroundColor="#333"
-        borderColor="#ddd"
-        borderRadius="12px"
-        holidayColor="#e91e63"
-        holidayBg="#ffe6ec"
-        [showHolidaysInput]="true"
-        (dateChange)="onDateChange($event)">
-      </ngx-persian-datepicker-element>
-    </div>
-  </section>
-
-  <!-- All Holiday Types Section -->
-  <section class="demo-section">
-    <h2>Show All Holiday Types</h2>
-    <div class="demo-result">
-      <ngx-persian-datepicker-element 
-        placeholder="انتخاب تاریخ با تمام تعطیلات" 
-        format="YYYY/MM/DD" 
-        [showHolidaysInput]="true"
-        holidayTypesInput="all" 
-        (dateChange)="onDateChange($event)">
-      </ngx-persian-datepicker-element>
-    </div>
-  </section>
-
-  <footer>
-    <p>Persian DatePicker Demo &copy; 2024</p>
-  </footer>
+  </div>
 </div>

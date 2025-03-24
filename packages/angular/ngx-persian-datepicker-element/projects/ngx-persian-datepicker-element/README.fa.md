@@ -9,6 +9,8 @@
 ✅ یکپارچه‌سازی با فرم‌های ری‌اکتیو  
 ✅ تقویم فارسی (جلالی)  
 ✅ پشتیبانی از انواع تعطیلات (ایران، افغانستان، مذهبی و غیره)  
+✅ پشتیبانی از حالت تاریک  
+✅ پشتیبانی کامل از چینش راست به چپ (RTL)  
 ✅ امکان شخصی‌سازی ظاهر  
 ✅ پشتیبانی کامل از تایپ‌اسکریپت  
 ✅ بدون نیاز به CDN - کامپوننت وب به همراه کتابخانه ارائه می‌شود
@@ -55,8 +57,8 @@ export class YourStandaloneComponent { }
 
 ```html
 <ngx-persian-datepicker-element 
-  placeholder="انتخاب تاریخ" 
-  format="YYYY/MM/DD" 
+  placeholderInput="انتخاب تاریخ" 
+  formatInput="YYYY/MM/DD" 
   (dateChange)="onDateChange($event)">
 </ngx-persian-datepicker-element>
 ```
@@ -95,17 +97,17 @@ export class ExampleComponent {
 ```html
 <!-- استفاده از ورودی‌های مبتنی بر سیگنال (توصیه شده برای انگولار ۱۷+) -->
 <ngx-persian-datepicker-element 
-  placeholder="انتخاب تاریخ" 
-  format="YYYY/MM/DD" 
-  [showHolidays]="true" 
-  [holidayTypes]="['Iran', 'Religious']"
+  placeholderInput="انتخاب تاریخ" 
+  formatInput="YYYY/MM/DD" 
+  [showHolidaysInput]="true" 
+  [holidayTypesInput]="['Iran', 'Religious']"
   (dateChange)="onDateChange($event)">
 </ngx-persian-datepicker-element>
 
 <!-- استفاده از نام‌های قدیمی (سازگار با تمام نسخه‌های انگولار) -->
 <ngx-persian-datepicker-element 
-  placeholder="انتخاب تاریخ" 
-  format="YYYY/MM/DD" 
+  placeholderInput="انتخاب تاریخ" 
+  formatInput="YYYY/MM/DD" 
   [showHolidaysInput]="true" 
   [holidayTypesInput]="['Iran', 'Religious']"
   (dateChange)="onDateChange($event)">
@@ -125,21 +127,157 @@ export class ExampleComponent {
 > export class YourComponent { }
 > ```
 
+### پشتیبانی از حالت تاریک
+
+دیت‌پیکر به طور کامل از حالت تاریک پشتیبانی می‌کند و شما می‌توانید آن را به دو روش پیاده‌سازی کنید:
+
+#### روش ۱: استفاده از کلاس‌های CSS
+
+```css
+/* استایل‌های حالت روشن (پیش‌فرض) */
+:root {
+  --jdp-background: #ffffff;
+  --jdp-foreground: #1e293b;
+  --jdp-muted: #f1f5f9;
+  --jdp-muted-foreground: #64748b;
+  --jdp-border: #e2e8f0;
+  /* سایر متغیرها */
+}
+
+/* استایل‌های حالت تاریک */
+.dark persian-datepicker-element {
+  --jdp-background: #1e1e2f;
+  --jdp-foreground: #e2e8f0;
+  --jdp-muted: #334155;
+  --jdp-muted-foreground: #94a3b8;
+  --jdp-border: #475569;
+  --jdp-input-border-color: #475569;
+  --jdp-calendar-shadow: 0px 10px 30px -5px rgba(2, 6, 23, 0.5);
+  --jdp-day-hover-bg: #334155;
+  /* سایر متغیرهای حالت تاریک */
+}
+```
+
+```html
+<div [ngClass]="{'dark': isDarkMode}">
+  <button (click)="toggleDarkMode()">تغییر حالت تاریک</button>
+  <ngx-persian-datepicker-element></ngx-persian-datepicker-element>
+</div>
+```
+
+#### روش ۲: تغییر برنامه‌ای استایل‌ها
+
+```typescript
+@Component({
+  // ...
+})
+export class AppComponent implements AfterViewInit {
+  @ViewChild('datepicker') datepicker!: NgxPersianDatepickerComponent;
+  isDarkMode = false;
+
+  // متغیرهای حالت تاریک
+  darkThemeVars = {
+    '--jdp-background': '#1e1e2f',
+    '--jdp-foreground': '#e2e8f0',
+    '--jdp-muted': '#334155',
+    '--jdp-muted-foreground': '#94a3b8',
+    '--jdp-border': '#475569',
+    '--jdp-input-border-color': '#475569',
+    '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
+    '--jdp-day-hover-bg': '#334155'
+  };
+
+  // متغیرهای حالت روشن
+  lightThemeVars = {
+    '--jdp-background': '#ffffff',
+    '--jdp-foreground': '#1e293b',
+    '--jdp-muted': '#f1f5f9',
+    '--jdp-muted-foreground': '#64748b',
+    '--jdp-border': '#e2e8f0',
+    '--jdp-input-border-color': '#e2e8f0'
+  };
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    const themeVars = this.isDarkMode ? this.darkThemeVars : this.lightThemeVars;
+    
+    // اعمال متغیرها به دیت‌پیکر
+    if (this.datepicker) {
+      this.datepicker.applyThemeVariables(themeVars);
+    }
+  }
+}
+```
+
+#### تشخیص خودکار حالت تاریک سیستم
+
+```typescript
+constructor() {
+  // بررسی ترجیحات سیستم
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  this.isDarkMode = mediaQuery.matches;
+  
+  // گوش دادن به تغییرات
+  mediaQuery.addEventListener('change', (e) => {
+    this.isDarkMode = e.matches;
+    this.applyTheme();
+  });
+}
+
+applyTheme() {
+  const themeVars = this.isDarkMode ? this.darkThemeVars : this.lightThemeVars;
+  if (this.datepicker) {
+    this.datepicker.applyThemeVariables(themeVars);
+  }
+}
+```
+
+### پشتیبانی از راست به چپ (RTL)
+
+دیت‌پیکر به طور کامل از چینش راست به چپ برای زبان‌های فارسی و عربی پشتیبانی می‌کند:
+
+#### استفاده از ویژگی rtlInput
+
+```html
+<ngx-persian-datepicker-element
+  [rtlInput]="true"
+  placeholderInput="انتخاب تاریخ">
+</ngx-persian-datepicker-element>
+```
+
+#### تنظیم RTL برای کل برنامه
+
+```html
+<!-- در app.component.html -->
+<div dir="rtl">
+  <!-- محتوای برنامه -->
+  <ngx-persian-datepicker-element></ngx-persian-datepicker-element>
+</div>
+```
+
+یا با استفاده از binding انگولار:
+
+```html
+<div [dir]="'rtl'">
+  <!-- محتوای برنامه -->
+</div>
+```
+
 ### شخصی‌سازی ظاهر
 
 ```html
 <ngx-persian-datepicker-element 
-  placeholder="تاریخ سفارشی" 
-  format="YYYY/MM/DD"
-  primaryColor="#9c27b0" 
-  primaryHover="#7b1fa2"
-  backgroundColor="#f5f0fa"
-  foregroundColor="#333"
-  borderColor="#ddd"
-  borderRadius="12px"
-  holidayColor="#e91e63"
-  holidayBg="#ffe6ec"
-  [showHolidays]="true">
+  placeholderInput="تاریخ سفارشی" 
+  formatInput="YYYY/MM/DD"
+  primaryColorInput="#9c27b0" 
+  primaryHoverInput="#7b1fa2"
+  backgroundColorInput="#f5f0fa"
+  foregroundColorInput="#333"
+  borderColorInput="#ddd"
+  borderRadiusInput="12px"
+  holidayColorInput="#e91e63"
+  holidayBgInput="#ffe6ec"
+  [showHolidaysInput]="true">
 </ngx-persian-datepicker-element>
 ```
 
