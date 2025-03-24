@@ -1,6 +1,6 @@
 {
   "name": "react-persian-datepicker-element",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React wrapper for Persian Datepicker Web Component - A beautiful and fully customizable Jalali date picker",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,10 +19,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mehrabhossain1/persian-datepicker-element",
+    "url": "https://github.com/mehrabix/persian-datepicker-element",
     "directory": "packages/react"
   },
-  "homepage": "https://github.com/mehrabhossain1/persian-datepicker-element/tree/main/packages/react",
+  "homepage": "https://github.com/mehrabix/persian-datepicker-element/tree/main/packages/react",
   "keywords": [
     "react",
     "persian",
