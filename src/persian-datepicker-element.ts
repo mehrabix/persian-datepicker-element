@@ -1242,36 +1242,6 @@ export class PersianDatePickerElement extends HTMLElement {
               tooltip.appendChild(eventItem);
             });
             
-            // For mobile, add a close button to the tooltip
-            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-              const closeButton = document.createElement("button");
-              closeButton.textContent = "بستن";
-              closeButton.classList.add("tooltip-close-button");
-              
-              // Add event listeners that properly stop propagation
-              closeButton.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                tooltip.classList.remove("tooltip-visible");
-                // Remove the tooltip after animation
-                setTimeout(() => {
-                  tooltip.remove();
-                }, 200);
-              });
-              
-              closeButton.addEventListener("touchend", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                tooltip.classList.remove("tooltip-visible");
-                // Remove the tooltip after animation
-                setTimeout(() => {
-                  tooltip.remove();
-                }, 200);
-              }, { passive: false });
-              
-              tooltip.appendChild(closeButton);
-            }
-            
             // Add focus handling to maintain tooltip styling
             tooltip.addEventListener("focusin", () => {
               tooltip.style.background = "var(--jdp-background)";
