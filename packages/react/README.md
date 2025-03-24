@@ -228,7 +228,6 @@ You can specify which types of holidays to display:
 | `fontFamily` | string | Font family |
 | `holidayColor` | string | Holiday text color |
 | `holidayBg` | string | Holiday background color |
-| `cssVariables` | object | Custom CSS variables map |
 
 ## CSS Variables for Styling
 

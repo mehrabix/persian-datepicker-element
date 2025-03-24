@@ -30,7 +30,6 @@ var PersianDatepicker = forwardRef(
       fontFamily,
       holidayColor,
       holidayBg,
-      cssVariables,
       ...restProps
     } = props;
     const elementRef = useRef(null);
@@ -73,12 +72,6 @@ var PersianDatepicker = forwardRef(
         if (fontFamily) element.style.setProperty("--jdp-font-family", fontFamily);
         if (holidayColor) element.style.setProperty("--jdp-holiday-color", holidayColor);
         if (holidayBg) element.style.setProperty("--jdp-holiday-bg", holidayBg);
-        if (cssVariables) {
-          Object.entries(cssVariables).forEach(([key, value]) => {
-            const cssKey = key.startsWith("--") ? key : `--${key}`;
-            element.style.setProperty(cssKey, value);
-          });
-        }
         const handleChange = (e) => {
           const customEvent = e;
           if (onChange && customEvent.detail) {
@@ -101,7 +94,6 @@ var PersianDatepicker = forwardRef(
       fontFamily,
       holidayColor,
       holidayBg,
-      cssVariables,
       ...Object.values(restProps)
     ]);
     return /* @__PURE__ */ React.createElement("div", { ref: containerRef, className, style });

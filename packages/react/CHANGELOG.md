@@ -5,6 +5,31 @@ All notable changes to the `react-persian-datepicker-element` package will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.17] - 2024-06-21
+
+### Added
+- Enhanced dark mode support with comprehensive documentation
+- Improved RTL (Right-to-Left) implementation for better Persian language support
+- New CSS variables for more granular styling control
+
+### Fixed
+- Fixed event handling in React components
+- Resolved issues with value prop binding in datepicker instances
+- Improved TypeScript definitions for better developer experience
+
+### Changed
+- Removed `cssVariables` prop in favor of using CSS variables directly in the document or component CSS
+- Simplified theming approach for easier integration with design systems
+
+## [1.0.16] - 2024-06-19
+
+### Added
+- Initial release with React wrapper for Persian DatePicker web component
+- Support for value prop and onChange handler
+- Holiday type customization (Iran, Afghanistan, Religious)
+- Extensive styling options with CSS variables
+- RTL support by default
+
 ## [1.0.0] - YYYY-MM-DD
 
 ### Added

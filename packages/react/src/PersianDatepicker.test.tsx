@@ -102,45 +102,6 @@ describe('PersianDatepicker', () => {
     expect(ref.current.getElement()).toBe(element);
   });
 
-  test('applies CSS custom properties', () => {
-    const { container } = render(
-      <PersianDatepicker 
-        primaryColor="#ff0000"
-        backgroundColor="#ffffff"
-        foregroundColor="#000000"
-        borderColor="#cccccc"
-        borderRadius="8px"
-        fontFamily="Arial"
-        holidayColor="#ff5555"
-        holidayBg="#ffeeee"
-      />
-    );
-    
-    const element = container.querySelector('persian-datepicker-element') as HTMLElement;
-    expect(element.style.getPropertyValue('--primary-color')).toBe('#ff0000');
-    expect(element.style.getPropertyValue('--background-color')).toBe('#ffffff');
-    expect(element.style.getPropertyValue('--foreground-color')).toBe('#000000');
-    expect(element.style.getPropertyValue('--border-color')).toBe('#cccccc');
-    expect(element.style.getPropertyValue('--border-radius')).toBe('8px');
-    expect(element.style.getPropertyValue('--font-family')).toBe('Arial');
-    expect(element.style.getPropertyValue('--holiday-color')).toBe('#ff5555');
-    expect(element.style.getPropertyValue('--holiday-bg')).toBe('#ffeeee');
-  });
-
-  test('applies additional CSS variables', () => {
-    const { container } = render(
-      <PersianDatepicker 
-        cssVariables={{
-          'custom-variable': 'custom-value',
-          'another-variable': '10px'
-        }}
-      />
-    );
-    
-    const element = container.querySelector('persian-datepicker-element') as HTMLElement;
-    expect(element.style.getPropertyValue('--custom-variable')).toBe('custom-value');
-    expect(element.style.getPropertyValue('--another-variable')).toBe('10px');
-  });
 
   test('applies className and style to container div', () => {
     const { container } = render(

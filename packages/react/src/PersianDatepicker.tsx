@@ -3,7 +3,6 @@ import type {
   PersianDatePickerElementOptions,
   PersianDateChangeEvent,
   DateTuple,
-  CSSVariableMap,
   PersianEvent
 } from 'persian-datepicker-element';
 
@@ -31,9 +30,6 @@ export interface PersianDatepickerProps extends Omit<PersianDatePickerElementOpt
   fontFamily?: string;
   holidayColor?: string;
   holidayBg?: string;
-  
-  // Additional custom CSS variables
-  cssVariables?: CSSVariableMap;
 }
 
 // Methods that will be available via ref
@@ -85,7 +81,6 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       fontFamily,
       holidayColor,
       holidayBg,
-      cssVariables,
       ...restProps
     } = props;
     
@@ -144,15 +139,6 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
         if (holidayColor) element.style.setProperty('--jdp-holiday-color', holidayColor);
         if (holidayBg) element.style.setProperty('--jdp-holiday-bg', holidayBg);
         
-        // Apply additional CSS variables
-        if (cssVariables) {
-          Object.entries(cssVariables).forEach(([key, value]) => {
-            // Apply the CSS variable whether it has the -- prefix or not
-            const cssKey = key.startsWith('--') ? key : `--${key}`;
-            element.style.setProperty(cssKey, value);
-          });
-        }
-        
         // Add change event listener
         const handleChange = (e: Event) => {
           const customEvent = e as CustomEvent<PersianDateChangeEvent>;
@@ -176,8 +162,7 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       borderRadius, 
       fontFamily, 
       holidayColor, 
-      holidayBg, 
-      cssVariables,
+      holidayBg,
       ...Object.values(restProps)
     ]);
     
