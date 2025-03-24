@@ -1,0 +1,66 @@
+{
+  "name": "react-persian-datepicker-element",
+  "version": "1.0.0",
+  "description": "React wrapper for Persian Datepicker Web Component - A beautiful and fully customizable Jalali date picker",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.tsx --format cjs,esm",
+    "build:dts": "tsc --declaration --emitDeclarationOnly --outDir dist",
+    "dev": "tsup src/index.tsx --format cjs,esm --watch",
+    "clean": "rimraf dist",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
+    "test": "jest",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mehrabhossain1/persian-datepicker-element",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/mehrabhossain1/persian-datepicker-element/tree/main/packages/react",
+  "keywords": [
+    "react",
+    "persian",
+    "jalali",
+    "shamsi",
+    "datepicker",
+    "calendar",
+    "persian-datepicker",
+    "web-component",
+    "react-component",
+    "date-picker"
+  ],
+  "author": "Ahmad Mehrabi",
+  "license": "MIT",
+  "dependencies": {
+    "persian-datepicker-element": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.5.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.1.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  }
+} 

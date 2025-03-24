@@ -1,0 +1,263 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.app {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f9fafb;
+  color: #374151;
+  padding: 2rem;
+  margin: 0;
+  direction: rtl;
+  transition: background-color 0.3s, color 0.3s;
+  min-height: 100vh;
+}
+
+.app.dark {
+  background-color: #1e293b;
+  color: #e2e8f0;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.app.dark .container {
+  background-color: #0f172a;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #1e293b;
+  transition: color 0.3s;
+}
+
+.app.dark h1 {
+  color: #f8fafc;
+}
+
+h2 {
+  font-weight: 500;
+  margin: 1.5rem 0 1rem;
+  color: #334155;
+  font-size: 1.1rem;
+  transition: color 0.3s;
+}
+
+.app.dark h2 {
+  color: #cbd5e1;
+}
+
+p {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+  transition: color 0.3s;
+}
+
+.app.dark p {
+  color: #94a3b8;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #4b5563;
+  transition: color 0.3s;
+}
+
+.app.dark label {
+  color: #cbd5e1;
+}
+
+/* Add styling for the datepicker input */
+.form-group > div {
+  width: 100%;
+}
+
+/* Ensure all datepicker instances have consistent width */
+persian-datepicker-element {
+  width: 100%;
+  display: block;
+}
+
+/* Style the datepicker input box */
+.app .form-group input {
+  font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  transition: all 0.3s ease;
+}
+
+/* Ensure the calendar has adequate z-index */
+.persian-datepicker-calendar {
+  z-index: 100;
+}
+
+.result {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.app.dark .result {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.result p {
+  margin: 0.5rem 0;
+}
+
+.result strong {
+  font-weight: 500;
+  color: #0f172a;
+  transition: color 0.3s;
+}
+
+.app.dark .result strong {
+  color: #f1f5f9;
+}
+
+.theme-container {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1.5rem;
+  transition: border-color 0.3s;
+}
+
+.app.dark .theme-container {
+  border-color: #334155;
+}
+
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 1.5rem;
+}
+
+.theme-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  background: #f1f5f9;
+}
+
+.app.dark .theme-btn {
+  background: #334155;
+}
+
+.theme-btn:hover {
+  transform: translateY(-2px);
+}
+
+.theme-btn.active {
+  border-color: #0284c7;
+}
+
+.color-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+}
+
+.theme-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.app.dark .theme-name {
+  color: #e2e8f0;
+}
+
+.theme-toggles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #0891b2;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.holiday-options {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  transition: border-color 0.3s;
+}
+
+.app.dark .holiday-options {
+  border-color: #334155;
+}
+
+.holiday-types-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 1.5rem;
+} 
