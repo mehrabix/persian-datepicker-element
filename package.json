@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.js",
   "module": "dist/persian-datepicker-element.esm.js",
@@ -11,7 +11,7 @@
   ],
   "sideEffects": false,
   "changelog": {
-    "1.0.27": [
+    "1.0.28": [
       "Added specialized test suite for Hijri date conversion accuracy",
       "Implemented robust tests for Hijri-to-Jalali calendar mapping",
       "Added tests for proper religious event mapping to the Persian calendar",

@@ -443,29 +443,6 @@ input:focus {
     bottom: 0;
     z-index: -1;
   }
-
-  /* Style the close button */
-  .tooltip-close-button {
-    margin-top: 8px;
-    padding: 6px 12px;
-    background: var(--jdp-muted);
-    border: 1px solid var(--jdp-border);
-    border-radius: var(--jdp-border-radius);
-    font-size: 12px;
-    width: 100%;
-    text-align: center;
-    cursor: pointer;
-    color: var(--jdp-foreground);
-    transition: all var(--jdp-transition-duration) ease;
-  }
-
-  .tooltip-close-button:hover {
-    background: var(--jdp-nav-button-bg-hover);
-  }
-
-  .tooltip-close-button:active {
-    transform: translateY(1px);
-  }
 }
 
 .event-item {
