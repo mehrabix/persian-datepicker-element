@@ -8,6 +8,7 @@ import { PersianEvent } from '../types';
 // Mock EventUtils
 jest.mock('../utils/event-utils', () => ({
   EventUtils: {
+    refreshEvents: jest.fn().mockImplementation(() => []),
     isHoliday: jest.fn().mockImplementation((month, day, holidayTypes) => {
       // Mock some holidays for testing
       if (month === 1 && day === 1) return true; // Nowruz

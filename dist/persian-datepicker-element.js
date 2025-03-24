@@ -1221,7 +1221,6 @@ class PersianDatePickerElement extends HTMLElement {
         this.holidayTypes = [...DEFAULT_HOLIDAY_TYPES];
         this.includeAllTypes = false;
         this.isTransitioning = false;
-        this.cachedEvents = new Map(); // Cache for event data
         this.options = options;
         const shadow = this.attachShadow({ mode: "open" });
         // Create the component's HTML structure

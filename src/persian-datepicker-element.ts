@@ -659,7 +659,6 @@ export class PersianDatePickerElement extends HTMLElement {
   private holidayTypes: string[] = [...DEFAULT_HOLIDAY_TYPES];
   private includeAllTypes: boolean = false;
   private isTransitioning: boolean = false;
-  private cachedEvents: Map<string, any[]> = new Map(); // Cache for event data
 
   static get observedAttributes() {
     return [
