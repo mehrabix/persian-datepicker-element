@@ -1,0 +1,15 @@
+# GitHub Pages configuration
+baseurl: ""
+url: ""
+
+# Disable Jekyll processing for these folders
+exclude:
+  - node_modules
+  - dist
+  - .github
+
+# Enable relative permalinks
+permalink: pretty
+
+# Set encoding to UTF-8
+encoding: utf-8 
