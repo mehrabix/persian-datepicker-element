@@ -1,6 +1,42 @@
 import { PersianEvent } from '../types';
 // Import the original JSON file from the Persian Calendar repo
-import persianCalendarData from '../data/persian-calendar-repo/PersianCalendar/data/events.json';
+// Handle direct import or dynamic import based on environment
+let persianCalendarData: any = {};
+
+// Add type declaration for require
+declare function require(path: string): any;
+
+try {
+  // First try to load the original JSON file
+  try {
+    persianCalendarData = require('../data/persian-calendar-repo/PersianCalendar/data/events.json');
+  } catch (originalError) {
+    console.warn('Could not load original events.json file, trying fallback', originalError);
+    
+    // If the original file fails, try loading the fallback file
+    try {
+      persianCalendarData = require('../data/events-fallback.json');
+      console.log('Successfully loaded fallback events data');
+    } catch (fallbackError) {
+      console.error('Could not load fallback events file either', fallbackError);
+      // Use hard-coded fallback data structure
+      persianCalendarData = {
+        "Persian Calendar": [],
+        "Hijri Calendar": [],
+        "Source": { "name": "Inline Fallback Data", "url": "" }
+      };
+    }
+  }
+} catch (error) {
+  console.error('Unexpected error loading events data', error);
+  // Use hard-coded fallback data structure
+  persianCalendarData = {
+    "Persian Calendar": [],
+    "Hijri Calendar": [],
+    "Source": { "name": "Inline Fallback Data", "url": "" }
+  };
+}
+
 // Import the Hijri utilities for date conversion
 import HijriUtils from './hijri-utils';
 import { PersianDate } from '../persian-date';

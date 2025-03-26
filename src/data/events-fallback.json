@@ -1,0 +1,24 @@
+{
+  "Persian Calendar": [
+    { "title": "عید نوروز", "month": 1, "day": 1, "type": "Iran", "holiday": true },
+    { "title": "روز طبیعت", "month": 1, "day": 13, "type": "Iran", "holiday": true },
+    { "title": "روز جمهوری اسلامی", "month": 1, "day": 12, "type": "Iran", "holiday": true },
+    { "title": "نیمه شعبان", "month": 3, "day": 15, "type": "Religious", "holiday": true },
+    { "title": "رحلت امام خمینی", "month": 3, "day": 14, "type": "Iran", "holiday": true },
+    { "title": "ولادت امام رضا", "month": 5, "day": 11, "type": "Religious", "holiday": false },
+    { "title": "روز ملی شدن صنعت نفت", "month": 12, "day": 29, "type": "Iran", "holiday": true }
+  ],
+  "Hijri Calendar": [
+    { "title": "عید فطر", "month": 10, "day": 1, "type": "Religious", "holiday": true },
+    { "title": "عید قربان", "month": 12, "day": 10, "type": "Religious", "holiday": true },
+    { "title": "تاسوعای حسینی", "month": 1, "day": 9, "type": "Religious", "holiday": true },
+    { "title": "عاشورای حسینی", "month": 1, "day": 10, "type": "Religious", "holiday": true },
+    { "title": "اربعین حسینی", "month": 2, "day": 20, "type": "Religious", "holiday": true },
+    { "title": "ولادت حضرت محمد", "month": 3, "day": 17, "type": "Religious", "holiday": true },
+    { "title": "شهادت امام علی", "month": 9, "day": 21, "type": "Religious", "holiday": true }
+  ],
+  "Source": {
+    "name": "Fallback Data for Persian Date Picker Element",
+    "url": "https://github.com/mehrabix/persian-datepicker-element"
+  }
+} 

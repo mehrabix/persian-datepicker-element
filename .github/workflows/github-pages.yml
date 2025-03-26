@@ -34,9 +34,30 @@ jobs:
           
       - name: Install dependencies
         run: pnpm install
+      
+      # Ensure the data directory exists in dist
+      - name: Create data directory structure
+        run: |
+          mkdir -p dist/data/persian-calendar-repo/PersianCalendar/data
+          cp -r src/data/persian-calendar-repo/PersianCalendar/data/*.json dist/data/persian-calendar-repo/PersianCalendar/data/ || true
+          mkdir -p dist/data
+          cp -r src/data/events-fallback.json dist/data/ || true
+          echo "Copied JSON data files to dist directory"
         
       - name: Build component
         run: pnpm build
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+      
+      # Copy examples and demo to make them accessible on GitHub Pages
+      - name: Copy examples and demo folders
+        run: |
+          mkdir -p build
+          cp -r dist build/
+          cp -r examples build/
+          cp -r demo build/
+          cp index.html build/
+          echo "Copied required files to build directory"
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -44,7 +65,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'build'
           
   deploy:
     environment:

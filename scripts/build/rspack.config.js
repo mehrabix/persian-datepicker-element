@@ -50,6 +50,47 @@ const config = {
       module: moduleType === 'module', // Enable for ESM output
     },
   },
+  plugins: [
+    // Add a plugin to copy the data directory to the output
+    {
+      apply(compiler) {
+        compiler.hooks.thisCompilation.tap('CopyAssetsPlugin', (compilation) => {
+          // Create an array of files to copy
+          const filesToCopy = [
+            {
+              source: path.resolve(rootDir, 'src/data/persian-calendar-repo/PersianCalendar/data/events.json'),
+              target: path.resolve(rootDir, 'dist/data/persian-calendar-repo/PersianCalendar/data/events.json')
+            },
+            {
+              source: path.resolve(rootDir, 'src/data/events-fallback.json'),
+              target: path.resolve(rootDir, 'dist/data/events-fallback.json')
+            }
+          ];
+          
+          // Copy each file
+          filesToCopy.forEach(({source, target}) => {
+            // Create the directory structure if it doesn't exist
+            const targetDir = path.dirname(target);
+            if (!fs.existsSync(targetDir)) {
+              fs.mkdirSync(targetDir, { recursive: true });
+            }
+            
+            // Copy the file if it exists
+            if (fs.existsSync(source)) {
+              try {
+                fs.copyFileSync(source, target);
+                console.log(`Successfully copied ${path.basename(source)} to ${targetDir}`);
+              } catch (error) {
+                console.error(`Error copying ${path.basename(source)}:`, error);
+              }
+            } else {
+              console.warn(`Source file not found: ${source}`);
+            }
+          });
+        });
+      }
+    }
+  ],
   module: {
     rules: [
       {
@@ -68,6 +109,12 @@ const config = {
           }
         },
         exclude: /node_modules/,
+      },
+      // Add JSON loader to handle the events.json file
+      {
+        test: /\.json$/,
+        type: 'json',
+        // Don't exclude any files so node_modules and data files are included
       }
     ],
   },
