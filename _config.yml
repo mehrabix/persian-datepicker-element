@@ -1,6 +1,6 @@
 # GitHub Pages configuration
-baseurl: ""
-url: ""
+baseurl: "/persian-datepicker-element"
+url: "https://mehrabix.github.io"
 
 # Disable Jekyll processing for these folders
 exclude:
