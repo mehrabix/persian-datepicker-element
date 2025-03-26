@@ -3,478 +3,364 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Persian Date Picker Element - Basic Usage</title>
+  <title>Persian Date Picker Element - Examples</title>
   <!-- Add Vazir Font from CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
-    body {
+    :root {
+      --primary: #0891b2;
+      --primary-hover: #0e7490;
+      --background: #ffffff;
+      --foreground: #1e293b;
+      --muted: #f1f5f9;
+      --border: #e2e8f0;
+      --radius: 0.5rem;
+      --font-size: 16px;
+    }
+    
+    html, body {
       font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       background-color: #f8fafc;
-      color: #1e293b;
+      color: var(--foreground);
+      font-size: var(--font-size);
       line-height: 1.5;
-      direction: rtl;
-      font-weight: 400;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    /* Apply Persian numbers to all elements */
-    * {
       -moz-font-feature-settings: "ss02";
       -webkit-font-feature-settings: "ss02";
       font-feature-settings: "ss02";
     }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 24px;
-      color: #0f172a;
-      font-weight: 700;
-      transition: color 0.3s;
-    }
-
-    h2 {
-      font-size: 20px;
-      margin: 32px 0 16px;
-      color: #334155;
-      font-weight: 700;
-      transition: color 0.3s;
-    }
-
-    p {
-      margin-bottom: 16px;
-      transition: color 0.3s;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .example {
-      margin-bottom: 40px;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      transition: background-color 0.3s, box-shadow 0.3s;
-    }
-
-    .example-label {
-      font-weight: 500;
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
-
-    .result {
-      margin-top: 16px;
-      padding: 12px;
-      background-color: #f1f5f9;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    pre {
-      background-color: #f1f5f9;
-      padding: 16px;
-      border-radius: 6px;
-      overflow-x: auto;
-      font-size: 14px;
-      margin: 20px 0;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    code {
-      font-family: 'Fira Code', monospace;
-      transition: color 0.3s;
-    }
-
-    .link {
-      display: inline-block;
-      margin-top: 20px;
-      background-color: #0891b2;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: background-color 0.2s;
-      margin-right: 8px;
-      margin-bottom: 8px;
-    }
-
-    .link:hover {
-      background-color: #0e7490;
-    }
-
-    /* Custom element styling */
-    persian-datepicker-element {
-      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      --jdp-font-feature-settings: "ss02";
-      --jdp-font-weight: 400;
-      transition: all 0.3s ease;
-    }
     
-    /* Make sure all inputs and form elements also use Persian numbers */
-    input, button, select, textarea {
-      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      -moz-font-feature-settings: "ss02";
-      -webkit-font-feature-settings: "ss02";
-      font-feature-settings: "ss02";
-      font-weight: 400;
-    }
-    
-    /* Dark mode styles */
     body.dark {
+      --background: #0f172a;
+      --foreground: #e2e8f0;
+      --muted: #1e293b;
+      --muted-foreground: #94a3b8;
+      --border: #334155;
+      
       background-color: #0f172a;
       color: #e2e8f0;
     }
     
-    body.dark h1 {
-      color: #f8fafc;
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
     }
     
-    body.dark h2 {
-      color: #cbd5e1;
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
     }
     
-    body.dark .example {
-      background-color: #1e293b;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
     }
     
-    body.dark .result,
-    body.dark pre {
-      background-color: #1e1e2f;
-      color: #e2e8f0;
+    .description {
+      color: #64748b;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      text-align: center;
     }
     
-    body.dark code {
-      color: #f8fafc;
+    body.dark .description {
+      color: #94a3b8;
     }
-
-    body.dark persian-datepicker-element {
-      --jdp-background: #1e1e2f;
-      --jdp-foreground: #e2e8f0;
-      --jdp-muted: #334155;
-      --jdp-muted-foreground: #94a3b8;
-      --jdp-border: #475569;
-      --jdp-day-hover-bg: #334155;
-      --jdp-input-border-color: #475569;
-      --jdp-input-bg: #1e1e2f;
-      --jdp-calendar-bg: #1e1e2f;
-      --jdp-holiday-bg: #3f1e2e;
+    
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
-
-    .navigation {
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #e2e8f0;
+    
+    .card {
+      background-color: var(--background);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    }
+    
+    body.dark .card {
+      background-color: #1e293b;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-content {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .card h2 {
+      font-size: 1.25rem;
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+    }
+    
+    .card p {
+      margin: 0 0 1.5rem;
+      color: #64748b;
+      flex-grow: 1;
+    }
+    
+    body.dark .card p {
+      color: #94a3b8;
+    }
+    
+    .card-footer {
+      padding: 1rem 1.5rem;
+      background-color: var(--muted);
+      display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: border-color 0.3s;
     }
-
-    .navigation h2 {
-      margin-top: 0;
+    
+    body.dark .card-footer {
+      background-color: #0f172a;
     }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    body.dark .navigation {
-      border-bottom-color: #334155;
-    }
-
-    /* Dark mode toggle */
-    .theme-switch {
-      position: relative;
+    
+    .btn {
       display: inline-block;
-      width: 50px;
-      height: 24px;
-      margin-left: 15px;
+      padding: 0.5rem 1rem;
+      background-color: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: background-color 0.2s;
     }
-
-    .theme-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
+    
+    .btn:hover {
+      background-color: var(--primary-hover);
     }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #cbd5e1;
-      transition: .4s;
-      border-radius: 24px;
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
     }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
+    
+    .btn-outline:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 2rem;
+      color: #64748b;
+      border-top: 1px solid var(--border);
+    }
+    
+    body.dark footer {
+      color: #94a3b8;
+    }
+    
+    .difficulty {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .beginner {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+    
+    .intermediate {
+      background-color: #e0f2fe;
+      color: #075985;
+    }
+    
+    .advanced {
+      background-color: #fef9c3;
+      color: #854d0e;
+    }
+    
+    body.dark .beginner {
+      background-color: #166534;
+      color: #dcfce7;
+    }
+    
+    body.dark .intermediate {
+      background-color: #075985;
+      color: #e0f2fe;
+    }
+    
+    body.dark .advanced {
+      background-color: #854d0e;
+      color: #fef9c3;
+    }
+    
+    .dark-mode-toggle {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      background-color: #1e293b;
+      border: none;
+      color: #e2e8f0;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: #0891b2;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-
-    .toggle-container {
       display: flex;
       align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 100;
     }
-
-    .toggle-label {
-      margin-right: 8px;
-      font-size: 14px;
-      font-weight: 500;
+    
+    body.dark .dark-mode-toggle {
+      background-color: #e2e8f0;
+      color: #1e293b;
+    }
+    
+    @media (max-width: 600px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
+  <button class="dark-mode-toggle" id="dark-mode-toggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+    </svg>
+  </button>
+
   <div class="container">
-    <h1>Persian Date Picker Element - Basic Usage</h1>
-    <p>Simple examples of how to use the Persian Date Picker Element component with different configurations.</p>
-    
-    <div class="navigation">
-      <div class="nav-links">
-        <a href="index.html" class="link">نمونه‌های پایه</a>
-        <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
-        <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
-        <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-        <a href="../demo/index.html" class="link">دمو</a>
+    <header>
+      <h1>Persian Date Picker Element - Examples</h1>
+      <p class="description">
+        مجموعه‌ای از مثال‌های کاربردی برای نشان دادن قابلیت‌های مختلف کامپوننت انتخاب تاریخ شمسی
+      </p>
+    </header>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-content">
+          <h2>استفاده پایه</h2>
+          <p>نحوه پیاده‌سازی ساده کامپوننت تقویم با تنظیمات پیش‌فرض به همراه نمایش رویدادها و تعطیلات</p>
+        </div>
+        <div class="card-footer">
+          <span class="difficulty beginner">مبتدی</span>
+          <a href="./basic.html" class="btn">مشاهده</a>
+        </div>
       </div>
-      <div class="toggle-container">
-        <span class="toggle-label">حالت تاریک</span>
-        <label class="theme-switch">
-          <input type="checkbox" id="dark-mode-toggle">
-          <span class="slider"></span>
-        </label>
+
+      <div class="card">
+        <div class="card-content">
+          <h2>شخصی‌سازی استایل</h2>
+          <p>نحوه تغییر ظاهر تقویم با استفاده از CSS Variables برای تنظیم رنگ‌ها، اندازه‌ها و گوشه‌ها</p>
+        </div>
+        <div class="card-footer">
+          <span class="difficulty intermediate">متوسط</span>
+          <a href="./customization.html" class="btn">مشاهده</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <h2>تغییردهنده تم</h2>
+          <p>پیاده‌سازی یک تغییردهنده تم ساده با امکان انتخاب رنگ‌های مختلف و حالت تاریک</p>
+        </div>
+        <div class="card-footer">
+          <span class="difficulty intermediate">متوسط</span>
+          <a href="./theme-switcher.html" class="btn">مشاهده</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <h2>سازنده تم</h2>
+          <p>ابزار پیشرفته برای ساخت تم دلخواه با کنترل‌های متنوع برای همه جنبه‌های بصری و دانلود کد CSS</p>
+        </div>
+        <div class="card-footer">
+          <span class="difficulty advanced">پیشرفته</span>
+          <a href="./theme-builder.html" class="btn">مشاهده</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <h2>محدودیت‌های انتخاب</h2>
+          <p>نحوه اعمال محدودیت برای انتخاب تاریخ با تنظیم حداقل و حداکثر تاریخ مجاز</p>
+        </div>
+        <div class="card-footer">
+          <span class="difficulty intermediate">متوسط</span>
+          <a href="./limits.html" class="btn">مشاهده</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <h2>فرمت‌های تاریخ</h2>
+          <p>نمایش فرمت‌های مختلف برای نمایش تاریخ شمسی با استفاده از الگوهای متنوع</p>
+        </div>
+        <div class="card-footer">
+          <span class="difficulty beginner">مبتدی</span>
+          <a href="./formats.html" class="btn">مشاهده</a>
+        </div>
       </div>
     </div>
-    
-    <div class="example">
-      <h2>Basic Usage</h2>
-      <div class="example-label">Default configuration:</div>
-      <persian-datepicker-element id="basic-picker"></persian-datepicker-element>
-      <div class="result">Selected date: <span id="basic-result">None</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element id="basic-picker"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-    </div>
-    
-    <div class="example">
-      <h2>Custom Placeholder</h2>
-      <div class="example-label">With a custom placeholder:</div>
-      <persian-datepicker-element id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"></persian-datepicker-element>
-      <div class="result">Selected date: <span id="placeholder-result">None</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-    </div>
-    
-    <div class="example">
-      <h2>Custom Format</h2>
-      <div class="example-label">With a custom date format:</div>
-      <persian-datepicker-element id="format-picker" format="YYYY-MM-DD"></persian-datepicker-element>
-      <div class="result">Selected date: <span id="format-result">None</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element id="format-picker" format="YYYY-MM-DD"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-    </div>
-    
-    <div class="example">
-      <h2>Initial Value</h2>
-      <div class="example-label">With a programmatically set initial value:</div>
-      <persian-datepicker-element id="initial-picker"></persian-datepicker-element>
-      <div class="result">Selected date: <span id="initial-result">None</span></div>
-      
-      <pre><code>// Set initial value programmatically 
-const initialPicker = document.getElementById('initial-picker');
-initialPicker.setValue(1403, 3, 15);</code></pre>
-    </div>
-    
-    <div class="example">
-      <h2>Listen For Changes</h2>
-      <div class="example-label">With event listener for changes:</div>
-      <persian-datepicker-element id="event-picker"></persian-datepicker-element>
-      <div class="result">
-        Jalali Date: <span id="jalali-result">None</span><br>
-        Gregorian Date: <span id="gregorian-result">None</span>
-      </div>
-      
-      <pre><code>document.getElementById('event-picker').addEventListener('change', (event) => {
-  const { jalali, gregorian } = event.detail;
-  document.getElementById('jalali-result').textContent = jalali.join('/');
-  document.getElementById('gregorian-result').textContent = gregorian.join('/');
-});</code></pre>
-    </div>
-    
-    <div class="example">
-      <h2>Custom Styling</h2>
-      <div class="example-label">With custom styling:</div>
-      <persian-datepicker-element 
-        id="styled-picker" 
-        style="
-          --jdp-primary: #8b5cf6;
-          --jdp-primary-hover: #7c3aed;
-          --jdp-border-radius: 0.75rem;
-          --jdp-font-size: 15px;
-          --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-          --jdp-font-feature-settings: 'ss02';
-        "
-      ></persian-datepicker-element>
-      <div class="result">Selected date: <span id="styled-result">None</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element 
-  id="styled-picker" 
-  style="
-    --jdp-primary: #8b5cf6;
-    --jdp-primary-hover: #7c3aed;
-    --jdp-border-radius: 0.75rem;
-    --jdp-font-size: 15px;
-    --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --jdp-font-feature-settings: 'ss02';
-  "
-&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-    </div>
-    
-    <div class="example">
-      <h2>Persian Numbers</h2>
-      <div class="example-label">With Persian number formatting:</div>
-      <persian-datepicker-element 
-        id="persian-number-picker"
-        style="
-          --jdp-font-feature-settings: 'ss02';
-          --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        "
-      ></persian-datepicker-element>
-      <div class="result">Selected date: <span id="persian-number-result">None</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element 
-  id="persian-number-picker"
-  style="
-    --jdp-font-feature-settings: 'ss02';
-    --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  "
-&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-    </div>
-    
-    <div class="link-container">
-      <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
-      <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
-      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-      <a href="../demo/index.html" class="link">دمو</a>
-    </div>
+
+    <a href="../index.html" class="back-link">← بازگشت به صفحه اصلی</a>
+
+    <footer>
+      <p>تمامی حقوق کامپوننت Persian Date Picker Element محفوظ است.</p>
+    </footer>
   </div>
 
-  <script src="../dist/persian-datepicker-element.min.js"></script>
   <script>
     // Dark mode toggle
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     
-    // Check for saved dark mode preference
+    // Check for saved theme preference
     if (localStorage.getItem('darkMode') === 'true') {
       document.body.classList.add('dark');
-      darkModeToggle.checked = true;
+      darkModeToggle.querySelector('svg').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
     }
     
     // Toggle dark mode
-    darkModeToggle.addEventListener('change', () => {
-      if (darkModeToggle.checked) {
-        document.body.classList.add('dark');
-        localStorage.setItem('darkMode', 'true');
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('darkMode', isDark);
+      
+      // Update icon
+      if (isDark) {
+        darkModeToggle.querySelector('svg').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
       } else {
-        document.body.classList.remove('dark');
-        localStorage.setItem('darkMode', 'false');
+        darkModeToggle.querySelector('svg').innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>';
       }
-    });
-  
-    // Convert numbers to Persian digits
-    function toPersianNum(num) {
-      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-      return num.toString().replace(/\d/g, x => persianDigits[x]);
-    }
-    
-    // Format date with Persian digits
-    function formatPersianDate(dateArray) {
-      return toPersianNum(dateArray.join('/'));
-    }
-    
-    // Basic picker
-    const basicPicker = document.getElementById('basic-picker');
-    const basicResult = document.getElementById('basic-result');
-    
-    basicPicker.addEventListener('change', (event) => {
-      basicResult.textContent = formatPersianDate(event.detail.jalali);
-    });
-    
-    // Placeholder picker
-    const placeholderPicker = document.getElementById('placeholder-picker');
-    const placeholderResult = document.getElementById('placeholder-result');
-    
-    placeholderPicker.addEventListener('change', (event) => {
-      placeholderResult.textContent = formatPersianDate(event.detail.jalali);
-    });
-    
-    // Format picker
-    const formatPicker = document.getElementById('format-picker');
-    const formatResult = document.getElementById('format-result');
-    
-    formatPicker.addEventListener('change', (event) => {
-      formatResult.textContent = formatPersianDate(event.detail.jalali);
-    });
-    
-    // Initial picker
-    const initialPicker = document.getElementById('initial-picker');
-    const initialResult = document.getElementById('initial-result');
-    
-    initialPicker.setValue(1403, 3, 15);
-    initialResult.textContent = toPersianNum('1403/3/15');
-    
-    initialPicker.addEventListener('change', (event) => {
-      initialResult.textContent = formatPersianDate(event.detail.jalali);
-    });
-    
-    // Event picker
-    const eventPicker = document.getElementById('event-picker');
-    const jalaliResult = document.getElementById('jalali-result');
-    const gregorianResult = document.getElementById('gregorian-result');
-    
-    eventPicker.addEventListener('change', (event) => {
-      const { jalali, gregorian } = event.detail;
-      jalaliResult.textContent = formatPersianDate(jalali);
-      gregorianResult.textContent = formatPersianDate(gregorian);
-    });
-    
-    // Styled picker
-    const styledPicker = document.getElementById('styled-picker');
-    const styledResult = document.getElementById('styled-result');
-    
-    styledPicker.addEventListener('change', (event) => {
-      styledResult.textContent = formatPersianDate(event.detail.jalali);
-    });
-    
-    // Persian number picker
-    document.getElementById('persian-number-picker').addEventListener('change', (event) => {
-      document.getElementById('persian-number-result').textContent = formatPersianDate(event.detail.jalali);
     });
   </script>
 </body>
