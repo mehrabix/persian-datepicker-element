@@ -15,10 +15,12 @@
       color: #1e293b;
       line-height: 1.5;
       direction: rtl;
+      font-weight: 400;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     /* Apply Persian numbers to all elements */
-    body {
+    * {
       -moz-font-feature-settings: "ss02";
       -webkit-font-feature-settings: "ss02";
       font-feature-settings: "ss02";
@@ -28,16 +30,21 @@
       font-size: 28px;
       margin-bottom: 24px;
       color: #0f172a;
+      font-weight: 700;
+      transition: color 0.3s;
     }
 
     h2 {
       font-size: 20px;
       margin: 32px 0 16px;
       color: #334155;
+      font-weight: 700;
+      transition: color 0.3s;
     }
 
     p {
       margin-bottom: 16px;
+      transition: color 0.3s;
     }
 
     .container {
@@ -51,6 +58,7 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s, box-shadow 0.3s;
     }
 
     .example-label {
@@ -65,6 +73,7 @@
       background-color: #f1f5f9;
       border-radius: 6px;
       font-size: 14px;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     pre {
@@ -74,10 +83,12 @@
       overflow-x: auto;
       font-size: 14px;
       margin: 20px 0;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     code {
       font-family: 'Fira Code', monospace;
+      transition: color 0.3s;
     }
 
     .link {
@@ -102,52 +113,141 @@
     persian-datepicker-element {
       --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       --jdp-font-feature-settings: "ss02";
+      --jdp-font-weight: 400;
+      transition: all 0.3s ease;
     }
     
-    /* Dark mode */
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #0f172a;
-        color: #e2e8f0;
-      }
-      
-      h1 {
-        color: #f8fafc;
-      }
-      
-      h2 {
-        color: #cbd5e1;
-      }
-      
-      .example {
-        background-color: #1e293b;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      }
-      
-      .result, pre {
-        background-color: #1e1e2f;
-        color: #e2e8f0;
-      }
-      
-      code {
-        color: #f8fafc;
-      }
+    /* Make sure all inputs and form elements also use Persian numbers */
+    input, button, select, textarea {
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
+    }
+    
+    /* Dark mode styles */
+    body.dark {
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+    
+    body.dark h1 {
+      color: #f8fafc;
+    }
+    
+    body.dark h2 {
+      color: #cbd5e1;
+    }
+    
+    body.dark .example {
+      background-color: #1e293b;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    body.dark .result,
+    body.dark pre {
+      background-color: #1e1e2f;
+      color: #e2e8f0;
+    }
+    
+    body.dark code {
+      color: #f8fafc;
+    }
+
+    body.dark persian-datepicker-element {
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-day-hover-bg: #334155;
+      --jdp-input-border-color: #475569;
+      --jdp-input-bg: #1e1e2f;
+      --jdp-calendar-bg: #1e1e2f;
+      --jdp-holiday-bg: #3f1e2e;
     }
 
     .navigation {
       margin-bottom: 30px;
       padding-bottom: 15px;
       border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.3s;
     }
 
     .navigation h2 {
       margin-top: 0;
     }
 
-    @media (prefers-color-scheme: dark) {
-      .navigation {
-        border-bottom-color: #334155;
-      }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    body.dark .navigation {
+      border-bottom-color: #334155;
+    }
+
+    /* Dark mode toggle */
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-left: 15px;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #0891b2;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-label {
+      margin-right: 8px;
+      font-size: 14px;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -157,12 +257,20 @@
     <p>Simple examples of how to use the Persian Date Picker Element component with different configurations.</p>
     
     <div class="navigation">
-      <h2>نمونه‌های موجود:</h2>
-      <a href="index.html" class="link">نمونه‌های پایه</a>
-      <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
-      <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
-      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-      <a href="../demo/index.html" class="link">دمو</a>
+      <div class="nav-links">
+        <a href="index.html" class="link">نمونه‌های پایه</a>
+        <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+        <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+        <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+        <a href="../demo/index.html" class="link">دمو</a>
+      </div>
+      <div class="toggle-container">
+        <span class="toggle-label">حالت تاریک</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
     
     <div class="example">
@@ -279,6 +387,26 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
 
   <script src="../dist/persian-datepicker-element.min.js"></script>
   <script>
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+      darkModeToggle.checked = true;
+    }
+    
+    // Toggle dark mode
+    darkModeToggle.addEventListener('change', () => {
+      if (darkModeToggle.checked) {
+        document.body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+      }
+    });
+  
     // Convert numbers to Persian digits
     function toPersianNum(num) {
       const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -291,39 +419,57 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     }
     
     // Basic picker
-    document.getElementById('basic-picker').addEventListener('change', (event) => {
-      document.getElementById('basic-result').textContent = formatPersianDate(event.detail.jalali);
+    const basicPicker = document.getElementById('basic-picker');
+    const basicResult = document.getElementById('basic-result');
+    
+    basicPicker.addEventListener('change', (event) => {
+      basicResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
     // Placeholder picker
-    document.getElementById('placeholder-picker').addEventListener('change', (event) => {
-      document.getElementById('placeholder-result').textContent = formatPersianDate(event.detail.jalali);
+    const placeholderPicker = document.getElementById('placeholder-picker');
+    const placeholderResult = document.getElementById('placeholder-result');
+    
+    placeholderPicker.addEventListener('change', (event) => {
+      placeholderResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
     // Format picker
-    document.getElementById('format-picker').addEventListener('change', (event) => {
-      document.getElementById('format-result').textContent = formatPersianDate(event.detail.jalali);
+    const formatPicker = document.getElementById('format-picker');
+    const formatResult = document.getElementById('format-result');
+    
+    formatPicker.addEventListener('change', (event) => {
+      formatResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
-    // Initial value picker
+    // Initial picker
     const initialPicker = document.getElementById('initial-picker');
+    const initialResult = document.getElementById('initial-result');
+    
     initialPicker.setValue(1403, 3, 15);
-    document.getElementById('initial-result').textContent = toPersianNum('1403/3/15');
+    initialResult.textContent = toPersianNum('1403/3/15');
     
     initialPicker.addEventListener('change', (event) => {
-      document.getElementById('initial-result').textContent = formatPersianDate(event.detail.jalali);
+      initialResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
-    // Event listener picker
-    document.getElementById('event-picker').addEventListener('change', (event) => {
+    // Event picker
+    const eventPicker = document.getElementById('event-picker');
+    const jalaliResult = document.getElementById('jalali-result');
+    const gregorianResult = document.getElementById('gregorian-result');
+    
+    eventPicker.addEventListener('change', (event) => {
       const { jalali, gregorian } = event.detail;
-      document.getElementById('jalali-result').textContent = formatPersianDate(jalali);
-      document.getElementById('gregorian-result').textContent = formatPersianDate(gregorian);
+      jalaliResult.textContent = formatPersianDate(jalali);
+      gregorianResult.textContent = formatPersianDate(gregorian);
     });
     
     // Styled picker
-    document.getElementById('styled-picker').addEventListener('change', (event) => {
-      document.getElementById('styled-result').textContent = formatPersianDate(event.detail.jalali);
+    const styledPicker = document.getElementById('styled-picker');
+    const styledResult = document.getElementById('styled-result');
+    
+    styledPicker.addEventListener('change', (event) => {
+      styledResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
     // Persian number picker

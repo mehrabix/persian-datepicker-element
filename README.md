@@ -137,6 +137,62 @@ const persianDate = PersianDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
 const gregorianDate = PersianDate.jalaliToGregorian(1402, 1, 1); // [2023, 3, 21]
 ```
 
+## Persian/Arabic Numbers Display | نمایش اعداد فارسی/عربی
+
+To ensure that all numbers are displayed in Persian/Arabic format, use the `font-feature-settings` CSS property with the "ss02" feature of Vazir font:
+
+```css
+/* Apply to all elements */
+* {
+  -moz-font-feature-settings: "ss02";
+  -webkit-font-feature-settings: "ss02";
+  font-feature-settings: "ss02";
+}
+
+/* Make sure to use font-weight: 400 for best number rendering */
+body {
+  font-family: 'Vazir', sans-serif;
+  font-weight: 400;
+  font-feature-settings: "ss02";
+}
+
+/* For datepicker component specifically */
+persian-datepicker-element {
+  --jdp-font-family: 'Vazir', sans-serif;
+  --jdp-font-feature-settings: "ss02";
+  --jdp-font-weight: 400;
+}
+```
+
+<div dir="rtl">
+
+برای اطمینان از نمایش همه اعداد به صورت فارسی/عربی، از ویژگی CSS با نام `font-feature-settings` همراه با قابلیت "ss02" فونت وزیر استفاده کنید:
+
+```css
+/* اعمال به تمام عناصر */
+* {
+  -moz-font-feature-settings: "ss02";
+  -webkit-font-feature-settings: "ss02";
+  font-feature-settings: "ss02";
+}
+
+/* استفاده از font-weight: 400 برای بهترین نمایش اعداد */
+body {
+  font-family: 'Vazir', sans-serif;
+  font-weight: 400;
+  font-feature-settings: "ss02";
+}
+
+/* برای کامپوننت تقویم */
+persian-datepicker-element {
+  --jdp-font-family: 'Vazir', sans-serif;
+  --jdp-font-feature-settings: "ss02";
+  --jdp-font-weight: 400;
+}
+```
+
+</div>
+
 ## Framework Integration | یکپارچه‌سازی با فریم‌ورک‌ها
 
 ### React

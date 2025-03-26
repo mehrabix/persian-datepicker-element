@@ -15,10 +15,11 @@
       margin: 0;
       direction: rtl;
       transition: background-color 0.3s, color 0.3s;
-      /* Apply Persian numbers to all elements */
+      /* Apply Persian numbers to all elements - use font weight that supports Persian numbers */
       -moz-font-feature-settings: "ss02";
       -webkit-font-feature-settings: "ss02";
       font-feature-settings: "ss02";
+      font-weight: 400;
     }
 
     body.dark {
@@ -41,8 +42,14 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
 
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+
     h1 {
-      font-weight: 600;
       margin-bottom: 1rem;
       text-align: center;
       color: #1e293b;
@@ -54,7 +61,6 @@
     }
 
     h2 {
-      font-weight: 500;
       margin: 1.5rem 0 1rem;
       color: #334155;
       font-size: 1.1rem;
@@ -107,6 +113,7 @@
       display: block;
       /* Apply Persian numbers to date picker */
       --jdp-font-feature-settings: "ss02";
+      font-weight: 400;
     }
 
     .result {
@@ -293,6 +300,28 @@
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
       margin-bottom: 1.5rem;
+    }
+
+    /* Ensure all elements use Persian numbers */
+    * {
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+
+    /* Apply proper font-weights for better number rendering */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+
+    input, select, button {
+      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
     }
   </style>
 </head>

@@ -7,19 +7,23 @@
   <!-- Add Vazir Font from CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
+    /* Apply Persian numbers to all elements */
+    * {
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+    
     body {
       font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #f9fafb;
-      color: #374151;
-      line-height: 1.5;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
       direction: rtl;
       transition: background-color 0.3s, color 0.3s;
-      /* Apply Persian numbers to all elements */
-      -moz-font-feature-settings: "ss02";
-      -webkit-font-feature-settings: "ss02";
-      font-feature-settings: "ss02";
+      font-weight: 400;
     }
 
     body.dark {
@@ -31,6 +35,7 @@
       font-size: 28px;
       margin-bottom: 24px;
       color: #0f172a;
+      font-weight: 700;
       transition: color 0.3s;
     }
     
@@ -42,6 +47,7 @@
       font-size: 20px;
       margin: 32px 0 16px;
       color: #334155;
+      font-weight: 700;
       transition: color 0.3s;
     }
     
@@ -320,15 +326,29 @@
       margin-bottom: 30px;
       padding-bottom: 15px;
       border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.3s;
     }
 
     .navigation h2 {
       margin-top: 0;
     }
 
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    body.dark .navigation {
+      border-bottom-color: #334155;
+    }
+
     .link {
       display: inline-block;
-      margin-top: 20px;
+      margin-top: 8px;
       background-color: #0891b2;
       color: white;
       padding: 8px 16px;
@@ -344,33 +364,115 @@
       background-color: #0e7490;
     }
 
-    @media (prefers-color-scheme: dark) {
-      .navigation {
-        border-bottom-color: #334155;
-      }
+    /* Dark mode toggle */
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-left: 15px;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #0891b2;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-label {
+      margin-right: 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Make sure datepicker is properly styled in dark mode */
+    body.dark persian-datepicker-element:not(.dark-theme) {
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-day-hover-bg: #334155;
+      --jdp-input-border-color: #475569;
+      --jdp-input-bg: #1e1e2f;
+      --jdp-calendar-bg: #1e1e2f;
+      --jdp-holiday-bg: #3f1e2e;
+    }
+
+    /* Custom element styling */
+    persian-datepicker-element {
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
+      --jdp-font-weight: 400;
+    }
+    
+    /* Make sure form elements also use Persian numbers */
+    input, button, select, textarea {
+      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="dark-mode-toggle">
-      <h2 style="margin: 0;">حالت تاریک</h2>
-      <label class="theme-switch">
-        <input type="checkbox" id="dark-mode-toggle">
-        <span class="slider"></span>
-      </label>
-    </div>
-
     <h1>Persian Date Picker Element - Styling Examples</h1>
-    <p>This page demonstrates the various styling possibilities of the Persian Date Picker Element component using CSS variables.</p>
-
+    <p>Examples showcasing various styling options and theme variants for the date picker component.</p>
+    
     <div class="navigation">
-      <h2>نمونه‌های موجود:</h2>
-      <a href="index.html" class="link">نمونه‌های پایه</a>
-      <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
-      <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
-      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-      <a href="../demo/index.html" class="link">دمو</a>
+      <div class="nav-links">
+        <a href="index.html" class="link">نمونه‌های پایه</a>
+        <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+        <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+        <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+        <a href="../demo/index.html" class="link">دمو</a>
+      </div>
+      <div class="toggle-container">
+        <span class="toggle-label">حالت تاریک</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
 
     <pre><code>// Basic example of setting CSS variables
@@ -447,167 +549,52 @@ persian-datepicker-element {
 
   <script src="../dist/persian-datepicker-element.min.js"></script>
   <script>
-    // Convert numbers to Persian digits
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+      darkModeToggle.checked = true;
+    }
+    
+    // Toggle dark mode
+    darkModeToggle.addEventListener('change', () => {
+      if (darkModeToggle.checked) {
+        document.body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+      }
+    });
+
+    // Function to convert to Persian digits
     function toPersianNum(num) {
       const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
       return num.toString().replace(/\d/g, x => persianDigits[x]);
     }
     
-    // Get all date pickers
-    const datePickers = document.querySelectorAll('persian-datepicker-element');
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    // Format Persian Date
+    function formatPersianDate(dateArray) {
+      return toPersianNum(dateArray.join('/'));
+    }
     
-    // Pre-defined themes
-    const themes = {
-      default: {
-        '--jdp-primary': '#0891b2',
-        '--jdp-primary-hover': '#0e7490',
-        '--jdp-border-radius': '0.5rem',
-        '--jdp-font-size': '14px',
-        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
-      },
-      blue: {
-        '--jdp-primary': '#3b82f6',
-        '--jdp-primary-hover': '#2563eb',
-        '--jdp-ring': '#60a5fa',
-        '--jdp-border-radius': '0.5rem',
-        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
-      },
-      green: {
-        '--jdp-primary': '#10b981',
-        '--jdp-primary-hover': '#059669',
-        '--jdp-ring': '#34d399',
-        '--jdp-border-radius': '0.5rem',
-        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
-      },
-      purple: {
-        '--jdp-primary': '#8b5cf6',
-        '--jdp-primary-hover': '#7c3aed',
-        '--jdp-ring': '#a78bfa',
-        '--jdp-border-radius': '0.5rem',
-        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
-      },
-      orange: {
-        '--jdp-primary': '#f97316',
-        '--jdp-primary-hover': '#ea580c',
-        '--jdp-ring': '#fb923c',
-        '--jdp-border-radius': '0.5rem',
-        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
-      },
-      minimal: {
-        '--jdp-primary': '#000000',
-        '--jdp-primary-hover': '#333333',
-        '--jdp-primary-foreground': '#ffffff',
-        '--jdp-border-radius': '2px',
-        '--jdp-input-border-width': '1px',
-        '--jdp-day-cell-border-radius': '0',
-        '--jdp-nav-button-border-radius': '0',
-        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
-      },
-      rounded: {
-        '--jdp-primary': '#0891b2',
-        '--jdp-primary-hover': '#0e7490',
-        '--jdp-border-radius': '1rem',
-        '--jdp-input-border-radius': '1rem',
-        '--jdp-day-cell-border-radius': '1rem',
-        '--jdp-nav-button-border-radius': '1rem',
-        '--jdp-calendar-border-radius': '1.5rem',
-        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
-      }
-    };
-
-    // Dark mode theme
-    const darkTheme = {
-      '--jdp-background': '#1e1e2f',
-      '--jdp-foreground': '#e2e8f0',
-      '--jdp-muted': '#334155',
-      '--jdp-muted-foreground': '#94a3b8',
-      '--jdp-border': '#475569',
-      '--jdp-input-border-color': '#475569',
-      '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
-      '--jdp-day-hover-bg': '#334155',
-      '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-      '--jdp-font-feature-settings': '"ss02"'
-    };
-
-    // Function to apply theme to all pickers
-    function applyTheme(themeValues) {
-      datePickers.forEach(picker => {
-        Object.entries(themeValues).forEach(([property, value]) => {
-          picker.style.setProperty(property, value);
-        });
-      });
-    }
-
-    // Function to get theme of element based on class
-    function getPickerThemeName(element) {
-      const classList = element.classList;
-      if (classList.contains('default-theme')) return 'default';
-      if (classList.contains('blue-theme')) return 'blue';
-      if (classList.contains('green-theme')) return 'green';
-      if (classList.contains('purple-theme')) return 'purple';
-      if (classList.contains('orange-theme')) return 'orange';
-      if (classList.contains('minimal-theme')) return 'minimal';
-      if (classList.contains('rounded-theme')) return 'rounded';
-      if (classList.contains('dark-theme')) return 'dark';
-      return 'default';
-    }
-
-    // Apply dark mode styles to each picker while preserving its theme
-    function applyDarkModeToPickers(isDark) {
-      datePickers.forEach(picker => {
-        const themeName = getPickerThemeName(picker);
-        if (themeName === 'dark') return; // Skip dark theme, it's already dark
-        
-        const themeStyles = themes[themeName] || themes.default;
-        
-        if (isDark) {
-          // Apply dark theme while preserving the theme's accent colors
-          Object.entries({...darkTheme, ...{
-            '--jdp-primary': themeStyles['--jdp-primary'],
-            '--jdp-primary-hover': themeStyles['--jdp-primary-hover'],
-            '--jdp-primary-foreground': themeStyles['--jdp-primary-foreground'] || '#ffffff',
-            '--jdp-ring': themeStyles['--jdp-ring'] || themeStyles['--jdp-primary'],
-            '--jdp-border-radius': themeStyles['--jdp-border-radius'],
-            '--jdp-input-border-radius': themeStyles['--jdp-input-border-radius'],
-            '--jdp-day-cell-border-radius': themeStyles['--jdp-day-cell-border-radius'],
-            '--jdp-nav-button-border-radius': themeStyles['--jdp-nav-button-border-radius'],
-            '--jdp-calendar-border-radius': themeStyles['--jdp-calendar-border-radius'],
-            '--jdp-font-family': themeStyles['--jdp-font-family'],
-            '--jdp-font-feature-settings': themeStyles['--jdp-font-feature-settings']
-          }}).forEach(([property, value]) => {
-            picker.style.setProperty(property, value);
-          });
-        } else {
-          // Revert to original theme
-          Object.entries(themeStyles).forEach(([property, value]) => {
-            picker.style.setProperty(property, value);
-          });
-        }
-      });
-    }
-
-    // Dark mode toggle functionality
-    darkModeToggle.addEventListener('change', () => {
-      // Toggle dark class on body
-      document.body.classList.toggle('dark', darkModeToggle.checked);
+    // Initialize all pickers
+    document.querySelectorAll('persian-datepicker-element').forEach(picker => {
+      // Set initial date
+      picker.setValue(1403, 3, 15);
       
-      // Apply dark mode to pickers
-      applyDarkModeToPickers(darkModeToggle.checked);
-    });
-
-    // Handle date selection for all date pickers
-    datePickers.forEach(picker => {
+      // Add change event listener
       picker.addEventListener('change', event => {
-        console.log('Selected date (jalali):', toPersianNum(event.detail.jalali.join('/')));
-        console.log('Selected date (gregorian):', toPersianNum(event.detail.gregorian.join('/')));
+        // Find closest result element and update
+        const container = picker.closest('.example-item');
+        if (container) {
+          const resultElement = container.querySelector('.picker-result');
+          if (resultElement) {
+            resultElement.textContent = formatPersianDate(event.detail.jalali);
+          }
+        }
       });
     });
   </script>

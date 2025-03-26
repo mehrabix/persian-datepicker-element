@@ -4,6 +4,26 @@ This directory contains a simple demo of the Persian Date Picker Element compone
 
 این دایرکتوری شامل یک نمایش ساده از کامپوننت تقویم تاریخ شمسی است.
 
+## Persian/Arabic Numbers Display | نمایش اعداد فارسی/عربی
+
+The demo demonstrates how to properly display Persian/Arabic numbers using the Vazir font:
+
+- Uses the `font-feature-settings: "ss02"` CSS property to activate the Persian digits feature
+- Applies consistent font-weight settings (400 for normal text, 700 for headings)
+- Ensures all HTML elements inherit the proper font settings
+- Uses JavaScript functions to convert any numbers to Persian digits format
+
+<div dir="rtl">
+
+این دمو نحوه نمایش صحیح اعداد فارسی/عربی با استفاده از فونت وزیر را نشان می‌دهد:
+
+- استفاده از خاصیت CSS با نام `font-feature-settings: "ss02"` برای فعال‌سازی ویژگی ارقام فارسی
+- اعمال تنظیمات وزن فونت به صورت یکنواخت (400 برای متن عادی، 700 برای عناوین)
+- اطمینان از اینکه تمام عناصر HTML تنظیمات فونت مناسب را به ارث می‌برند
+- استفاده از توابع جاوااسکریپت برای تبدیل هر عدد به قالب ارقام فارسی
+
+</div>
+
 ## Features Demonstrated | ویژگی‌های نمایش داده شده
 
 - Basic usage of the component
