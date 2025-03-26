@@ -612,6 +612,23 @@
       این ابزار به شما امکان می‌دهد تم دلخواه خود را به صورت کامل بسازید و کد CSS مربوطه را دریافت کنید.
     </p>
     
+    <div class="navigation" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color);">
+      <div class="nav-links" style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <a href="index.html" class="btn btn-outline" style="margin-right: 8px;">نمونه‌های پایه</a>
+        <a href="customization.html" class="btn btn-outline" style="margin-right: 8px;">نمونه‌های استایل‌دهی</a>
+        <a href="theme-switcher.html" class="btn btn-outline" style="margin-right: 8px;">تغییردهنده تم</a>
+        <a href="theme-builder.html" class="btn btn-outline" style="margin-right: 8px;">سازنده کامل تم</a>
+        <a href="../demo/index.html" class="btn btn-outline">دمو</a>
+      </div>
+      <div style="display: flex; align-items: center;">
+        <span style="margin-right: 8px; font-size: 14px; font-weight: 500;">حالت تاریک</span>
+        <label class="switch">
+          <input type="checkbox" id="nav-dark-mode-toggle">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+    </div>
+    
     <!-- Mobile tabs for responsive navigation -->
     <div class="tabs">
       <div class="tab active" data-tab="basic">پایه</div>
@@ -1142,6 +1159,7 @@ persian-datepicker-element {
     const picker = document.getElementById('theme-preview');
     const cssOutput = document.getElementById('css-output');
     const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const navDarkModeToggle = document.getElementById('nav-dark-mode-toggle');
     const presetButtons = document.querySelectorAll('.preset-btn');
     const resetButton = document.getElementById('reset-button');
     const copyButton = document.getElementById('copy-button');
@@ -1326,6 +1344,11 @@ persian-datepicker-element {
     darkModeToggle.addEventListener('change', () => {
       document.body.classList.toggle('dark', darkModeToggle.checked);
       
+      // Keep both dark mode toggles in sync
+      if (navDarkModeToggle) {
+        navDarkModeToggle.checked = darkModeToggle.checked;
+      }
+      
       if (darkModeToggle.checked) {
         // Apply dark theme but keep primary colors
         const primaryColors = {
@@ -1362,10 +1385,21 @@ persian-datepicker-element {
       }
     });
     
+    // Navigation dark mode toggle
+    navDarkModeToggle.addEventListener('change', () => {
+      darkModeToggle.checked = navDarkModeToggle.checked;
+      darkModeToggle.dispatchEvent(new Event('change'));
+    });
+    
     // Check for saved dark mode preference
     if (localStorage.getItem('darkMode') === 'true') {
       document.body.classList.add('dark');
       darkModeToggle.checked = true;
+      
+      // Sync the navigation dark mode toggle if it exists
+      if (navDarkModeToggle) {
+        navDarkModeToggle.checked = true;
+      }
       
       // Apply dark theme but keep primary colors
       const primaryColors = {
@@ -1379,6 +1413,14 @@ persian-datepicker-element {
       // Make sure input and calendar background are set
       picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
       picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
+    }
+    
+    // Add event listener for navigation dark mode toggle
+    if (navDarkModeToggle) {
+      navDarkModeToggle.addEventListener('change', () => {
+        darkModeToggle.checked = navDarkModeToggle.checked;
+        darkModeToggle.dispatchEvent(new Event('change'));
+      });
     }
     
     // Initialize

@@ -292,25 +292,15 @@
       margin-bottom: 30px;
       padding-bottom: 15px;
       border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      transition: border-color 0.3s;
     }
 
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    body.dark .navigation {
-      border-bottom-color: #334155;
+    .navigation h2 {
+      margin-top: 0;
     }
 
     .link {
       display: inline-block;
-      margin-top: 8px;
+      margin-top: 20px;
       background-color: #0891b2;
       color: white;
       padding: 8px 16px;
@@ -326,18 +316,18 @@
       background-color: #0e7490;
     }
 
-    /* Make sure datepicker is properly styled in dark mode */
-    body.dark persian-datepicker-element {
-      --jdp-background: #1e1e2f;
-      --jdp-foreground: #e2e8f0;
-      --jdp-muted: #334155;
-      --jdp-muted-foreground: #94a3b8;
-      --jdp-border: #475569;
-      --jdp-day-hover-bg: #334155;
-      --jdp-input-border-color: #475569;
-      --jdp-input-bg: #1e1e2f;
-      --jdp-calendar-bg: #1e1e2f;
-      --jdp-holiday-bg: #3f1e2e;
+    body.dark .link {
+      background-color: #0e7490;
+    }
+
+    body.dark .link:hover {
+      background-color: #0891b2;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .navigation {
+        border-bottom-color: #334155;
+      }
     }
 
     /* Make sure form elements also use Persian numbers */
@@ -376,7 +366,7 @@
       <div class="theme-toggle">
         <h2 style="margin: 0;">حالت تاریک</h2>
         <label class="switch">
-          <input type="checkbox" id="dark-mode-toggle">
+          <input type="checkbox" id="theme-section-dark-toggle">
           <span class="slider"></span>
         </label>
       </div>
@@ -427,16 +417,82 @@
     if (localStorage.getItem('darkMode') === 'true') {
       document.body.classList.add('dark');
       document.getElementById('dark-mode-toggle').checked = true;
+      document.getElementById('theme-section-dark-toggle').checked = true;
     }
     
-    // Toggle dark mode
+    // Toggle dark mode for main toggle
     document.getElementById('dark-mode-toggle').addEventListener('change', (e) => {
       if (e.target.checked) {
         document.body.classList.add('dark');
         localStorage.setItem('darkMode', 'true');
+        // Keep the other toggle in sync
+        document.getElementById('theme-section-dark-toggle').checked = true;
       } else {
         document.body.classList.remove('dark');
         localStorage.setItem('darkMode', 'false');
+        // Keep the other toggle in sync
+        document.getElementById('theme-section-dark-toggle').checked = false;
+      }
+      
+      // Get the current active theme
+      const activeThemeBtn = document.querySelector('.theme-btn.active');
+      const activeThemeName = activeThemeBtn ? activeThemeBtn.getAttribute('data-theme') : 'default';
+      const activeTheme = themes[activeThemeName] || themes.default;
+      
+      if (e.target.checked) {
+        // Apply dark theme merged with the current theme
+        applyTheme({...darkTheme, ...{
+          '--jdp-primary': activeTheme['--jdp-primary'],
+          '--jdp-primary-hover': activeTheme['--jdp-primary-hover'],
+          '--jdp-border-radius': activeTheme['--jdp-border-radius'],
+          '--jdp-input-border-radius': activeTheme['--jdp-input-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-day-cell-border-radius': activeTheme['--jdp-day-cell-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-nav-button-border-radius': activeTheme['--jdp-nav-button-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-input-border-width': activeTheme['--jdp-input-border-width'],
+          '--jdp-font-family': activeTheme['--jdp-font-family'],
+          '--jdp-font-feature-settings': activeTheme['--jdp-font-feature-settings']
+        }});
+      } else {
+        // Revert to the current theme without dark mode
+        applyTheme(activeTheme);
+      }
+    });
+    
+    // Toggle dark mode for theme section toggle
+    document.getElementById('theme-section-dark-toggle').addEventListener('change', (e) => {
+      if (e.target.checked) {
+        document.body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+        // Keep the other toggle in sync
+        document.getElementById('dark-mode-toggle').checked = true;
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+        // Keep the other toggle in sync
+        document.getElementById('dark-mode-toggle').checked = false;
+      }
+      
+      // Get the current active theme
+      const activeThemeBtn = document.querySelector('.theme-btn.active');
+      const activeThemeName = activeThemeBtn ? activeThemeBtn.getAttribute('data-theme') : 'default';
+      const activeTheme = themes[activeThemeName] || themes.default;
+      
+      if (e.target.checked) {
+        // Apply dark theme merged with the current theme
+        applyTheme({...darkTheme, ...{
+          '--jdp-primary': activeTheme['--jdp-primary'],
+          '--jdp-primary-hover': activeTheme['--jdp-primary-hover'],
+          '--jdp-border-radius': activeTheme['--jdp-border-radius'],
+          '--jdp-input-border-radius': activeTheme['--jdp-input-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-day-cell-border-radius': activeTheme['--jdp-day-cell-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-nav-button-border-radius': activeTheme['--jdp-nav-button-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-input-border-width': activeTheme['--jdp-input-border-width'],
+          '--jdp-font-family': activeTheme['--jdp-font-family'],
+          '--jdp-font-feature-settings': activeTheme['--jdp-font-feature-settings']
+        }});
+      } else {
+        // Revert to the current theme without dark mode
+        applyTheme(activeTheme);
       }
     });
 
@@ -599,35 +655,6 @@
       });
     });
     
-    // Dark mode toggle
-    darkModeToggle.addEventListener('change', () => {
-      // Toggle dark class on body
-      document.body.classList.toggle('dark', darkModeToggle.checked);
-      
-      // Get the current active theme
-      const activeThemeBtn = document.querySelector('.theme-btn.active');
-      const activeThemeName = activeThemeBtn ? activeThemeBtn.getAttribute('data-theme') : 'default';
-      const activeTheme = themes[activeThemeName] || themes.default;
-      
-      if (darkModeToggle.checked) {
-        // Apply dark theme merged with the current theme
-        applyTheme({...darkTheme, ...{
-          '--jdp-primary': activeTheme['--jdp-primary'],
-          '--jdp-primary-hover': activeTheme['--jdp-primary-hover'],
-          '--jdp-border-radius': activeTheme['--jdp-border-radius'],
-          '--jdp-input-border-radius': activeTheme['--jdp-input-border-radius'] || activeTheme['--jdp-border-radius'],
-          '--jdp-day-cell-border-radius': activeTheme['--jdp-day-cell-border-radius'] || activeTheme['--jdp-border-radius'],
-          '--jdp-nav-button-border-radius': activeTheme['--jdp-nav-button-border-radius'] || activeTheme['--jdp-border-radius'],
-          '--jdp-input-border-width': activeTheme['--jdp-input-border-width'],
-          '--jdp-font-family': activeTheme['--jdp-font-family'],
-          '--jdp-font-feature-settings': activeTheme['--jdp-font-feature-settings']
-        }});
-      } else {
-        // Revert to the current theme without dark mode
-        applyTheme(activeTheme);
-      }
-    });
-
     // Color input
     primaryColorInput.addEventListener('input', () => {
       applyColor(primaryColorInput.value);

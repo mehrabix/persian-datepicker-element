@@ -177,6 +177,41 @@
       color: #64748b;
     }
     
+    .frameworks-section {
+      margin: 3rem 0;
+      text-align: center;
+    }
+    
+    .frameworks-section p {
+      color: #64748b;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    
+    .framework-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+    
+    .framework-links a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .documentation-link {
+      margin-top: 1.5rem;
+    }
+    
+    .documentation-link a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
     @media (max-width: 768px) {
       .card-grid {
         grid-template-columns: 1fr;
@@ -203,6 +238,10 @@
     
     .dark .card p,
     .dark .description {
+      color: #94a3b8;
+    }
+    
+    .dark .frameworks-section p {
       color: #94a3b8;
     }
     
@@ -278,6 +317,49 @@
           <p>مجموعه کاملی از مثال‌های کاربردی شامل استایل دهی پیشرفته و تم بیلدر</p>
           <a href="examples/index.html" class="btn">مشاهده مثال‌ها</a>
         </div>
+      </div>
+    </div>
+    
+    <div class="frameworks-section">
+      <h2>مستندات فریم‌ورک‌ها</h2>
+      <p>
+        راهنمای پیاده‌سازی کامپوننت تاریخ شمسی در فریم‌ورک‌های مختلف
+      </p>
+      
+      <div class="framework-links">
+        <a href="docs/frameworks/react.html" class="btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="2.139" />
+            <path d="M12 14.863c5.137 0 9.303-1.282 9.303-2.863s-4.166-2.863-9.303-2.863S2.697 10.419 2.697 12s4.166 2.863 9.303 2.863Z" />
+            <path d="M9.296 13.456C8.423 15.929 8.12 18.324 8.44 19.95c.352 1.786 1.306 2.862 2.561 2.862 1.254 0 2.208-1.076 2.56-2.862.32-1.626.018-4.02-.855-6.494"/>
+          </svg>
+          React
+        </a>
+        
+        <a href="docs/frameworks/vue.html" class="btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L14.928 7H19.5L12 20L4.5 7H9.072L12 2Z" fill="currentColor" stroke="none" />
+          </svg>
+          Vue
+        </a>
+        
+        <a href="docs/frameworks/angular.html" class="btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <path d="M12 2.5L1.75 6.38L3.5 18.16L12 22.5L20.5 18.16L22.25 6.38L12 2.5Z" fill="currentColor" stroke="none" />
+            <path d="M12 5L4 17L7.5 16.5L8.68 14H15.25L16.38 16.5L19.92 17L12 5Z" fill="rgba(255,255,255,0.9)" stroke="none" />
+          </svg>
+          Angular
+        </a>
+      </div>
+      
+      <div class="documentation-link">
+        <a href="docs/index.html" class="btn-outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          مستندات کامل
+        </a>
       </div>
     </div>
     
