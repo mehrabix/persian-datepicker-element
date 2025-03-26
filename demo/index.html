@@ -4,15 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Persian Date Picker Element Demo</title>
+  <!-- Add Vazir Font from CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #f9fafb;
       color: #374151;
       padding: 2rem;
       margin: 0;
       direction: rtl;
       transition: background-color 0.3s, color 0.3s;
+      /* Apply Persian numbers to all elements */
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
     }
 
     body.dark {
@@ -69,6 +75,17 @@
       color: #94a3b8;
     }
 
+    .font-note {
+      text-align: center; 
+      font-size: 0.85rem; 
+      color: #6b7280;
+      transition: color 0.3s;
+    }
+
+    body.dark .font-note {
+      color: #64748b;
+    }
+
     .form-group {
       margin-bottom: 1.5rem;
     }
@@ -88,6 +105,8 @@
     persian-datepicker-element {
       width: 100%;
       display: block;
+      /* Apply Persian numbers to date picker */
+      --jdp-font-feature-settings: "ss02";
     }
 
     .result {
@@ -243,6 +262,7 @@
       border-radius: 4px;
       font-weight: 500;
       transition: background-color 0.2s;
+      margin: 0 5px 5px 0;
     }
 
     .more-examples a:hover {
@@ -280,6 +300,7 @@
   <div class="container">
     <h1>Persian Date Picker Element</h1>
     <p>این مثال قابلیت‌های شخصی‌سازی ظاهری تقویم شمسی را نشان می‌دهد</p>
+    <p class="font-note">قلم وزیر برای نمایش بهتر متون فارسی استفاده شده است</p>
 
     <div class="theme-container">
       <div class="theme-toggles">
@@ -387,12 +408,21 @@
     </div>
 
     <div class="more-examples">
-      <a href="../examples/index.html">مشاهده مثال‌های بیشتر</a>
+      <a href="../examples/index.html">نمونه‌های پایه</a>
+      <a href="../examples/customization.html">نمونه‌های استایل‌دهی</a>
+      <a href="../examples/theme-switcher.html">تغییردهنده تم</a>
+      <a href="../examples/theme-builder.html">سازنده کامل تم</a>
     </div>
   </div>
 
   <script type="module" src="../dist/persian-datepicker-element.min.js"></script>
   <script>
+    // Convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+    
     // Get all date pickers
     const datePickers = document.querySelectorAll('persian-datepicker-element');
     const darkModeToggle = document.getElementById('dark-mode-toggle');
@@ -404,37 +434,49 @@
         '--jdp-primary': '#0891b2',
         '--jdp-primary-hover': '#0e7490',
         '--jdp-border-radius': '0.5rem',
-        '--jdp-font-size': '14px'
+        '--jdp-font-size': '14px',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       blue: {
         '--jdp-primary': '#3b82f6',
         '--jdp-primary-hover': '#2563eb',
         '--jdp-ring': '#60a5fa',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       green: {
         '--jdp-primary': '#10b981',
         '--jdp-primary-hover': '#059669',
         '--jdp-ring': '#34d399',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       purple: {
         '--jdp-primary': '#8b5cf6',
         '--jdp-primary-hover': '#7c3aed',
         '--jdp-ring': '#a78bfa',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       red: {
         '--jdp-primary': '#ef4444',
         '--jdp-primary-hover': '#dc2626',
         '--jdp-ring': '#fca5a5',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       orange: {
         '--jdp-primary': '#f97316',
         '--jdp-primary-hover': '#ea580c',
         '--jdp-ring': '#fdba74',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       minimal: {
         '--jdp-primary': '#000000',
@@ -443,7 +485,9 @@
         '--jdp-border-radius': '2px',
         '--jdp-input-border-width': '1px',
         '--jdp-day-cell-border-radius': '0',
-        '--jdp-nav-button-border-radius': '0'
+        '--jdp-nav-button-border-radius': '0',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       rounded: {
         '--jdp-primary': '#0891b2',
@@ -452,7 +496,9 @@
         '--jdp-input-border-radius': '1rem',
         '--jdp-day-cell-border-radius': '1rem',
         '--jdp-nav-button-border-radius': '1rem',
-        '--jdp-calendar-border-radius': '1.5rem'
+        '--jdp-calendar-border-radius': '1.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       }
     };
 
@@ -465,7 +511,9 @@
       '--jdp-border': '#475569',
       '--jdp-input-border-color': '#475569',
       '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
-      '--jdp-day-hover-bg': '#334155'
+      '--jdp-day-hover-bg': '#334155',
+      '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+      '--jdp-font-feature-settings': '"ss02"'
     };
 
     // Function to apply theme to all pickers
@@ -495,10 +543,10 @@
         const events = event.detail.events;
         
         document.getElementById('jalali-result').textContent = 
-          `${jalaliDate[0]}/${jalaliDate[1].toString().padStart(2, '0')}/${jalaliDate[2].toString().padStart(2, '0')}`;
+          toPersianNum(`${jalaliDate[0]}/${jalaliDate[1].toString().padStart(2, '0')}/${jalaliDate[2].toString().padStart(2, '0')}`);
         
         document.getElementById('gregorian-result').textContent = 
-          `${gregorianDate[0]}/${gregorianDate[1].toString().padStart(2, '0')}/${gregorianDate[2].toString().padStart(2, '0')}`;
+          toPersianNum(`${gregorianDate[0]}/${gregorianDate[1].toString().padStart(2, '0')}/${gregorianDate[2].toString().padStart(2, '0')}`);
           
         document.getElementById('events-result').textContent = formatEvents(events);
       });
@@ -532,7 +580,9 @@
               '--jdp-nav-button-border-radius': selectedTheme['--jdp-nav-button-border-radius'],
               '--jdp-calendar-border-radius': selectedTheme['--jdp-calendar-border-radius'],
               '--jdp-input-border-width': selectedTheme['--jdp-input-border-width'],
-              '--jdp-font-size': selectedTheme['--jdp-font-size']
+              '--jdp-font-size': selectedTheme['--jdp-font-size'],
+              '--jdp-font-family': selectedTheme['--jdp-font-family'],
+              '--jdp-font-feature-settings': selectedTheme['--jdp-font-feature-settings']
             }});
           } else {
             // Apply the theme
@@ -560,7 +610,9 @@
           '--jdp-primary': activeTheme['--jdp-primary'],
           '--jdp-primary-hover': activeTheme['--jdp-primary-hover'],
           '--jdp-primary-foreground': activeTheme['--jdp-primary-foreground'] || '#ffffff',
-          '--jdp-ring': activeTheme['--jdp-ring'] || activeTheme['--jdp-primary']
+          '--jdp-ring': activeTheme['--jdp-ring'] || activeTheme['--jdp-primary'],
+          '--jdp-font-family': activeTheme['--jdp-font-family'],
+          '--jdp-font-feature-settings': activeTheme['--jdp-font-feature-settings']
         }});
       } else {
         // Revert to the current theme without dark mode

@@ -4,9 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Persian Date Picker Element - Theme Switcher</title>
+  <!-- Add Vazir Font from CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
       padding: 20px;
       background-color: #f8fafc;
@@ -14,6 +16,10 @@
       line-height: 1.5;
       direction: rtl;
       transition: background-color 0.3s, color 0.3s;
+      /* Apply Persian numbers to all elements */
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
     }
 
     body.dark {
@@ -21,10 +27,16 @@
       color: #e2e8f0;
     }
 
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
     h1 {
       font-size: 28px;
       margin-bottom: 24px;
       color: #0f172a;
+      text-align: center;
       transition: color 0.3s;
     }
 
@@ -34,7 +46,7 @@
 
     h2 {
       font-size: 20px;
-      margin: 32px 0 16px;
+      margin: 24px 0 16px;
       color: #334155;
       transition: color 0.3s;
     }
@@ -45,53 +57,102 @@
 
     p {
       margin-bottom: 16px;
+      color: #4b5563;
+      transition: color 0.3s;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
+    body.dark p {
+      color: #94a3b8;
     }
 
-    .theme-container {
-      margin-bottom: 40px;
+    .theme-section {
       background-color: #fff;
       padding: 24px;
       border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
       transition: background-color 0.3s, box-shadow 0.3s;
     }
 
-    body.dark .theme-container {
+    body.dark .theme-section {
       background-color: #1e293b;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
-    .pickers-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 24px;
-      margin-top: 20px;
+    .theme-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
     }
 
-    .picker-container {
+    .control-group {
       margin-bottom: 20px;
     }
 
-    .theme-switch-container {
+    .control-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #4b5563;
+      transition: color 0.3s;
+    }
+
+    body.dark .control-group label {
+      color: #e2e8f0;
+    }
+
+    .theme-btn {
+      padding: 8px 16px;
+      background-color: #f1f5f9;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      transition: all 0.2s;
+      color: #1e293b;
+    }
+
+    .theme-btn:hover {
+      background-color: #e2e8f0;
+    }
+
+    .theme-btn.active {
+      border-color: #0891b2;
+      background-color: #ecfeff;
+      font-weight: 500;
+    }
+
+    body.dark .theme-btn {
+      background-color: #334155;
+      color: #e2e8f0;
+    }
+
+    body.dark .theme-btn:hover {
+      background-color: #475569;
+    }
+
+    body.dark .theme-btn.active {
+      border-color: #0891b2;
+      background-color: #164e63;
+    }
+
+    .theme-toggle {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 32px;
+      margin-bottom: 20px;
     }
 
-    .theme-switch {
+    .switch {
       position: relative;
       display: inline-block;
-      width: 60px;
-      height: 30px;
+      width: 50px;
+      height: 24px;
     }
 
-    .theme-switch input {
+    .switch input {
       opacity: 0;
       width: 0;
       height: 0;
@@ -106,16 +167,16 @@
       bottom: 0;
       background-color: #cbd5e1;
       transition: .4s;
-      border-radius: 30px;
+      border-radius: 24px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 22px;
-      width: 22px;
-      left: 4px;
-      bottom: 4px;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
       background-color: white;
       transition: .4s;
       border-radius: 50%;
@@ -126,108 +187,104 @@
     }
 
     input:checked + .slider:before {
-      transform: translateX(30px);
+      transform: translateX(26px);
     }
 
-    .color-picker-container {
+    .color-input {
+      margin-bottom: 16px;
+    }
+
+    .color-input label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #4b5563;
+      transition: color 0.3s;
+    }
+
+    body.dark .color-input label {
+      color: #e2e8f0;
+    }
+
+    .radius-control {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-bottom: 16px;
     }
 
-    .color-picker-label {
+    .radius-control label {
+      font-weight: 500;
+      color: #4b5563;
+      transition: color 0.3s;
       min-width: 120px;
-      font-weight: 500;
     }
 
-    input[type="color"] {
-      padding: 0;
-      border: none;
-      border-radius: 4px;
-      height: 30px;
-      width: 50px;
-      cursor: pointer;
+    body.dark .radius-control label {
+      color: #e2e8f0;
     }
 
-    .theme-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
+    .radius-control input {
+      flex-grow: 1;
     }
 
-    .theme-button {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 4px;
-      font-family: inherit;
+    .radius-control span {
       font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s, transform 0.2s;
+      color: #64748b;
+      min-width: 40px;
+      text-align: right;
+      transition: color 0.3s;
     }
 
-    .theme-button:hover {
-      transform: translateY(-2px);
+    body.dark .radius-control span {
+      color: #94a3b8;
     }
 
-    .theme-button:active {
-      transform: translateY(0);
+    .datepicker-container {
+      margin-top: 24px;
     }
 
-    .theme-button.blue {
-      background-color: #3b82f6;
-      color: white;
+    persian-datepicker-element {
+      width: 100%;
+      display: block;
+      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      --jdp-font-feature-settings: "ss02";
     }
 
-    .theme-button.green {
-      background-color: #10b981;
-      color: white;
-    }
-
-    .theme-button.purple {
-      background-color: #8b5cf6;
-      color: white;
-    }
-
-    .theme-button.orange {
-      background-color: #f97316;
-      color: white;
-    }
-
-    .theme-button.dark {
-      background-color: #1e293b;
-      color: white;
-    }
-
-    .theme-button.minimal {
-      background-color: #f8fafc;
-      color: #0f172a;
-      border: 1px solid #cbd5e1;
-    }
-
-    .reset-button {
-      background-color: #ef4444;
-      color: white;
-    }
-
-    pre {
-      background-color: #f1f5f9;
+    .result {
+      margin-top: 20px;
       padding: 16px;
+      background-color: #f1f5f9;
       border-radius: 6px;
-      overflow-x: auto;
-      font-size: 14px;
-      margin: 20px 0;
       transition: background-color 0.3s;
     }
 
-    body.dark pre {
+    body.dark .result {
       background-color: #1e1e2f;
     }
 
-    code {
-      font-family: 'Fira Code', monospace;
+    .result p {
+      margin: 8px 0;
+    }
+
+    .result strong {
+      font-weight: 500;
+      color: #0f172a;
+      transition: color 0.3s;
+    }
+
+    body.dark .result strong {
+      color: #e2e8f0;
+    }
+
+    .navigation {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .navigation h2 {
+      margin-top: 0;
     }
 
     .link {
@@ -240,322 +297,299 @@
       text-decoration: none;
       font-weight: 500;
       transition: background-color 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
     }
 
     .link:hover {
       background-color: #0e7490;
+    }
+
+    body.dark .link {
+      background-color: #0e7490;
+    }
+
+    body.dark .link:hover {
+      background-color: #0891b2;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .navigation {
+        border-bottom-color: #334155;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Persian Date Picker Element - Theme Switcher</h1>
-    <p>This example demonstrates how to dynamically change the appearance of the Persian Date Picker Element using CSS variables.</p>
-    
-    <div class="theme-container">
-      <div class="theme-switch-container">
-        <h2 style="margin: 0;">Dark Mode</h2>
-        <label class="theme-switch">
-          <input type="checkbox" id="theme-toggle">
+    <p>این صفحه امکان تغییر ظاهر تقویم شمسی را به صورت آنی فراهم می‌کند. می‌توانید از تم‌های آماده استفاده کنید یا با تنظیم متغیرهای CSS، ظاهر دلخواه خود را ایجاد کنید.</p>
+
+    <div class="navigation">
+      <h2>نمونه‌های موجود:</h2>
+      <a href="index.html" class="link">نمونه‌های پایه</a>
+      <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+      <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+      <a href="../demo/index.html" class="link">دمو</a>
+    </div>
+
+    <div class="theme-section">
+      <div class="theme-toggle">
+        <h2 style="margin: 0;">حالت تاریک</h2>
+        <label class="switch">
+          <input type="checkbox" id="dark-mode-toggle">
           <span class="slider"></span>
         </label>
       </div>
-      
-      <h2>Preset Themes</h2>
-      <div class="theme-buttons">
-        <button class="theme-button blue" data-theme="blue">Blue Theme</button>
-        <button class="theme-button green" data-theme="green">Green Theme</button>
-        <button class="theme-button purple" data-theme="purple">Purple Theme</button>
-        <button class="theme-button orange" data-theme="orange">Orange Theme</button>
-        <button class="theme-button dark" data-theme="dark">Dark Theme</button>
-        <button class="theme-button minimal" data-theme="minimal">Minimal</button>
-        <button class="theme-button reset-button" data-theme="reset">Reset</button>
+
+      <h2>انتخاب تم</h2>
+      <div class="theme-controls">
+        <button class="theme-btn active" data-theme="default">پیش‌فرض</button>
+        <button class="theme-btn" data-theme="blue">آبی</button>
+        <button class="theme-btn" data-theme="green">سبز</button>
+        <button class="theme-btn" data-theme="purple">بنفش</button>
+        <button class="theme-btn" data-theme="orange">نارنجی</button>
+        <button class="theme-btn" data-theme="minimal">مینیمال</button>
       </div>
-      
-      <h2>Custom Colors</h2>
-      <div class="color-picker-container">
-        <span class="color-picker-label">Primary Color:</span>
-        <input type="color" id="primary-color" value="#0891b2">
-      </div>
-      
-      <div class="color-picker-container">
-        <span class="color-picker-label">Border Radius:</span>
-        <input type="range" id="border-radius" min="0" max="20" value="8" step="1">
-        <span id="border-radius-value">8px</span>
-      </div>
-      
-      <h2>Result</h2>
-      <div class="pickers-grid">
-        <div class="picker-container">
-          <persian-datepicker-element id="theme-picker" placeholder="انتخاب تاریخ"></persian-datepicker-element>
+
+      <div class="control-group">
+        <div class="color-input">
+          <label for="primary-color">رنگ اصلی:</label>
+          <input type="color" id="primary-color" value="#0891b2">
+        </div>
+
+        <div class="radius-control">
+          <label for="border-radius">شعاع گوشه‌ها:</label>
+          <input type="range" id="border-radius" min="0" max="20" value="8">
+          <span id="radius-value">8px</span>
         </div>
       </div>
-      
-      <pre><code>// Apply theme dynamically
-const picker = document.getElementById('theme-picker');
 
-// Method 1: Apply individual CSS variables
-picker.style.setProperty('--jdp-primary', '#3b82f6');
-picker.style.setProperty('--jdp-border-radius', '0.75rem');
+      <div class="datepicker-container">
+        <persian-datepicker-element id="theme-datepicker" placeholder="تاریخ را انتخاب کنید"></persian-datepicker-element>
+      </div>
 
-// Method 2: Apply a complete theme by class
-picker.className = 'dark-theme'; // After defining CSS rules for .dark-theme</code></pre>
+      <div class="result">
+        <p><strong>تاریخ انتخاب شده:</strong> <span id="selected-date">-</span></p>
+      </div>
     </div>
-    
-    <a href="index.html" class="link">← Back to Basic Examples</a>
-    <a href="customization.html" class="link" style="margin-left: 10px;">View More Styling Examples →</a>
+
+    <div class="link-container" style="margin-top: 30px; text-align: center;">
+      <a href="index.html" class="link">نمونه‌های پایه</a>
+      <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+      <a href="../demo/index.html" class="link">دمو</a>
+    </div>
   </div>
 
   <script src="../dist/persian-datepicker-element.min.js"></script>
   <script>
-    // Get references
-    const picker = document.getElementById('theme-picker');
-    const themeToggle = document.getElementById('theme-toggle');
-    const primaryColorPicker = document.getElementById('primary-color');
-    const borderRadiusSlider = document.getElementById('border-radius');
-    const borderRadiusValue = document.getElementById('border-radius-value');
-    const themeButtons = document.querySelectorAll('.theme-button');
+    // Convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+
+    // Format date with Persian digits
+    function formatPersianDate(dateArray) {
+      return toPersianNum(dateArray.join('/'));
+    }
     
-    // Theme presets
+    // Elements
+    const datepicker = document.getElementById('theme-datepicker');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const themeButtons = document.querySelectorAll('.theme-btn');
+    const primaryColorInput = document.getElementById('primary-color');
+    const borderRadiusInput = document.getElementById('border-radius');
+    const radiusValueDisplay = document.getElementById('radius-value');
+
+    // Pre-defined themes
     const themes = {
+      default: {
+        '--jdp-primary': '#0891b2',
+        '--jdp-primary-hover': '#0e7490',
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
+      },
       blue: {
         '--jdp-primary': '#3b82f6',
         '--jdp-primary-hover': '#2563eb',
-        '--jdp-ring': '#60a5fa',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       green: {
         '--jdp-primary': '#10b981',
         '--jdp-primary-hover': '#059669',
-        '--jdp-ring': '#34d399',
-        '--jdp-font-size': '15px',
-        '--jdp-border-radius': '0.75rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       purple: {
         '--jdp-primary': '#8b5cf6',
         '--jdp-primary-hover': '#7c3aed',
-        '--jdp-ring': '#a78bfa',
-        '--jdp-input-padding-y': '12px',
-        '--jdp-input-padding-x': '16px',
-        '--jdp-border-radius': '0.375rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       orange: {
         '--jdp-primary': '#f97316',
         '--jdp-primary-hover': '#ea580c',
-        '--jdp-ring': '#fb923c',
-        '--jdp-border-radius': '0',
-        '--jdp-input-border-width': '2px',
-        '--jdp-input-border-color': '#fdba74',
-        '--jdp-input-focus-ring-width': '0'
-      },
-      dark: {
-        '--jdp-primary': '#4f46e5',
-        '--jdp-primary-hover': '#6366f1',
-        '--jdp-primary-foreground': '#ffffff',
-        '--jdp-background': '#1e1e2f',
-        '--jdp-foreground': '#e2e8f0',
-        '--jdp-muted': '#334155',
-        '--jdp-muted-foreground': '#94a3b8',
-        '--jdp-border': '#475569',
-        '--jdp-ring': '#4f46e5',
-        '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
-        '--jdp-day-hover-bg': '#334155',
-        '--jdp-input-border-color': '#475569',
-        '--jdp-day-selected-bg': '#4f46e5'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       minimal: {
         '--jdp-primary': '#000000',
         '--jdp-primary-hover': '#333333',
-        '--jdp-primary-foreground': '#ffffff',
-        '--jdp-border': '#e2e8f0',
-        '--jdp-ring': '#000000',
         '--jdp-border-radius': '2px',
         '--jdp-input-border-width': '1px',
-        '--jdp-input-border-radius': '2px',
         '--jdp-day-cell-border-radius': '0',
         '--jdp-nav-button-border-radius': '0',
-        '--jdp-day-selected-bg': '#000000',
-        '--jdp-day-today-border-color': '#000000',
-        '--jdp-calendar-shadow': '0 4px 6px rgba(0, 0, 0, 0.1)'
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       }
     };
-    
-    // Default theme values
-    const defaultTheme = {
-      '--jdp-primary': '#0891b2',
-      '--jdp-primary-hover': '#0e7490',
-      '--jdp-primary-foreground': '#ffffff',
-      '--jdp-background': '#ffffff',
-      '--jdp-foreground': '#1e293b',
-      '--jdp-muted': '#f1f5f9',
-      '--jdp-muted-foreground': '#64748b',
-      '--jdp-border': '#e2e8f0',
-      '--jdp-ring': '#0284c7',
-      '--jdp-border-radius': '0.5rem',
-      '--jdp-input-border-width': '1px',
-      '--jdp-input-focus-ring-width': '2px',
-      '--jdp-day-cell-border-radius': '0.5rem',
-      '--jdp-nav-button-border-radius': '0.5rem',
-      '--jdp-calendar-shadow': '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)'
+
+    // Dark mode theme
+    const darkTheme = {
+      '--jdp-background': '#1e1e2f',
+      '--jdp-foreground': '#e2e8f0',
+      '--jdp-muted': '#334155',
+      '--jdp-muted-foreground': '#94a3b8',
+      '--jdp-border': '#475569',
+      '--jdp-input-border-color': '#475569',
+      '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
+      '--jdp-day-hover-bg': '#334155',
+      '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+      '--jdp-font-feature-settings': '"ss02"'
     };
-    
-    // Apply theme function
+
+    // Apply theme to datepicker
     function applyTheme(themeValues) {
       Object.entries(themeValues).forEach(([property, value]) => {
-        picker.style.setProperty(property, value);
+        datepicker.style.setProperty(property, value);
       });
-      
-      // Update controls to match theme
-      if (themeValues['--jdp-primary']) {
-        primaryColorPicker.value = themeValues['--jdp-primary'];
-      }
-      
-      if (themeValues['--jdp-border-radius']) {
-        const radiusValue = parseInt(themeValues['--jdp-border-radius']);
-        if (!isNaN(radiusValue)) {
-          borderRadiusSlider.value = radiusValue;
-          borderRadiusValue.textContent = `${radiusValue}px`;
-        }
-      }
     }
-    
-    // Handle theme toggle for dark mode
-    themeToggle.addEventListener('change', () => {
-      document.body.classList.toggle('dark', themeToggle.checked);
+
+    // Apply color to datepicker
+    function applyColor(color) {
+      // Convert the color to a darker shade for hover state
+      const darkerColor = adjustColor(color, -15);
       
-      // Get the current active theme (if one is set)
-      let currentThemeStyles = {};
-      const activePrimaryColor = picker.style.getPropertyValue('--jdp-primary');
-      if (activePrimaryColor) {
-        // Save some of the current theme settings that we want to preserve
-        currentThemeStyles = {
-          '--jdp-primary': activePrimaryColor,
-          '--jdp-primary-hover': picker.style.getPropertyValue('--jdp-primary-hover') || adjustColor(activePrimaryColor, -20),
-          '--jdp-ring': picker.style.getPropertyValue('--jdp-ring') || activePrimaryColor,
-          '--jdp-border-radius': picker.style.getPropertyValue('--jdp-border-radius'),
-          '--jdp-input-border-radius': picker.style.getPropertyValue('--jdp-input-border-radius'),
-          '--jdp-day-cell-border-radius': picker.style.getPropertyValue('--jdp-day-cell-border-radius'),
-          '--jdp-font-size': picker.style.getPropertyValue('--jdp-font-size'),
-          '--jdp-input-border-width': picker.style.getPropertyValue('--jdp-input-border-width')
-        };
-      }
+      datepicker.style.setProperty('--jdp-primary', color);
+      datepicker.style.setProperty('--jdp-primary-hover', darkerColor);
       
-      if (themeToggle.checked) {
-        // Apply dark theme base styles but preserve the current theme's primary colors and other settings
-        const darkModeWithCurrentTheme = {
-          // Dark mode background styles
-          '--jdp-background': themes.dark['--jdp-background'],
-          '--jdp-foreground': themes.dark['--jdp-foreground'],
-          '--jdp-muted': themes.dark['--jdp-muted'],
-          '--jdp-muted-foreground': themes.dark['--jdp-muted-foreground'],
-          '--jdp-border': themes.dark['--jdp-border'],
-          '--jdp-input-border-color': themes.dark['--jdp-input-border-color'],
-          '--jdp-calendar-shadow': themes.dark['--jdp-calendar-shadow'],
-          '--jdp-day-hover-bg': themes.dark['--jdp-day-hover-bg'],
-          
-          // Preserve current theme colors if they exist
-          ...currentThemeStyles
-        };
-        
-        applyTheme(darkModeWithCurrentTheme);
-      } else {
-        // If we have current theme styles, apply only those, otherwise apply default
-        if (Object.keys(currentThemeStyles).length > 0) {
-          applyTheme({...defaultTheme, ...currentThemeStyles});
-        } else {
-          applyTheme(defaultTheme);
-        }
-      }
-    });
-    
-    // Handle primary color changes
-    primaryColorPicker.addEventListener('input', () => {
-      picker.style.setProperty('--jdp-primary', primaryColorPicker.value);
+      // Update color input to match
+      primaryColorInput.value = color;
+    }
+
+    // Apply border radius to datepicker
+    function applyRadius(radius) {
+      const radiusValue = `${radius}px`;
+      datepicker.style.setProperty('--jdp-border-radius', radiusValue);
       
-      // Generate a darker hover color
-      const hoverColor = adjustColor(primaryColorPicker.value, -20);
-      picker.style.setProperty('--jdp-primary-hover', hoverColor);
-    });
-    
-    // Handle border radius changes
-    borderRadiusSlider.addEventListener('input', () => {
-      const value = borderRadiusSlider.value;
-      borderRadiusValue.textContent = `${value}px`;
-      picker.style.setProperty('--jdp-border-radius', `${value}px`);
-    });
-    
-    // Handle theme button clicks
-    themeButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const themeName = button.dataset.theme;
-        
-        if (themeName === 'reset') {
-          applyTheme(defaultTheme);
-          document.body.classList.remove('dark');
-          themeToggle.checked = false;
-        } else {
-          const theme = themes[themeName];
-          if (theme) {
-            // If dark mode is enabled, we need to preserve dark mode background styles
-            if (themeToggle.checked && themeName !== 'dark') {
-              // Apply dark theme but with the selected theme's primary colors
-              const darkModeWithTheme = {
-                // Dark mode background styles
-                '--jdp-background': themes.dark['--jdp-background'],
-                '--jdp-foreground': themes.dark['--jdp-foreground'],
-                '--jdp-muted': themes.dark['--jdp-muted'],
-                '--jdp-muted-foreground': themes.dark['--jdp-muted-foreground'],
-                '--jdp-border': themes.dark['--jdp-border'],
-                '--jdp-input-border-color': themes.dark['--jdp-input-border-color'],
-                '--jdp-calendar-shadow': themes.dark['--jdp-calendar-shadow'],
-                '--jdp-day-hover-bg': themes.dark['--jdp-day-hover-bg'],
-                
-                // Selected theme's primary colors and other specific settings
-                '--jdp-primary': theme['--jdp-primary'],
-                '--jdp-primary-hover': theme['--jdp-primary-hover'],
-                '--jdp-primary-foreground': theme['--jdp-primary-foreground'] || '#ffffff',
-                '--jdp-ring': theme['--jdp-ring'] || theme['--jdp-primary'],
-                '--jdp-border-radius': theme['--jdp-border-radius'],
-                '--jdp-input-border-radius': theme['--jdp-input-border-radius'],
-                '--jdp-day-cell-border-radius': theme['--jdp-day-cell-border-radius'],
-                '--jdp-nav-button-border-radius': theme['--jdp-nav-button-border-radius'],
-                '--jdp-font-size': theme['--jdp-font-size'],
-                '--jdp-input-border-width': theme['--jdp-input-border-width'],
-                '--jdp-input-padding-x': theme['--jdp-input-padding-x'],
-                '--jdp-input-padding-y': theme['--jdp-input-padding-y']
-              };
-              
-              applyTheme(darkModeWithTheme);
-            } else {
-              applyTheme(theme);
-            }
-            
-            // If it's the dark theme, enable the toggle
-            if (themeName === 'dark') {
-              document.body.classList.add('dark');
-              themeToggle.checked = true;
-            } else if (!themeToggle.checked) {
-              document.body.classList.remove('dark');
-            }
-          }
-        }
-      });
-    });
-    
+      // Update radius display
+      radiusValueDisplay.textContent = radiusValue;
+    }
+
     // Helper function to adjust color brightness
     function adjustColor(color, amount) {
-      return '#' + color.replace(/^#/, '')
-        .match(/.{2}/g)
-        .map(c => {
-          const num = parseInt(c, 16);
-          const adjusted = Math.max(0, Math.min(255, num + amount));
-          return adjusted.toString(16).padStart(2, '0');
-        })
-        .join('');
+      return '#' + color.replace(/^#/, '').replace(/../g, color => 
+        ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
+      );
     }
-    
-    // Initialize with default theme
-    applyTheme(defaultTheme);
+
+    // Handle theme button clicks
+    themeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all buttons
+        themeButtons.forEach(b => b.classList.remove('active'));
+        
+        // Add active class to clicked button
+        btn.classList.add('active');
+        
+        // Apply the selected theme
+        const themeName = btn.getAttribute('data-theme');
+        const selectedTheme = themes[themeName];
+        
+        if (selectedTheme) {
+          // If dark mode is enabled, merge with dark theme properly
+          if (darkModeToggle.checked) {
+            applyTheme({...darkTheme, ...{
+              '--jdp-primary': selectedTheme['--jdp-primary'],
+              '--jdp-primary-hover': selectedTheme['--jdp-primary-hover'],
+              '--jdp-border-radius': selectedTheme['--jdp-border-radius'],
+              '--jdp-input-border-radius': selectedTheme['--jdp-input-border-radius'] || selectedTheme['--jdp-border-radius'],
+              '--jdp-day-cell-border-radius': selectedTheme['--jdp-day-cell-border-radius'] || selectedTheme['--jdp-border-radius'],
+              '--jdp-nav-button-border-radius': selectedTheme['--jdp-nav-button-border-radius'] || selectedTheme['--jdp-border-radius'],
+              '--jdp-input-border-width': selectedTheme['--jdp-input-border-width'],
+              '--jdp-font-family': selectedTheme['--jdp-font-family'],
+              '--jdp-font-feature-settings': selectedTheme['--jdp-font-feature-settings']
+            }});
+          } else {
+            applyTheme(selectedTheme);
+          }
+          
+          // Update controls to match theme
+          primaryColorInput.value = selectedTheme['--jdp-primary'];
+          
+          // Update radius input based on the theme
+          const radiusValue = parseInt(selectedTheme['--jdp-border-radius']) || 0;
+          borderRadiusInput.value = radiusValue;
+          radiusValueDisplay.textContent = `${radiusValue}px`;
+        }
+      });
+    });
+
+    // Dark mode toggle
+    darkModeToggle.addEventListener('change', () => {
+      // Toggle dark class on body
+      document.body.classList.toggle('dark', darkModeToggle.checked);
+      
+      // Get the current active theme
+      const activeThemeBtn = document.querySelector('.theme-btn.active');
+      const activeThemeName = activeThemeBtn ? activeThemeBtn.getAttribute('data-theme') : 'default';
+      const activeTheme = themes[activeThemeName] || themes.default;
+      
+      if (darkModeToggle.checked) {
+        // Apply dark theme merged with the current theme
+        applyTheme({...darkTheme, ...{
+          '--jdp-primary': activeTheme['--jdp-primary'],
+          '--jdp-primary-hover': activeTheme['--jdp-primary-hover'],
+          '--jdp-border-radius': activeTheme['--jdp-border-radius'],
+          '--jdp-input-border-radius': activeTheme['--jdp-input-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-day-cell-border-radius': activeTheme['--jdp-day-cell-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-nav-button-border-radius': activeTheme['--jdp-nav-button-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-input-border-width': activeTheme['--jdp-input-border-width'],
+          '--jdp-font-family': activeTheme['--jdp-font-family'],
+          '--jdp-font-feature-settings': activeTheme['--jdp-font-feature-settings']
+        }});
+      } else {
+        // Revert to the current theme without dark mode
+        applyTheme(activeTheme);
+      }
+    });
+
+    // Color input
+    primaryColorInput.addEventListener('input', () => {
+      applyColor(primaryColorInput.value);
+    });
+
+    // Border radius input
+    borderRadiusInput.addEventListener('input', () => {
+      applyRadius(borderRadiusInput.value);
+    });
+
+    // Handle date selection
+    datepicker.addEventListener('change', event => {
+      document.getElementById('selected-date').textContent = formatPersianDate(event.detail.jalali);
+    });
+
+    // Apply the default theme initially
+    applyTheme(themes.default);
   </script>
 </body>
 </html> 

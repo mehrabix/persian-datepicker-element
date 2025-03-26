@@ -123,6 +123,138 @@ const date = new Date(gYear, gMonth - 1, gDay);
 console.log(`Gregorian date: ${date.toLocaleDateString()}`); // Output: Gregorian date: 3/15/2024
 ```
 
+## PersianDate Utility
+
+The package also exports a `PersianDate` utility for converting between Jalali and Gregorian dates:
+
+```javascript
+import { PersianDate } from 'persian-datepicker-element';
+
+// Convert Gregorian to Jalali
+const persianDate = PersianDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
+
+// Convert Jalali to Gregorian
+const gregorianDate = PersianDate.jalaliToGregorian(1402, 1, 1); // [2023, 3, 21]
+```
+
+## Framework Integration | یکپارچه‌سازی با فریم‌ورک‌ها
+
+### React
+
+```bash
+npm install react-persian-datepicker-element persian-datepicker-element
+```
+
+```jsx
+import React from 'react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  const handleDateChange = (event) => {
+    console.log('Selected date (Jalali):', event.jalali); // [year, month, day]
+    console.log('Gregorian date:', event.gregorian);
+    console.log('Is holiday:', event.isHoliday);
+  };
+
+  return (
+    <div>
+      <h1>Persian Datepicker Example</h1>
+      <PersianDatepicker
+        placeholder="انتخاب تاریخ"
+        format="YYYY/MM/DD"
+        showHolidays={true}
+        holidayTypes="Iran,Religious"
+        onChange={handleDateChange}
+        cssVariables={{
+          '--jdp-primary': '#3b82f6',
+          '--jdp-font-family': "'Vazir', sans-serif",
+          '--jdp-font-feature-settings': '"ss02"' // For Persian/Arabic digits
+        }}
+      />
+    </div>
+  );
+}
+```
+
+### Vue
+
+```bash
+npm install vue-persian-datepicker-element persian-datepicker-element
+```
+
+```vue
+<template>
+  <div>
+    <h1>Persian Datepicker Example</h1>
+    <PersianDatepicker
+      v-model="date"
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+      :show-holidays="true"
+      @change="handleDateChange"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+const date = ref([1402, 12, 15]);
+
+const handleDateChange = (event) => {
+  console.log('Selected date (Jalali):', event.jalali);
+  console.log('Gregorian date:', event.gregorian);
+};
+</script>
+
+<style>
+:root {
+  --jdp-primary: #3b82f6;
+  --jdp-font-family: 'Vazir', sans-serif;
+  --jdp-font-feature-settings: "ss02"; /* For Persian/Arabic digits */
+}
+</style>
+```
+
+### Angular
+
+```bash
+npm install ngx-persian-datepicker-element
+```
+
+```typescript
+// In your component (Angular 17+)
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-my-component',
+  template: `
+    <ngx-persian-datepicker-element
+      placeholderInput="انتخاب تاریخ"
+      formatInput="YYYY/MM/DD"
+      [showHolidaysInput]="true"
+      [primaryColorInput]="'#3b82f6'"
+      [fontFamilyInput]="'Vazir, sans-serif'"
+      (dateChange)="onDateChange($event)">
+    </ngx-persian-datepicker-element>
+  `,
+  styles: [`
+    ngx-persian-datepicker-element {
+      --jdp-font-feature-settings: "ss02"; /* For Persian/Arabic digits */
+    }
+  `],
+  imports: [NgxPersianDatepickerComponent],
+  standalone: true
+})
+export class MyComponent {
+  onDateChange(event: any) {
+    console.log('Selected date (Jalali):', event.jalali);
+    console.log('Gregorian date:', event.gregorian);
+  }
+}
+```
+
 ## Attributes
 
 You can customize the date picker using the following attributes:
@@ -179,6 +311,14 @@ In addition to the attributes above, you can use CSS variables for more detailed
     --jdp-scrollbar-track: transparent;
     --jdp-scrollbar-border-radius: 4px;
     
+    /* Select boxes styling */
+    --jdp-select-container-gap: 8px;
+    --jdp-select-trigger-max-width: 110px;
+    --jdp-select-month-trigger-max-width: 120px; /* Month names can be longer */
+    --jdp-select-year-trigger-max-width: 90px;
+    --jdp-select-text-overflow: ellipsis;
+    --jdp-select-trigger-border-radius: 0.375rem;
+    
     /* Dark mode scrollbar (applies when dark-mode is enabled) */
     --jdp-dark-scrollbar-thumb: rgba(255, 255, 255, 0.2);
     --jdp-dark-scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
@@ -201,6 +341,34 @@ document.querySelector('persian-datepicker-element').addEventListener('change', 
   console.log('Is this date a holiday?', isHoliday);
   console.log('Events on this date:', events);
 });
+```
+
+## Methods
+
+The component provides methods for programmatic control:
+
+```javascript
+// Get a reference to the component
+const datePicker = document.querySelector('persian-datepicker-element');
+
+// Programmatically set the date (year, month, day)
+datePicker.setValue(1402, 12, 25);
+
+// Get the selected date (returns [year, month, day] or null)
+const selectedDate = datePicker.getValue();
+
+// Programmatically open the calendar
+// Note: This will automatically close any other open calendars
+datePicker.open();
+
+// Programmatically close the calendar
+datePicker.close();
+
+// Set holiday types to display
+datePicker.setHolidayTypes(['Iran', 'Religious']);
+
+// Get current holiday types
+const types = datePicker.getHolidayTypes();
 ```
 
 ## Holiday Types Feature
@@ -253,20 +421,6 @@ The component includes the following holiday types:
 - `Religious`: Islamic religious occasions and holidays
 - `International`: International days and events
 - `Afghanistan`: Afghanistan-specific holidays
-
-## PersianDate Utility
-
-The package also exports a `PersianDate` utility for converting between Jalali and Gregorian dates:
-
-```javascript
-import { PersianDate } from 'persian-datepicker-element';
-
-// Convert Gregorian to Jalali
-const persianDate = PersianDate.gregorianToJalali(2023, 3, 21); // [1402, 1, 1]
-
-// Convert Jalali to Gregorian
-const gregorianDate = PersianDate.jalaliToGregorian(1402, 1, 1); // [2023, 3, 21]
-```
 
 ## Advanced Styling | شخصی‌سازی پیشرفته
 
@@ -368,84 +522,14 @@ persian-datepicker-element {
 | | `--jdp-day-today-border-color` | Today indicator border color | رنگ حاشیه نشانگر امروز |
 | | `--jdp-day-today-border-width` | Today indicator border width | عرض حاشیه نشانگر امروز |
 | | `--jdp-day-disabled-opacity` | Opacity for disabled days | شفافیت برای روزهای غیرفعال |
+| **Select boxes** | `--jdp-select-container-gap` | Gap between month and year selectors | فاصله بین انتخابگرهای ماه و سال |
+| | `--jdp-select-trigger-max-width` | Default max width for select triggers | حداکثر عرض پیش‌فرض برای دکمه‌های انتخاب |
+| | `--jdp-select-month-trigger-max-width` | Max width for month select button | حداکثر عرض دکمه انتخاب ماه |
+| | `--jdp-select-year-trigger-max-width` | Max width for year select button | حداکثر عرض دکمه انتخاب سال |
+| | `--jdp-select-text-overflow` | Text overflow handling for long text | نحوه نمایش متن طولانی |
+| | `--jdp-select-dropdown-width` | Width of dropdown menus | عرض منوهای کشویی |
+| | `--jdp-select-trigger-border-radius` | Border radius for select triggers | شعاع گوشه دکمه‌های انتخاب |
+| | `--jdp-select-item-border-radius` | Border radius for dropdown items | شعاع گوشه آیتم‌های منوی کشویی |
+| | `--jdp-select-item-selected-border-radius` | Border radius for selected item | شعاع گوشه آیتم انتخاب شده |
 | **Animations** | `--jdp-transition-duration` | Duration of transitions | مدت‌زمان انتقال‌ها |
 | | `--jdp-fade-from-y` | Vertical offset for fade animations | آفست عمودی برای انیمیشن‌های محو |
-
-## Example: Custom Theme | مثال: تم سفارشی
-
-Here's an example of a custom theme with a dark mode appearance:
-
-در اینجا مثالی از یک تم سفارشی با ظاهر حالت تاریک آورده شده است:
-
-```css
-/* Dark Mode Theme */
-persian-datepicker-element.dark-theme {
-  --jdp-primary: #4f46e5;
-  --jdp-primary-hover: #6366f1;
-  --jdp-primary-foreground: #ffffff;
-  
-  --jdp-background: #1e1e2f;
-  --jdp-foreground: #e2e8f0;
-  --jdp-muted: #334155;
-  --jdp-muted-foreground: #94a3b8;
-  --jdp-border: #475569;
-  --jdp-ring: #4f46e5;
-  
-  --jdp-holiday-color: #f87171;
-  --jdp-holiday-bg: rgba(239, 68, 68, 0.15);
-  --jdp-holiday-hover-bg: rgba(239, 68, 68, 0.25);
-  
-  --jdp-calendar-shadow: 0px 10px 30px -5px rgba(2, 6, 23, 0.5);
-  --jdp-day-hover-bg: #334155;
-  
-  --jdp-font-family: 'Samim', 'Vazir', sans-serif;
-}
-```
-
-## Advanced Customization
-
-You can also customize the component using CSS Variable types in TypeScript:
-
-```typescript
-import { 
-  PersianDatePickerElement, 
-  type CSSVariableKey, 
-  type CSSVariableMap 
-} from 'persian-datepicker-element';
-
-const picker = document.querySelector('persian-datepicker-element') as PersianDatePickerElement;
-
-// Using CSSVariableKey for specific variables
-picker.style.setProperty('--jdp-primary' as CSSVariableKey, '#3b82f6');
-
-// Using CSSVariableMap to set multiple variables
-const customTheme: Partial<CSSVariableMap> = {
-  '--jdp-primary': '#3b82f6',
-  '--jdp-primary-hover': '#2563eb',
-  '--jdp-background': '#f8fafc',
-  '--jdp-font-family': '"Vazir", sans-serif'
-};
-
-Object.entries(customTheme).forEach(([key, value]) => {
-  picker.style.setProperty(key as CSSVariableKey, value);
-});
-
-// Setting holiday types programmatically
-picker.setHolidayTypes(['Iran', 'Religious']);
-```
-
-## License | مجوز
-
-MIT
-
-## Changelog
-
-### Version 1.0.12
-- Fixed touch swipe gestures to prevent page scrolling when swiping the calendar
-- Improved mobile experience by preventing swipe actions from affecting the whole page
-
-### Version 1.0.11
-- Initial public release
-- Support for Jalali (Persian) calendar
-- Holiday highlighting
-- Customizable styling with CSS variables

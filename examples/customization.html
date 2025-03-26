@@ -4,9 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Persian Date Picker Element - Styling Examples</title>
+  <!-- Add Vazir Font from CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
       padding: 20px;
       background-color: #f9fafb;
@@ -14,6 +16,10 @@
       line-height: 1.5;
       direction: rtl;
       transition: background-color 0.3s, color 0.3s;
+      /* Apply Persian numbers to all elements */
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
     }
 
     body.dark {
@@ -128,6 +134,8 @@
       --jdp-primary-hover: #0e7490;
       --jdp-border-radius: 0.5rem;
       --jdp-font-size: 14px;
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
     }
 
     persian-datepicker-element.blue-theme {
@@ -137,6 +145,8 @@
       --jdp-primary-foreground: #ffffff;
       --jdp-ring: #60a5fa;
       --jdp-border-radius: 0.5rem;
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
     }
 
     persian-datepicker-element.green-theme {
@@ -146,6 +156,8 @@
       --jdp-primary-foreground: #ffffff;
       --jdp-ring: #34d399;
       --jdp-border-radius: 0.5rem;
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
     }
 
     persian-datepicker-element.purple-theme {
@@ -155,6 +167,8 @@
       --jdp-primary-foreground: #ffffff;
       --jdp-ring: #a78bfa;
       --jdp-border-radius: 0.5rem;
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
     }
 
     persian-datepicker-element.orange-theme {
@@ -166,6 +180,8 @@
       --jdp-border-radius: 0.5rem;
       --jdp-input-border-width: 1px;
       --jdp-input-focus-ring-width: 2px;
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
     }
 
     persian-datepicker-element.dark-theme {
@@ -197,6 +213,8 @@
       --jdp-month-year-font-size: 16px;
       --jdp-month-year-font-weight: 600;
       --jdp-day-name-font-weight: 600;
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
     }
 
     persian-datepicker-element.minimal-theme {
@@ -219,6 +237,8 @@
       --jdp-day-today-border-color: #000000;
       
       --jdp-calendar-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
     }
 
     persian-datepicker-element.rounded-theme {
@@ -230,6 +250,8 @@
       --jdp-day-cell-border-radius: 1rem;
       --jdp-nav-button-border-radius: 1rem;
       --jdp-calendar-border-radius: 1.5rem;
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
     }
 
     /* Theme switch */
@@ -293,6 +315,40 @@
     body.dark .dark-mode-toggle span {
       color: #cbd5e1;
     }
+
+    .navigation {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .navigation h2 {
+      margin-top: 0;
+    }
+
+    .link {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #0891b2;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .link:hover {
+      background-color: #0e7490;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .navigation {
+        border-bottom-color: #334155;
+      }
+    }
   </style>
 </head>
 <body>
@@ -308,11 +364,21 @@
     <h1>Persian Date Picker Element - Styling Examples</h1>
     <p>This page demonstrates the various styling possibilities of the Persian Date Picker Element component using CSS variables.</p>
 
+    <div class="navigation">
+      <h2>نمونه‌های موجود:</h2>
+      <a href="index.html" class="link">نمونه‌های پایه</a>
+      <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+      <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+      <a href="../demo/index.html" class="link">دمو</a>
+    </div>
+
     <pre><code>// Basic example of setting CSS variables
 persian-datepicker-element {
   --jdp-primary: #3b82f6;
   --jdp-border-radius: 0.75rem;
   --jdp-font-family: 'Vazir', sans-serif;
+  --jdp-font-feature-settings: "ss02";
 }</code></pre>
 
     <h2>Color Themes</h2>
@@ -365,14 +431,28 @@ persian-datepicker-element {
           placeholder="تنظیم با ویژگی‌های HTML" 
           primary-color="#e11d48" 
           border-radius="8px"
-          font-family="Tahoma, sans-serif"
+          font-family="Vazir, sans-serif"
+          font-feature-settings="ss02"
         ></persian-datepicker-element>
       </div>
+    </div>
+
+    <div class="link-container" style="margin-top: 30px; text-align: center;">
+      <a href="index.html" class="link">نمونه‌های پایه</a>
+      <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+      <a href="../demo/index.html" class="link">دمو</a>
     </div>
   </div>
 
   <script src="../dist/persian-datepicker-element.min.js"></script>
   <script>
+    // Convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+    
     // Get all date pickers
     const datePickers = document.querySelectorAll('persian-datepicker-element');
     const darkModeToggle = document.getElementById('dark-mode-toggle');
@@ -383,31 +463,41 @@ persian-datepicker-element {
         '--jdp-primary': '#0891b2',
         '--jdp-primary-hover': '#0e7490',
         '--jdp-border-radius': '0.5rem',
-        '--jdp-font-size': '14px'
+        '--jdp-font-size': '14px',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       blue: {
         '--jdp-primary': '#3b82f6',
         '--jdp-primary-hover': '#2563eb',
         '--jdp-ring': '#60a5fa',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       green: {
         '--jdp-primary': '#10b981',
         '--jdp-primary-hover': '#059669',
         '--jdp-ring': '#34d399',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       purple: {
         '--jdp-primary': '#8b5cf6',
         '--jdp-primary-hover': '#7c3aed',
         '--jdp-ring': '#a78bfa',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       orange: {
         '--jdp-primary': '#f97316',
         '--jdp-primary-hover': '#ea580c',
         '--jdp-ring': '#fb923c',
-        '--jdp-border-radius': '0.5rem'
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       minimal: {
         '--jdp-primary': '#000000',
@@ -416,7 +506,9 @@ persian-datepicker-element {
         '--jdp-border-radius': '2px',
         '--jdp-input-border-width': '1px',
         '--jdp-day-cell-border-radius': '0',
-        '--jdp-nav-button-border-radius': '0'
+        '--jdp-nav-button-border-radius': '0',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       },
       rounded: {
         '--jdp-primary': '#0891b2',
@@ -425,7 +517,9 @@ persian-datepicker-element {
         '--jdp-input-border-radius': '1rem',
         '--jdp-day-cell-border-radius': '1rem',
         '--jdp-nav-button-border-radius': '1rem',
-        '--jdp-calendar-border-radius': '1.5rem'
+        '--jdp-calendar-border-radius': '1.5rem',
+        '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
       }
     };
 
@@ -438,7 +532,9 @@ persian-datepicker-element {
       '--jdp-border': '#475569',
       '--jdp-input-border-color': '#475569',
       '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
-      '--jdp-day-hover-bg': '#334155'
+      '--jdp-day-hover-bg': '#334155',
+      '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+      '--jdp-font-feature-settings': '"ss02"'
     };
 
     // Function to apply theme to all pickers
@@ -483,7 +579,9 @@ persian-datepicker-element {
             '--jdp-input-border-radius': themeStyles['--jdp-input-border-radius'],
             '--jdp-day-cell-border-radius': themeStyles['--jdp-day-cell-border-radius'],
             '--jdp-nav-button-border-radius': themeStyles['--jdp-nav-button-border-radius'],
-            '--jdp-calendar-border-radius': themeStyles['--jdp-calendar-border-radius']
+            '--jdp-calendar-border-radius': themeStyles['--jdp-calendar-border-radius'],
+            '--jdp-font-family': themeStyles['--jdp-font-family'],
+            '--jdp-font-feature-settings': themeStyles['--jdp-font-feature-settings']
           }}).forEach(([property, value]) => {
             picker.style.setProperty(property, value);
           });
@@ -503,6 +601,14 @@ persian-datepicker-element {
       
       // Apply dark mode to pickers
       applyDarkModeToPickers(darkModeToggle.checked);
+    });
+
+    // Handle date selection for all date pickers
+    datePickers.forEach(picker => {
+      picker.addEventListener('change', event => {
+        console.log('Selected date (jalali):', toPersianNum(event.detail.jalali.join('/')));
+        console.log('Selected date (gregorian):', toPersianNum(event.detail.gregorian.join('/')));
+      });
     });
   </script>
 </body>

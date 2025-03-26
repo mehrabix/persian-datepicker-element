@@ -54,6 +54,146 @@ This directory contains a simple demo of the Persian Date Picker Element compone
 
 </div>
 
+## Framework Integration | یکپارچه‌سازی با فریمورک‌ها
+
+### React
+
+You can use this datepicker with React using our official wrapper:
+
+```bash
+npm install react-persian-datepicker-element persian-datepicker-element
+```
+
+```jsx
+import React, { useState } from 'react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  const handleDateChange = (event) => {
+    console.log('Selected date (Jalali):', event.jalali);
+    console.log('Gregorian date:', event.gregorian);
+    console.log('Is holiday:', event.isHoliday);
+  };
+
+  return (
+    <div>
+      <h1>Persian Datepicker Example</h1>
+      <PersianDatepicker
+        placeholder="انتخاب تاریخ"
+        format="YYYY/MM/DD"
+        showHolidays={true}
+        onChange={handleDateChange}
+        cssVariables={{
+          '--jdp-primary': '#3b82f6',
+          '--jdp-font-feature-settings': '"ss02"',
+          '--jdp-font-family': "'Vazir', sans-serif"
+        }}
+      />
+    </div>
+  );
+}
+```
+
+### Vue
+
+For Vue applications, use our Vue wrapper:
+
+```bash
+npm install vue-persian-datepicker-element persian-datepicker-element
+```
+
+```vue
+<template>
+  <div>
+    <h1>Persian Datepicker Example</h1>
+    <PersianDatepicker
+      v-model="date"
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+      :show-holidays="true"
+      @change="handleDateChange"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+const date = ref([1402, 12, 15]);
+
+const handleDateChange = (event) => {
+  console.log('Selected date (Jalali):', event.jalali);
+  console.log('Gregorian date:', event.gregorian);
+  console.log('Is holiday:', event.isHoliday);
+};
+</script>
+
+<style>
+:root {
+  --jdp-primary: #3b82f6;
+  --jdp-font-feature-settings: "ss02";
+  --jdp-font-family: 'Vazir', sans-serif;
+}
+</style>
+```
+
+### Angular
+
+For Angular applications, use our Angular wrapper:
+
+```bash
+npm install ngx-persian-datepicker-element
+```
+
+```typescript
+// In your component (Angular 17+)
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-my-component',
+  template: `
+    <ngx-persian-datepicker-element
+      placeholderInput="انتخاب تاریخ"
+      formatInput="YYYY/MM/DD"
+      [showHolidaysInput]="true"
+      [primaryColorInput]="'#3b82f6'"
+      [fontFamilyInput]="'Vazir, sans-serif'"
+      (dateChange)="onDateChange($event)">
+    </ngx-persian-datepicker-element>
+  `,
+  styles: [`
+    ngx-persian-datepicker-element {
+      --jdp-font-feature-settings: "ss02";
+    }
+  `],
+  imports: [NgxPersianDatepickerComponent],
+  standalone: true
+})
+export class MyComponent {
+  onDateChange(event: any) {
+    console.log('Selected date (Jalali):', event.jalali);
+    console.log('Gregorian date:', event.gregorian);
+    console.log('Is holiday:', event.isHoliday);
+  }
+}
+```
+
+Or for traditional Angular module approach:
+
+```typescript
+// In your module
+import { NgxPersianDatepickerModule } from 'ngx-persian-datepicker-element';
+
+@NgModule({
+  imports: [
+    NgxPersianDatepickerModule
+  ],
+  // ...
+})
+export class YourModule { }
+```
+
 ## More Examples | نمونه‌های بیشتر
 
 For more comprehensive examples, check the [examples directory](../examples/).

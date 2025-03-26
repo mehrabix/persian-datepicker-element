@@ -647,9 +647,14 @@ const styles = `:host {
   --jdp-header-gap: var(--jdp-spacing-xs);
 
   /* Select boxes - default values that can be overridden */
-  --jdp-select-container-gap: var(--jdp-spacing-xs);
+  --jdp-select-container-gap: 8px;
   --jdp-select-trigger-height: var(--jdp-nav-button-size);
   --jdp-select-trigger-bg: var(--jdp-muted);
+  --jdp-select-trigger-max-width: 110px;
+  --jdp-select-month-trigger-max-width: var(--jdp-select-trigger-max-width);
+  --jdp-select-year-trigger-max-width: var(--jdp-select-trigger-max-width);
+  --jdp-select-dropdown-width: auto;
+  --jdp-select-text-overflow: ellipsis;
   
   /* Scrollbar styling - thin and subtle */
   --jdp-scrollbar-width: 4px;
@@ -1054,12 +1059,12 @@ input:focus {
 /* Month/Year selectors - scoped to the component */
 :host .selectors-container {
   display: flex;
-  gap: var(--jdp-select-container-gap, var(--jdp-spacing-xs));
+  gap: var(--jdp-select-container-gap, 8px);
   position: relative;
   align-items: var(--jdp-select-container-align, center);
   justify-content: var(--jdp-select-container-justify, space-between);
   width: 100%;
-  max-width: calc(100% - var(--jdp-nav-button-size) * 2 - var(--jdp-spacing-md));
+  max-width: calc(100% - var(--jdp-nav-button-size) * 2 - var(--jdp-spacing-sm));
   margin: 0 var(--jdp-spacing-xs);
 }
 
@@ -1067,12 +1072,23 @@ input:focus {
   position: relative;
   user-select: none;
   width: 100%;
+  margin: 0 var(--jdp-spacing-xs, 2px);
+}
+
+:host .month-select {
+  margin-left: var(--jdp-month-select-margin-left, 0);
+  margin-right: var(--jdp-month-select-margin-right, 0);
+}
+
+:host .year-select {
+  margin-left: var(--jdp-year-select-margin-left, 0);
+  margin-right: var(--jdp-year-select-margin-right, 0);
 }
 
 :host .select-trigger {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: var(--jdp-select-trigger-justify, center);
   gap: 0 4px;
   width: 100%;
   height: var(--jdp-select-trigger-height, var(--jdp-nav-button-size));
@@ -1084,7 +1100,7 @@ input:focus {
   font-family: inherit;
   font-size: var(--jdp-select-trigger-font-size, var(--jdp-font-size));
   line-height: 1;
-  padding: 0 var(--jdp-select-trigger-padding-x, 0.75rem);
+  padding: 0 var(--jdp-select-trigger-padding-x, 0);
   cursor: pointer;
   transition: all var(--jdp-transition-duration) ease;
   text-align: var(--jdp-select-trigger-text-align, center);
@@ -1092,7 +1108,25 @@ input:focus {
   outline: none;
   font-weight: var(--jdp-select-trigger-font-weight, 500);
   box-sizing: border-box;
-  max-width: 83px;
+  max-width: var(--jdp-select-trigger-max-width, 110px);
+}
+
+:host .month-select .select-trigger {
+  max-width: var(--jdp-select-month-trigger-max-width, var(--jdp-select-trigger-max-width));
+}
+
+:host .year-select .select-trigger {
+  max-width: var(--jdp-select-year-trigger-max-width, var(--jdp-select-trigger-max-width));
+}
+
+:host .select-trigger span:first-child {
+  white-space: nowrap;
+  overflow: var(--jdp-select-trigger-overflow, visible);
+  text-overflow: var(--jdp-select-text-overflow, ellipsis);
+  max-width: calc(100% - 24px);
+  display: inline-block;
+  text-align: center;
+  flex: 1;
 }
 
 :host .select-trigger:hover {
@@ -1107,7 +1141,7 @@ input:focus {
 
 :host .select-icon {
   margin-left: var(--jdp-select-icon-margin, var(--jdp-spacing-xs));
-  display: inline-flex;
+  display: var(--jdp-select-icon-display, none);
   justify-content: center;
   align-items: center;
   transition: transform 0.2s ease;
@@ -1130,7 +1164,8 @@ input:focus {
   position: var(--jdp-select-content-position, absolute);
   top: calc(100% + var(--jdp-select-content-top-offset, 5px));
   left: 0;
-  width: 100%;
+  width: var(--jdp-select-dropdown-width, 100%);
+  min-width: 100%;
   background-color: var(--jdp-select-content-bg, var(--jdp-background));
   border: var(--jdp-select-content-border-width, 1px) solid var(--jdp-select-content-border-color, var(--jdp-border));
   border-radius: var(--jdp-select-content-border-radius, var(--jdp-border-radius));
@@ -1172,20 +1207,27 @@ input:focus {
 }
 
 :host .month-select-content {
-  width: var(--jdp-select-month-width, 100%);
+  width: var(--jdp-select-month-width, var(--jdp-select-dropdown-width, auto));
+  min-width: 100%;
 }
 
 :host .year-select-content {
-  width: var(--jdp-select-year-width, 100%);
+  width: var(--jdp-select-year-width, var(--jdp-select-dropdown-width, auto));
+  min-width: 100%;
 }
 
 :host .select-item {
   padding: var(--jdp-select-item-padding-y, 0.5rem) var(--jdp-select-item-padding-x, 0.75rem);
   cursor: pointer;
   transition: background-color var(--jdp-transition-duration) ease;
-  text-align: var(--jdp-select-item-text-align, right);
-  border-radius: var(--jdp-select-item-border-radius, 0.25rem);
+  border-radius: var(--jdp-select-item-border-radius, var(--jdp-select-trigger-border-radius, var(--jdp-border-radius)));
   margin: var(--jdp-select-item-margin, 0 0.25rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: var(--jdp-select-item-max-width, 100%);
+  box-sizing: border-box;
+  text-align: var(--jdp-select-item-text-align, center);
 }
 
 :host .select-item:hover {
@@ -1196,6 +1238,7 @@ input:focus {
   background-color: var(--jdp-select-item-selected-bg, var(--jdp-primary));
   color: var(--jdp-select-item-selected-color, var(--jdp-primary-foreground));
   font-weight: var(--jdp-select-item-selected-font-weight, var(--jdp-font-weight-medium));
+  border-radius: var(--jdp-select-item-selected-border-radius, var(--jdp-select-trigger-border-radius, var(--jdp-border-radius)));
 }
 
 @keyframes fadeInSelect {
@@ -1807,14 +1850,26 @@ class PersianDatePickerElement extends HTMLElement {
     toggleCalendar() {
         // First close any open dropdowns
         this.closeAllDropdowns();
+        // Check if this calendar is already open
         if (this.calendar.classList.contains("visible")) {
             // Hide calendar
             this.calendar.classList.remove("visible", "position-bottom", "position-top");
+            // Clear the static reference if this instance is being closed
+            if (PersianDatePickerElement.openCalendarInstance === this) {
+                PersianDatePickerElement.openCalendarInstance = null;
+            }
         }
         else {
+            // Close any already open calendar instance
+            if (PersianDatePickerElement.openCalendarInstance &&
+                PersianDatePickerElement.openCalendarInstance !== this) {
+                PersianDatePickerElement.openCalendarInstance.toggleCalendar();
+            }
             // Show calendar with position calculation
             this.positionCalendar();
             this.calendar.classList.add("visible");
+            // Set this as the currently open instance
+            PersianDatePickerElement.openCalendarInstance = this;
         }
     }
     /**
@@ -2366,6 +2421,23 @@ class PersianDatePickerElement extends HTMLElement {
                     dropdown.scrollTop = Math.max(0, scrollTop);
                 }
             });
+        }
+    }
+    /**
+     * Programmatically open the calendar
+     * Will close any other open calendar instances
+     */
+    open() {
+        if (!this.calendar.classList.contains("visible")) {
+            this.toggleCalendar();
+        }
+    }
+    /**
+     * Programmatically close the calendar
+     */
+    close() {
+        if (this.calendar.classList.contains("visible")) {
+            this.toggleCalendar();
         }
     }
 }

@@ -4,15 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Persian Date Picker Element - Basic Usage</title>
+  <!-- Add Vazir Font from CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
       padding: 20px;
       background-color: #f8fafc;
       color: #1e293b;
       line-height: 1.5;
       direction: rtl;
+    }
+
+    /* Apply Persian numbers to all elements */
+    body {
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
     }
 
     h1 {
@@ -81,10 +90,64 @@
       text-decoration: none;
       font-weight: 500;
       transition: background-color 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
     }
 
     .link:hover {
       background-color: #0e7490;
+    }
+
+    /* Custom element styling */
+    persian-datepicker-element {
+      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
+    }
+    
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #0f172a;
+        color: #e2e8f0;
+      }
+      
+      h1 {
+        color: #f8fafc;
+      }
+      
+      h2 {
+        color: #cbd5e1;
+      }
+      
+      .example {
+        background-color: #1e293b;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      
+      .result, pre {
+        background-color: #1e1e2f;
+        color: #e2e8f0;
+      }
+      
+      code {
+        color: #f8fafc;
+      }
+    }
+
+    .navigation {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .navigation h2 {
+      margin-top: 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .navigation {
+        border-bottom-color: #334155;
+      }
     }
   </style>
 </head>
@@ -92,6 +155,15 @@
   <div class="container">
     <h1>Persian Date Picker Element - Basic Usage</h1>
     <p>Simple examples of how to use the Persian Date Picker Element component with different configurations.</p>
+    
+    <div class="navigation">
+      <h2>نمونه‌های موجود:</h2>
+      <a href="index.html" class="link">نمونه‌های پایه</a>
+      <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+      <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+      <a href="../demo/index.html" class="link">دمو</a>
+    </div>
     
     <div class="example">
       <h2>Basic Usage</h2>
@@ -157,6 +229,8 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
           --jdp-primary-hover: #7c3aed;
           --jdp-border-radius: 0.75rem;
           --jdp-font-size: 15px;
+          --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+          --jdp-font-feature-settings: 'ss02';
         "
       ></persian-datepicker-element>
       <div class="result">Selected date: <span id="styled-result">None</span></div>
@@ -168,49 +242,93 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     --jdp-primary-hover: #7c3aed;
     --jdp-border-radius: 0.75rem;
     --jdp-font-size: 15px;
+    --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --jdp-font-feature-settings: 'ss02';
   "
 &gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
     
-    <a href="customization.html" class="link">View More Styling Examples →</a>
+    <div class="example">
+      <h2>Persian Numbers</h2>
+      <div class="example-label">With Persian number formatting:</div>
+      <persian-datepicker-element 
+        id="persian-number-picker"
+        style="
+          --jdp-font-feature-settings: 'ss02';
+          --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        "
+      ></persian-datepicker-element>
+      <div class="result">Selected date: <span id="persian-number-result">None</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  id="persian-number-picker"
+  style="
+    --jdp-font-feature-settings: 'ss02';
+    --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  "
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+    
+    <div class="link-container">
+      <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+      <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+      <a href="../demo/index.html" class="link">دمو</a>
+    </div>
   </div>
 
   <script src="../dist/persian-datepicker-element.min.js"></script>
   <script>
+    // Convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+    
+    // Format date with Persian digits
+    function formatPersianDate(dateArray) {
+      return toPersianNum(dateArray.join('/'));
+    }
+    
     // Basic picker
     document.getElementById('basic-picker').addEventListener('change', (event) => {
-      document.getElementById('basic-result').textContent = event.detail.jalali.join('/');
+      document.getElementById('basic-result').textContent = formatPersianDate(event.detail.jalali);
     });
     
     // Placeholder picker
     document.getElementById('placeholder-picker').addEventListener('change', (event) => {
-      document.getElementById('placeholder-result').textContent = event.detail.jalali.join('/');
+      document.getElementById('placeholder-result').textContent = formatPersianDate(event.detail.jalali);
     });
     
     // Format picker
     document.getElementById('format-picker').addEventListener('change', (event) => {
-      document.getElementById('format-result').textContent = event.detail.jalali.join('/');
+      document.getElementById('format-result').textContent = formatPersianDate(event.detail.jalali);
     });
     
     // Initial value picker
     const initialPicker = document.getElementById('initial-picker');
     initialPicker.setValue(1403, 3, 15);
-    document.getElementById('initial-result').textContent = '1403/3/15';
+    document.getElementById('initial-result').textContent = toPersianNum('1403/3/15');
     
     initialPicker.addEventListener('change', (event) => {
-      document.getElementById('initial-result').textContent = event.detail.jalali.join('/');
+      document.getElementById('initial-result').textContent = formatPersianDate(event.detail.jalali);
     });
     
     // Event listener picker
     document.getElementById('event-picker').addEventListener('change', (event) => {
       const { jalali, gregorian } = event.detail;
-      document.getElementById('jalali-result').textContent = jalali.join('/');
-      document.getElementById('gregorian-result').textContent = gregorian.join('/');
+      document.getElementById('jalali-result').textContent = formatPersianDate(jalali);
+      document.getElementById('gregorian-result').textContent = formatPersianDate(gregorian);
     });
     
     // Styled picker
     document.getElementById('styled-picker').addEventListener('change', (event) => {
-      document.getElementById('styled-result').textContent = event.detail.jalali.join('/');
+      document.getElementById('styled-result').textContent = formatPersianDate(event.detail.jalali);
+    });
+    
+    // Persian number picker
+    document.getElementById('persian-number-picker').addEventListener('change', (event) => {
+      document.getElementById('persian-number-result').textContent = formatPersianDate(event.detail.jalali);
     });
   </script>
 </body>
