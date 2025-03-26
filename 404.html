@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 - Page Not Found | Persian Date Picker Element</title>
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <script src="./assets/js/path-fix.js"></script>
   <style>
     :root {
       --primary: #0891b2;
@@ -92,19 +93,48 @@
     <p>متأسفانه صفحه‌ای که به دنبال آن بودید پیدا نشد. لطفاً از یکی از لینک‌های زیر استفاده کنید.</p>
     
     <div>
-      <a href="/persian-datepicker-element/index.html" class="btn">صفحه اصلی</a>
-      <a href="/persian-datepicker-element/docs/index.html" class="btn">مستندات</a>
-      <a href="/persian-datepicker-element/examples/index.html" class="btn">مثال‌ها</a>
+      <a href="./index.html" class="btn">صفحه اصلی</a>
+      <a href="./docs/index.html" class="btn">مستندات</a>
+      <a href="./examples/index.html" class="btn">مثال‌ها</a>
     </div>
     
     <div class="links">
       <h3>لینک‌های مستندات فریم‌ورک‌ها</h3>
       <ul>
-        <li><a href="/persian-datepicker-element/docs/frameworks/react.html">React</a></li>
-        <li><a href="/persian-datepicker-element/docs/frameworks/vue.html">Vue</a></li>
-        <li><a href="/persian-datepicker-element/docs/frameworks/angular.html">Angular</a></li>
+        <li><a href="./docs/frameworks/react.html">React</a></li>
+        <li><a href="./docs/frameworks/vue.html">Vue</a></li>
+        <li><a href="./docs/frameworks/angular.html">Angular</a></li>
       </ul>
     </div>
   </div>
+  
+  <script>
+    // Try to detect the correct path based on the URL
+    function fixMissingPath() {
+      // Get the current path
+      const path = window.location.pathname;
+      
+      // If we're on GitHub Pages and in the persian-datepicker-element repo
+      if (window.location.hostname === 'mehrabix.github.io' && 
+          path.includes('/persian-datepicker-element/')) {
+        
+        // Check if we might be looking for a framework doc
+        if (path.includes('/frameworks/') || path.includes('/react') || 
+            path.includes('/vue') || path.includes('/angular')) {
+          
+          // Show a special message for framework docs
+          document.querySelector('h1').textContent = 'مستندات فریم‌ورک‌ها';
+          document.querySelector('p').innerHTML = 
+            'به نظر می‌رسد به دنبال مستندات یکی از فریم‌ورک‌ها هستید. ' +
+            'لطفاً از لینک‌های زیر استفاده کنید:';
+        }
+        
+        // You could add more specific logic here based on the URL pattern
+      }
+    }
+    
+    // Run the fix
+    fixMissingPath();
+  </script>
 </body>
 </html> 
