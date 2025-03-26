@@ -307,19 +307,27 @@
     }
 
     .dark-mode-toggle {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      background-color: #1e293b;
+      border: none;
+      color: #e2e8f0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      transition: background-color 0.3s, color 0.3s;
     }
     
-    .dark-mode-toggle span {
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    
-    body.dark .dark-mode-toggle span {
-      color: #cbd5e1;
+    body.dark .dark-mode-toggle {
+      background-color: #e2e8f0;
+      color: #1e293b;
     }
 
     .navigation {
@@ -451,6 +459,82 @@
       font-feature-settings: "ss02";
       font-weight: 400;
     }
+
+    /* Responsive design improvements */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .container {
+        padding: 1rem;
+        max-width: 100%;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .navigation {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .nav-links {
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      
+      .nav-links .link {
+        margin: 0 0.5rem 0.5rem 0;
+        padding: 0.5rem 0.8rem;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      
+      .toggle-container {
+        margin-top: 1rem;
+        width: 100%;
+      }
+      
+      .dark-mode-toggle {
+        padding: 0.5rem 1rem;
+        width: 100%;
+      }
+      
+      .example {
+        padding: 1rem;
+      }
+      
+      pre {
+        font-size: 0.9rem;
+        overflow-x: auto;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      h2 {
+        font-size: 1.3rem;
+      }
+      
+      .example-label {
+        font-size: 0.9rem;
+      }
+      
+      code, pre {
+        font-size: 0.85rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -461,19 +545,20 @@
     <div class="navigation">
       <div class="nav-links">
         <a href="index.html" class="link">نمونه‌های پایه</a>
+        <a href="basic.html" class="link">استفاده پایه</a>
         <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
         <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
         <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-        <a href="../demo/index.html" class="link">دمو</a>
+        <a href="../index.html" class="link">صفحه اصلی</a>
       </div>
-      <div class="toggle-container">
-        <span class="toggle-label">حالت تاریک</span>
-      <label class="theme-switch">
-        <input type="checkbox" id="dark-mode-toggle">
-        <span class="slider"></span>
-      </label>
     </div>
-    </div>
+
+    <!-- Floating dark mode toggle -->
+    <button class="dark-mode-toggle" id="dark-mode-toggle">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+      </svg>
+    </button>
 
     <pre><code>// Basic example of setting CSS variables
 persian-datepicker-element {
@@ -543,7 +628,7 @@ persian-datepicker-element {
       <a href="index.html" class="link">نمونه‌های پایه</a>
       <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
       <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-      <a href="../demo/index.html" class="link">دمو</a>
+      <a href="../index.html" class="link">صفحه اصلی</a>
     </div>
   </div>
 
@@ -553,19 +638,25 @@ persian-datepicker-element {
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     
     // Check for saved dark mode preference
-    if (localStorage.getItem('darkMode') === 'true') {
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedDarkMode = localStorage.getItem('darkMode');
+    const isDarkMode = storedDarkMode === 'true' || (storedDarkMode === null && prefersDarkMode);
+    
+    if (isDarkMode) {
       document.body.classList.add('dark');
-      darkModeToggle.checked = true;
+      darkModeToggle.querySelector('svg').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
     }
     
     // Toggle dark mode
-    darkModeToggle.addEventListener('change', () => {
-      if (darkModeToggle.checked) {
-        document.body.classList.add('dark');
-        localStorage.setItem('darkMode', 'true');
+    darkModeToggle.addEventListener('click', () => {
+      const isDarkMode = document.body.classList.toggle('dark');
+      localStorage.setItem('darkMode', isDarkMode);
+      
+      // Update the icon
+      if (isDarkMode) {
+        darkModeToggle.querySelector('svg').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
       } else {
-        document.body.classList.remove('dark');
-        localStorage.setItem('darkMode', 'false');
+        darkModeToggle.querySelector('svg').innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>';
       }
     });
 

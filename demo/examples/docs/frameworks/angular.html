@@ -160,6 +160,69 @@
     .back-to-top:hover {
       background-color: var(--primary-hover);
     }
+    
+    /* Responsive design improvements */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      header {
+        margin-bottom: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .nav-links {
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      
+      .nav-links a {
+        margin: 0 1rem 0.5rem 0;
+      }
+      
+      pre {
+        font-size: 0.9rem;
+      }
+      
+      .back-to-top {
+        bottom: 1rem;
+        left: 1rem;
+        padding: 0.4rem 0.8rem;
+      }
+      
+      .props-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .dark-mode-toggle {
+        padding: 0.4rem 0.8rem;
+        width: 100%;
+        margin-top: 1rem;
+      }
+      
+      .props-table th,
+      .props-table td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -183,6 +246,15 @@
     </nav>
 
     <div class="content">
+      <!-- Add Angular logo at the top -->
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <svg width="100" height="100" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+          <path d="M125 30L31.9 63.2L46.1 186.3L125 230L203.9 186.3L218.1 63.2L125 30Z" fill="#DD0031"/>
+          <path d="M125 30V52.2V52.1V153.4V230L203.9 186.3L218.1 63.2L125 30Z" fill="#C3002F"/>
+          <path d="M125 52.1L66.8 182.6H88.5L101.8 150.4H148.3L161.6 182.6H183.3L125 52.1ZM142 131.5H108L125 90.9L142 131.5Z" fill="white"/>
+        </svg>
+      </div>
+
       <h2>نصب و راه‌اندازی</h2>
       <p>برای نصب کامپوننت تاریخ شمسی در پروژه Angular خود:</p>
       <pre><code>// Using npm

@@ -338,6 +338,100 @@
       font-feature-settings: "ss02";
       font-weight: 400;
     }
+
+    /* Responsive design improvements */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .container {
+        padding: 1rem;
+        max-width: 100%;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .navigation {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .nav-links {
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      
+      .nav-links .link {
+        margin: 0 0.5rem 0.5rem 0;
+        padding: 0.5rem 0.8rem;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      
+      .toggle-container {
+        margin-top: 1rem;
+        width: 100%;
+      }
+      
+      .dark-mode-toggle {
+        padding: 0.5rem 1rem;
+        width: 100%;
+      }
+      
+      .theme-section {
+        padding: 1.5rem;
+      }
+      
+      .theme-toggle {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .theme-controls {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      
+      .theme-btn {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+        flex: 1 0 calc(33% - 0.5rem);
+      }
+      
+      .control-group {
+        flex-direction: column;
+      }
+      
+      .color-input {
+        margin-bottom: 1rem;
+        width: 100%;
+      }
+      
+      .radius-control {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .theme-btn {
+        flex: 1 0 calc(50% - 0.5rem);
+      }
+    }
   </style>
 </head>
 <body>
@@ -351,14 +445,7 @@
         <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
         <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
         <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-        <a href="../demo/index.html" class="link">دمو</a>
-      </div>
-      <div class="toggle-container">
-        <span class="toggle-label">حالت تاریک</span>
-        <label class="switch">
-          <input type="checkbox" id="dark-mode-toggle">
-          <span class="slider"></span>
-        </label>
+        <a href="../index.html" class="link">صفحه اصلی</a>
       </div>
     </div>
 
@@ -407,99 +494,60 @@
       <a href="index.html" class="link">نمونه‌های پایه</a>
       <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
       <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-      <a href="../demo/index.html" class="link">دمو</a>
+      <a href="../index.html" class="link">صفحه اصلی</a>
     </div>
   </div>
 
   <script src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
-    // Check for saved dark mode preference
-    if (localStorage.getItem('darkMode') === 'true') {
-      document.body.classList.add('dark');
-      document.getElementById('dark-mode-toggle').checked = true;
-      document.getElementById('theme-section-dark-toggle').checked = true;
-    }
+    // Dark mode toggle
+    const themeSectionDarkToggle = document.getElementById('theme-section-dark-toggle');
     
-    // Toggle dark mode for main toggle
-    document.getElementById('dark-mode-toggle').addEventListener('change', (e) => {
-      if (e.target.checked) {
-        document.body.classList.add('dark');
-        localStorage.setItem('darkMode', 'true');
-        // Keep the other toggle in sync
-        document.getElementById('theme-section-dark-toggle').checked = true;
-      } else {
-        document.body.classList.remove('dark');
-        localStorage.setItem('darkMode', 'false');
-        // Keep the other toggle in sync
-        document.getElementById('theme-section-dark-toggle').checked = false;
-      }
-      
-      // Get the current active theme
-      const activeThemeBtn = document.querySelector('.theme-btn.active');
-      const activeThemeName = activeThemeBtn ? activeThemeBtn.getAttribute('data-theme') : 'default';
-      const activeTheme = themes[activeThemeName] || themes.default;
-      
-      if (e.target.checked) {
-        // Apply dark theme merged with the current theme
-        applyTheme({...darkTheme, ...{
-          '--jdp-primary': activeTheme['--jdp-primary'],
-          '--jdp-primary-hover': activeTheme['--jdp-primary-hover'],
-          '--jdp-border-radius': activeTheme['--jdp-border-radius'],
-          '--jdp-input-border-radius': activeTheme['--jdp-input-border-radius'] || activeTheme['--jdp-border-radius'],
-          '--jdp-day-cell-border-radius': activeTheme['--jdp-day-cell-border-radius'] || activeTheme['--jdp-border-radius'],
-          '--jdp-nav-button-border-radius': activeTheme['--jdp-nav-button-border-radius'] || activeTheme['--jdp-border-radius'],
-          '--jdp-input-border-width': activeTheme['--jdp-input-border-width'],
-          '--jdp-font-family': activeTheme['--jdp-font-family'],
-          '--jdp-font-feature-settings': activeTheme['--jdp-font-feature-settings']
-        }});
-      } else {
-        // Revert to the current theme without dark mode
-        applyTheme(activeTheme);
-      }
-    });
-    
-    // Toggle dark mode for theme section toggle
-    document.getElementById('theme-section-dark-toggle').addEventListener('change', (e) => {
-      if (e.target.checked) {
-        document.body.classList.add('dark');
-        localStorage.setItem('darkMode', 'true');
-        // Keep the other toggle in sync
-        document.getElementById('dark-mode-toggle').checked = true;
-      } else {
-        document.body.classList.remove('dark');
-        localStorage.setItem('darkMode', 'false');
-        // Keep the other toggle in sync
-        document.getElementById('dark-mode-toggle').checked = false;
-      }
-      
-      // Get the current active theme
-      const activeThemeBtn = document.querySelector('.theme-btn.active');
-      const activeThemeName = activeThemeBtn ? activeThemeBtn.getAttribute('data-theme') : 'default';
-      const activeTheme = themes[activeThemeName] || themes.default;
-      
-      if (e.target.checked) {
-        // Apply dark theme merged with the current theme
-        applyTheme({...darkTheme, ...{
-          '--jdp-primary': activeTheme['--jdp-primary'],
-          '--jdp-primary-hover': activeTheme['--jdp-primary-hover'],
-          '--jdp-border-radius': activeTheme['--jdp-border-radius'],
-          '--jdp-input-border-radius': activeTheme['--jdp-input-border-radius'] || activeTheme['--jdp-border-radius'],
-          '--jdp-day-cell-border-radius': activeTheme['--jdp-day-cell-border-radius'] || activeTheme['--jdp-border-radius'],
-          '--jdp-nav-button-border-radius': activeTheme['--jdp-nav-button-border-radius'] || activeTheme['--jdp-border-radius'],
-          '--jdp-input-border-width': activeTheme['--jdp-input-border-width'],
-          '--jdp-font-family': activeTheme['--jdp-font-family'],
-          '--jdp-font-feature-settings': activeTheme['--jdp-font-feature-settings']
-        }});
-      } else {
-        // Revert to the current theme without dark mode
-        applyTheme(activeTheme);
-      }
-    });
-
     // Convert numbers to Persian digits
     function toPersianNum(num) {
       const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
       return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+    
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+      themeSectionDarkToggle.checked = true;
+      applyDarkMode(true);
+    }
+    
+    // Toggle dark mode from theme section toggle
+    themeSectionDarkToggle.addEventListener('change', () => {
+      const isDarkMode = themeSectionDarkToggle.checked;
+      document.body.classList.toggle('dark', isDarkMode);
+      localStorage.setItem('darkMode', isDarkMode);
+      applyDarkMode(isDarkMode);
+    });
+
+    // Function to apply dark mode changes
+    function applyDarkMode(isDarkMode) {
+      // Get the current active theme
+      const activeThemeBtn = document.querySelector('.theme-btn.active');
+      const activeThemeName = activeThemeBtn ? activeThemeBtn.getAttribute('data-theme') : 'default';
+      const activeTheme = themes[activeThemeName] || themes.default;
+      
+      if (isDarkMode) {
+        // Apply dark theme merged with the current theme
+        applyTheme({...darkTheme, ...{
+          '--jdp-primary': activeTheme['--jdp-primary'],
+          '--jdp-primary-hover': activeTheme['--jdp-primary-hover'],
+          '--jdp-border-radius': activeTheme['--jdp-border-radius'],
+          '--jdp-input-border-radius': activeTheme['--jdp-input-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-day-cell-border-radius': activeTheme['--jdp-day-cell-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-nav-button-border-radius': activeTheme['--jdp-nav-button-border-radius'] || activeTheme['--jdp-border-radius'],
+          '--jdp-input-border-width': activeTheme['--jdp-input-border-width'],
+          '--jdp-font-family': activeTheme['--jdp-font-family'],
+          '--jdp-font-feature-settings': activeTheme['--jdp-font-feature-settings']
+        }});
+      } else {
+        // Revert to the current theme without dark mode
+        applyTheme(activeTheme);
+      }
     }
 
     // Format date with Persian digits
@@ -628,7 +676,7 @@
         
         if (selectedTheme) {
           // If dark mode is enabled, merge with dark theme properly
-          if (darkModeToggle.checked) {
+          if (themeSectionDarkToggle.checked) {
             applyTheme({...darkTheme, ...{
               '--jdp-primary': selectedTheme['--jdp-primary'],
               '--jdp-primary-hover': selectedTheme['--jdp-primary-hover'],
@@ -640,7 +688,7 @@
               '--jdp-font-family': selectedTheme['--jdp-font-family'],
               '--jdp-font-feature-settings': selectedTheme['--jdp-font-feature-settings']
             }});
-            } else {
+          } else {
             applyTheme(selectedTheme);
           }
           

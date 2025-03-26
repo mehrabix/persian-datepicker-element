@@ -147,6 +147,69 @@
     .back-to-top:hover {
       background-color: var(--primary-hover);
     }
+    
+    /* Responsive design improvements */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      header {
+        margin-bottom: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .nav-links {
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      
+      .nav-links a {
+        margin: 0 1rem 0.5rem 0;
+      }
+      
+      pre {
+        font-size: 0.9rem;
+      }
+      
+      .back-to-top {
+        bottom: 1rem;
+        left: 1rem;
+        padding: 0.4rem 0.8rem;
+      }
+      
+      .props-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .dark-mode-toggle {
+        padding: 0.4rem 0.8rem;
+        width: 100%;
+        margin-top: 1rem;
+      }
+      
+      .props-table th,
+      .props-table td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -170,6 +233,14 @@
     </nav>
 
     <div class="content">
+      <!-- Add Vue logo at the top -->
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <svg width="100" height="100" viewBox="0 0 196 170" xmlns="http://www.w3.org/2000/svg">
+          <path d="M39.3817 5.38965e-08L78.7635 68.1442L118.145 5.38965e-08H157.527L78.7635 136.288L0 5.38965e-08H39.3817Z" fill="#41B883"/>
+          <path d="M39.3817 5.38965e-08L78.7635 68.1442L118.145 5.38965e-08H98.4544L78.7635 34.0721L59.0726 5.38965e-08H39.3817Z" fill="#35495E"/>
+        </svg>
+      </div>
+
       <h2>نصب و راه‌اندازی</h2>
       <p>برای نصب کامپوننت تاریخ شمسی در پروژه Vue خود:</p>
       <pre><code>// Using npm

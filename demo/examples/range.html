@@ -1,0 +1,94 @@
+  <style>
+    .custom-input:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .container {
+        padding: 1rem;
+        max-width: 100%;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .navigation {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .nav-links {
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      
+      .nav-links .link {
+        margin: 0 0.5rem 0.5rem 0;
+        padding: 0.5rem 0.8rem;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      
+      .toggle-container {
+        margin-top: 1rem;
+        width: 100%;
+      }
+      
+      .dark-mode-toggle {
+        padding: 0.5rem 1rem;
+        width: 100%;
+      }
+
+      pre {
+        font-size: 0.9rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .grid-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      code, pre {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>انتخاب محدوده تاریخ</h1>
+    
+    <div class="navigation">
+      <div class="nav-links">
+        <a href="../index.html" class="link">صفحه اصلی</a>
+        <a href="index.html" class="link">مثال‌ها</a>
+        <a href="basic.html" class="link">مثال ساده</a>
+        <a href="range.html" class="link active">انتخاب محدوده</a>
+        <a href="formats.html" class="link">فرمت‌های مختلف</a>
+        <a href="time.html" class="link">انتخاب زمان</a>
+        <a href="theme-switcher.html" class="link">تغییر تم</a>
+        <a href="theme-builder.html" class="link">سازنده تم</a>
+        <a href="docs/index.html" class="link">مستندات</a>
+      </div>
+      <div class="toggle-container">
+        <button id="darkModeToggle" class="dark-mode-toggle">تغییر حالت تاریک/روشن</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 
