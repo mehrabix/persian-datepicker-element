@@ -5,9 +5,9 @@
  */
 (function() {
   // Check if we're on GitHub Pages
-  if (window.location.hostname === 'mehrabix.github.io') {
+  if (window.location.hostname === 'mehrabix.github.io' || window.location.hostname.endsWith('github.io')) {
     // The repository name that needs to be in the path
-    const repoName = 'persian-datepicker-element';
+    const repoName = 'calander'; // UPDATED to your actual repo name
     const baseUrl = '/' + repoName;
     
     document.addEventListener('DOMContentLoaded', function() {
@@ -18,7 +18,7 @@
         const href = link.getAttribute('href');
         
         // Only process internal links (not external URLs with http/https)
-        if (!href.match(/^(https?:)?\/\//)) {
+        if (!href.match(/^(https?:)?\/\//) && !href.startsWith('#')) {
           // Fix absolute paths that don't include the repo name
           if (href.startsWith('/') && !href.startsWith(baseUrl)) {
             link.setAttribute('href', baseUrl + href);
@@ -26,6 +26,8 @@
           // Fix relative paths if needed
           else if (href.startsWith('./') || href.startsWith('../') || !href.startsWith('/')) {
             // We'll keep relative paths as they are - they should work if the HTML structure is consistent
+            // But we'll log them for debugging
+            console.log('Keeping relative path:', href);
           }
         }
       });
@@ -45,8 +47,17 @@
         }
       }
       
+      // Add base tag to head if not exists
+      if (!document.querySelector('base')) {
+        const base = document.createElement('base');
+        base.href = window.location.origin + baseUrl + '/';
+        document.head.appendChild(base);
+      }
+      
       // Log that the path fixing is complete (for debugging)
-      console.log('GitHub Pages path fixing complete');
+      console.log('GitHub Pages path fixing complete with baseUrl:', baseUrl);
     });
+  } else {
+    console.log('Not on GitHub Pages, skipping path fixes');
   }
 })(); 
