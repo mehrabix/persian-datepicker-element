@@ -9,6 +9,8 @@
 - Full RTL support
 - Iranian holidays and events display with customization options
 - Highly customizable styling with CSS variables
+- Dark mode support with automatic scrollbar styling
+- Smart dropdown navigation with auto-scroll to selected items
 - Lightweight and dependency-free
 - Works with any framework or vanilla JavaScript
 - TypeScript support
@@ -20,6 +22,8 @@
 - پشتیبانی کامل از راست به چپ (RTL)
 - نمایش تعطیلات و رویدادهای ایران با قابلیت شخصی‌سازی
 - قابلیت شخصی‌سازی بالا با متغیرهای CSS
+- پشتیبانی از حالت تاریک با تغییر خودکار استایل اسکرول‌بار
+- منوهای هوشمند با اسکرول خودکار به آیتم انتخاب شده
 - سبک و بدون وابستگی
 - سازگار با هر فریم‌ورک یا جاوااسکریپت خالص
 - پشتیبانی از TypeScript
@@ -137,6 +141,7 @@ You can customize the date picker using the following attributes:
   rtl="true"
   holiday-types="Iran,Religious"
   show-holidays="true"
+  dark-mode="false"
 ></persian-datepicker-element>
 ```
 
@@ -154,6 +159,35 @@ You can customize the date picker using the following attributes:
 | `rtl`              | Boolean | true            | Right-to-left support                    |
 | `show-holidays`    | Boolean | true            | Show holiday indicators                  |
 | `holiday-types`    | String  | "Iran,Religious"| Comma-separated list of holiday types    |
+| `dark-mode`        | Boolean | false           | Enable dark mode styling                 |
+
+## CSS Variables
+
+In addition to the attributes above, you can use CSS variables for more detailed customization:
+
+```html
+<style>
+  persian-datepicker-element {
+    /* Basic styling */
+    --pdp-primary: #0891b2;
+    --pdp-primary-hover: #0e7490;
+    
+    /* Scrollbar styling */
+    --jdp-scrollbar-width: 6px;
+    --jdp-scrollbar-thumb: rgba(0, 0, 0, 0.2);
+    --jdp-scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
+    --jdp-scrollbar-track: transparent;
+    --jdp-scrollbar-border-radius: 4px;
+    
+    /* Dark mode scrollbar (applies when dark-mode is enabled) */
+    --jdp-dark-scrollbar-thumb: rgba(255, 255, 255, 0.2);
+    --jdp-dark-scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
+    --jdp-dark-scrollbar-track: transparent;
+  }
+</style>
+```
+
+See the [styling documentation](./STYLING.md) for a complete list of available CSS variables.
 
 ## Events
 

@@ -28,13 +28,6 @@ export interface PersianEvent {
 export type DateTuple = [number, number, number];
 
 /**
- * Map of CSS variable names to their values
- */
-export interface CSSVariableMap {
-  [key: string]: string;
-}
-
-/**
  * Options for the Persian date picker element
  */
 export interface PersianDatePickerElementOptions {
@@ -46,8 +39,6 @@ export interface PersianDatePickerElementOptions {
   rtl?: boolean;
   /** Whether to show holidays in the calendar */
   showHolidays?: boolean;
-  /** Custom CSS variables */
-  cssVariables?: CSSVariableMap;
   /** Types of holidays to display (e.g. 'Iran', 'Religious') */
   holidayTypes?: string[] | string;
 }

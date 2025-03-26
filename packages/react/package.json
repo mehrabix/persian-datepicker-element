@@ -1,6 +1,6 @@
 {
   "name": "react-persian-datepicker-element",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "React wrapper for Persian Datepicker Web Component - A beautiful and fully customizable Jalali date picker",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -41,7 +41,7 @@
   "author": "Ahmad Mehrabi",
   "license": "MIT",
   "dependencies": {
-    "persian-datepicker-element": "^1.0.0"
+    "persian-datepicker-element": "^1.0.29"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",

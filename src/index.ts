@@ -7,13 +7,31 @@ import type {
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,
   DateTuple,
-  CSSVariableMap,
   PersianEvent
 } from './types';
 
-// Define the custom element
-if (!customElements.get('persian-datepicker-element')) {
-  customElements.define('persian-datepicker-element', PersianDatePickerElement);
+// Declare global window interface extension for TypeScript
+declare global {
+  interface Window {
+    PersianDatePickerElement?: typeof PersianDatePickerElement;
+  }
+}
+
+// Try to register the custom element with the browser
+// First check if we're in a browser environment and if customElements API exists
+const isBrowser = typeof window !== 'undefined';
+const hasCustomElements = isBrowser && typeof customElements !== 'undefined';
+
+if (hasCustomElements) {
+  // Only register if it's not already registered
+  if (!customElements.get('persian-datepicker-element')) {
+    try {
+      customElements.define('persian-datepicker-element', PersianDatePickerElement);
+      console.info('persian-datepicker-element registered successfully');
+    } catch (error) {
+      console.error('Error registering persian-datepicker-element:', error);
+    }
+  }
 }
 
 // Export the classes and types
@@ -22,7 +40,6 @@ export type {
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,
   DateTuple,
-  CSSVariableMap,
   PersianEvent
 };
 

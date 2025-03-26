@@ -39,7 +39,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(webpack@5.98.0)
       terser:
-        specifier: ^5.30.1
+        specifier: ^5.39.0
         version: 5.39.0
       ts-jest:
         specifier: ^29.2.6

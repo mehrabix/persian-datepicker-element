@@ -6,12 +6,12 @@ module.exports = {
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: './tsconfig.json',
-      jsx: 'react',
     }],
+    '^.+\\.vue$': '@vue/vue3-jest',
   },
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': '<rootDir>/../../src/__mocks__/styleMock.js',
   },
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node', 'vue'],
 }; 

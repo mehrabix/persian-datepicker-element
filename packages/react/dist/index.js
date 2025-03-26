@@ -67,6 +67,12 @@ var PersianDatepicker = (0, import_react.forwardRef)(
       fontFamily,
       holidayColor,
       holidayBg,
+      scrollbarWidth,
+      scrollbarThumbColor,
+      scrollbarThumbHoverColor,
+      scrollbarTrackColor,
+      scrollbarBorderRadius,
+      darkMode,
       ...restProps
     } = props;
     const elementRef = (0, import_react.useRef)(null);
@@ -109,6 +115,11 @@ var PersianDatepicker = (0, import_react.forwardRef)(
         if (fontFamily) element.style.setProperty("--jdp-font-family", fontFamily);
         if (holidayColor) element.style.setProperty("--jdp-holiday-color", holidayColor);
         if (holidayBg) element.style.setProperty("--jdp-holiday-bg", holidayBg);
+        if (scrollbarWidth) element.style.setProperty("--jdp-scrollbar-width", scrollbarWidth);
+        if (scrollbarThumbColor) element.style.setProperty("--jdp-scrollbar-thumb-color", scrollbarThumbColor);
+        if (scrollbarThumbHoverColor) element.style.setProperty("--jdp-scrollbar-thumb-hover-color", scrollbarThumbHoverColor);
+        if (scrollbarTrackColor) element.style.setProperty("--jdp-scrollbar-track-color", scrollbarTrackColor);
+        if (scrollbarBorderRadius) element.style.setProperty("--jdp-scrollbar-border-radius", scrollbarBorderRadius);
         const handleChange = (e) => {
           const customEvent = e;
           if (onChange && customEvent.detail) {
@@ -131,6 +142,11 @@ var PersianDatepicker = (0, import_react.forwardRef)(
       fontFamily,
       holidayColor,
       holidayBg,
+      scrollbarWidth,
+      scrollbarThumbColor,
+      scrollbarThumbHoverColor,
+      scrollbarTrackColor,
+      scrollbarBorderRadius,
       ...Object.values(restProps)
     ]);
     return /* @__PURE__ */ import_react.default.createElement("div", { ref: containerRef, className, style });

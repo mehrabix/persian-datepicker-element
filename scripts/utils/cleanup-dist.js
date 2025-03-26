@@ -1,8 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 
-// Get the list of files in the dist directory
-const distPath = path.resolve(__dirname, 'dist');
+// Get the list of files in the dist directory (two levels up from scripts/utils)
+const rootDir = path.resolve(__dirname, '../..');
+const distPath = path.resolve(rootDir, 'dist');
 
 if (!fs.existsSync(distPath)) {
   console.error('Error: dist directory not found');
@@ -12,7 +13,7 @@ if (!fs.existsSync(distPath)) {
 console.log("Cleaning up filenames in dist directory...");
 
 // Create a temporary directory
-const tempPath = path.resolve(__dirname, 'temp');
+const tempPath = path.resolve(rootDir, 'temp');
 if (fs.existsSync(tempPath)) {
   fs.rmSync(tempPath, { recursive: true, force: true });
 }

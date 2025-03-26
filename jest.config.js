@@ -15,7 +15,9 @@ module.exports = {
   testPathIgnorePatterns: [
     '/node_modules/', 
     '/__tests__/test-utils\\.ts$', 
-    '/packages/angular/'
+    '/packages/angular/',
+    '/packages/react/',
+    '/packages/vue/'
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverage: true,

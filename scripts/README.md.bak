@@ -1,0 +1,79 @@
+# Build and Optimization Scripts
+
+This directory contains a collection of specialized scripts for building, optimizing, and managing the Persian Date Picker component.
+
+## Directory Structure
+
+The scripts are organized into three subdirectories:
+
+- **build**: Scripts for building the component with different configurations
+- **optimize**: Scripts for applying various optimizations to reduce bundle size
+- **utils**: Utility scripts for maintenance and support tasks
+
+## Build Scripts
+
+Located in `scripts/build/`:
+
+- **rspack.config.js**: Configuration for rspack bundler with settings for different build types
+- **production-build.js**: Main production build script that combines rspack with optimized Terser compression
+- **extreme-build.js**: More aggressive build script with experimental size reductions
+
+## Optimization Scripts
+
+Located in `scripts/optimize/`:
+
+- **terser-optimize.js**: Applies aggressive Terser optimization settings
+- **terser-safe.js**: Applies safer Terser optimization settings that preserve functionality
+- **max-compress.js**: Maximizes compression with multiple optimization stages
+- **super-optimize.js**: Additional optimization pass for further size reduction
+- **minify.js**: Basic minification utility for JavaScript files
+
+## Utility Scripts
+
+Located in `scripts/utils/`:
+
+- **cleanup-dist.js**: Cleans up the dist directory and ensures consistent filenames
+
+## Common Build Commands
+
+Available in `package.json`:
+
+- **build**: Standard build pipeline
+- **build:production**: Optimized production build with maximum compression
+- **build:terser**: Apply Terser optimizations to existing builds
+- **build:extreme**: Experimental build with maximum possible optimizations
+
+## Usage Examples
+
+### Standard Build
+```bash
+pnpm run build
+```
+
+### Production Build (Recommended)
+```bash
+pnpm run build:production
+```
+
+### Apply Additional Optimizations
+```bash
+pnpm run build:terser
+```
+
+### Extreme Optimization (Experimental)
+```bash
+pnpm run build:extreme
+```
+
+## Performance
+
+The optimization scripts have been tuned to achieve approximately 27-30% size reduction over standard builds while maintaining full functionality.
+
+## Notes for Contributors
+
+When modifying the build pipeline:
+
+1. Always test that the component works correctly after optimization
+2. Compare file sizes before and after changes
+3. Use the safer optimization options first before trying more aggressive settings
+4. Update this README when adding new scripts or changing existing behavior 

@@ -30,6 +30,16 @@ export interface PersianDatepickerProps extends Omit<PersianDatePickerElementOpt
   fontFamily?: string;
   holidayColor?: string;
   holidayBg?: string;
+  
+  // New dark mode and scrollbar related props
+  scrollbarWidth?: string;
+  scrollbarThumbColor?: string;
+  scrollbarThumbHoverColor?: string;
+  scrollbarTrackColor?: string;
+  scrollbarBorderRadius?: string;
+  
+  // Dark mode helper prop
+  darkMode?: boolean;
 }
 
 // Methods that will be available via ref
@@ -81,6 +91,12 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       fontFamily,
       holidayColor,
       holidayBg,
+      scrollbarWidth,
+      scrollbarThumbColor,
+      scrollbarThumbHoverColor,
+      scrollbarTrackColor,
+      scrollbarBorderRadius,
+      darkMode,
       ...restProps
     } = props;
     
@@ -138,6 +154,11 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
         if (fontFamily) element.style.setProperty('--jdp-font-family', fontFamily);
         if (holidayColor) element.style.setProperty('--jdp-holiday-color', holidayColor);
         if (holidayBg) element.style.setProperty('--jdp-holiday-bg', holidayBg);
+        if (scrollbarWidth) element.style.setProperty('--jdp-scrollbar-width', scrollbarWidth);
+        if (scrollbarThumbColor) element.style.setProperty('--jdp-scrollbar-thumb-color', scrollbarThumbColor);
+        if (scrollbarThumbHoverColor) element.style.setProperty('--jdp-scrollbar-thumb-hover-color', scrollbarThumbHoverColor);
+        if (scrollbarTrackColor) element.style.setProperty('--jdp-scrollbar-track-color', scrollbarTrackColor);
+        if (scrollbarBorderRadius) element.style.setProperty('--jdp-scrollbar-border-radius', scrollbarBorderRadius);
         
         // Add change event listener
         const handleChange = (e: Event) => {
@@ -163,6 +184,11 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       fontFamily, 
       holidayColor, 
       holidayBg,
+      scrollbarWidth,
+      scrollbarThumbColor,
+      scrollbarThumbHoverColor,
+      scrollbarTrackColor,
+      scrollbarBorderRadius,
       ...Object.values(restProps)
     ]);
     
