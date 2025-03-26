@@ -1,140 +1,72 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 - Page Not Found | Persian Date Picker Element</title>
-  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-  <script src="./assets/js/path-fix.js"></script>
+  <title>Page Not Found - Persian Date Picker Element</title>
   <style>
-    :root {
-      --primary: #0891b2;
-      --primary-hover: #0e7490;
-      --background: #f8fafc;
-      --foreground: #1e293b;
-      --muted: #64748b;
-      --radius: 0.5rem;
-    }
-
     body {
-      font-family: 'Vazirmatn', system-ui, sans-serif;
-      background-color: var(--background);
-      color: var(--foreground);
-      line-height: 1.6;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      margin: 0;
-      padding: 20px;
       text-align: center;
     }
-
+    
     .container {
       max-width: 600px;
+      padding: 2rem;
     }
-
+    
     h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
+      color: #0891b2;
     }
-
+    
     p {
-      color: var(--muted);
       margin-bottom: 2rem;
+      font-size: 1.2rem;
+      color: #64748b;
     }
-
-    .btn {
+    
+    .link {
       display: inline-block;
-      background-color: var(--primary);
+      background-color: #0891b2;
       color: white;
       text-decoration: none;
       padding: 0.75rem 1.5rem;
-      border-radius: var(--radius);
-      margin: 0 0.5rem 1rem;
+      border-radius: 0.25rem;
+      font-weight: 500;
       transition: background-color 0.2s;
+      margin: 0 0.5rem;
     }
-
-    .btn:hover {
-      background-color: var(--primary-hover);
+    
+    .link:hover {
+      background-color: #0e7490;
     }
-
-    .links {
-      margin-top: 2rem;
-    }
-
-    .links h3 {
+    
+    .emoji {
+      font-size: 4rem;
       margin-bottom: 1rem;
-    }
-
-    .links ul {
-      list-style: none;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-    }
-
-    .links ul li a {
-      color: var(--primary);
-      text-decoration: none;
-    }
-
-    .links ul li a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>صفحه مورد نظر یافت نشد</h1>
-    <p>متأسفانه صفحه‌ای که به دنبال آن بودید پیدا نشد. لطفاً از یکی از لینک‌های زیر استفاده کنید.</p>
-    
+    <div class="emoji">🔍</div>
+    <h1>صفحه یافت نشد</h1>
+    <p>متأسفانه صفحه‌ای که به دنبال آن هستید وجود ندارد یا به آدرس دیگری منتقل شده است.</p>
     <div>
-      <a href="./index.html" class="btn">صفحه اصلی</a>
-      <a href="./docs/index.html" class="btn">مستندات</a>
-      <a href="./examples/index.html" class="btn">مثال‌ها</a>
-    </div>
-    
-    <div class="links">
-      <h3>لینک‌های مستندات فریم‌ورک‌ها</h3>
-      <ul>
-        <li><a href="./docs/frameworks/react.html">React</a></li>
-        <li><a href="./docs/frameworks/vue.html">Vue</a></li>
-        <li><a href="./docs/frameworks/angular.html">Angular</a></li>
-      </ul>
+      <a href="index.html" class="link">صفحه اصلی</a>
+      <a href="docs/index.html" class="link">مستندات</a>
+      <a href="examples/index.html" class="link">مثال‌ها</a>
     </div>
   </div>
-  
-  <script>
-    // Try to detect the correct path based on the URL
-    function fixMissingPath() {
-      // Get the current path
-      const path = window.location.pathname;
-      
-      // If we're on GitHub Pages and in the persian-datepicker-element repo
-      if (window.location.hostname === 'mehrabix.github.io' && 
-          path.includes('/persian-datepicker-element/')) {
-        
-        // Check if we might be looking for a framework doc
-        if (path.includes('/frameworks/') || path.includes('/react') || 
-            path.includes('/vue') || path.includes('/angular')) {
-          
-          // Show a special message for framework docs
-          document.querySelector('h1').textContent = 'مستندات فریم‌ورک‌ها';
-          document.querySelector('p').innerHTML = 
-            'به نظر می‌رسد به دنبال مستندات یکی از فریم‌ورک‌ها هستید. ' +
-            'لطفاً از لینک‌های زیر استفاده کنید:';
-        }
-        
-        // You could add more specific logic here based on the URL pattern
-      }
-    }
-    
-    // Run the fix
-    fixMissingPath();
-  </script>
 </body>
 </html> 

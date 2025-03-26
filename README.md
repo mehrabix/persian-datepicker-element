@@ -1,6 +1,40 @@
-# Persian Date Picker Element | تقویم انتخاب تاریخ شمسی
+# Persian Date Picker Element
 
-یک کامپوننت وب مدرن و قابل شخصی‌سازی برای انتخاب تاریخ شمسی با طراحی مشابه کامپوننت‌های shadcn.
+A beautiful and fully customizable Persian (Jalali) date picker element for web applications.
+
+## Project Structure
+
+- **docs/** - Documentation pages
+  - **frameworks/** - Framework-specific documentation (React, Vue, Angular)
+- **examples/** - Example implementations
+- **assets/** - Supporting assets
+
+## Navigation
+
+The website uses simple relative links for navigation:
+
+- Home page: [index.html](index.html)
+- Documentation: [docs/index.html](docs/index.html)
+- Examples: [examples/index.html](examples/index.html)
+
+## Framework Support
+
+- [React Documentation](docs/frameworks/react.html)
+- [Vue Documentation](docs/frameworks/vue.html)
+- [Angular Documentation](docs/frameworks/angular.html)
+
+## Features
+
+- Persian (Jalali) calendar with holiday support
+- Customizable themes with CSS variables
+- Dark mode support
+- Mobile-responsive design
+- TypeScript support
+- Framework integrations for React, Vue, and Angular
+
+## Getting Started
+
+See the [examples](examples/index.html) for implementation details.
 
 ## Features | ویژگی‌ها
 
