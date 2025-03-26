@@ -54,9 +54,9 @@ jobs:
         run: |
           mkdir -p build
           cp -r dist build/
-          cp -r examples build/
           cp -r demo build/
           cp index.html build/
+          touch build/.nojekyll
           echo "Copied required files to build directory"
         
       - name: Setup Pages
