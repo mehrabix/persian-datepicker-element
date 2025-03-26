@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persian Datepicker Element for React</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <style>
+    :root {
+      --primary: #0891b2;
+      --primary-hover: #0e7490;
+      --primary-foreground: #f8fafc;
+      --muted: #f1f5f9;
+      --muted-foreground: #64748b;
+      --background: #ffffff;
+      --foreground: #0f172a;
+      --border: #e2e8f0;
+      --accent: #f1f5f9;
+      --radius: 0.5rem;
+    }
+
+    .dark {
+      --primary: #0891b2;
+      --primary-hover: #22d3ee;
+      --primary-foreground: #f8fafc;
+      --muted: #1e293b;
+      --muted-foreground: #94a3b8;
+      --background: #0f172a;
+      --foreground: #e2e8f0;
+      --border: #1e293b;
+      --accent: #1e293b;
+    }
+
+    body {
+      font-family: 'Vazirmatn', system-ui, sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .nav-links a {
+      margin-left: 1rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--foreground);
+    }
+
+    pre {
+      background-color: var(--muted);
+      padding: 1rem;
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: monospace;
+      color: var(--primary);
+    }
+
+    .dark-mode-toggle {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .dark-mode-toggle:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .example {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .feature {
+      padding: 1rem;
+      border-radius: var(--radius);
+      background-color: var(--accent);
+    }
+
+    .props-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+    }
+
+    .props-table th,
+    .props-table td {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      text-align: right;
+    }
+
+    .props-table th {
+      background-color: var(--muted);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+
+    .back-to-top:hover {
+      background-color: var(--primary-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Persian Datepicker Element برای React</h1>
+      <p>
+        یک مؤلفه تاریخ شمسی (جلالی) زیبا و کاملاً قابل سفارشی‌سازی برای React
+      </p>
+    </header>
+
+    <nav>
+      <div class="nav-links">
+        <a href="../index.html">صفحه اصلی</a>
+        <a href="react.html" class="active">نسخه React</a>
+        <a href="vue.html">نسخه Vue</a>
+        <a href="angular.html">نسخه Angular</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">تغییر حالت تاریک/روشن</button>
+    </nav>
+
+    <div class="content">
+      <h2>نصب و راه‌اندازی</h2>
+      <p>برای نصب کامپوننت تاریخ شمسی در پروژه React خود:</p>
+      <pre><code>// Using npm
+npm install react-persian-datepicker-element persian-datepicker-element
+
+// Using Yarn
+yarn add react-persian-datepicker-element persian-datepicker-element
+
+// Using pnpm
+pnpm add react-persian-datepicker-element persian-datepicker-element</code></pre>
+
+      <h2>استفاده پایه</h2>
+      <pre><code>import React, { useState } from 'react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  const handleDateChange = (event) => {
+    console.log('Selected date (Jalali):', event.jalali); // [year, month, day]
+    console.log('Gregorian date:', event.gregorian);
+    console.log('Is holiday:', event.isHoliday);
+    console.log('Events:', event.events);
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Persian Datepicker Example&lt;/h1&gt;
+      &lt;PersianDatepicker
+        placeholder="انتخاب تاریخ"
+        format="YYYY/MM/DD"
+        showHolidays={true}
+        onChange={handleDateChange}
+      /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre>
+
+      <h2>مثال‌های کاربردی</h2>
+      <div class="examples">
+        <div class="example">
+          <h3>شخصی‌سازی ظاهر</h3>
+          <pre><code>import React from 'react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  // تعریف تم با استفاده از متغیرهای CSS
+  const blueTheme = {
+    '--jdp-primary': '#3b82f6',
+    '--jdp-primary-hover': '#2563eb',
+    '--jdp-ring': '#60a5fa',
+    '--jdp-border-radius': '0.5rem'
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Customized Persian Datepicker&lt;/h1&gt;
+      &lt;PersianDatepicker 
+        placeholder="انتخاب تاریخ با تم آبی"
+        cssVariables={blueTheme}
+      /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+        </div>
+
+        <div class="example">
+          <h3>پشتیبانی از حالت تاریک</h3>
+          <pre><code>import React, { useState } from 'react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  
+  // تم روشن
+  const lightTheme = {
+    '--jdp-primary': '#0891b2',
+    '--jdp-primary-hover': '#0e7490'
+  };
+  
+  // تم تاریک
+  const darkTheme = {
+    // رنگ‌های پایه
+    '--jdp-background': '#1e1e2f',
+    '--jdp-foreground': '#e2e8f0',
+    '--jdp-muted': '#334155',
+    '--jdp-muted-foreground': '#94a3b8',
+    '--jdp-border': '#475569',
+    '--jdp-input-border-color': '#475569',
+    '--jdp-primary': '#0891b2',
+    '--jdp-primary-hover': '#0e7490',
+    
+    // فیلد ورودی
+    '--jdp-input-bg': '#1e1e2f',
+    '--jdp-input-text': '#e2e8f0',
+    
+    // بدنه تقویم
+    '--jdp-calendar-bg': '#0f172a',
+    '--jdp-day-text': '#e2e8f0'
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() => setIsDarkMode(!isDarkMode)}&gt;
+        Toggle {isDarkMode ? 'Light' : 'Dark'} Mode
+      &lt;/button&gt;
+      
+      &lt;PersianDatepicker
+        placeholder="تاریخ را انتخاب کنید"
+        cssVariables={isDarkMode ? darkTheme : lightTheme}
+      /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+        </div>
+
+        <div class="example">
+          <h3>استفاده از Ref (API دستوری)</h3>
+          <pre><code>import React, { useRef } from 'react';
+import { PersianDatepicker, PersianDatepickerMethods } from 'react-persian-datepicker-element';
+
+function App() {
+  const datepickerRef = useRef&lt;PersianDatepickerMethods&gt;(null);
+
+  const handleGetValue = () => {
+    // دریافت مقدار فعلی
+    const value = datepickerRef.current?.getValue();
+    console.log('Current value:', value);
+  };
+
+  const handleSetValue = () => {
+    // تنظیم مقدار به صورت برنامه‌ای (مثلاً به ۱۵ دی ۱۴۰۲)
+    datepickerRef.current?.setValue(1402, 10, 15);
+  };
+
+  const handleOpenCalendar = () => {
+    datepickerRef.current?.open();
+  };
+
+  const handleCloseCalendar = () => {
+    datepickerRef.current?.close();
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;PersianDatepicker ref={datepickerRef} placeholder="از دکمه‌ها استفاده کنید" /&gt;
+      
+      &lt;div style={{ marginTop: '1rem' }}&gt;
+        &lt;button onClick={handleGetValue}&gt;Get Value&lt;/button&gt;
+        &lt;button onClick={handleSetValue}&gt;Set to 15 Dey 1402&lt;/button&gt;
+        &lt;button onClick={handleOpenCalendar}&gt;Open Calendar&lt;/button&gt;
+        &lt;button onClick={handleCloseCalendar}&gt;Close Calendar&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+        </div>
+
+        <div class="example">
+          <h3>انواع تعطیلات</h3>
+          <pre><code>&lt;PersianDatepicker
+  holidayTypes="Iran,Religious"
+  placeholder="تعطیلات ایران و مذهبی"
+/&gt;
+
+&lt;PersianDatepicker
+  holidayTypes="Afghanistan"
+  placeholder="تعطیلات افغانستان"
+/&gt;</code></pre>
+        </div>
+      </div>
+
+      <h2>ویژگی‌ها (Props)</h2>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>نام پراپرتی</th>
+            <th>نوع</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>placeholder</td>
+            <td>string</td>
+            <td>متن نمایشی پیش فرض</td>
+          </tr>
+          <tr>
+            <td>format</td>
+            <td>string</td>
+            <td>فرمت نمایش تاریخ (مثلاً "YYYY/MM/DD")</td>
+          </tr>
+          <tr>
+            <td>showHolidays</td>
+            <td>boolean</td>
+            <td>نمایش نشانگر تعطیلات</td>
+          </tr>
+          <tr>
+            <td>holidayTypes</td>
+            <td>string</td>
+            <td>انواع تعطیلات برای نمایش (با کاما جدا شده: "Iran", "Religious", "Afghanistan")</td>
+          </tr>
+          <tr>
+            <td>rtl</td>
+            <td>boolean</td>
+            <td>چیدمان راست به چپ</td>
+          </tr>
+          <tr>
+            <td>value</td>
+            <td>[number, number, number]</td>
+            <td>مقدار اولیه تاریخ به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>onChange</td>
+            <td>function</td>
+            <td>تابع callback هنگام تغییر تاریخ</td>
+          </tr>
+          <tr>
+            <td>disabled</td>
+            <td>boolean</td>
+            <td>غیرفعال کردن انتخابگر تاریخ</td>
+          </tr>
+          <tr>
+            <td>min</td>
+            <td>[number, number, number]</td>
+            <td>حداقل تاریخ قابل انتخاب به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>max</td>
+            <td>[number, number, number]</td>
+            <td>حداکثر تاریخ قابل انتخاب به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>className</td>
+            <td>string</td>
+            <td>کلاس سفارشی برای کانتینر</td>
+          </tr>
+          <tr>
+            <td>style</td>
+            <td>object</td>
+            <td>استایل‌های سفارشی برای کانتینر</td>
+          </tr>
+          <tr>
+            <td>id</td>
+            <td>string</td>
+            <td>شناسه HTML</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>پراپرتی‌های استایل‌دهی</h3>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>نام پراپرتی</th>
+            <th>نوع</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>primaryColor</td>
+            <td>string</td>
+            <td>رنگ اصلی برای تاریخ‌های انتخاب شده</td>
+          </tr>
+          <tr>
+            <td>primaryHover</td>
+            <td>string</td>
+            <td>رنگ هاور برای تاریخ‌ها</td>
+          </tr>
+          <tr>
+            <td>backgroundColor</td>
+            <td>string</td>
+            <td>رنگ پس‌زمینه</td>
+          </tr>
+          <tr>
+            <td>foregroundColor</td>
+            <td>string</td>
+            <td>رنگ متن</td>
+          </tr>
+          <tr>
+            <td>borderColor</td>
+            <td>string</td>
+            <td>رنگ حاشیه</td>
+          </tr>
+          <tr>
+            <td>borderRadius</td>
+            <td>string</td>
+            <td>شعاع گوشه‌ها</td>
+          </tr>
+          <tr>
+            <td>fontFamily</td>
+            <td>string</td>
+            <td>فونت خانواده</td>
+          </tr>
+          <tr>
+            <td>holidayColor</td>
+            <td>string</td>
+            <td>رنگ متن تعطیلات</td>
+          </tr>
+          <tr>
+            <td>holidayBg</td>
+            <td>string</td>
+            <td>رنگ پس‌زمینه تعطیلات</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>متغیرهای CSS برای استایل‌دهی</h2>
+      <p>تمام متغیرهای CSS از پیشوند <code>--jdp-</code> (مخفف Jalali DatePicker) استفاده می‌کنند:</p>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>متغیر CSS</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>--jdp-primary</td>
+            <td>رنگ اصلی برای تاریخ‌های انتخاب شده و حالت فوکوس</td>
+          </tr>
+          <tr>
+            <td>--jdp-primary-hover</td>
+            <td>رنگ برای حالت‌های هاور</td>
+          </tr>
+          <tr>
+            <td>--jdp-primary-foreground</td>
+            <td>رنگ متن روی پس‌زمینه اصلی</td>
+          </tr>
+          <tr>
+            <td>--jdp-background</td>
+            <td>رنگ پس‌زمینه اصلی</td>
+          </tr>
+          <tr>
+            <td>--jdp-foreground</td>
+            <td>رنگ متن اصلی</td>
+          </tr>
+          <tr>
+            <td>--jdp-muted</td>
+            <td>رنگ پس‌زمینه کم‌رنگ برای عناصر متناوب</td>
+          </tr>
+          <tr>
+            <td>--jdp-muted-foreground</td>
+            <td>رنگ متن برای عناصر کم‌رنگ</td>
+          </tr>
+          <tr>
+            <td>--jdp-border</td>
+            <td>رنگ حاشیه</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-border-color</td>
+            <td>رنگ حاشیه فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-bg</td>
+            <td>رنگ پس‌زمینه فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-text</td>
+            <td>رنگ متن فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-placeholder</td>
+            <td>رنگ متن پیش‌فرض فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-calendar-bg</td>
+            <td>رنگ پس‌زمینه منوی بازشونده تقویم</td>
+          </tr>
+          <tr>
+            <td>--jdp-day-hover-bg</td>
+            <td>رنگ پس‌زمینه هنگام هاور روی یک روز</td>
+          </tr>
+          <tr>
+            <td>--jdp-holiday-color</td>
+            <td>رنگ متن تعطیلات</td>
+          </tr>
+          <tr>
+            <td>--jdp-holiday-bg</td>
+            <td>رنگ پس‌زمینه تعطیلات</td>
+          </tr>
+          <tr>
+            <td>--jdp-font-size</td>
+            <td>اندازه فونت پایه</td>
+          </tr>
+          <tr>
+            <td>--jdp-font-family</td>
+            <td>فونت خانواده</td>
+          </tr>
+          <tr>
+            <td>--jdp-border-radius</td>
+            <td>شعاع گوشه پایه</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-border-radius</td>
+            <td>شعاع گوشه فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-calendar-border-radius</td>
+            <td>شعاع گوشه منوی بازشونده تقویم</td>
+          </tr>
+          <tr>
+            <td>--jdp-day-cell-border-radius</td>
+            <td>شعاع گوشه سلول روز</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>متدهای Ref</h2>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>متد</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>getValue()</td>
+            <td>دریافت مقدار فعلی تاریخ به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>setValue(year, month, day)</td>
+            <td>تنظیم مقدار تاریخ به صورت برنامه‌ای</td>
+          </tr>
+          <tr>
+            <td>open()</td>
+            <td>باز کردن منوی بازشونده تاریخ</td>
+          </tr>
+          <tr>
+            <td>close()</td>
+            <td>بستن منوی بازشونده تاریخ</td>
+          </tr>
+          <tr>
+            <td>getElement()</td>
+            <td>دریافت عنصر web component زیرین</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>پشتیبانی از TypeScript</h2>
+      <p>
+        این کتابخانه شامل تعاریف TypeScript برای تمام ویژگی‌ها است:
+      </p>
+      <pre><code>import { 
+  PersianDatepicker, 
+  PersianDatepickerMethods, 
+  PersianDateChangeEvent,
+  DateTuple
+} from 'react-persian-datepicker-element';
+
+// نوع برای رویداد onChange
+const handleChange = (event: PersianDateChangeEvent) => {
+  const jalaliDate: DateTuple = event.jalali;
+  const gregorianDate: DateTuple = event.gregorian;
+};</code></pre>
+
+      <h2>پشتیبانی از مرورگرها</h2>
+      <p>
+        این کامپوننت از Web Components استفاده می‌کند و با تمام مرورگرهای مدرن سازگار است.
+      </p>
+
+      <h2>مجوز</h2>
+      <p>MIT</p>
+    </div>
+  </div>
+
+  <a href="#" class="back-to-top">بازگشت به بالا</a>
+
+  <script>
+    // Toggle dark mode
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+    
+    // Check for saved dark mode preference or prefer-color-scheme
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedDarkMode = localStorage.getItem('darkMode');
+    
+    if (storedDarkMode === 'true' || (storedDarkMode === null && prefersDarkMode)) {
+      body.classList.add('dark');
+    }
+    
+    darkModeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark');
+      localStorage.setItem('darkMode', body.classList.contains('dark') ? 'true' : 'false');
+    });
+  </script>
+</body>
+</html> 

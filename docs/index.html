@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persian Datepicker Element - Documentation</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <style>
+    :root {
+      --primary: #0891b2;
+      --primary-hover: #0e7490;
+      --primary-foreground: #f8fafc;
+      --muted: #f1f5f9;
+      --muted-foreground: #64748b;
+      --background: #ffffff;
+      --foreground: #0f172a;
+      --border: #e2e8f0;
+      --accent: #f1f5f9;
+      --radius: 0.5rem;
+    }
+
+    .dark {
+      --primary: #0891b2;
+      --primary-hover: #22d3ee;
+      --primary-foreground: #f8fafc;
+      --muted: #1e293b;
+      --muted-foreground: #94a3b8;
+      --background: #0f172a;
+      --foreground: #e2e8f0;
+      --border: #1e293b;
+      --accent: #1e293b;
+    }
+
+    body {
+      font-family: 'Vazirmatn', system-ui, sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      text-align: center;
+    }
+
+    .hero {
+      text-align: center;
+      margin: 3rem 0;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--muted-foreground);
+      max-width: 800px;
+      margin: 0 auto 2rem;
+    }
+
+    nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .dark-mode-toggle {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .dark-mode-toggle:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .framework-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .framework-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      background-color: var(--background);
+    }
+
+    .framework-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .framework-card-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--primary-foreground);
+    }
+    
+    .react-icon {
+      background-color: #61dafb;
+    }
+    
+    .vue-icon {
+      background-color: #42b883;
+    }
+    
+    .angular-icon {
+      background-color: #dd0031;
+    }
+
+    .framework-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .framework-card p {
+      color: var(--muted-foreground);
+      margin-bottom: 1.5rem;
+    }
+
+    .framework-card a {
+      display: inline-block;
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      text-decoration: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    .framework-card a:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .features {
+      margin: 4rem 0;
+    }
+
+    .features h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      background-color: var(--accent);
+    }
+
+    .feature-item h3 {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .feature-item h3 span {
+      margin-left: 0.5rem;
+    }
+
+    .feature-item p {
+      color: var(--muted-foreground);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted-foreground);
+    }
+
+    .examples-section {
+      margin: 4rem 0;
+      text-align: center;
+    }
+
+    .examples-btn {
+      display: inline-block;
+      background-color: var(--accent);
+      color: var(--foreground);
+      text-decoration: none;
+      padding: 0.75rem 2rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      border: 1px solid var(--border);
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .examples-btn:hover {
+      transform: translateY(-2px);
+      background-color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <button class="dark-mode-toggle" id="darkModeToggle">تغییر حالت تاریک/روشن</button>
+    </nav>
+
+    <div class="hero">
+      <h1>Persian Datepicker Element</h1>
+      <p>
+        کامپوننت تاریخ شمسی (جلالی) برای وب، زیبا و کاملاً قابل سفارشی‌سازی، با پشتیبانی از React، Vue و Angular
+      </p>
+    </div>
+
+    <div class="framework-cards">
+      <div class="framework-card">
+        <div class="framework-card-icon react-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="2.139" />
+            <path d="M12 14.863c5.137 0 9.303-1.282 9.303-2.863s-4.166-2.863-9.303-2.863S2.697 10.419 2.697 12s4.166 2.863 9.303 2.863Z" />
+            <path d="M9.296 13.456C8.423 15.929 8.12 18.324 8.44 19.95c.352 1.786 1.306 2.862 2.561 2.862 1.254 0 2.208-1.076 2.56-2.862.32-1.626.018-4.02-.855-6.494"/>
+            <path d="M14.704 10.544c.873-2.473 1.176-4.868.856-6.494-.352-1.786-1.306-2.862-2.56-2.862-1.255 0-2.209 1.076-2.561 2.862-.32 1.626-.018 4.02.855 6.494"/>
+            <path d="M9.296 10.544C7.109 7.975 5.09 6.057 3.733 5.785 2.143 5.474 1.092 6.2.772 7.533c-.32 1.333.28 2.687 1.806 3.906 1.345.986 3.387 1.923 5.718 3.017"/>
+            <path d="M14.704 13.456c2.187 2.569 4.206 4.487 5.563 4.759 1.59.311 2.641-.415 2.96-1.748.32-1.333-.279-2.687-1.806-3.906-1.345-.986-3.387-1.923-5.717-3.017"/>
+          </svg>
+        </div>
+        <h3>نسخه React</h3>
+        <p>پیاده‌سازی کامپوننت تاریخ شمسی برای پروژه‌های React، با پشتیبانی از هوک‌ها و TypeScript</p>
+        <a href="frameworks/react.html">مشاهده مستندات</a>
+      </div>
+
+      <div class="framework-card">
+        <div class="framework-card-icon vue-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L14.928 7H19.5L12 20L4.5 7H9.072L12 2Z" fill="currentColor" stroke="none" />
+            <path d="M12 2L14.5 7H18L12 17L6 7H9.5L12 2Z" fill="rgba(255,255,255,0.8)" stroke="none" />
+          </svg>
+        </div>
+        <h3>نسخه Vue</h3>
+        <p>پیاده‌سازی کامپوننت تاریخ شمسی برای Vue 3 با پشتیبانی از Composition API و v-model</p>
+        <a href="frameworks/vue.html">مشاهده مستندات</a>
+      </div>
+
+      <div class="framework-card">
+        <div class="framework-card-icon angular-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1">
+            <path d="M12 2.5L1.75 6.38L3.5 18.16L12 22.5L20.5 18.16L22.25 6.38L12 2.5Z" fill="currentColor" stroke="none" />
+            <path d="M12 5L4 17L7.5 16.5L8.68 14H15.25L16.38 16.5L19.92 17L12 5ZM12 8.5L14 12.5H10L12 8.5Z" fill="rgba(255,255,255,0.9)" stroke="none" />
+          </svg>
+        </div>
+        <h3>نسخه Angular</h3>
+        <p>پیاده‌سازی کامپوننت تاریخ شمسی برای Angular، با پشتیبانی از Reactive Forms و اتصال دو طرفه</p>
+        <a href="frameworks/angular.html">مشاهده مستندات</a>
+      </div>
+    </div>
+
+    <div class="features">
+      <h2>ویژگی‌های کلیدی</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <h3>
+            <span role="img" aria-label="Calendar">🗓️</span>
+            <span>تقویم شمسی (جلالی)</span>
+          </h3>
+          <p>نمایش و انتخاب تاریخ بر اساس تقویم رسمی ایران، تبدیل خودکار به تاریخ میلادی</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>
+            <span role="img" aria-label="Design">🎨</span>
+            <span>کاملاً قابل سفارشی‌سازی</span>
+          </h3>
+          <p>استفاده از متغیرهای CSS برای شخصی‌سازی کامل رنگ‌ها، فونت‌ها، سایه‌ها و گوشه‌ها</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>
+            <span role="img" aria-label="Dark Mode">🌗</span>
+            <span>پشتیبانی از حالت تاریک</span>
+          </h3>
+          <p>تغییر خودکار به تم تاریک بر اساس تنظیمات کاربر یا تغییر دستی به حالت تاریک</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>
+            <span role="img" aria-label="Holidays">📅</span>
+            <span>نمایش تعطیلات و رویدادها</span>
+          </h3>
+          <p>نمایش تعطیلات رسمی ایران و افغانستان و امکان افزودن رویدادهای سفارشی</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>
+            <span role="img" aria-label="Mobile">📱</span>
+            <span>واکنش‌گرا و موبایل-فرندلی</span>
+          </h3>
+          <p>طراحی واکنش‌گرا برای نمایش بهینه در تمام اندازه‌های صفحه و تجربه کاربری عالی در موبایل</p>
+        </div>
+
+        <div class="feature-item">
+          <h3>
+            <span role="img" aria-label="TypeScript">💪</span>
+            <span>پشتیبانی کامل از TypeScript</span>
+          </h3>
+          <p>تعاریف کامل TypeScript برای API داخلی و خارجی، تکمیل خودکار و type safety</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="examples-section">
+      <h2>مثال‌ها</h2>
+      <p>مجموعه‌ای از مثال‌های کاربردی برای نمایش قابلیت‌های مختلف کامپوننت تاریخ شمسی</p>
+      <a href="../examples/index.html" class="examples-btn">مشاهده مثال‌ها</a>
+    </div>
+
+    <footer>
+      <p>
+        Persian Datepicker Element &copy; 2023-2024
+        <br>
+        تحت مجوز MIT
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // Toggle dark mode
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+    
+    // Check for saved dark mode preference or prefer-color-scheme
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedDarkMode = localStorage.getItem('darkMode');
+    
+    if (storedDarkMode === 'true' || (storedDarkMode === null && prefersDarkMode)) {
+      body.classList.add('dark');
+    }
+    
+    darkModeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark');
+      localStorage.setItem('darkMode', body.classList.contains('dark') ? 'true' : 'false');
+    });
+  </script>
+</body>
+</html> 

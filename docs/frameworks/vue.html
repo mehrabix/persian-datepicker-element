@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persian Datepicker Element for Vue</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <style>
+    :root {
+      --primary: #0891b2;
+      --primary-hover: #0e7490;
+      --primary-foreground: #f8fafc;
+      --muted: #f1f5f9;
+      --muted-foreground: #64748b;
+      --background: #ffffff;
+      --foreground: #0f172a;
+      --border: #e2e8f0;
+      --accent: #f1f5f9;
+      --radius: 0.5rem;
+    }
+
+    .dark {
+      --primary: #0891b2;
+      --primary-hover: #22d3ee;
+      --primary-foreground: #f8fafc;
+      --muted: #1e293b;
+      --muted-foreground: #94a3b8;
+      --background: #0f172a;
+      --foreground: #e2e8f0;
+      --border: #1e293b;
+      --accent: #1e293b;
+    }
+
+    body {
+      font-family: 'Vazirmatn', system-ui, sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .nav-links a {
+      margin-left: 1rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--foreground);
+    }
+
+    pre {
+      background-color: var(--muted);
+      padding: 1rem;
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: monospace;
+      color: var(--primary);
+    }
+
+    .dark-mode-toggle {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .dark-mode-toggle:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: a1.5rem;
+      margin-top: 2rem;
+    }
+
+    .example {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .props-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+    }
+
+    .props-table th,
+    .props-table td {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      text-align: right;
+    }
+
+    .props-table th {
+      background-color: var(--muted);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+
+    .back-to-top:hover {
+      background-color: var(--primary-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Persian Datepicker Element برای Vue</h1>
+      <p>
+        یک مؤلفه تاریخ شمسی (جلالی) زیبا و کاملاً قابل سفارشی‌سازی برای Vue 3
+      </p>
+    </header>
+
+    <nav>
+      <div class="nav-links">
+        <a href="../index.html">صفحه اصلی</a>
+        <a href="react.html">نسخه React</a>
+        <a href="vue.html" class="active">نسخه Vue</a>
+        <a href="angular.html">نسخه Angular</a>
+      </div>
+      <button class="dark-mode-toggle" id="darkModeToggle">تغییر حالت تاریک/روشن</button>
+    </nav>
+
+    <div class="content">
+      <h2>نصب و راه‌اندازی</h2>
+      <p>برای نصب کامپوننت تاریخ شمسی در پروژه Vue خود:</p>
+      <pre><code>// Using npm
+npm install vue-persian-datepicker-element persian-datepicker-element
+
+// Using Yarn
+yarn add vue-persian-datepicker-element persian-datepicker-element
+
+// Using pnpm
+pnpm add vue-persian-datepicker-element persian-datepicker-element</code></pre>
+
+      <h2>استفاده پایه</h2>
+      <pre><code>&lt;script setup&gt;
+import { ref } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+const selectedDate = ref(null);
+
+const handleDateChange = (event) => {
+  selectedDate.value = event.jalali;
+  console.log('Jalali date:', event.jalali); // [year, month, day]
+  console.log('Gregorian date:', event.gregorian);
+  console.log('Is holiday:', event.isHoliday);
+  console.log('Events:', event.events);
+};
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;Persian Datepicker Example&lt;/h1&gt;
+    &lt;PersianDatepicker
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+      :showHolidays="true"
+      @change="handleDateChange"
+    /&gt;
+    &lt;p v-if="selectedDate"&gt;
+      تاریخ انتخاب شده: {{ selectedDate[0] }}/{{ selectedDate[1] }}/{{ selectedDate[2] }}
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+
+      <h2>Vue 3 با پشتیبانی از v-model</h2>
+      <pre><code>&lt;script setup&gt;
+import { ref } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+// استفاده از v-model با تاریخ پیکر
+const selectedDate = ref([1402, 10, 15]); // مقدار اولیه: ۱۵ دی ۱۴۰۲
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;Persian Datepicker with v-model&lt;/h1&gt;
+    &lt;PersianDatepicker
+      v-model="selectedDate"
+      placeholder="تاریخ را انتخاب کنید"
+    /&gt;
+    &lt;p v-if="selectedDate"&gt;
+      تاریخ انتخاب شده: {{ selectedDate[0] }}/{{ selectedDate[1] }}/{{ selectedDate[2] }}
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+
+      <h2>مثال‌های کاربردی</h2>
+      <div class="examples">
+        <div class="example">
+          <h3>شخصی‌سازی ظاهر</h3>
+          <pre><code>&lt;script setup&gt;
+import { ref } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+// تعریف تم
+const blueTheme = {
+  '--jdp-primary': '#3b82f6',
+  '--jdp-primary-hover': '#2563eb',
+  '--jdp-ring': '#60a5fa',
+  '--jdp-border-radius': '0.5rem'
+};
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;Customized Persian Datepicker&lt;/h1&gt;
+    &lt;PersianDatepicker 
+      placeholder="انتخاب تاریخ با تم آبی"
+      :cssVariables="blueTheme"
+    /&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+        </div>
+
+        <div class="example">
+          <h3>پشتیبانی از حالت تاریک</h3>
+          <pre><code>&lt;script setup&gt;
+import { ref } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+const isDarkMode = ref(false);
+
+// تم روشن
+const lightTheme = {
+  '--jdp-primary': '#0891b2',
+  '--jdp-primary-hover': '#0e7490'
+};
+
+// تم تاریک
+const darkTheme = {
+  // رنگ‌های پایه
+  '--jdp-background': '#1e1e2f',
+  '--jdp-foreground': '#e2e8f0',
+  '--jdp-muted': '#334155',
+  '--jdp-muted-foreground': '#94a3b8',
+  '--jdp-border': '#475569',
+  '--jdp-input-border-color': '#475569',
+  '--jdp-primary': '#0891b2',
+  '--jdp-primary-hover': '#0e7490',
+  
+  // فیلد ورودی
+  '--jdp-input-bg': '#1e1e2f',
+  '--jdp-input-text': '#e2e8f0',
+  
+  // بدنه تقویم
+  '--jdp-calendar-bg': '#0f172a',
+  '--jdp-day-text': '#e2e8f0'
+};
+
+const toggleDarkMode = () => {
+  isDarkMode.value = !isDarkMode.value;
+};
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;button @click="toggleDarkMode"&gt;
+      Toggle {{ isDarkMode ? 'Light' : 'Dark' }} Mode
+    &lt;/button&gt;
+    
+    &lt;PersianDatepicker
+      placeholder="تاریخ را انتخاب کنید"
+      :cssVariables="isDarkMode ? darkTheme : lightTheme"
+    /&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+        </div>
+
+        <div class="example">
+          <h3>استفاده از Template Ref</h3>
+          <pre><code>&lt;script setup&gt;
+import { ref, onMounted } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+const datepickerRef = ref(null);
+
+const handleGetValue = () => {
+  // دریافت مقدار فعلی
+  const value = datepickerRef.value?.getValue();
+  console.log('Current value:', value);
+};
+
+const handleSetValue = () => {
+  // تنظیم مقدار به صورت برنامه‌ای (مثلاً به ۱۵ دی ۱۴۰۲)
+  datepickerRef.value?.setValue(1402, 10, 15);
+};
+
+const handleOpenCalendar = () => {
+  datepickerRef.value?.open();
+};
+
+const handleCloseCalendar = () => {
+  datepickerRef.value?.close();
+};
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;PersianDatepicker 
+      ref="datepickerRef" 
+      placeholder="از دکمه‌ها استفاده کنید"
+    /&gt;
+    
+    &lt;div style="margin-top: 1rem"&gt;
+      &lt;button @click="handleGetValue"&gt;Get Value&lt;/button&gt;
+      &lt;button @click="handleSetValue"&gt;Set to 15 Dey 1402&lt;/button&gt;
+      &lt;button @click="handleOpenCalendar"&gt;Open Calendar&lt;/button&gt;
+      &lt;button @click="handleCloseCalendar"&gt;Close Calendar&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+        </div>
+      </div>
+
+      <h2>ویژگی‌ها (Props)</h2>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>نام پراپرتی</th>
+            <th>نوع</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>v-model</td>
+            <td>[number, number, number]</td>
+            <td>پیوند دوطرفه برای مقدار تاریخ</td>
+          </tr>
+          <tr>
+            <td>placeholder</td>
+            <td>string</td>
+            <td>متن پیش‌فرض نمایشی در ورودی</td>
+          </tr>
+          <tr>
+            <td>format</td>
+            <td>string</td>
+            <td>فرمت نمایش تاریخ (مثلاً "YYYY/MM/DD")</td>
+          </tr>
+          <tr>
+            <td>showHolidays</td>
+            <td>boolean</td>
+            <td>نمایش نشانگر تعطیلات</td>
+          </tr>
+          <tr>
+            <td>holidayTypes</td>
+            <td>string</td>
+            <td>انواع تعطیلات برای نمایش (با کاما جدا شده)</td>
+          </tr>
+          <tr>
+            <td>rtl</td>
+            <td>boolean</td>
+            <td>چیدمان راست به چپ</td>
+          </tr>
+          <tr>
+            <td>value</td>
+            <td>[number, number, number]</td>
+            <td>مقدار اولیه تاریخ به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>disabled</td>
+            <td>boolean</td>
+            <td>غیرفعال کردن انتخابگر تاریخ</td>
+          </tr>
+          <tr>
+            <td>min</td>
+            <td>[number, number, number]</td>
+            <td>حداقل تاریخ قابل انتخاب به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>max</td>
+            <td>[number, number, number]</td>
+            <td>حداکثر تاریخ قابل انتخاب به صورت [سال، ماه، روز]</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>رویدادها (Events)</h2>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>رویداد</th>
+            <th>داده ارسالی</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>change</td>
+            <td>{ jalali, gregorian, isHoliday, events }</td>
+            <td>هنگام تغییر تاریخ ارسال می‌شود</td>
+          </tr>
+          <tr>
+            <td>open</td>
+            <td>-</td>
+            <td>هنگام باز شدن تقویم ارسال می‌شود</td>
+          </tr>
+          <tr>
+            <td>close</td>
+            <td>-</td>
+            <td>هنگام بسته شدن تقویم ارسال می‌شود</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>متدهای کامپوننت (از طریق template refs)</h2>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>متد</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>getValue()</td>
+            <td>دریافت مقدار فعلی تاریخ به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>setValue(year, month, day)</td>
+            <td>تنظیم مقدار تاریخ به صورت برنامه‌ای</td>
+          </tr>
+          <tr>
+            <td>open()</td>
+            <td>باز کردن منوی بازشونده تاریخ</td>
+          </tr>
+          <tr>
+            <td>close()</td>
+            <td>بستن منوی بازشونده تاریخ</td>
+          </tr>
+          <tr>
+            <td>getElement()</td>
+            <td>دریافت عنصر web component زیرین</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>پشتیبانی از TypeScript</h2>
+      <pre><code>&lt;script setup lang="ts"&gt;
+import { ref } from 'vue';
+import { 
+  PersianDatepicker, 
+  PersianDateChangeEvent, 
+  DateTuple 
+} from 'vue-persian-datepicker-element';
+
+const selectedDate = ref&lt;DateTuple | null&gt;(null);
+
+const handleDateChange = (event: PersianDateChangeEvent) => {
+  selectedDate.value = event.jalali;
+};
+&lt;/script&gt;</code></pre>
+
+      <h2>استفاده با Nuxt 3</h2>
+      <p>برای Nuxt 3، اطمینان حاصل کنید که کامپوننت را به پلاگین‌های خود اضافه کنید:</p>
+      <pre><code>// plugins/persian-datepicker.ts
+import { defineNuxtPlugin } from '#app';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.vueApp.component('PersianDatepicker', PersianDatepicker);
+});</code></pre>
+
+      <p>و آن را در قالب خود به عنوان client-only علامت‌گذاری کنید:</p>
+      <pre><code>&lt;template&gt;
+  &lt;div&gt;
+    &lt;ClientOnly&gt;
+      &lt;PersianDatepicker placeholder="انتخاب تاریخ" /&gt;
+    &lt;/ClientOnly&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+
+      <h2>پشتیبانی از مرورگرها</h2>
+      <p>
+        این کامپوننت از Web Components استفاده می‌کند و با تمام مرورگرهای مدرن سازگار است.
+      </p>
+
+      <h2>مجوز</h2>
+      <p>MIT</p>
+    </div>
+  </div>
+
+  <a href="#" class="back-to-top">بازگشت به بالا</a>
+
+  <script>
+    // Toggle dark mode
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+    
+    // Check for saved dark mode preference or prefer-color-scheme
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedDarkMode = localStorage.getItem('darkMode');
+    
+    if (storedDarkMode === 'true' || (storedDarkMode === null && prefersDarkMode)) {
+      body.classList.add('dark');
+    }
+    
+    darkModeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark');
+      localStorage.setItem('darkMode', body.classList.contains('dark') ? 'true' : 'false');
+    });
+  </script>
+</body>
+</html> 
