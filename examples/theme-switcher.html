@@ -380,7 +380,7 @@
           <span class="slider"></span>
         </label>
       </div>
-
+      
       <h2>انتخاب تم</h2>
       <div class="theme-controls">
         <button class="theme-btn active" data-theme="default">پیش‌فرض</button>
@@ -390,20 +390,20 @@
         <button class="theme-btn" data-theme="orange">نارنجی</button>
         <button class="theme-btn" data-theme="minimal">مینیمال</button>
       </div>
-
+      
       <div class="control-group">
         <div class="color-input">
           <label for="primary-color">رنگ اصلی:</label>
-          <input type="color" id="primary-color" value="#0891b2">
-        </div>
-
+        <input type="color" id="primary-color" value="#0891b2">
+      </div>
+      
         <div class="radius-control">
           <label for="border-radius">شعاع گوشه‌ها:</label>
           <input type="range" id="border-radius" min="0" max="20" value="8">
           <span id="radius-value">8px</span>
         </div>
       </div>
-
+      
       <div class="datepicker-container">
         <persian-datepicker-element id="theme-datepicker" placeholder="تاریخ را انتخاب کنید"></persian-datepicker-element>
       </div>
@@ -412,7 +412,7 @@
         <p><strong>تاریخ انتخاب شده:</strong> <span id="selected-date">-</span></p>
       </div>
     </div>
-
+    
     <div class="link-container" style="margin-top: 30px; text-align: center;">
       <a href="index.html" class="link">نمونه‌های پایه</a>
       <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
@@ -556,7 +556,7 @@
         ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
       );
     }
-
+    
     // Handle theme button clicks
     themeButtons.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -584,7 +584,7 @@
               '--jdp-font-family': selectedTheme['--jdp-font-family'],
               '--jdp-font-feature-settings': selectedTheme['--jdp-font-feature-settings']
             }});
-          } else {
+            } else {
             applyTheme(selectedTheme);
           }
           
@@ -598,7 +598,7 @@
         }
       });
     });
-
+    
     // Dark mode toggle
     darkModeToggle.addEventListener('change', () => {
       // Toggle dark class on body
