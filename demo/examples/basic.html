@@ -249,114 +249,6 @@
       font-size: 14px;
       font-weight: 500;
     }
-    
-    /* Responsive design improvements for mobile */
-    @media (max-width: 768px) {
-      body {
-        padding: 15px;
-      }
-      
-      .container {
-        max-width: 100%;
-      }
-      
-      h1 {
-        font-size: 24px;
-      }
-      
-      h2 {
-        font-size: 18px;
-      }
-      
-      .navigation {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .nav-links {
-        margin-bottom: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
-      }
-      
-      .toggle-container {
-        width: 100%;
-        justify-content: flex-end;
-      }
-      
-      .link {
-        margin-bottom: 10px;
-        /* More touch-friendly sizing */
-        padding: 10px 15px;
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .example {
-        padding: 15px;
-      }
-      
-      pre {
-        font-size: 12px;
-        padding: 12px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      body {
-        padding: 10px;
-      }
-      
-      h1 {
-        font-size: 22px;
-      }
-      
-      .example-label {
-        font-size: 14px;
-      }
-      
-      .result {
-        font-size: 13px;
-      }
-      
-      /* Make links stack vertically on very small screens */
-      .nav-links {
-        flex-direction: column;
-      }
-      
-      .link {
-        width: 100%;
-        box-sizing: border-box;
-        margin-right: 0;
-      }
-    }
-
-    .dark-mode-toggle {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      background-color: #1e293b;
-      border: none;
-      color: #e2e8f0;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      z-index: 100;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    
-    body.dark .dark-mode-toggle {
-      background-color: #e2e8f0;
-      color: #1e293b;
-    }
   </style>
 </head>
 <body>
@@ -370,16 +262,16 @@
         <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
         <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
         <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-        <a href="../index.html" class="link">صفحه اصلی</a>
+        <a href="../demo/index.html" class="link">دمو</a>
+      </div>
+      <div class="toggle-container">
+        <span class="toggle-label">حالت تاریک</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="slider"></span>
+        </label>
       </div>
     </div>
-
-    <!-- Floating dark mode toggle -->
-    <button class="dark-mode-toggle" id="dark-mode-toggle">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-      </svg>
-    </button>
 
     <div class="example">
       <h2>Basic Usage</h2>
@@ -528,26 +420,21 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     }
     
     // Check for saved dark mode preference
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const storedDarkMode = localStorage.getItem('darkMode');
-    const isDarkMode = storedDarkMode === 'true' || (storedDarkMode === null && prefersDarkMode);
-    
-    if (isDarkMode) {
+    if (localStorage.getItem('darkMode') === 'true') {
       document.body.classList.add('dark');
-      darkModeToggle.querySelector('svg').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+      darkModeToggle.checked = true;
       applyDarkModeToPickers(true);
     }
     
     // Toggle dark mode
-    darkModeToggle.addEventListener('click', () => {
-      const isDarkMode = document.body.classList.toggle('dark');
-      localStorage.setItem('darkMode', isDarkMode);
-      
-      // Update the icon
+    darkModeToggle.addEventListener('change', () => {
+      const isDarkMode = darkModeToggle.checked;
       if (isDarkMode) {
-        darkModeToggle.querySelector('svg').innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+        document.body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
       } else {
-        darkModeToggle.querySelector('svg').innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>';
+        document.body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
       }
       
       // Apply dark mode to date pickers
