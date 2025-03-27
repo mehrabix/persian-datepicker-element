@@ -334,10 +334,51 @@
       </div>
       
       <div class="control-group">
+        <!-- Dark Mode Toggle -->
+        <div class="switch-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <label for="dark-mode-toggle" style="font-weight: 500;">حالت تاریک</label>
+          <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 26px; flex-shrink: 0;">
+            <input type="checkbox" id="dark-mode-toggle">
+            <span class="switch-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px;"></span>
+          </label>
+        </div>
+        <style>
+          /* Switch toggle styles */
+          .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+          }
+          
+          .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+          }
+          
+          input:checked + .switch-slider {
+            background-color: var(--jdp-primary, #0891b2);
+          }
+          
+          input:checked + .switch-slider:before {
+            transform: translateX(24px);
+          }
+          
+          body.dark .switch-slider {
+            background-color: #475569;
+          }
+        </style>
+        
         <div class="color-input">
           <label for="primary-color">رنگ اصلی:</label>
-        <input type="color" id="primary-color" value="#0891b2">
-      </div>
+          <input type="color" id="primary-color" value="#0891b2">
+        </div>
       
         <div class="radius-control">
           <label for="border-radius">شعاع گوشه‌ها:</label>
@@ -371,6 +412,7 @@
     const primaryColorInput = document.getElementById('primary-color');
     const borderRadiusInput = document.getElementById('border-radius');
     const radiusValueDisplay = document.getElementById('radius-value');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
 
     // Pre-defined themes
     const themes = {
@@ -454,8 +496,10 @@
     
     // Helper function to check if a theme is dark
     function isDarkTheme(theme) {
-      return theme === darkTheme || 
-        (theme['--jdp-background'] && theme['--jdp-background'].includes('1e1e2f'));
+      return document.body.classList.contains('dark') || 
+             (theme && theme['--jdp-background'] && 
+              (theme['--jdp-background'].includes('1e1e2f') || 
+               theme['--jdp-background'].includes('0f172a')));
     }
 
     // Convert numbers to Persian digits
@@ -511,7 +555,16 @@
         const selectedTheme = themes[themeName];
         
         if (selectedTheme) {
-          applyTheme(selectedTheme);
+          // Check if dark mode is active
+          if (darkModeToggle.checked) {
+            // Apply dark theme with selected theme's primary color
+            const mergedTheme = {...darkTheme};
+            mergedTheme['--jdp-primary'] = selectedTheme['--jdp-primary'];
+            mergedTheme['--jdp-primary-hover'] = selectedTheme['--jdp-primary-hover'];
+            applyTheme(mergedTheme);
+          } else {
+            applyTheme(selectedTheme);
+          }
           
           // Update controls to match theme
           primaryColorInput.value = selectedTheme['--jdp-primary'];
@@ -526,12 +579,49 @@
     
     // Color input
     primaryColorInput.addEventListener('input', () => {
-      applyColor(primaryColorInput.value);
+      const color = primaryColorInput.value;
+      
+      // Apply the color with respect to dark mode
+      if (darkModeToggle.checked) {
+        const mergedTheme = {...darkTheme};
+        mergedTheme['--jdp-primary'] = color;
+        mergedTheme['--jdp-primary-hover'] = adjustColor(color, -15);
+        applyTheme(mergedTheme);
+      } else {
+        applyColor(color);
+      }
     });
 
     // Border radius input
     borderRadiusInput.addEventListener('input', () => {
-      applyRadius(borderRadiusInput.value);
+      const radius = borderRadiusInput.value;
+      
+      // If in dark mode, preserve dark theme properties when applying radius
+      if (darkModeToggle.checked) {
+        // Get current theme properties
+        const activeThemeButton = document.querySelector('.theme-btn.active');
+        if (activeThemeButton) {
+          const themeName = activeThemeButton.getAttribute('data-theme');
+          const currentTheme = themes[themeName];
+          
+          // Create a merged theme
+          const mergedTheme = {...darkTheme};
+          mergedTheme['--jdp-primary'] = currentTheme['--jdp-primary'] || darkTheme['--jdp-primary'];
+          mergedTheme['--jdp-primary-hover'] = currentTheme['--jdp-primary-hover'] || darkTheme['--jdp-primary-hover'];
+          mergedTheme['--jdp-border-radius'] = `${radius}px`;
+          
+          applyTheme(mergedTheme);
+        } else {
+          const mergedTheme = {...darkTheme};
+          mergedTheme['--jdp-border-radius'] = `${radius}px`;
+          applyTheme(mergedTheme);
+        }
+      } else {
+        applyRadius(radius);
+      }
+      
+      // Update radius display
+      radiusValueDisplay.textContent = `${radius}px`;
     });
 
     // Handle date selection
@@ -541,6 +631,79 @@
 
     // Apply the default theme initially
     applyTheme(themes.default);
+
+    // Initialize dark mode based on saved preference or system preference
+    function initDarkMode() {
+      // Check saved preference
+      const savedDarkMode = localStorage.getItem('darkMode');
+      
+      if (savedDarkMode === 'true') {
+        darkModeToggle.checked = true;
+        document.body.classList.add('dark');
+        applyDarkModeToCurrentTheme();
+      } else if (savedDarkMode === 'false') {
+        darkModeToggle.checked = false;
+        document.body.classList.remove('dark');
+      } else {
+        // Check system preference if no saved preference
+        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDarkMode) {
+          darkModeToggle.checked = true;
+          document.body.classList.add('dark');
+          applyDarkModeToCurrentTheme();
+        }
+      }
+    }
+
+    // Apply dark mode to the current theme
+    function applyDarkModeToCurrentTheme() {
+      // Find active theme
+      const activeThemeButton = document.querySelector('.theme-btn.active');
+      if (activeThemeButton) {
+        const themeName = activeThemeButton.getAttribute('data-theme');
+        const currentTheme = themes[themeName];
+        
+        // Get primary color from current theme
+        const primaryColor = currentTheme['--jdp-primary'];
+        const primaryHoverColor = currentTheme['--jdp-primary-hover'];
+        
+        // Apply dark theme with current theme's primary colors
+        const mergedTheme = {...darkTheme};
+        mergedTheme['--jdp-primary'] = primaryColor;
+        mergedTheme['--jdp-primary-hover'] = primaryHoverColor;
+        
+        applyTheme(mergedTheme);
+      } else {
+        // If no active theme, apply default dark theme
+        applyTheme(darkTheme);
+      }
+    }
+
+    // Dark mode toggle
+    darkModeToggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark', darkModeToggle.checked);
+      
+      if (darkModeToggle.checked) {
+        // Save preference
+        localStorage.setItem('darkMode', 'true');
+        applyDarkModeToCurrentTheme();
+      } else {
+        // Save preference
+        localStorage.setItem('darkMode', 'false');
+        
+        // Reapply the current theme in light mode
+        const activeThemeButton = document.querySelector('.theme-btn.active');
+        if (activeThemeButton) {
+          const themeName = activeThemeButton.getAttribute('data-theme');
+          applyTheme(themes[themeName]);
+        } else {
+          applyTheme(themes.default);
+        }
+      }
+    });
+    
+    // Initialize dark mode
+    initDarkMode();
   </script>
 </body>
 </html> 
