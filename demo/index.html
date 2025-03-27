@@ -11,7 +11,7 @@
       font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #f9fafb;
       color: #374151;
-      padding: 2rem;
+      padding: 1rem;
       margin: 0;
       direction: rtl;
       transition: background-color 0.3s, color 0.3s;
@@ -28,13 +28,15 @@
     }
 
     .container {
+      width: 100%;
       max-width: 700px;
       margin: 0 auto;
-      padding: 2rem;
+      padding: 1.5rem;
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s, box-shadow 0.3s;
+      box-sizing: border-box;
     }
 
     body.dark .container {
@@ -54,6 +56,7 @@
       text-align: center;
       color: #1e293b;
       transition: color 0.3s;
+      font-size: clamp(1.5rem, 5vw, 2rem);
     }
 
     body.dark h1 {
@@ -63,7 +66,7 @@
     h2 {
       margin: 1.5rem 0 1rem;
       color: #334155;
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 4vw, 1.1rem);
       transition: color 0.3s;
     }
 
@@ -75,6 +78,7 @@
       color: #4b5563;
       margin-bottom: 1.5rem;
       transition: color 0.3s;
+      font-size: clamp(0.875rem, 3vw, 1rem);
     }
 
     body.dark p {
@@ -83,7 +87,7 @@
 
     .font-note {
       text-align: center; 
-      font-size: 0.85rem; 
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
       color: #6b7280;
       transition: color 0.3s;
     }
@@ -111,9 +115,22 @@
     persian-datepicker-element {
       width: 100%;
       display: block;
-      /* Apply Persian numbers to date picker */
+      /* Core variables that are properly supported by the component */
       --jdp-font-feature-settings: "ss02";
-      font-weight: 400;
+      --jdp-font-family: "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+      --jdp-font-size: 14px;
+      --jdp-primary: #0891b2;
+      --jdp-primary-hover: #0e7490;
+      --jdp-primary-foreground: #ffffff;
+      --jdp-background: #ffffff;
+      --jdp-foreground: #1e293b;
+      --jdp-border: #e2e8f0;
+      --jdp-border-radius: 0.5rem;
+      --jdp-direction: rtl;
+      --jdp-nav-button-size: 38px;
+      --jdp-day-cell-size: 36px;
+      --jdp-calendar-z-index: 1000;
+      touch-action: manipulation;
     }
 
     .result {
@@ -123,6 +140,9 @@
       border-radius: 6px;
       border: 1px solid #e2e8f0;
       transition: background-color 0.3s, border-color 0.3s;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-word;
     }
 
     body.dark .result {
@@ -132,6 +152,7 @@
 
     .result p {
       margin: 0.5rem 0;
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
     }
 
     .result strong {
@@ -157,16 +178,18 @@
 
     .theme-options {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
       margin-bottom: 1.5rem;
     }
 
     .theme-btn {
+      min-height: 60px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px;
+      justify-content: center;
+      padding: 8px;
       border-radius: 6px;
       cursor: pointer;
       border: 2px solid transparent;
@@ -215,6 +238,7 @@
       display: inline-block;
       width: 50px;
       height: 24px;
+      flex-shrink: 0;
     }
 
     .theme-switch input {
@@ -258,6 +282,10 @@
     .more-examples {
       text-align: center;
       margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
     }
 
     .more-examples a {
@@ -269,7 +297,9 @@
       border-radius: 4px;
       font-weight: 500;
       transition: background-color 0.2s;
-      margin: 0 5px 5px 0;
+      font-size: clamp(0.75rem, 3vw, 0.9rem);
+      white-space: nowrap;
+      margin: 0;
     }
 
     .more-examples a:hover {
@@ -297,9 +327,59 @@
     
     .holiday-types-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 15px;
       margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .holiday-types-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        padding: 1rem;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      
+      .theme-toggles h2 {
+        font-size: 0.9rem;
+        margin-right: 0.5rem;
+      }
+      
+      body {
+        padding: 0;
+        padding-bottom: 2rem;
+      }
+      
+      /* Only use supported position properties */
+      persian-datepicker-element {
+        --jdp-calendar-z-index: 1000;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .theme-options {
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 8px;
+      }
+      
+      .theme-name {
+        font-size: 0.75rem;
+      }
+      
+      .color-dot {
+        width: 20px;
+        height: 20px;
+      }
+      persian-datepicker-element {
+        --jdp-nav-button-size: 42px;
+        --jdp-day-cell-size: 40px;
+        --jdp-font-size: 15px;
+      }
     }
 
     /* Ensure all elements use Persian numbers */
@@ -322,6 +402,27 @@
       -moz-font-feature-settings: "ss02";
       -webkit-font-feature-settings: "ss02";
       font-feature-settings: "ss02";
+    }
+
+    /* Prevent long text overflow */
+    .result p {
+      margin: 0.5rem 0;
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    body.dark persian-datepicker-element {
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-day-hover-bg: #334155;
+      --jdp-input-border-color: #475569;
+      --jdp-input-bg: #1e1e2f;
+      --jdp-calendar-bg: #1e1e2f;
+      --jdp-holiday-bg: #3f1e2e;
     }
   </style>
 </head>
@@ -457,77 +558,143 @@
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     const themeButtons = document.querySelectorAll('.theme-btn');
     
+    // Handle mobile view positioning
+    datePickers.forEach(picker => {
+      picker.addEventListener('dp:open', () => {
+        // On mobile, ensure the calendar popup doesn't get cut off
+        if (window.innerWidth < 768) {
+          // Add a small delay to let the calendar render first
+          setTimeout(() => {
+            const calendarElem = picker.shadowRoot?.querySelector('.calendar');
+            if (calendarElem) {
+              // Check if calendar would be cut off at bottom of viewport
+              const rect = calendarElem.getBoundingClientRect();
+              if (rect.bottom > window.innerHeight) {
+                // Scroll the page to show the calendar
+                window.scrollTo({
+                  top: window.scrollY + (rect.bottom - window.innerHeight) + 20,
+                  behavior: 'smooth'
+                });
+              }
+            }
+          }, 100);
+        }
+      });
+    });
+    
     // Pre-defined themes
     const themes = {
       default: {
         '--jdp-primary': '#0891b2',
         '--jdp-primary-hover': '#0e7490',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-background': '#ffffff',
+        '--jdp-foreground': '#1e293b',
+        '--jdp-border': '#e2e8f0',
         '--jdp-border-radius': '0.5rem',
-        '--jdp-font-size': '14px',
         '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
+        '--jdp-font-feature-settings': '"ss02"',
+        '--jdp-font-size': '14px',
+        '--jdp-nav-button-size': '38px',
+        '--jdp-day-cell-size': '36px'
       },
       blue: {
         '--jdp-primary': '#3b82f6',
         '--jdp-primary-hover': '#2563eb',
-        '--jdp-ring': '#60a5fa',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-background': '#ffffff',
+        '--jdp-foreground': '#1e293b',
+        '--jdp-border': '#e2e8f0',
         '--jdp-border-radius': '0.5rem',
         '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
+        '--jdp-font-feature-settings': '"ss02"',
+        '--jdp-font-size': '14px',
+        '--jdp-nav-button-size': '38px',
+        '--jdp-day-cell-size': '36px'
       },
       green: {
         '--jdp-primary': '#10b981',
         '--jdp-primary-hover': '#059669',
-        '--jdp-ring': '#34d399',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-background': '#ffffff',
+        '--jdp-foreground': '#1e293b',
+        '--jdp-border': '#e2e8f0',
         '--jdp-border-radius': '0.5rem',
         '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
+        '--jdp-font-feature-settings': '"ss02"',
+        '--jdp-font-size': '14px',
+        '--jdp-nav-button-size': '38px',
+        '--jdp-day-cell-size': '36px'
       },
       purple: {
         '--jdp-primary': '#8b5cf6',
         '--jdp-primary-hover': '#7c3aed',
-        '--jdp-ring': '#a78bfa',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-background': '#ffffff',
+        '--jdp-foreground': '#1e293b',
+        '--jdp-border': '#e2e8f0',
         '--jdp-border-radius': '0.5rem',
         '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
+        '--jdp-font-feature-settings': '"ss02"',
+        '--jdp-font-size': '14px',
+        '--jdp-nav-button-size': '38px',
+        '--jdp-day-cell-size': '36px'
       },
       red: {
         '--jdp-primary': '#ef4444',
         '--jdp-primary-hover': '#dc2626',
-        '--jdp-ring': '#fca5a5',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-background': '#ffffff',
+        '--jdp-foreground': '#1e293b',
+        '--jdp-border': '#e2e8f0',
         '--jdp-border-radius': '0.5rem',
         '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
+        '--jdp-font-feature-settings': '"ss02"',
+        '--jdp-font-size': '14px',
+        '--jdp-nav-button-size': '38px',
+        '--jdp-day-cell-size': '36px'
       },
       orange: {
         '--jdp-primary': '#f97316',
         '--jdp-primary-hover': '#ea580c',
-        '--jdp-ring': '#fdba74',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-background': '#ffffff',
+        '--jdp-foreground': '#1e293b',
+        '--jdp-border': '#e2e8f0',
         '--jdp-border-radius': '0.5rem',
         '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
+        '--jdp-font-feature-settings': '"ss02"',
+        '--jdp-font-size': '14px',
+        '--jdp-nav-button-size': '38px',
+        '--jdp-day-cell-size': '36px'
       },
       minimal: {
         '--jdp-primary': '#000000',
         '--jdp-primary-hover': '#333333',
         '--jdp-primary-foreground': '#ffffff',
+        '--jdp-background': '#ffffff',
+        '--jdp-foreground': '#1e293b',
+        '--jdp-border': '#e2e8f0',
         '--jdp-border-radius': '2px',
-        '--jdp-input-border-width': '1px',
-        '--jdp-day-cell-border-radius': '0',
-        '--jdp-nav-button-border-radius': '0',
         '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
+        '--jdp-font-feature-settings': '"ss02"',
+        '--jdp-font-size': '14px',
+        '--jdp-nav-button-size': '38px',
+        '--jdp-day-cell-size': '36px'
       },
       rounded: {
         '--jdp-primary': '#0891b2',
         '--jdp-primary-hover': '#0e7490',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-background': '#ffffff',
+        '--jdp-foreground': '#1e293b',
+        '--jdp-border': '#e2e8f0',
         '--jdp-border-radius': '1rem',
-        '--jdp-input-border-radius': '1rem',
-        '--jdp-day-cell-border-radius': '1rem',
-        '--jdp-nav-button-border-radius': '1rem',
-        '--jdp-calendar-border-radius': '1.5rem',
         '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        '--jdp-font-feature-settings': '"ss02"'
+        '--jdp-font-feature-settings': '"ss02"',
+        '--jdp-font-size': '14px',
+        '--jdp-nav-button-size': '38px',
+        '--jdp-day-cell-size': '36px'
       }
     };
 
@@ -535,14 +702,12 @@
     const darkTheme = {
       '--jdp-background': '#1e1e2f',
       '--jdp-foreground': '#e2e8f0',
-      '--jdp-muted': '#334155',
-      '--jdp-muted-foreground': '#94a3b8',
       '--jdp-border': '#475569',
-      '--jdp-input-border-color': '#475569',
-      '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
-      '--jdp-day-hover-bg': '#334155',
       '--jdp-font-family': "'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-      '--jdp-font-feature-settings': '"ss02"'
+      '--jdp-font-feature-settings': '"ss02"',
+      '--jdp-font-size': '14px',
+      '--jdp-nav-button-size': '38px',
+      '--jdp-day-cell-size': '36px'
     };
 
     // Function to apply theme to all pickers
@@ -602,16 +767,7 @@
               '--jdp-primary': selectedTheme['--jdp-primary'],
               '--jdp-primary-hover': selectedTheme['--jdp-primary-hover'],
               '--jdp-primary-foreground': selectedTheme['--jdp-primary-foreground'] || '#ffffff',
-              '--jdp-ring': selectedTheme['--jdp-ring'] || selectedTheme['--jdp-primary'],
-              '--jdp-border-radius': selectedTheme['--jdp-border-radius'],
-              '--jdp-input-border-radius': selectedTheme['--jdp-input-border-radius'],
-              '--jdp-day-cell-border-radius': selectedTheme['--jdp-day-cell-border-radius'],
-              '--jdp-nav-button-border-radius': selectedTheme['--jdp-nav-button-border-radius'],
-              '--jdp-calendar-border-radius': selectedTheme['--jdp-calendar-border-radius'],
-              '--jdp-input-border-width': selectedTheme['--jdp-input-border-width'],
-              '--jdp-font-size': selectedTheme['--jdp-font-size'],
-              '--jdp-font-family': selectedTheme['--jdp-font-family'],
-              '--jdp-font-feature-settings': selectedTheme['--jdp-font-feature-settings']
+              '--jdp-border-radius': selectedTheme['--jdp-border-radius']
             }});
           } else {
             // Apply the theme
@@ -639,13 +795,21 @@
           '--jdp-primary': activeTheme['--jdp-primary'],
           '--jdp-primary-hover': activeTheme['--jdp-primary-hover'],
           '--jdp-primary-foreground': activeTheme['--jdp-primary-foreground'] || '#ffffff',
-          '--jdp-ring': activeTheme['--jdp-ring'] || activeTheme['--jdp-primary'],
-          '--jdp-font-family': activeTheme['--jdp-font-family'],
-          '--jdp-font-feature-settings': activeTheme['--jdp-font-feature-settings']
+          '--jdp-border-radius': activeTheme['--jdp-border-radius']
         }});
+        
+        // Set darkmode attribute on all datepicker elements
+        datePickers.forEach(picker => {
+          picker.setAttribute('darkmode', 'true');
+        });
       } else {
         // Revert to the current theme without dark mode
         applyTheme(activeTheme);
+        
+        // Remove darkmode attribute from all datepicker elements
+        datePickers.forEach(picker => {
+          picker.removeAttribute('darkmode');
+        });
       }
     });
 
