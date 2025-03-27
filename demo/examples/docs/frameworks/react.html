@@ -51,6 +51,19 @@
       margin-bottom: 2rem;
       border-bottom: 1px solid var(--border);
       padding-bottom: 1rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.25rem;
+      color: var(--muted-foreground);
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     nav {
@@ -58,21 +71,50 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
     }
 
     .nav-links a {
-      margin-left: 1rem;
       color: var(--primary);
       text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .nav-links a:hover {
+    .nav-links a:hover, .nav-links a.active {
       color: var(--primary-hover);
       text-decoration: underline;
     }
 
+    .nav-links a.active::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary);
+    }
+
     h1, h2, h3, h4 {
       color: var(--foreground);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
     }
 
     pre {
@@ -80,6 +122,8 @@
       padding: 1rem;
       border-radius: var(--radius);
       overflow-x: auto;
+      margin-bottom: 1.5rem;
+      position: relative;
     }
 
     code {
@@ -94,16 +138,55 @@
       padding: 0.5rem 1rem;
       border-radius: var(--radius);
       cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+      font-weight: 500;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .dark-mode-toggle:hover {
       background-color: var(--primary-hover);
     }
+    
+    .dark-mode-toggle:active {
+      transform: scale(0.96);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .back-to-top:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .back-to-top:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
 
     .examples {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 1.5rem;
+      gap: 2rem;
       margin-top: 2rem;
     }
 
@@ -111,19 +194,39 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 1.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      background-color: var(--background);
+    }
+
+    .example:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .example h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
     }
 
     .features {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1rem;
+      gap: 1.5rem;
       margin: 2rem 0;
     }
 
     .feature {
-      padding: 1rem;
+      padding: 1.5rem;
       border-radius: var(--radius);
       background-color: var(--accent);
+      border: 1px solid var(--border);
+      transition: transform 0.2s;
+    }
+
+    .feature:hover {
+      transform: translateY(-3px);
     }
 
     .props-table {
@@ -143,28 +246,206 @@
       background-color: var(--muted);
     }
 
-    .back-to-top {
-      position: fixed;
-      bottom: 2rem;
-      left: 2rem;
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 0.875rem;
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    .back-to-top:hover {
-      background-color: var(--primary-hover);
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      header h1 {
+        font-size: 2rem;
+      }
+      
+      header p {
+        font-size: 1.125rem;
+      }
+      
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .nav-links {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        display: flex;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1rem;
+      }
+      
+      .examples {
+        grid-template-columns: 1fr;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      pre {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .props-table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .props-table th,
+      .props-table td {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      header h1 {
+        font-size: 1.75rem;
+      }
+      
+      header p {
+        font-size: 1rem;
+      }
+      
+      pre {
+        font-size: 0.8rem;
+        padding: 0.6rem;
+        border-radius: calc(var(--radius) * 0.75);
+      }
+      
+      .back-to-top {
+        left: 1rem;
+        bottom: 1rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .example {
+        padding: 1rem;
+      }
+      
+      .feature {
+        padding: 1rem;
+      }
+      
+      .dark-mode-toggle {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+      
+      .react-icon {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .react-icon svg {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    /* Additional improvements for mobile interaction */
+    @media (hover: none) {
+      .back-to-top:hover,
+      .dark-mode-toggle:hover,
+      .example:hover,
+      .feature:hover,
+      .nav-links a:hover {
+        /* Disable hover effects on touch devices */
+        transform: none;
+        background-color: var(--primary);
+      }
+      
+      .example:active,
+      .feature:active {
+        transform: translateY(-2px);
+      }
+      
+      /* Make sure active/touch states are responsive */
+      .back-to-top:active,
+      .dark-mode-toggle:active {
+        opacity: 0.8;
+      }
+    }
+
+    /* Add icon styles */
+    .react-icon {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      background-color: #222222;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+    
+    .react-icon svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px;
+      height: 56px;
+      z-index: 2;
+    }
+    
+    .react-icon::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.25);
+      z-index: 1;
+    }
+    
+    .dark .react-icon {
+      background-color: #282c34;
+    }
+    
+    .dark .react-icon svg {
+      filter: brightness(1.2);
     }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
+      <div class="react-icon">
+        <!-- Simplified React logo -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="50" height="50">
+          <circle cx="50" cy="50" r="10" fill="#61DAFB" />
+          <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#61DAFB" stroke-width="4" fill="none" transform="rotate(0 50 50)" />
+          <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#61DAFB" stroke-width="4" fill="none" transform="rotate(60 50 50)" />
+          <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#61DAFB" stroke-width="4" fill="none" transform="rotate(120 50 50)" />
+        </svg>
+      </div>
       <h1>Persian Datepicker Element برای React</h1>
       <p>
         یک مؤلفه تاریخ شمسی (جلالی) زیبا و کاملاً قابل سفارشی‌سازی برای React
@@ -670,6 +951,17 @@ const handleChange = (event: PersianDateChangeEvent) => {
       body.classList.toggle('dark');
       localStorage.setItem('darkMode', body.classList.contains('dark') ? 'true' : 'false');
     });
+
+    // Back to top functionality
+    const backToTop = document.querySelector('.back-to-top');
+    if (backToTop) {
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
   </script>
 </body>
 </html> 
