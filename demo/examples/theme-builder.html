@@ -89,6 +89,8 @@
       white-space: nowrap;
       border-bottom: 1px solid var(--border-color);
       margin-bottom: 1.5rem;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
     }
     
     .tab {
@@ -167,6 +169,7 @@
       border-radius: var(--border-radius);
       padding: 20px;
       min-height: 310px;
+      overflow: auto;
     }
     
     /* Code Output */
@@ -250,6 +253,15 @@
       cursor: pointer;
     }
     
+    input[type="range"]::-moz-range-thumb {
+      width: 15px;
+      height: 15px;
+      background-color: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+    
     .slider-value {
       min-width: 60px;
       padding: 4px 8px;
@@ -272,6 +284,7 @@
       display: inline-block;
       width: 50px;
       height: 26px;
+      flex-shrink: 0;
     }
     
     .switch input { 
@@ -498,6 +511,16 @@
         max-height: none;
         padding: 15px;
       }
+      
+      .navigation {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .nav-links {
+        justify-content: center;
+        width: 100%;
+      }
     }
     
     @media (max-width: 600px) {
@@ -533,6 +556,74 @@
       
       .btn {
         width: 100%;
+      }
+      
+      .navigation .btn {
+        padding: 8px 12px;
+        margin-right: 4px !important;
+        font-size: 0.75rem;
+      }
+      
+      .switch-container {
+        flex-wrap: wrap;
+      }
+      
+      .switch-container .control-label {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+      
+      .color-input-container {
+        flex-wrap: wrap;
+      }
+      
+      input[type="color"] {
+        width: 40px;
+        height: 30px;
+      }
+      
+      .color-text {
+        width: calc(100% - 50px);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 8px;
+      }
+      
+      .controls, .preview {
+        padding: 12px;
+      }
+      
+      .tabs {
+        padding-bottom: 0;
+      }
+      
+      .tab {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+      }
+      
+      .preview-container {
+        padding: 10px;
+      }
+      
+      pre {
+        font-size: 11px;
+        padding: 10px;
+      }
+      
+      .copy-button {
+        top: 5px;
+        right: 5px;
+        padding: 3px 8px;
+        font-size: 0.7rem;
+      }
+      
+      .link {
+        padding: 6px 10px;
+        font-size: 0.75rem;
       }
     }
     
@@ -602,6 +693,70 @@
     
     .dark .btn-outline:hover {
       border-color: #94a3b8;
+    }
+    
+    /* Improve touch areas on mobile */
+    @media (hover: none) and (pointer: coarse) {
+      .btn, 
+      .preset-btn, 
+      .tab, 
+      .switch,
+      .copy-button {
+        min-height: 44px;
+        touch-action: manipulation;
+      }
+      
+      input[type="range"]::-webkit-slider-thumb {
+        width: 22px;
+        height: 22px;
+      }
+      
+      input[type="range"]::-moz-range-thumb {
+        width: 22px;
+        height: 22px;
+      }
+    }
+    
+    /* Better scrolling on iOS devices */
+    .controls, 
+    .tabs,
+    .preview-container {
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+    
+    /* Add better focus states for accessibility */
+    input:focus, 
+    button:focus, 
+    select:focus, 
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Remove outline for mouse users but keep it for keyboard navigation */
+    @media (hover: hover) {
+      input:focus:not(:focus-visible), 
+      button:focus:not(:focus-visible), 
+      select:focus:not(:focus-visible), 
+      a:focus:not(:focus-visible) {
+        outline: none;
+      }
+    }
+    
+    /* Fix some iOS rendering issues */
+    input[type="color"],
+    input[type="range"],
+    button,
+    select {
+      -webkit-appearance: none;
+      border-radius: var(--border-radius);
+    }
+    
+    /* Make sure long previews don't break layout on small screens */
+    .preview pre {
+      max-width: 100%;
+      overflow-wrap: break-word;
     }
   </style>
 </head>
@@ -1057,6 +1212,72 @@ persian-datepicker-element {
 
   <script src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
+    // Detect if the device is a touch device
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Add touch class to body for any specific touch-based styling
+    if (isTouchDevice) {
+      document.body.classList.add('touch-device');
+    }
+    
+    // Performance improvements for mobile
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      // Use passive event listeners for better scrolling performance
+      document.addEventListener('touchstart', function() {}, { passive: true });
+      document.addEventListener('touchmove', function() {}, { passive: true });
+      
+      // Optimize any heavy animations
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @media (max-width: 900px) {
+          * {
+            transition-duration: 0.15s !important;
+            animation-duration: 0.15s !important;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Initialize tabs for mobile view on document ready
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make sure mobile tabs work properly
+      const tabs = document.querySelectorAll('.tab');
+      
+      // Initial handling based on viewport
+      handleWindowResize();
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabName = this.getAttribute('data-tab');
+          
+          // Remove active class from all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Hide all tab content
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.style.display = 'none';
+          });
+          
+          // Show corresponding tab content
+          document.querySelectorAll(`.tab-content[data-tab-content="${tabName}"]`).forEach(content => {
+            content.style.display = 'block';
+          });
+          
+          // Smooth scroll to the top of content on tab change (mobile only)
+          if (window.innerWidth <= 900) {
+            document.querySelector('.controls').scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    });
+    
     // Convert numbers to Persian digits
     function toPersianNum(num) {
       const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -1434,11 +1655,47 @@ persian-datepicker-element {
       // Setup event listeners
       setupEventListeners();
       
-      // Setup tab navigation
-      setupTabs();
-      
       // Setup advanced controls
       setupAdvancedControls();
+      
+      // Handle window resize for proper tab display
+      window.addEventListener('resize', handleWindowResize);
+    }
+    
+    // Handle window resize for tab display
+    function handleWindowResize() {
+      const isMobile = window.innerWidth <= 900;
+      const tabs = document.querySelectorAll('.tab');
+      const activeTab = document.querySelector('.tab.active');
+      
+      if (isMobile) {
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        
+        // Show active tab content
+        if (activeTab) {
+          const activeTabName = activeTab.getAttribute('data-tab');
+          document.querySelectorAll(`.tab-content[data-tab-content="${activeTabName}"]`).forEach(content => {
+            content.style.display = 'block';
+          });
+        } else {
+          // If no active tab, default to basic
+          document.querySelectorAll('.tab-content[data-tab-content="basic"]').forEach(content => {
+            content.style.display = 'block';
+          });
+          
+          if (tabs.length) {
+            tabs[0].classList.add('active');
+          }
+        }
+      } else {
+        // Show all tab content for desktop view
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.style.display = 'block';
+        });
+      }
     }
     
     // Setup event listeners
