@@ -1205,6 +1205,19 @@ persian-datepicker-element {
 
   <script src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
+    // Fix for missing DOM elements to avoid JS errors
+    (() => {
+      // Create a dummy navDarkModeToggle element since it's referenced in the code but doesn't exist
+      if (!document.getElementById('nav-dark-mode-toggle')) {
+        const dummyElement = document.createElement('input');
+        dummyElement.type = 'checkbox';
+        dummyElement.id = 'nav-dark-mode-toggle';
+        dummyElement.style.display = 'none';
+        document.body.appendChild(dummyElement);
+        console.log('Added missing nav-dark-mode-toggle element to prevent JS errors');
+      }
+    })();
+    
     // Detect if the device is a touch device
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
@@ -1373,7 +1386,6 @@ persian-datepicker-element {
     const picker = document.getElementById('theme-preview');
     const cssOutput = document.getElementById('css-output');
     const darkModeToggle = document.getElementById('dark-mode-toggle');
-    const navDarkModeToggle = document.getElementById('nav-dark-mode-toggle');
     const presetButtons = document.querySelectorAll('.preset-btn');
     const resetButton = document.getElementById('reset-button');
     const copyButton = document.getElementById('copy-button');
@@ -1558,11 +1570,6 @@ persian-datepicker-element {
     darkModeToggle.addEventListener('change', () => {
       document.body.classList.toggle('dark', darkModeToggle.checked);
       
-      // Keep both dark mode toggles in sync
-      if (navDarkModeToggle) {
-        navDarkModeToggle.checked = darkModeToggle.checked;
-      }
-      
       if (darkModeToggle.checked) {
         // Apply dark theme but keep primary colors
         const primaryColors = {
@@ -1599,44 +1606,6 @@ persian-datepicker-element {
       }
     });
     
-    // Navigation dark mode toggle
-    navDarkModeToggle.addEventListener('change', () => {
-      darkModeToggle.checked = navDarkModeToggle.checked;
-      darkModeToggle.dispatchEvent(new Event('change'));
-    });
-    
-    // Check for saved dark mode preference
-    if (localStorage.getItem('darkMode') === 'true') {
-      document.body.classList.add('dark');
-      darkModeToggle.checked = true;
-      
-      // Sync the navigation dark mode toggle if it exists
-      if (navDarkModeToggle) {
-        navDarkModeToggle.checked = true;
-      }
-      
-      // Apply dark theme but keep primary colors
-      const primaryColors = {
-        '--jdp-primary': currentTheme['--jdp-primary'],
-        '--jdp-primary-hover': currentTheme['--jdp-primary-hover'],
-        '--jdp-primary-foreground': currentTheme['--jdp-primary-foreground'],
-      };
-      
-      applyTheme({...darkTheme, ...primaryColors});
-      
-      // Make sure input and calendar background are set
-      picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
-      picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
-    }
-    
-    // Add event listener for navigation dark mode toggle
-    if (navDarkModeToggle) {
-      navDarkModeToggle.addEventListener('change', () => {
-        darkModeToggle.checked = navDarkModeToggle.checked;
-        darkModeToggle.dispatchEvent(new Event('change'));
-      });
-    }
-    
     // Initialize
     function init() {
       // Apply default theme
@@ -1650,6 +1619,9 @@ persian-datepicker-element {
       
       // Setup advanced controls
       setupAdvancedControls();
+      
+      // Setup tabs for mobile navigation
+      setupTabs();
       
       // Handle window resize for proper tab display
       window.addEventListener('resize', handleWindowResize);
