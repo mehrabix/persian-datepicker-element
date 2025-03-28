@@ -9,7 +9,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 const outputFileName = process.env.OUTPUT_FILE || (isProduction ? 'persian-datepicker-element.min.js' : 'persian-datepicker-element.js');
 const shouldMinify = process.env.MINIFY !== 'false';
 const moduleType = process.env.MODULE_TYPE || 'umd';
-const shouldAnalyze = process.env.BUNDLE_ANALYZE === 'true';
 
 // Clean the dist directory if this is the first build step
 if (process.env.CLEAN_DIST === 'true') {

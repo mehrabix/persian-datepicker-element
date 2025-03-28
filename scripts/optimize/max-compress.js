@@ -82,7 +82,7 @@ try {
   // Step 1: Clean the dist directory
   console.log('🧹 Cleaning dist directory...');
   execSync(
-    `set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && npx rspack --config ${path.resolve(rootDir, 'scripts/build/rspack.config.js')}`,
+    `set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && npx rspack --config ${path.resolve(rootDir, 'rspack.config.js')}`,
     { stdio: 'inherit' }
   );
 
@@ -90,7 +90,7 @@ try {
   for (const output of outputs) {
     console.log(`\n🔨 Building ${output.file} with maximum optimization...`);
 
-    const cmd = `set NODE_ENV=${output.env} && set OUTPUT_FILE=${output.file} && set MODULE_TYPE=${output.moduleType} && set MINIFY=true && npx rspack --config ${path.resolve(rootDir, 'scripts/build/rspack.config.js')}`;
+    const cmd = `set NODE_ENV=${output.env} && set OUTPUT_FILE=${output.file} && set MODULE_TYPE=${output.moduleType} && set MINIFY=true && npx rspack --config ${path.resolve(rootDir, 'rspack.config.js')}`;
     execSync(cmd, { stdio: 'inherit' });
 
     // Step 3: Apply ultra-aggressive terser settings
