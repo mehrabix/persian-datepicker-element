@@ -30,10 +30,12 @@ async function run() {
   try {
     // Use Terser to minify
     const code = fs.readFileSync(filePath, 'utf8');
-    
+
     // First, try with standard options
     const result = await minify(code, {
-      parse: { module: true }, compress: { module: true,
+      parse: { module: true },
+      compress: {
+        module: true,
         ecma: 2020,
         passes: 3,
         unsafe: true,
@@ -63,34 +65,34 @@ async function run() {
         comments: false,
       },
     });
-    
+
     if (result.code) {
       fs.writeFileSync(filePath, result.code);
-      
+
       // Check the size after minification
       const minifiedSize = fs.statSync(filePath).size;
       console.log(`Minified size: ${(minifiedSize / 1024).toFixed(2)} KB`);
-      
+
       // Create gzip version for reference
       const gzipped = zlib.gzipSync(result.code, { level: 9 });
       fs.writeFileSync(`${filePath}.gz`, gzipped);
       console.log(`Gzipped size: ${(gzipped.length / 1024).toFixed(2)} KB`);
-      
+
       // Check if minification increased the file size
       if (minifiedSize > originalSize) {
         console.warn(`Warning: Minification increased file size! Restoring original file.`);
         fs.copyFileSync(backupPath, filePath);
       } else {
-        const reduction = ((1 - (minifiedSize / originalSize)) * 100).toFixed(2);
+        const reduction = ((1 - minifiedSize / originalSize) * 100).toFixed(2);
         console.log(`Size reduction: ${reduction}%`);
       }
     }
-    
+
     // Remove backup file
     if (fs.existsSync(backupPath)) {
       fs.unlinkSync(backupPath);
     }
-    
+
     console.log('Done!');
   } catch (err) {
     console.error('Minification error:', err);

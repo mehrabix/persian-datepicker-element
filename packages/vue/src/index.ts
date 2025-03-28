@@ -1,4 +1,5 @@
 import { App } from 'vue';
+
 import PersianDatepicker from './PersianDatepicker.vue';
 
 export { PersianDatepicker };
@@ -8,5 +9,5 @@ export default {
   PersianDatepicker,
   install: (app: App) => {
     app.component('PersianDatepicker', PersianDatepicker);
-  }
-}; 
+  },
+};

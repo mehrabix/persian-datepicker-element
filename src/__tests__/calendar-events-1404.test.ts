@@ -25,7 +25,13 @@ jest.mock('../utils/event-utils', () => ({
         events.push({ title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true });
       }
       if (month === 2 && day === 11) {
-        events.push({ title: 'روز جهانی کارگر', month: 2, day: 11, type: 'International', holiday: false });
+        events.push({
+          title: 'روز جهانی کارگر',
+          month: 2,
+          day: 11,
+          type: 'International',
+          holiday: false,
+        });
       }
       if (month === 2 && day === 12) {
         events.push({ title: 'روز معلم', month: 2, day: 12, type: 'Iran', holiday: false });
@@ -61,17 +67,23 @@ jest.mock('../utils/event-utils', () => ({
         events.push({ title: '۹ دی', month: 10, day: 9, type: 'Iran', holiday: false });
       }
       if (month === 11 && day === 22) {
-        events.push({ title: 'پیروزی انقلاب اسلامی', month: 11, day: 22, type: 'Iran', holiday: true });
+        events.push({
+          title: 'پیروزی انقلاب اسلامی',
+          month: 11,
+          day: 22,
+          type: 'Iran',
+          holiday: true,
+        });
       }
       if (month === 12 && day === 29) {
         events.push({ title: 'ملی شدن صنعت نفت', month: 12, day: 29, type: 'Iran', holiday: true });
       }
-      
+
       // Add a mock Ashura event in Tir (month 4)
       if (month === 4 && day === 19) {
         events.push({ title: 'عاشورا', month: 4, day: 19, type: 'Religious', holiday: true });
       }
-      
+
       return events;
     }),
     getEventTypes: jest.fn().mockReturnValue(['Iran', 'Religious', 'International', 'Afghanistan']),
@@ -80,9 +92,9 @@ jest.mock('../utils/event-utils', () => ({
       { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true },
       { title: 'روز جهانی کارگر', month: 2, day: 11, type: 'International', holiday: false },
       { title: 'روز معلم', month: 2, day: 12, type: 'Iran', holiday: false },
-      { title: 'عاشورا', month: 4, day: 19, type: 'Religious', holiday: true }
-    ])
-  }
+      { title: 'عاشورا', month: 4, day: 19, type: 'Religious', holiday: true },
+    ]),
+  },
 }));
 
 describe('Persian Datepicker 1404 Events Tests', () => {
@@ -94,7 +106,7 @@ describe('Persian Datepicker 1404 Events Tests', () => {
     if (!customElements.get('persian-datepicker-element')) {
       customElements.define('persian-datepicker-element', PersianDatePickerElement);
     }
-    
+
     // Create a new element for each test
     element = document.createElement('persian-datepicker-element') as PersianDatePickerElement;
     document.body.appendChild(element);
@@ -114,7 +126,10 @@ describe('Persian Datepicker 1404 Events Tests', () => {
     const targetDay = Array.from(dayElements || []).find(
       dayEl => !dayEl.classList.contains('empty') && dayEl.textContent === day.toString()
     );
-    return targetDay?.querySelectorAll('.event-tooltip') || document.createDocumentFragment().querySelectorAll('*');
+    return (
+      targetDay?.querySelectorAll('.event-tooltip') ||
+      document.createDocumentFragment().querySelectorAll('*')
+    );
   };
 
   // Helper function to check if a day has the 'holiday' class
@@ -133,7 +148,12 @@ describe('Persian Datepicker 1404 Events Tests', () => {
     });
 
     test('Nowruz (1st of Farvardin) should be marked as a holiday', () => {
-      expect(EventUtils.isHoliday).toHaveBeenCalledWith(1, 1, expect.any(Array), expect.any(Boolean));
+      expect(EventUtils.isHoliday).toHaveBeenCalledWith(
+        1,
+        1,
+        expect.any(Array),
+        expect.any(Boolean)
+      );
     });
 
     test('Nowruz event tooltip should contain the correct title', () => {
@@ -143,7 +163,12 @@ describe('Persian Datepicker 1404 Events Tests', () => {
     });
 
     test('Nature Day (13th of Farvardin) should be marked as a holiday', () => {
-      expect(EventUtils.isHoliday).toHaveBeenCalledWith(1, 13, expect.any(Array), expect.any(Boolean));
+      expect(EventUtils.isHoliday).toHaveBeenCalledWith(
+        1,
+        13,
+        expect.any(Array),
+        expect.any(Boolean)
+      );
     });
 
     test('Nature Day event tooltip should contain the correct title', () => {
@@ -165,7 +190,7 @@ describe('Persian Datepicker 1404 Events Tests', () => {
       expect(events[0].title).toContain('روز جهانی کارگر');
     });
 
-    test('Teacher\'s Day should be displayed correctly', () => {
+    test("Teacher's Day should be displayed correctly", () => {
       const events = EventUtils.getEvents(2, 12, undefined, false);
       expect(events.length).toBeGreaterThan(0);
       expect(events[0].title).toContain('روز معلم');
@@ -203,7 +228,7 @@ describe('Persian Datepicker 1404 Events Tests', () => {
       expect(events.length).toBeGreaterThan(0);
       expect(events[0].title).toContain('شهادت دکتر بهشتی');
     });
-    
+
     test('Ashura should be marked as a religious holiday', () => {
       const events = EventUtils.getEvents(4, 19, undefined, false);
       expect(events.length).toBeGreaterThan(0);
@@ -334,13 +359,13 @@ describe('Persian Datepicker 1404 Events Tests', () => {
       // Set to show only Iran holidays
       element.setAttribute('holiday-types', 'Iran');
       element.setValue(persianYear, 1, 15);
-      
+
       expect(EventUtils.getEvents).toHaveBeenCalled();
-      
+
       // Set to show only Religious holidays
       element.setAttribute('holiday-types', 'Religious');
       element.setValue(persianYear, 1, 15);
-      
+
       expect(EventUtils.getEvents).toHaveBeenCalled();
     });
   });
@@ -349,19 +374,19 @@ describe('Persian Datepicker 1404 Events Tests', () => {
     test('tooltip styling should handle mobile view', () => {
       // Simply verify that the tooltip styles are applied correctly
       element.setValue(persianYear, 1, 1);
-      
+
       // Mock checking tooltip classes programmatically, without relying on DOM elements
       const tooltipClasses = [
         'event-tooltip',
         'event-item',
         'event-type-label',
         'tooltip-close-button',
-        'tooltip-visible'
+        'tooltip-visible',
       ];
-      
+
       expect(tooltipClasses).toContain('event-tooltip');
       expect(tooltipClasses).toContain('event-item');
       expect(tooltipClasses).toContain('event-type-label');
     });
   });
-}); 
+});

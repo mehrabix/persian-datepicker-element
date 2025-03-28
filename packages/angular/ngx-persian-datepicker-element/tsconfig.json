@@ -10,9 +10,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "ngx-persian-datepicker-element": [
-        "./dist/ngx-persian-datepicker-element"
-      ]
+      "ngx-persian-datepicker-element": ["./dist/ngx-persian-datepicker-element"]
     },
     "skipLibCheck": true,
     "isolatedModules": true,

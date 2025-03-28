@@ -12,7 +12,7 @@ try {
     persianCalendarData = require('../data/persian-calendar-repo/PersianCalendar/data/events.json');
   } catch (originalError) {
     console.warn('Could not load original events.json file, trying fallback', originalError);
-    
+
     // If the original file fails, try loading the fallback file
     try {
       persianCalendarData = require('../data/events-fallback.json');
@@ -21,9 +21,9 @@ try {
       console.error('Could not load fallback events file either', fallbackError);
       // Use hard-coded fallback data structure
       persianCalendarData = {
-        "Persian Calendar": [],
-        "Hijri Calendar": [],
-        "Source": { "name": "Inline Fallback Data", "url": "" }
+        'Persian Calendar': [],
+        'Hijri Calendar': [],
+        Source: { name: 'Inline Fallback Data', url: '' },
       };
     }
   }
@@ -31,9 +31,9 @@ try {
   console.error('Unexpected error loading events data', error);
   // Use hard-coded fallback data structure
   persianCalendarData = {
-    "Persian Calendar": [],
-    "Hijri Calendar": [],
-    "Source": { "name": "Inline Fallback Data", "url": "" }
+    'Persian Calendar': [],
+    'Hijri Calendar': [],
+    Source: { name: 'Inline Fallback Data', url: '' },
   };
 }
 
@@ -57,22 +57,22 @@ const fallbackEvents: PersianEvent[] = [
 function mapPersianCalendarEvents(): PersianEvent[] {
   try {
     let allEvents: PersianEvent[] = [];
-    
+
     // Process Persian Calendar events
-    if (persianCalendarData && Array.isArray(persianCalendarData["Persian Calendar"])) {
-      const persianEvents = persianCalendarData["Persian Calendar"].map((event: any) => ({
+    if (persianCalendarData && Array.isArray(persianCalendarData['Persian Calendar'])) {
+      const persianEvents = persianCalendarData['Persian Calendar'].map((event: any) => ({
         title: event.title,
         month: event.month,
         day: event.day,
         type: event.type,
-        holiday: event.holiday
+        holiday: event.holiday,
       }));
-      
+
       allEvents = [...persianEvents];
     }
-    
+
     // Process Hijri Calendar events - Convert them to current Jalali year
-    if (persianCalendarData && Array.isArray(persianCalendarData["Hijri Calendar"])) {
+    if (persianCalendarData && Array.isArray(persianCalendarData['Hijri Calendar'])) {
       // Get current Jalali year
       const today = new Date();
       const jalaliToday = PersianDate.gregorianToJalali(
@@ -81,22 +81,22 @@ function mapPersianCalendarEvents(): PersianEvent[] {
         today.getDate()
       );
       const currentJalaliYear = jalaliToday[0];
-      
+
       // Process each Hijri event
       const hijriEvents: PersianEvent[] = [];
-      
-      persianCalendarData["Hijri Calendar"].forEach((event: any) => {
+
+      persianCalendarData['Hijri Calendar'].forEach((event: any) => {
         // Convert Hijri date to Jalali for current year
         const jalaliDate = HijriUtils.getHijriEventDateInJalaliYear(
-          currentJalaliYear, 
-          event.month, 
+          currentJalaliYear,
+          event.month,
           event.day
         );
-        
+
         // Only add the event if it occurs in the current Jalali year
         if (jalaliDate) {
           const [jMonth, jDay] = jalaliDate;
-          
+
           hijriEvents.push({
             title: event.title,
             month: jMonth,
@@ -105,20 +105,20 @@ function mapPersianCalendarEvents(): PersianEvent[] {
             holiday: event.holiday,
             // Add original Hijri date for reference
             originalHijriMonth: event.month,
-            originalHijriDay: event.day
+            originalHijriDay: event.day,
           });
         }
       });
-      
+
       // Add converted Hijri events to all events
       allEvents = [...allEvents, ...hijriEvents];
     }
-    
+
     if (allEvents.length === 0) {
       console.warn('Persian Calendar data not found in expected format, using fallback events');
       return fallbackEvents;
     }
-    
+
     return allEvents;
   } catch (error) {
     console.error('Error mapping Persian Calendar events:', error);
@@ -140,12 +140,12 @@ export const EventUtils = {
    */
   getAllEvents(eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
     let filteredEvents = [...mappedEvents];
-    
+
     // If specific event types are provided and we're not including all types, filter by those types
     if (eventTypes && eventTypes.length > 0 && !includeAllTypes) {
       filteredEvents = filteredEvents.filter(event => eventTypes.includes(event.type));
     }
-    
+
     return filteredEvents;
   },
 
@@ -156,12 +156,14 @@ export const EventUtils = {
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
-  getEvents(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
+  getEvents(
+    month: number,
+    day: number,
+    eventTypes?: string[],
+    includeAllTypes: boolean = false
+  ): PersianEvent[] {
     const events = this.getAllEvents(eventTypes, includeAllTypes);
-    return events.filter(event => 
-      event.month === month && 
-      event.day === day
-    );
+    return events.filter(event => event.month === month && event.day === day);
   },
 
   /**
@@ -171,7 +173,12 @@ export const EventUtils = {
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
-  isHoliday(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): boolean {
+  isHoliday(
+    month: number,
+    day: number,
+    eventTypes?: string[],
+    includeAllTypes: boolean = false
+  ): boolean {
     const events = this.getEvents(month, day, eventTypes, includeAllTypes);
     return events.some(event => event.holiday === true);
   },
@@ -183,11 +190,14 @@ export const EventUtils = {
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
-  getHolidayTitles(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): string[] {
+  getHolidayTitles(
+    month: number,
+    day: number,
+    eventTypes?: string[],
+    includeAllTypes: boolean = false
+  ): string[] {
     const events = this.getEvents(month, day, eventTypes, includeAllTypes);
-    return events
-      .filter(event => event.holiday === true)
-      .map(event => event.title);
+    return events.filter(event => event.holiday === true).map(event => event.title);
   },
 
   /**
@@ -197,27 +207,34 @@ export const EventUtils = {
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
-  getAllEventTitles(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): string[] {
+  getAllEventTitles(
+    month: number,
+    day: number,
+    eventTypes?: string[],
+    includeAllTypes: boolean = false
+  ): string[] {
     const events = this.getEvents(month, day, eventTypes, includeAllTypes);
     return events.map(event => event.title);
   },
-  
+
   /**
    * Gets events of a specific type
    * @param type The event type (e.g., 'Iran', 'Religious')
    * @param includeAllTypes If true, includes all event types
    * @param holidaysOnly If true, only returns holiday events
    */
-  getEventsByType(type: string, includeAllTypes: boolean = false, holidaysOnly: boolean = false): PersianEvent[] {
-    const events = includeAllTypes 
-      ? mappedEvents 
+  getEventsByType(
+    type: string,
+    includeAllTypes: boolean = false,
+    holidaysOnly: boolean = false
+  ): PersianEvent[] {
+    const events = includeAllTypes
+      ? mappedEvents
       : mappedEvents.filter(event => event.type === type);
-    
-    return holidaysOnly 
-      ? events.filter(event => event.holiday === true) 
-      : events;
+
+    return holidaysOnly ? events.filter(event => event.holiday === true) : events;
   },
-  
+
   /**
    * Get all holidays
    * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
@@ -243,7 +260,7 @@ export const EventUtils = {
   getSourceMetadata(): { [key: string]: string } {
     return persianCalendarData.Source || {};
   },
-  
+
   /**
    * Refresh the events data to update Hijri calendar events for the current year
    * This should be called when the component is initialized or the year changes
@@ -251,16 +268,16 @@ export const EventUtils = {
   refreshEvents(): PersianEvent[] {
     // Recalculate all events (especially Hijri events for current year)
     const refreshedEvents = mapPersianCalendarEvents();
-    
+
     // Replace the cached events with the new ones
     while (mappedEvents.length > 0) {
       mappedEvents.pop();
     }
-    
+
     refreshedEvents.forEach(event => mappedEvents.push(event));
-    
+
     return [...mappedEvents];
-  }
+  },
 };
 
-export default EventUtils; 
+export default EventUtils;

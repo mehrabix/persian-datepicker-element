@@ -6,8 +6,8 @@ export interface PersianDateChangeEvent extends CustomEvent {
   detail: {
     /** Jalali (Persian) date as [year, month, day] */
     jalali: [number, number, number];
-    
+
     /** Gregorian date as [year, month, day] */
     gregorian: [number, number, number];
   };
-} 
+}

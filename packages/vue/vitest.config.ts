@@ -1,6 +1,7 @@
-import { defineConfig } from 'vitest/config';
-import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
+
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [vue()],
@@ -20,13 +21,13 @@ export default defineConfig({
         '**/*.test.ts',
         '**/*.config.ts',
         '**/virtual:',
-        '**/dist/'
-      ]
-    }
+        '**/dist/',
+      ],
+    },
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src')
-    }
-  }
-}); 
+      '@': resolve(__dirname, './src'),
+    },
+  },
+});

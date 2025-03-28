@@ -1,6 +1,10 @@
 {
   "name": "persian-datepicker-element",
   "version": "1.0.29",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.js",
   "module": "dist/persian-datepicker-element.esm.js",
@@ -72,11 +76,11 @@
     ]
   },
   "scripts": {
-    "build": "pnpm run build:clean && pnpm run build:prod && pnpm run build:dev && pnpm run build:esm && pnpm run minify && pnpm run cleanup",
-    "build:clean": "set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && npx rspack --config scripts/build/rspack.config.js",
-    "build:prod": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.min.js && set MINIFY=true && npx rspack --config scripts/build/rspack.config.js",
-    "build:dev": "set NODE_ENV=development && set OUTPUT_FILE=persian-datepicker-element.js && set MINIFY=false && npx rspack --config scripts/build/rspack.config.js",
-    "build:esm": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.esm.js && set MODULE_TYPE=module && set MINIFY=true && npx rspack --config scripts/build/rspack.config.js",
+    "build": "pnpm -r run build",
+    "build:clean": "pnpm -r run build:clean",
+    "build:prod": "pnpm -r run build:prod",
+    "build:dev": "pnpm -r run build:dev",
+    "build:esm": "pnpm -r run build:esm",
     "build:max-compress": "node scripts/optimize/max-compress.js",
     "build:super-optimize": "node scripts/optimize/super-optimize.js",
     "build:optimal": "pnpm run build:max-compress && pnpm run build:super-optimize",
@@ -85,14 +89,20 @@
     "build:esm-optimize": "node scripts/optimize/esm-optimize.js",
     "build:extreme": "node scripts/build/extreme-build.js",
     "build:production": "node scripts/build/production-build.js",
+    "build:angular": "cd packages/angular/ngx-persian-datepicker-element && pnpm run build:lib",
+    "build:all": "pnpm -r run build && pnpm run build:angular",
     "minify": "node scripts/optimize/minify.js persian-datepicker-element.min.js && node scripts/optimize/esm-optimize.js",
     "cleanup": "node scripts/utils/cleanup-dist.js",
-    "dev": "set NODE_ENV=development && npx rspack serve --config scripts/build/rspack.config.js",
-    "analyze": "set NODE_ENV=production && set BUNDLE_ANALYZE=true && npx rspack --config scripts/build/rspack.config.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "dev": "pnpm -r run dev",
+    "analyze": "pnpm -r run analyze",
+    "test": "pnpm -r run test",
+    "test:watch": "pnpm -r run test:watch",
+    "test:coverage": "pnpm -r run test:coverage",
     "serve": "pnpm exec serve",
+    "lint": "eslint \"packages/**/*.{js,jsx,ts,tsx,vue}\" --max-warnings=0 --debug",
+    "lint:fix": "eslint \"packages/**/*.{js,jsx,ts,tsx,vue}\" --fix --max-warnings=0",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,vue,json,css,scss,md}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,vue,json,css,scss,md}\"",
     "prepublishOnly": "pnpm run build"
   },
   "keywords": [
@@ -133,6 +143,18 @@
     "terser": "^5.39.0",
     "ts-jest": "^29.2.6",
     "ts-loader": "^9.5.2",
-    "typescript": "^5.8.2"
+    "typescript": "~5.5.0",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-typescript": "^12.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-vue": "^9.21.1",
+    "prettier": "^3.2.5",
+    "vue-eslint-parser": "^9.3.2",
+    "eslint-import-resolver-typescript": "^3.6.1"
   }
 }

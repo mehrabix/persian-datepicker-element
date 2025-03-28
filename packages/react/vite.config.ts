@@ -1,7 +1,10 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
+
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
+
+/* eslint-disable import/no-unresolved */
 
 export default defineConfig({
   plugins: [
@@ -15,7 +18,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.tsx'),
       name: 'ReactPersianDatepickerElement',
-      fileName: (format) => `react-persian-datepicker-element.${format}.js`,
+      fileName: format => `react-persian-datepicker-element.${format}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'persian-datepicker-element'],
@@ -28,4 +31,4 @@ export default defineConfig({
       },
     },
   },
-}); 
+});

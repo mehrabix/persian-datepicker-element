@@ -44,4 +44,4 @@ if (!customElements.get('persian-datepicker-element')) {
 // Configure Vue Test Utils
 config.global.mocks = {
   // Add any global mocks here
-}; 
+};

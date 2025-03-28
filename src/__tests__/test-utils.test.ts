@@ -5,7 +5,7 @@ describe('Test utilities', () => {
     const waitPromise = wait(10);
     expect(waitPromise).toBeInstanceOf(Promise);
   });
-  
+
   test('findByText should find elements by their text content', () => {
     // Setup test DOM
     document.body.innerHTML = `
@@ -15,12 +15,12 @@ describe('Test utilities', () => {
         <span>Third span</span>
       </div>
     `;
-    
+
     const result = findByText(document.body, 'span', 'Second span');
     expect(result).toBeTruthy();
     expect(result?.textContent).toBe('Second span');
-    
+
     const notFound = findByText(document.body, 'span', 'Fourth span');
     expect(notFound).toBeNull();
   });
-}); 
+});

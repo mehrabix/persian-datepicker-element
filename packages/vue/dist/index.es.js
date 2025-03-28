@@ -53,18 +53,22 @@ const D = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled",
       const o = e.detail;
       i("update:modelValue", o.jalali), i("change", o);
     };
-    return u(() => a.modelValue, (e) => {
-      r(() => {
-        if (l.value)
-          if (Array.isArray(e) && e.length === 3)
-            try {
-              l.value.setValue(e[0], e[1], e[2]);
-            } catch (o) {
-              console.error("Failed to set value:", o);
-            }
-          else typeof e == "string" && l.value.setAttribute("value", e);
-      });
-    }, { immediate: !1 }), u([() => a.min, () => a.max], ([e, o]) => {
+    return u(
+      () => a.modelValue,
+      (e) => {
+        r(() => {
+          if (l.value)
+            if (Array.isArray(e) && e.length === 3)
+              try {
+                l.value.setValue(e[0], e[1], e[2]);
+              } catch (o) {
+                console.error("Failed to set value:", o);
+              }
+            else typeof e == "string" && l.value.setAttribute("value", e);
+        });
+      },
+      { immediate: !1 }
+    ), u([() => a.min, () => a.max], ([e, o]) => {
       r(() => {
         l.value && (e && (l.value.min = e), o && (l.value.max = o));
       });
@@ -73,7 +77,11 @@ const D = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled",
         if (a.modelValue && l.value)
           if (Array.isArray(a.modelValue) && a.modelValue.length === 3)
             try {
-              l.value.setValue(a.modelValue[0], a.modelValue[1], a.modelValue[2]);
+              l.value.setValue(
+                a.modelValue[0],
+                a.modelValue[1],
+                a.modelValue[2]
+              );
             } catch (e) {
               console.error("Failed to set initial value:", e);
             }

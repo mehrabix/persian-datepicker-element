@@ -12,10 +12,11 @@ if (!window.customElements) {
 }
 
 // Mock for Shadow DOM
-Element.prototype.attachShadow = Element.prototype.attachShadow || 
-  function() { 
+Element.prototype.attachShadow =
+  Element.prototype.attachShadow ||
+  function () {
     const shadow = document.createElement('div');
     shadow.innerHTML = '';
     this.shadowRoot = shadow;
     return shadow;
-  }; 
+  };

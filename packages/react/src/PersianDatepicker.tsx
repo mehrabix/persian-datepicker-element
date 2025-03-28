@@ -1,9 +1,9 @@
 import React, { forwardRef, useRef, useEffect, useImperativeHandle, CSSProperties } from 'react';
-import type { 
+
+import type {
   PersianDatePickerElementOptions,
   PersianDateChangeEvent,
   DateTuple,
-  PersianEvent
 } from 'persian-datepicker-element';
 
 // Ensure the web component is registered globally when imported
@@ -15,11 +15,11 @@ if (typeof window !== 'undefined') {
 export interface PersianDatepickerProps extends Omit<PersianDatePickerElementOptions, 'onChange'> {
   // Override onChange to use proper React event handling
   onChange?: (event: PersianDateChangeEvent) => void;
-  
+
   // Additional React-specific props
   className?: string;
   style?: CSSProperties;
-  
+
   // CSS custom properties as direct props for easier styling
   primaryColor?: string;
   primaryHover?: string;
@@ -30,14 +30,14 @@ export interface PersianDatepickerProps extends Omit<PersianDatePickerElementOpt
   fontFamily?: string;
   holidayColor?: string;
   holidayBg?: string;
-  
+
   // New dark mode and scrollbar related props
   scrollbarWidth?: string;
   scrollbarThumbColor?: string;
   scrollbarThumbHoverColor?: string;
   scrollbarTrackColor?: string;
   scrollbarBorderRadius?: string;
-  
+
   // Dark mode helper prop
   darkMode?: boolean;
 }
@@ -96,16 +96,15 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       scrollbarThumbHoverColor,
       scrollbarTrackColor,
       scrollbarBorderRadius,
-      darkMode,
       ...restProps
     } = props;
-    
+
     // Reference to the web component element
     const elementRef = useRef<PersianDatepickerElement | null>(null);
-    
+
     // Container div reference for styling
     const containerRef = useRef<HTMLDivElement>(null);
-    
+
     // Expose methods to parent component via ref
     useImperativeHandle(ref, () => ({
       getValue: () => {
@@ -120,22 +119,24 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       close: () => {
         elementRef.current?.close?.();
       },
-      getElement: () => elementRef.current
+      getElement: () => elementRef.current,
     }));
-    
+
     // Create and configure the web component on mount
     useEffect(() => {
       if (containerRef.current) {
         // Create the element if it doesn't exist
         if (!elementRef.current) {
-          const element = document.createElement('persian-datepicker-element') as PersianDatepickerElement;
+          const element = document.createElement(
+            'persian-datepicker-element'
+          ) as PersianDatepickerElement;
           elementRef.current = element;
           containerRef.current.appendChild(element);
         }
-        
+
         // Set element properties from props
         const element = elementRef.current;
-        
+
         // Apply all props as attributes
         Object.entries(restProps).forEach(([key, value]) => {
           if (value !== undefined && value !== null) {
@@ -143,7 +144,7 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
             element.setAttribute(attributeName, convertValueToAttribute(value));
           }
         });
-        
+
         // Apply CSS custom properties
         if (primaryColor) element.style.setProperty('--jdp-primary', primaryColor);
         if (primaryHover) element.style.setProperty('--jdp-primary-hover', primaryHover);
@@ -155,45 +156,47 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
         if (holidayColor) element.style.setProperty('--jdp-holiday-color', holidayColor);
         if (holidayBg) element.style.setProperty('--jdp-holiday-bg', holidayBg);
         if (scrollbarWidth) element.style.setProperty('--jdp-scrollbar-width', scrollbarWidth);
-        if (scrollbarThumbColor) element.style.setProperty('--jdp-scrollbar-thumb-color', scrollbarThumbColor);
-        if (scrollbarThumbHoverColor) element.style.setProperty('--jdp-scrollbar-thumb-hover-color', scrollbarThumbHoverColor);
-        if (scrollbarTrackColor) element.style.setProperty('--jdp-scrollbar-track-color', scrollbarTrackColor);
-        if (scrollbarBorderRadius) element.style.setProperty('--jdp-scrollbar-border-radius', scrollbarBorderRadius);
-        
+        if (scrollbarThumbColor)
+          element.style.setProperty('--jdp-scrollbar-thumb-color', scrollbarThumbColor);
+        if (scrollbarThumbHoverColor)
+          element.style.setProperty('--jdp-scrollbar-thumb-hover-color', scrollbarThumbHoverColor);
+        if (scrollbarTrackColor)
+          element.style.setProperty('--jdp-scrollbar-track-color', scrollbarTrackColor);
+        if (scrollbarBorderRadius)
+          element.style.setProperty('--jdp-scrollbar-border-radius', scrollbarBorderRadius);
+
         // Add change event listener
-        const handleChange = (e: Event) => {
-          const customEvent = e as CustomEvent<PersianDateChangeEvent>;
+        const handleDateChange = (event: any) => {
+          const customEvent = event as CustomEvent<PersianDateChangeEvent>;
           if (onChange && customEvent.detail) {
             onChange(customEvent.detail);
           }
         };
-        
-        element.addEventListener('change', handleChange);
+
+        element.addEventListener('change', handleDateChange);
         return () => {
-          element.removeEventListener('change', handleChange);
+          element.removeEventListener('change', handleDateChange);
         };
       }
     }, [
-      onChange, 
-      primaryColor, 
-      primaryHover, 
-      backgroundColor, 
-      foregroundColor, 
-      borderColor, 
-      borderRadius, 
-      fontFamily, 
-      holidayColor, 
+      onChange,
+      primaryColor,
+      primaryHover,
+      backgroundColor,
+      foregroundColor,
+      borderColor,
+      borderRadius,
+      fontFamily,
+      holidayColor,
       holidayBg,
       scrollbarWidth,
       scrollbarThumbColor,
       scrollbarThumbHoverColor,
       scrollbarTrackColor,
       scrollbarBorderRadius,
-      ...Object.values(restProps)
+      ...Object.values(restProps),
     ]);
-    
-    return (
-      <div ref={containerRef} className={className} style={style}></div>
-    );
+
+    return <div ref={containerRef} className={className} style={style}></div>;
   }
-); 
+);

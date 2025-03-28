@@ -4,9 +4,12 @@ module.exports = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['../../jest.setup.js'],
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
-      tsconfig: './tsconfig.json',
-    }],
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: './tsconfig.json',
+      },
+    ],
     '^.+\\.vue$': '@vue/vue3-jest',
   },
   moduleNameMapper: {
@@ -14,4 +17,4 @@ module.exports = {
   },
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node', 'vue'],
-}; 
+};

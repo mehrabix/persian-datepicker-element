@@ -5,4 +5,4 @@
     "jsx": "preserve"
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "test/**/*.ts"]
-} 
+}

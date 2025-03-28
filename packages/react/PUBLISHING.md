@@ -17,6 +17,7 @@ npm run build
 ```
 
 3. Update the version number in `package.json` following semantic versioning:
+
    - PATCH (1.0.x) - Bug fixes and minor changes
    - MINOR (1.x.0) - New features in a backward-compatible manner
    - MAJOR (x.0.0) - Breaking changes
@@ -106,4 +107,4 @@ git push origin v1.0.0
 ## Notes about Dependencies
 
 - This package includes `persian-datepicker-element` as a direct dependency, so it will be automatically installed when users install `react-persian-datepicker-element`.
-- React and ReactDOM are peer dependencies so users need to have them installed in their projects. 
+- React and ReactDOM are peer dependencies so users need to have them installed in their projects.

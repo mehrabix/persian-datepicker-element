@@ -7,8 +7,8 @@ const rootDir = path.resolve(__dirname, '../..');
 
 /**
  * Super-optimizer for Persian Datepicker Element
- * 
- * This script applies additional aggressive but safe optimizations to 
+ *
+ * This script applies additional aggressive but safe optimizations to
  * further reduce bundle size. Run this after the main build process.
  */
 
@@ -25,37 +25,41 @@ function safeMinify(filePath, terserCmd, label) {
   // Backup the original file
   const backupPath = `${filePath}.backup`;
   fs.copyFileSync(filePath, backupPath);
-  
+
   // Get original size
   const statsBefore = fs.statSync(filePath);
   const sizeBefore = statsBefore.size;
-  
+
   console.log(`Applying ${label} to ${path.basename(filePath)}...`);
-  
+
   try {
     // Run terser command
     execSync(terserCmd, { stdio: 'inherit' });
-    
+
     // Check if the file size increased
     const statsAfter = fs.statSync(filePath);
     const sizeAfter = statsAfter.size;
-    
+
     if (sizeAfter > sizeBefore) {
-      console.log(`⚠️ Warning: File size increased (${(sizeBefore / 1024).toFixed(2)}KB -> ${(sizeAfter / 1024).toFixed(2)}KB)`);
+      console.log(
+        `⚠️ Warning: File size increased (${(sizeBefore / 1024).toFixed(2)}KB -> ${(sizeAfter / 1024).toFixed(2)}KB)`
+      );
       console.log('↩️ Reverting to original file...');
       fs.copyFileSync(backupPath, filePath);
       return {
         size: sizeBefore,
-        reduced: false
+        reduced: false,
       };
     } else {
       // Success - file was reduced in size
       const reduction = ((1 - sizeAfter / sizeBefore) * 100).toFixed(2);
-      console.log(`✅ File size reduced by ${reduction}% (${(sizeBefore / 1024).toFixed(2)}KB -> ${(sizeAfter / 1024).toFixed(2)}KB)`);
+      console.log(
+        `✅ File size reduced by ${reduction}% (${(sizeBefore / 1024).toFixed(2)}KB -> ${(sizeAfter / 1024).toFixed(2)}KB)`
+      );
       return {
         size: sizeAfter,
         reduced: true,
-        reduction
+        reduction,
       };
     }
   } catch (error) {
@@ -65,7 +69,7 @@ function safeMinify(filePath, terserCmd, label) {
     return {
       size: sizeBefore,
       reduced: false,
-      error: error.message
+      error: error.message,
     };
   } finally {
     // Clean up backup
@@ -78,34 +82,34 @@ function safeMinify(filePath, terserCmd, label) {
 // Process each file with different optimization techniques
 filesToOptimize.forEach(file => {
   const filePath = path.resolve(rootDir, file);
-  
+
   if (!fs.existsSync(filePath)) {
     console.log(`⚠️ File not found: ${file}`);
     return;
   }
-  
+
   console.log(`\n📦 Super-optimizing ${path.basename(file)}...`);
-  
+
   // Original file size
   const origSize = fs.statSync(filePath).size;
   console.log(`Original size: ${(origSize / 1024).toFixed(2)}KB`);
-  
+
   // First optimization pass: collapse_vars=true
   let cmd1 = `pnpm exec terser "${filePath}" --compress collapse_vars=true,evaluate=true,booleans=true,if_return=true,sequences=true,conditionals=true --mangle --format comments=false --output "${filePath}"`;
-  let result = safeMinify(filePath, cmd1, "structural optimizations");
-  
+  let result = safeMinify(filePath, cmd1, 'structural optimizations');
+
   // Second optimization pass: specialized functions
   if (result.reduced) {
     let cmd2 = `pnpm exec terser "${filePath}" --compress reduce_vars=true,reduce_funcs=true,join_vars=true --mangle --format comments=false --output "${filePath}"`;
-    result = safeMinify(filePath, cmd2, "variable reduction optimizations");
+    result = safeMinify(filePath, cmd2, 'variable reduction optimizations');
   }
-  
+
   // Third optimization pass: remove unused code
   if (result.reduced) {
     let cmd3 = `pnpm exec terser "${filePath}" --compress dead_code=true,unused=true,drop_console=true,drop_debugger=true --mangle --format comments=false --output "${filePath}"`;
-    result = safeMinify(filePath, cmd3, "dead code elimination");
+    result = safeMinify(filePath, cmd3, 'dead code elimination');
   }
-  
+
   // Final report
   const finalSize = fs.statSync(filePath).size;
   const totalReduction = ((1 - finalSize / origSize) * 100).toFixed(2);
@@ -115,4 +119,4 @@ filesToOptimize.forEach(file => {
   console.log(`Total reduction: ${totalReduction}%`);
 });
 
-console.log('\n🎉 Super optimization process completed!'); 
+console.log('\n🎉 Super optimization process completed!');

@@ -1,5 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { PersianDatepicker, PersianDatepickerMethods, PersianDateChangeEvent } from 'react-persian-datepicker-element';
+import {
+  PersianDatepicker,
+  PersianDatepickerMethods,
+  PersianDateChangeEvent,
+} from 'react-persian-datepicker-element';
 
 const DatepickerDemo: React.FC = () => {
   // State for basic example
@@ -7,17 +11,17 @@ const DatepickerDemo: React.FC = () => {
   const [selectedGregorian, setSelectedGregorian] = useState<string>('');
   const [isHoliday, setIsHoliday] = useState<boolean>(false);
   const [events, setEvents] = useState<any[]>([]);
-  
+
   // State for controlled example
   const [controlledValue, setControlledValue] = useState<[number, number, number]>([1401, 6, 15]);
-  
+
   // State for theme toggle
   const [darkMode, setDarkMode] = useState<boolean>(false);
-  
+
   // Refs
   const basicRef = useRef<PersianDatepickerMethods>(null);
   const customRef = useRef<PersianDatepickerMethods>(null);
-  
+
   // Theme colors
   const theme = {
     light: {
@@ -27,7 +31,7 @@ const DatepickerDemo: React.FC = () => {
       foreground: '#333333',
       border: '#e5e7eb',
       holidayColor: '#ef4444',
-      holidayBg: '#fee2e2'
+      holidayBg: '#fee2e2',
     },
     dark: {
       primary: '#60a5fa',
@@ -36,39 +40,35 @@ const DatepickerDemo: React.FC = () => {
       foreground: '#f3f4f6',
       border: '#374151',
       holidayColor: '#f87171',
-      holidayBg: '#7f1d1d'
-    }
+      holidayBg: '#7f1d1d',
+    },
   };
-  
+
   const currentTheme = darkMode ? theme.dark : theme.light;
-  
+
   // Handle date change for basic example
   const handleDateChange = (event: PersianDateChangeEvent) => {
     const { jalali, gregorian, isHoliday, events } = event;
-    
+
     setSelectedDate(`${jalali[0]}/${jalali[1]}/${jalali[2]}`);
     setSelectedGregorian(`${gregorian[0]}-${gregorian[1]}-${gregorian[2]}`);
     setIsHoliday(isHoliday);
     setEvents(events || []);
-    
+
     console.log('Date changed:', event);
   };
-  
+
   // Handle date change for controlled example
   const handleControlledDateChange = (event: PersianDateChangeEvent) => {
     setControlledValue(event.jalali);
   };
-  
+
   // Set to today
   const handleSetToday = () => {
     const today = new Date();
-    basicRef.current?.setValue(
-      today.getFullYear(),
-      today.getMonth() + 1,
-      today.getDate()
-    );
+    basicRef.current?.setValue(today.getFullYear(), today.getMonth() + 1, today.getDate());
   };
-  
+
   // Get current value
   const handleGetValue = () => {
     const value = basicRef.current?.getValue();
@@ -76,7 +76,7 @@ const DatepickerDemo: React.FC = () => {
       alert(`Current value: ${value.join('/')}`);
     }
   };
-  
+
   // Toggle calendar
   const handleToggleCalendar = () => {
     const element = basicRef.current?.getElement();
@@ -86,25 +86,21 @@ const DatepickerDemo: React.FC = () => {
       basicRef.current?.open();
     }
   };
-  
+
   // Toggle theme
   const toggleTheme = () => {
     setDarkMode(!darkMode);
   };
-  
+
   return (
     <div className={`demo-container ${darkMode ? 'dark' : 'light'}`}>
       <header>
         <h1>Persian Datepicker Demo</h1>
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-        >
+        <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
           {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
         </button>
       </header>
-      
+
       <div className="demo-section">
         <h2>Basic Example</h2>
         <div className="datepicker-wrapper">
@@ -122,13 +118,13 @@ const DatepickerDemo: React.FC = () => {
             holidayColor={currentTheme.holidayColor}
             holidayBg={currentTheme.holidayBg}
           />
-          
+
           <div className="actions">
             <button onClick={handleSetToday}>Today</button>
             <button onClick={handleGetValue}>Get Value</button>
             <button onClick={handleToggleCalendar}>Toggle Calendar</button>
           </div>
-          
+
           {selectedDate && (
             <div className="selected-info">
               <div className="info-row">
@@ -146,7 +142,7 @@ const DatepickerDemo: React.FC = () => {
                   </span>
                 </div>
               )}
-              
+
               {events.length > 0 && (
                 <div className="events">
                   <h4>Events on this day:</h4>
@@ -166,25 +162,19 @@ const DatepickerDemo: React.FC = () => {
           )}
         </div>
       </div>
-      
+
       <div className="demo-section">
         <h2>Controlled Component</h2>
         <div className="datepicker-wrapper">
           <div className="controlled-value">
             <span>Current value: {controlledValue.join('/')}</span>
             <div className="controlled-buttons">
-              <button onClick={() => setControlledValue([1400, 1, 1])}>
-                Set to 1400/1/1
-              </button>
-              <button onClick={() => setControlledValue([1401, 6, 15])}>
-                Set to 1401/6/15
-              </button>
-              <button onClick={() => setControlledValue([1402, 12, 29])}>
-                Set to 1402/12/29
-              </button>
+              <button onClick={() => setControlledValue([1400, 1, 1])}>Set to 1400/1/1</button>
+              <button onClick={() => setControlledValue([1401, 6, 15])}>Set to 1401/6/15</button>
+              <button onClick={() => setControlledValue([1402, 12, 29])}>Set to 1402/12/29</button>
             </div>
           </div>
-          
+
           <PersianDatepicker
             value={controlledValue}
             onChange={handleControlledDateChange}
@@ -197,7 +187,7 @@ const DatepickerDemo: React.FC = () => {
           />
         </div>
       </div>
-      
+
       <div className="demo-section">
         <h2>Range Limitation</h2>
         <div className="datepicker-wrapper">
@@ -216,7 +206,7 @@ const DatepickerDemo: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="demo-section">
         <h2>Custom Styling</h2>
         <div className="datepicker-wrapper">
@@ -238,12 +228,12 @@ const DatepickerDemo: React.FC = () => {
             style={{
               boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
               width: '100%',
-              maxWidth: '300px'
+              maxWidth: '300px',
             }}
           />
         </div>
       </div>
-      
+
       <div className="demo-section">
         <h2>Disabled State</h2>
         <div className="datepicker-wrapper">
@@ -257,14 +247,12 @@ const DatepickerDemo: React.FC = () => {
           />
         </div>
       </div>
-      
+
       <footer>
-        <p>
-          react-persian-datepicker-element © {new Date().getFullYear()} - MIT License
-        </p>
+        <p>react-persian-datepicker-element © {new Date().getFullYear()} - MIT License</p>
       </footer>
     </div>
   );
 };
 
-export default DatepickerDemo; 
+export default DatepickerDemo;

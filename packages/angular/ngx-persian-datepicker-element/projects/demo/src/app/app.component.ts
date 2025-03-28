@@ -1,7 +1,20 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit, ElementRef, QueryList, ViewChildren, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  AfterViewInit,
+  ElementRef,
+  QueryList,
+  ViewChildren,
+  ViewChild,
+} from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { NgxPersianDatepickerComponent } from '../../../ngx-persian-datepicker-element/src/lib/ngx-persian-datepicker.component';
+import {
+  PersianDateChangeEvent,
+  DateTuple,
+} from '../../../ngx-persian-datepicker-element/src/lib/persian-datepicker-types';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +22,15 @@ import { NgxPersianDatepickerComponent } from '../../../ngx-persian-datepicker-e
   imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxPersianDatepickerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements AfterViewInit {
   title = 'Persian DatePicker Demo';
-  
+
   // Datepicker references through query list
-  @ViewChildren(NgxPersianDatepickerComponent) datepickers!: QueryList<NgxPersianDatepickerComponent>;
-  
+  @ViewChildren(NgxPersianDatepickerComponent)
+  datepickers!: QueryList<NgxPersianDatepickerComponent>;
+
   // Individual datepicker references
   @ViewChild('datepicker1') datepicker1!: NgxPersianDatepickerComponent;
   @ViewChild('datepicker2') datepicker2!: NgxPersianDatepickerComponent;
@@ -24,26 +38,26 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('datepicker4') datepicker4!: NgxPersianDatepickerComponent;
   @ViewChild('datepicker5') datepicker5!: NgxPersianDatepickerComponent;
   @ViewChild('datepicker6') datepicker6!: NgxPersianDatepickerComponent;
-  
+
   // Date values
-  birthdate: any = null;
-  joinDate: any = null;
-  iranHolidays: any = null;
-  religiousHolidays: any = null;
-  afghanistanHolidays: any = null;
-  allHolidays: any = null;
+  birthdate: DateTuple | null = null;
+  joinDate: DateTuple | null = null;
+  iranHolidays: DateTuple | null = null;
+  religiousHolidays: DateTuple | null = null;
+  afghanistanHolidays: DateTuple | null = null;
+  allHolidays: DateTuple | null = null;
 
   // Results display
-  selectedJalali: string = '-';
-  selectedGregorian: string = '-';
-  selectedEvents: string = '-';
-  
+  selectedJalali: string = '';
+  selectedGregorian: string = '';
+  selectedEvents: string = '';
+
   // RTL direction - always true for Persian
   rtlDirection = true;
-  
+
   // Show holidays - true for holiday datepickers
   showHolidays = true;
-  
+
   // Dark mode toggle
   isDarkMode: boolean = false;
 
@@ -68,7 +82,7 @@ export class AppComponent implements AfterViewInit {
     '--jdp-primary': '#0891b2',
     '--jdp-primary-hover': '#0e7490',
     '--jdp-primary-foreground': '#ffffff',
-    '--jdp-ring': '#0891b2'
+    '--jdp-ring': '#0891b2',
   };
 
   // Light theme variables (default)
@@ -79,21 +93,22 @@ export class AppComponent implements AfterViewInit {
     '--jdp-muted-foreground': '#64748b',
     '--jdp-border': '#e2e8f0',
     '--jdp-input-border-color': '#e2e8f0',
-    '--jdp-calendar-shadow': '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
+    '--jdp-calendar-shadow':
+      '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
     '--jdp-day-hover-bg': '#f1f5f9',
     '--jdp-primary': '#0891b2',
     '--jdp-primary-hover': '#0e7490',
     '--jdp-primary-foreground': '#ffffff',
-    '--jdp-ring': '#0284c7'
+    '--jdp-ring': '#0284c7',
   };
 
   constructor(private elementRef: ElementRef) {
     // Check system dark mode preference
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     this.isDarkMode = mediaQuery.matches;
-    
+
     // Add listener for system theme changes
-    mediaQuery.addEventListener('change', (e) => {
+    mediaQuery.addEventListener('change', e => {
       this.isDarkMode = e.matches;
       this.applyThemeToDatepickers();
     });
@@ -105,14 +120,14 @@ export class AppComponent implements AfterViewInit {
       this.applyThemeToDatepickers();
       this.setupDatepickerProperties();
     }, 100);
-    
+
     // Listen for changes in the QueryList
     this.datepickers.changes.subscribe(() => {
       this.applyThemeToDatepickers();
       this.setupDatepickerProperties();
     });
   }
-  
+
   /**
    * Set up common properties for all datepickers
    */
@@ -124,7 +139,7 @@ export class AppComponent implements AfterViewInit {
         element.setAttribute('rtl', 'true');
       }
     });
-    
+
     // Apply show-holidays to holiday datepickers
     [this.datepicker3, this.datepicker4, this.datepicker5, this.datepicker6].forEach(datepicker => {
       if (datepicker) {
@@ -138,44 +153,47 @@ export class AppComponent implements AfterViewInit {
 
   applyThemeToDatepickers() {
     const themeVars = this.isDarkMode ? this.darkThemeVars : this.lightThemeVars;
-    
+
     // Use individual references for more reliable targeting
     [
-      this.datepicker1, 
-      this.datepicker2, 
-      this.datepicker3, 
-      this.datepicker4, 
-      this.datepicker5, 
-      this.datepicker6
+      this.datepicker1,
+      this.datepicker2,
+      this.datepicker3,
+      this.datepicker4,
+      this.datepicker5,
+      this.datepicker6,
     ].forEach(datepicker => {
       if (datepicker) {
         this.applyVariablesToDatepicker(datepicker, themeVars);
       }
     });
-    
+
     // Also apply through QueryList as a fallback
     if (this.datepickers) {
       this.datepickers.forEach(datepicker => {
         this.applyVariablesToDatepicker(datepicker, themeVars);
       });
     }
-    
+
     // Directly access the native web components
     const datepickerElements = document.querySelectorAll('persian-datepicker-element');
-    datepickerElements.forEach((element) => {
+    datepickerElements.forEach(element => {
       const htmlElement = element as HTMLElement;
       for (const [prop, value] of Object.entries(themeVars)) {
         htmlElement.style.setProperty(prop, value);
       }
     });
   }
-  
-  applyVariablesToDatepicker(datepicker: NgxPersianDatepickerComponent, variables: Record<string, string>) {
+
+  applyVariablesToDatepicker(
+    datepicker: NgxPersianDatepickerComponent,
+    variables: Record<string, string>
+  ) {
     if (!datepicker) return;
-    
+
     // Use the exposed applyThemeVariables method
     datepicker.applyThemeVariables(variables);
-    
+
     // Also try to directly access the element
     const element = datepicker.elementSignal?.();
     if (element) {
@@ -185,25 +203,20 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  handleDateChange(event: any) {
+  handleDateChange(event: PersianDateChangeEvent): void {
     console.log('Date changed:', event);
-    
-    const jalaliDate = event.jalali;
-    const gregorianDate = event.gregorian;
-    const events = event.events;
-    
+
+    const jalaliDate = event.detail.jalali;
+    const gregorianDate = event.detail.gregorian;
+    const events = event.detail.events || [];
+
     this.selectedJalali = `${jalaliDate[0]}/${jalaliDate[1].toString().padStart(2, '0')}/${jalaliDate[2].toString().padStart(2, '0')}`;
     this.selectedGregorian = `${gregorianDate[0]}/${gregorianDate[1].toString().padStart(2, '0')}/${gregorianDate[2].toString().padStart(2, '0')}`;
     this.selectedEvents = this.formatEvents(events);
   }
 
-  formatEvents(events: Array<{title: string, type: string, holiday: boolean}> | undefined): string {
-    if (!events || events.length === 0) return 'هیچ رویدادی وجود ندارد';
-    
-    return events.map(event => {
-      const holidayMark = event.holiday ? '🔴 ' : '';
-      return `${holidayMark}${event.title} (${event.type})`;
-    }).join(' | ');
+  private formatEvents(events: string[]): string {
+    return events.join(', ');
   }
 
   toggleDarkMode() {

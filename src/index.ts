@@ -3,11 +3,11 @@ import { PersianDatePickerElement } from './persian-datepicker-element';
 // Import the utility class
 import { PersianDate } from './persian-date';
 // Import types from types directory
-import type { 
-  PersianDatePickerElementOptions, 
+import type {
+  PersianDatePickerElementOptions,
   PersianDateChangeEvent,
   DateTuple,
-  PersianEvent
+  PersianEvent,
 } from './types';
 
 // Declare global window interface extension for TypeScript
@@ -36,12 +36,7 @@ if (hasCustomElements) {
 
 // Export the classes and types
 export { PersianDatePickerElement, PersianDate };
-export type { 
-  PersianDatePickerElementOptions, 
-  PersianDateChangeEvent,
-  DateTuple,
-  PersianEvent
-};
+export type { PersianDatePickerElementOptions, PersianDateChangeEvent, DateTuple, PersianEvent };
 
 // Default export for convenient usage
-export default PersianDatePickerElement; 
+export default PersianDatePickerElement;

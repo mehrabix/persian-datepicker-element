@@ -33,11 +33,9 @@ pnpm add ngx-persian-datepicker-element
 import { NgxPersianDatepickerModule } from 'ngx-persian-datepicker-element';
 
 @NgModule({
-  imports: [
-    NgxPersianDatepickerModule
-  ]
+  imports: [NgxPersianDatepickerModule],
 })
-export class AppModule { }
+export class AppModule {}
 ```
 
 یا برای کامپوننت‌های مستقل:
@@ -47,19 +45,20 @@ import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
 
 @Component({
   // ...
-  imports: [NgxPersianDatepickerComponent]
+  imports: [NgxPersianDatepickerComponent],
   // ...
 })
-export class YourStandaloneComponent { }
+export class YourStandaloneComponent {}
 ```
 
 ### استفاده پایه
 
 ```html
-<ngx-persian-datepicker-element 
-  placeholderInput="انتخاب تاریخ" 
-  formatInput="YYYY/MM/DD" 
-  (dateChange)="onDateChange($event)">
+<ngx-persian-datepicker-element
+  placeholderInput="انتخاب تاریخ"
+  formatInput="YYYY/MM/DD"
+  (dateChange)="onDateChange($event)"
+>
 </ngx-persian-datepicker-element>
 ```
 
@@ -77,14 +76,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-example',
-  templateUrl: './example.component.html'
+  templateUrl: './example.component.html',
 })
 export class ExampleComponent {
   myForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.myForm = this.fb.group({
-      date: [null]
+      date: [null],
     });
   }
 }
@@ -96,21 +95,23 @@ export class ExampleComponent {
 
 ```html
 <!-- استفاده از ورودی‌های مبتنی بر سیگنال (توصیه شده برای انگولار ۱۷+) -->
-<ngx-persian-datepicker-element 
-  placeholderInput="انتخاب تاریخ" 
-  formatInput="YYYY/MM/DD" 
-  [showHolidaysInput]="true" 
+<ngx-persian-datepicker-element
+  placeholderInput="انتخاب تاریخ"
+  formatInput="YYYY/MM/DD"
+  [showHolidaysInput]="true"
   [holidayTypesInput]="['Iran', 'Religious']"
-  (dateChange)="onDateChange($event)">
+  (dateChange)="onDateChange($event)"
+>
 </ngx-persian-datepicker-element>
 
 <!-- استفاده از نام‌های قدیمی (سازگار با تمام نسخه‌های انگولار) -->
-<ngx-persian-datepicker-element 
-  placeholderInput="انتخاب تاریخ" 
-  formatInput="YYYY/MM/DD" 
-  [showHolidaysInput]="true" 
+<ngx-persian-datepicker-element
+  placeholderInput="انتخاب تاریخ"
+  formatInput="YYYY/MM/DD"
+  [showHolidaysInput]="true"
   [holidayTypesInput]="['Iran', 'Religious']"
-  (dateChange)="onDateChange($event)">
+  (dateChange)="onDateChange($event)"
+>
 </ngx-persian-datepicker-element>
 ```
 
@@ -118,13 +119,13 @@ export class ExampleComponent {
 >
 > ```typescript
 > import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-> 
+>
 > @Component({
 >   // ...
 >   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 >   // ...
 > })
-> export class YourComponent { }
+> export class YourComponent {}
 > ```
 
 ### پشتیبانی از حالت تاریک
@@ -184,7 +185,7 @@ export class AppComponent implements AfterViewInit {
     '--jdp-border': '#475569',
     '--jdp-input-border-color': '#475569',
     '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
-    '--jdp-day-hover-bg': '#334155'
+    '--jdp-day-hover-bg': '#334155',
   };
 
   // متغیرهای حالت روشن
@@ -194,13 +195,13 @@ export class AppComponent implements AfterViewInit {
     '--jdp-muted': '#f1f5f9',
     '--jdp-muted-foreground': '#64748b',
     '--jdp-border': '#e2e8f0',
-    '--jdp-input-border-color': '#e2e8f0'
+    '--jdp-input-border-color': '#e2e8f0',
   };
 
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
     const themeVars = this.isDarkMode ? this.darkThemeVars : this.lightThemeVars;
-    
+
     // اعمال متغیرها به دیت‌پیکر
     if (this.datepicker) {
       this.datepicker.applyThemeVariables(themeVars);
@@ -216,7 +217,7 @@ constructor() {
   // بررسی ترجیحات سیستم
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   this.isDarkMode = mediaQuery.matches;
-  
+
   // گوش دادن به تغییرات
   mediaQuery.addEventListener('change', (e) => {
     this.isDarkMode = e.matches;
@@ -239,9 +240,7 @@ applyTheme() {
 #### استفاده از ویژگی rtlInput
 
 ```html
-<ngx-persian-datepicker-element
-  [rtlInput]="true"
-  placeholderInput="انتخاب تاریخ">
+<ngx-persian-datepicker-element [rtlInput]="true" placeholderInput="انتخاب تاریخ">
 </ngx-persian-datepicker-element>
 ```
 
@@ -266,10 +265,10 @@ applyTheme() {
 ### شخصی‌سازی ظاهر
 
 ```html
-<ngx-persian-datepicker-element 
-  placeholderInput="تاریخ سفارشی" 
+<ngx-persian-datepicker-element
+  placeholderInput="تاریخ سفارشی"
   formatInput="YYYY/MM/DD"
-  primaryColorInput="#9c27b0" 
+  primaryColorInput="#9c27b0"
   primaryHoverInput="#7b1fa2"
   backgroundColorInput="#f5f0fa"
   foregroundColorInput="#333"
@@ -277,7 +276,8 @@ applyTheme() {
   borderRadiusInput="12px"
   holidayColorInput="#e91e63"
   holidayBgInput="#ffe6ec"
-  [showHolidaysInput]="true">
+  [showHolidaysInput]="true"
+>
 </ngx-persian-datepicker-element>
 ```
 
@@ -285,28 +285,28 @@ applyTheme() {
 
 ### ورودی‌ها (Inputs)
 
-| ویژگی | نوع | توضیحات |
-|----------|------|-------------|
-| `placeholder` / `placeholderInput` | `string` | متن راهنما برای ورودی |
-| `format` / `formatInput` | `string` | قالب تاریخ (به عنوان مثال 'YYYY/MM/DD') |
-| `showHolidays` / `showHolidaysInput` | `boolean` | نمایش تعطیلات در تقویم |
-| `holidayTypes` / `holidayTypesInput` | `string` یا `string[]` | انواع تعطیلات برای نمایش (مانند 'Iran'، 'Religious'، 'National'، 'Afghanistan' یا 'all') |
-| `rtl` / `rtlInput` | `boolean` | استفاده از چینش راست به چپ |
-| `primaryColor` / `primaryColorInput` | `string` | رنگ اصلی دیت‌پیکر |
-| `primaryHover` / `primaryHoverInput` | `string` | رنگ هاور اصلی دیت‌پیکر |
-| `backgroundColor` / `backgroundColorInput` | `string` | رنگ پس‌زمینه دیت‌پیکر |
-| `foregroundColor` / `foregroundColorInput` | `string` | رنگ متن دیت‌پیکر |
-| `borderColor` / `borderColorInput` | `string` | رنگ حاشیه دیت‌پیکر |
-| `borderRadius` / `borderRadiusInput` | `string` | شعاع حاشیه دیت‌پیکر |
-| `fontFamily` / `fontFamilyInput` | `string` | فونت دیت‌پیکر |
-| `holidayColor` / `holidayColorInput` | `string` | رنگ متن تعطیلات |
-| `holidayBg` / `holidayBgInput` | `string` | رنگ پس‌زمینه تعطیلات |
-| `cssVariables` / `cssVariablesInput` | `CSSVariableMap` | متغیرهای CSS سفارشی برای استایل‌دهی |
+| ویژگی                                      | نوع                    | توضیحات                                                                                  |
+| ------------------------------------------ | ---------------------- | ---------------------------------------------------------------------------------------- |
+| `placeholder` / `placeholderInput`         | `string`               | متن راهنما برای ورودی                                                                    |
+| `format` / `formatInput`                   | `string`               | قالب تاریخ (به عنوان مثال 'YYYY/MM/DD')                                                  |
+| `showHolidays` / `showHolidaysInput`       | `boolean`              | نمایش تعطیلات در تقویم                                                                   |
+| `holidayTypes` / `holidayTypesInput`       | `string` یا `string[]` | انواع تعطیلات برای نمایش (مانند 'Iran'، 'Religious'، 'National'، 'Afghanistan' یا 'all') |
+| `rtl` / `rtlInput`                         | `boolean`              | استفاده از چینش راست به چپ                                                               |
+| `primaryColor` / `primaryColorInput`       | `string`               | رنگ اصلی دیت‌پیکر                                                                        |
+| `primaryHover` / `primaryHoverInput`       | `string`               | رنگ هاور اصلی دیت‌پیکر                                                                   |
+| `backgroundColor` / `backgroundColorInput` | `string`               | رنگ پس‌زمینه دیت‌پیکر                                                                    |
+| `foregroundColor` / `foregroundColorInput` | `string`               | رنگ متن دیت‌پیکر                                                                         |
+| `borderColor` / `borderColorInput`         | `string`               | رنگ حاشیه دیت‌پیکر                                                                       |
+| `borderRadius` / `borderRadiusInput`       | `string`               | شعاع حاشیه دیت‌پیکر                                                                      |
+| `fontFamily` / `fontFamilyInput`           | `string`               | فونت دیت‌پیکر                                                                            |
+| `holidayColor` / `holidayColorInput`       | `string`               | رنگ متن تعطیلات                                                                          |
+| `holidayBg` / `holidayBgInput`             | `string`               | رنگ پس‌زمینه تعطیلات                                                                     |
+| `cssVariables` / `cssVariablesInput`       | `CSSVariableMap`       | متغیرهای CSS سفارشی برای استایل‌دهی                                                      |
 
 ### رویدادهای خروجی (Outputs)
 
-| رویداد | نوع | توضیحات |
-|-------|------|-------------|
+| رویداد       | نوع                             | توضیحات                                   |
+| ------------ | ------------------------------- | ----------------------------------------- |
 | `dateChange` | `EventEmitter<DateChangeEvent>` | زمانی که تاریخ انتخاب می‌شود منتشر می‌شود |
 
 ### ساختار رویداد DateChangeEvent
@@ -326,4 +326,4 @@ interface DateChangeEvent {
 
 ## مجوز
 
-MIT 
+MIT

@@ -4,11 +4,6 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "allowedNonPeerDependencies": [
-    "persian-datepicker-element"
-  ],
-  "assets": [
-    "./assets/**/*",
-    "README.fa.md"
-  ]
+  "allowedNonPeerDependencies": ["persian-datepicker-element"],
+  "assets": ["./assets/**/*", "README.fa.md"]
 }

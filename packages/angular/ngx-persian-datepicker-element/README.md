@@ -22,6 +22,7 @@ npm install ngx-persian-datepicker-element
 ### Zero Configuration Required
 
 The package seamlessly bundles the Persian DatePicker web component (`persian-datepicker-element`) directly, so you don't need to:
+
 - Add any scripts to your angular.json file
 - Import the web component separately
 - Configure any additional assets
@@ -47,7 +48,7 @@ import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
   imports: [NgxPersianDatepickerComponent],
   // ...
 })
-export class YourComponent { }
+export class YourComponent {}
 ```
 
 ### 2. Using the NgModule (Traditional Angular)
@@ -59,11 +60,11 @@ import { NgxPersianDatepickerModule } from 'ngx-persian-datepicker-element';
 @NgModule({
   imports: [
     // ... other imports
-    NgxPersianDatepickerModule
+    NgxPersianDatepickerModule,
   ],
   // ... declarations, etc.
 })
-export class YourModule { }
+export class YourModule {}
 ```
 
 ### Basic Usage with Signals (Recommended)
@@ -75,7 +76,8 @@ The component uses Angular Signals for better performance. Use the input propert
   placeholderInput="انتخاب تاریخ"
   formatInput="YYYY/MM/DD"
   [showHolidaysInput]="true"
-  (dateChange)="onDateChange($event)">
+  (dateChange)="onDateChange($event)"
+>
 </ngx-persian-datepicker-element>
 ```
 
@@ -97,7 +99,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
       </div>
       <button type="submit">ثبت</button>
     </form>
-  `
+  `,
 })
 export class MyFormComponent implements OnInit {
   myForm: FormGroup;
@@ -106,7 +108,7 @@ export class MyFormComponent implements OnInit {
 
   ngOnInit() {
     this.myForm = this.fb.group({
-      date: [[1403, 6, 15]] // Initial value: [year, month, day]
+      date: [[1403, 6, 15]], // Initial value: [year, month, day]
     });
 
     // Subscribe to value changes
@@ -127,7 +129,10 @@ export class MyFormComponent implements OnInit {
 <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm.value)">
   <div>
     <label for="date">تاریخ:</label>
-    <ngx-persian-datepicker-element [(ngModel)]="model.date" name="date"></ngx-persian-datepicker-element>
+    <ngx-persian-datepicker-element
+      [(ngModel)]="model.date"
+      name="date"
+    ></ngx-persian-datepicker-element>
   </div>
   <button type="submit">ثبت</button>
 </form>
@@ -155,7 +160,8 @@ You can customize the appearance of the datepicker using the style inputs:
   primaryColorInput="#3b82f6"
   primaryHoverInput="#2563eb"
   borderRadiusInput="0.5rem"
-  fontFamilyInput="'Vazir', sans-serif">
+  fontFamilyInput="'Vazir', sans-serif"
+>
 </ngx-persian-datepicker-element>
 ```
 
@@ -168,7 +174,8 @@ Or by using the `cssVariablesInput` input:
     '--jdp-primary-hover': '#2563eb',
     '--jdp-border-radius': '0.5rem',
     '--jdp-font-family': '\'Vazir\', sans-serif'
-  }">
+  }"
+>
 </ngx-persian-datepicker-element>
 ```
 
@@ -200,7 +207,9 @@ You can specify which holiday types to display:
 <ngx-persian-datepicker-element holidayTypesInput="all"></ngx-persian-datepicker-element>
 
 <!-- Or using an array -->
-<ngx-persian-datepicker-element [holidayTypesInput]="['Iran', 'Religious', 'Afghanistan']"></ngx-persian-datepicker-element>
+<ngx-persian-datepicker-element
+  [holidayTypesInput]="['Iran', 'Religious', 'Afghanistan']"
+></ngx-persian-datepicker-element>
 ```
 
 ### Dynamic Holiday Types Selection
@@ -226,12 +235,12 @@ holidayTypes = ['Iran', 'Religious'];
 updateHolidayTypes(type: HolidayTypeKey, event: any) {
   // Update checkbox state
   this.checkboxStates[type] = event.target.checked;
-  
+
   // Rebuild the holidayTypes array based on checked boxes
   this.holidayTypes = Object.keys(this.checkboxStates).filter(
     key => this.checkboxStates[key as HolidayTypeKey]
   ) as HolidayTypeKey[];
-  
+
   // If no types are selected, ensure we have at least one to prevent errors
   if (this.holidayTypes.length === 0) {
     this.holidayTypes = ['Iran'];
@@ -244,26 +253,40 @@ updateHolidayTypes(type: HolidayTypeKey, event: any) {
 <!-- In your template -->
 <div class="checkbox-group">
   <label>
-    <input type="checkbox" [checked]="checkboxStates['Iran']" (change)="updateHolidayTypes('Iran', $event)">
+    <input
+      type="checkbox"
+      [checked]="checkboxStates['Iran']"
+      (change)="updateHolidayTypes('Iran', $event)"
+    />
     Show Iran Holidays
   </label>
   <label>
-    <input type="checkbox" [checked]="checkboxStates['Religious']" (change)="updateHolidayTypes('Religious', $event)">
+    <input
+      type="checkbox"
+      [checked]="checkboxStates['Religious']"
+      (change)="updateHolidayTypes('Religious', $event)"
+    />
     Show Religious Holidays
   </label>
   <label>
-    <input type="checkbox" [checked]="checkboxStates['National']" (change)="updateHolidayTypes('National', $event)">
+    <input
+      type="checkbox"
+      [checked]="checkboxStates['National']"
+      (change)="updateHolidayTypes('National', $event)"
+    />
     Show National Holidays
   </label>
   <label>
-    <input type="checkbox" [checked]="checkboxStates['Afghanistan']" (change)="updateHolidayTypes('Afghanistan', $event)">
+    <input
+      type="checkbox"
+      [checked]="checkboxStates['Afghanistan']"
+      (change)="updateHolidayTypes('Afghanistan', $event)"
+    />
     Show Afghanistan Holidays
   </label>
 </div>
 
-<ngx-persian-datepicker-element 
-  [holidayTypesInput]="holidayTypes"
-  [showHolidaysInput]="true">
+<ngx-persian-datepicker-element [holidayTypesInput]="holidayTypes" [showHolidaysInput]="true">
 </ngx-persian-datepicker-element>
 ```
 
@@ -272,7 +295,9 @@ updateHolidayTypes(type: HolidayTypeKey, event: any) {
 ### Date Change Event
 
 ```html
-<ngx-persian-datepicker-element (dateChange)="onDateChange($event)"></ngx-persian-datepicker-element>
+<ngx-persian-datepicker-element
+  (dateChange)="onDateChange($event)"
+></ngx-persian-datepicker-element>
 ```
 
 ```typescript
@@ -288,28 +313,28 @@ onDateChange(event) {
 
 ### Inputs (with Signal Approach)
 
-| Input | Type | Description |
-|-------|------|-------------|
-| `placeholderInput` | string | Placeholder text for the input field |
-| `formatInput` | string | Date format string (e.g., 'YYYY/MM/DD') |
-| `showHolidaysInput` | boolean | Whether to show holidays in the calendar |
-| `holidayTypesInput` | string \| string[] | Holiday types to display (comma-separated or array) |
-| `rtlInput` | boolean | Whether the component should use RTL layout |
-| `primaryColorInput` | string | Primary color for the datepicker |
-| `primaryHoverInput` | string | Primary hover color for the datepicker |
-| `backgroundColorInput` | string | Background color for the datepicker |
-| `foregroundColorInput` | string | Foreground (text) color for the datepicker |
-| `borderColorInput` | string | Border color for the datepicker |
-| `borderRadiusInput` | string | Border radius for the datepicker |
-| `fontFamilyInput` | string | Font family for the datepicker |
-| `holidayColorInput` | string | Holiday text color for the datepicker |
-| `holidayBgInput` | string | Holiday background color for the datepicker |
-| `cssVariablesInput` | object | CSS variables for custom styling |
+| Input                  | Type               | Description                                         |
+| ---------------------- | ------------------ | --------------------------------------------------- |
+| `placeholderInput`     | string             | Placeholder text for the input field                |
+| `formatInput`          | string             | Date format string (e.g., 'YYYY/MM/DD')             |
+| `showHolidaysInput`    | boolean            | Whether to show holidays in the calendar            |
+| `holidayTypesInput`    | string \| string[] | Holiday types to display (comma-separated or array) |
+| `rtlInput`             | boolean            | Whether the component should use RTL layout         |
+| `primaryColorInput`    | string             | Primary color for the datepicker                    |
+| `primaryHoverInput`    | string             | Primary hover color for the datepicker              |
+| `backgroundColorInput` | string             | Background color for the datepicker                 |
+| `foregroundColorInput` | string             | Foreground (text) color for the datepicker          |
+| `borderColorInput`     | string             | Border color for the datepicker                     |
+| `borderRadiusInput`    | string             | Border radius for the datepicker                    |
+| `fontFamilyInput`      | string             | Font family for the datepicker                      |
+| `holidayColorInput`    | string             | Holiday text color for the datepicker               |
+| `holidayBgInput`       | string             | Holiday background color for the datepicker         |
+| `cssVariablesInput`    | object             | CSS variables for custom styling                    |
 
 ### Outputs
 
-| Output | Type | Description |
-|--------|------|-------------|
+| Output       | Type                | Description                           |
+| ------------ | ------------------- | ------------------------------------- |
 | `dateChange` | EventEmitter\<any\> | Event emitted when a date is selected |
 
 ## License
@@ -370,7 +395,7 @@ export class AppComponent implements AfterViewInit {
     '--jdp-border': '#475569',
     '--jdp-input-border-color': '#475569',
     '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
-    '--jdp-day-hover-bg': '#334155'
+    '--jdp-day-hover-bg': '#334155',
   };
 
   // Light theme variables
@@ -380,13 +405,13 @@ export class AppComponent implements AfterViewInit {
     '--jdp-muted': '#f1f5f9',
     '--jdp-muted-foreground': '#64748b',
     '--jdp-border': '#e2e8f0',
-    '--jdp-input-border-color': '#e2e8f0'
+    '--jdp-input-border-color': '#e2e8f0',
   };
 
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
     const themeVars = this.isDarkMode ? this.darkThemeVars : this.lightThemeVars;
-    
+
     // Apply variables to the datepicker
     if (this.datepicker) {
       this.datepicker.applyThemeVariables(themeVars);
@@ -411,7 +436,7 @@ constructor() {
   // Check system preference
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   this.isDarkMode = mediaQuery.matches;
-  
+
   // Listen for changes
   mediaQuery.addEventListener('change', (e) => {
     this.isDarkMode = e.matches;
@@ -434,9 +459,7 @@ The datepicker has built-in RTL (Right-to-Left) support for Persian and Arabic l
 ### Using the rtlInput property
 
 ```html
-<ngx-persian-datepicker-element
-  rtlInput="true"
-  placeholderInput="انتخاب تاریخ">
+<ngx-persian-datepicker-element rtlInput="true" placeholderInput="انتخاب تاریخ">
 </ngx-persian-datepicker-element>
 ```
 
@@ -464,21 +487,21 @@ Or using Angular binding:
 
 The datepicker uses CSS variables for styling. Here's a complete list of the available variables:
 
-| Variable | Description | Default Value |
-|----------|-------------|---------------|
-| `--jdp-primary` | Primary color | `#0891b2` |
-| `--jdp-primary-hover` | Primary hover color | `#0e7490` |
-| `--jdp-primary-foreground` | Text color on primary background | `#ffffff` |
-| `--jdp-background` | Background color | `#ffffff` |
-| `--jdp-foreground` | Text color | `#1e293b` |
-| `--jdp-muted` | Muted background color | `#f1f5f9` |
-| `--jdp-muted-foreground` | Text color on muted background | `#64748b` |
-| `--jdp-border` | Border color | `#e2e8f0` |
-| `--jdp-input-border-color` | Input border color | `var(--jdp-border)` |
-| `--jdp-holiday-color` | Holiday text color | `#ef4444` |
-| `--jdp-holiday-bg` | Holiday background color | `#fee2e2` |
-| `--jdp-holiday-hover-bg` | Holiday hover background color | `#fecaca` |
-| `--jdp-border-radius` | Border radius for elements | `0.5rem` |
-| `--jdp-direction` | Text direction | `rtl` |
+| Variable                   | Description                      | Default Value       |
+| -------------------------- | -------------------------------- | ------------------- |
+| `--jdp-primary`            | Primary color                    | `#0891b2`           |
+| `--jdp-primary-hover`      | Primary hover color              | `#0e7490`           |
+| `--jdp-primary-foreground` | Text color on primary background | `#ffffff`           |
+| `--jdp-background`         | Background color                 | `#ffffff`           |
+| `--jdp-foreground`         | Text color                       | `#1e293b`           |
+| `--jdp-muted`              | Muted background color           | `#f1f5f9`           |
+| `--jdp-muted-foreground`   | Text color on muted background   | `#64748b`           |
+| `--jdp-border`             | Border color                     | `#e2e8f0`           |
+| `--jdp-input-border-color` | Input border color               | `var(--jdp-border)` |
+| `--jdp-holiday-color`      | Holiday text color               | `#ef4444`           |
+| `--jdp-holiday-bg`         | Holiday background color         | `#fee2e2`           |
+| `--jdp-holiday-hover-bg`   | Holiday hover background color   | `#fecaca`           |
+| `--jdp-border-radius`      | Border radius for elements       | `0.5rem`            |
+| `--jdp-direction`          | Text direction                   | `rtl`               |
 
 For a full list of all CSS variables, check out the [component implementation](projects/ngx-persian-datepicker-element/src/lib/ngx-persian-datepicker.component.ts).

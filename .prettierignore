@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+*.d.ts
+*.min.js
+*.min.css
+build
+.next
+.nuxt
+.vuepress/dist
+public
+pnpm-lock.yaml
+package-lock.json
+yarn.lock 

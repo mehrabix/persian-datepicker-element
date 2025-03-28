@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { mount, VueWrapper } from '@vue/test-utils';
+import { describe, it, expect, beforeEach } from 'vitest';
+
 import PersianDatepicker from './PersianDatepicker.vue';
 
 // NOTE: The custom element is already registered in test/setup.ts
@@ -30,8 +31,8 @@ describe('PersianDatepicker', () => {
         format: 'YYYY/MM/DD',
         showHolidays: true,
         rtl: true,
-        disabled: false
-      }
+        disabled: false,
+      },
     });
   });
 
@@ -58,8 +59,8 @@ describe('PersianDatepicker', () => {
         jalali: [1403, 1, 1],
         gregorian: [2024, 3, 21],
         isHoliday: false,
-        events: []
-      }
+        events: [],
+      },
     });
     await datepicker.element.dispatchEvent(event);
     expect(wrapper.emitted('update:modelValue')).toBeTruthy();
@@ -75,4 +76,4 @@ describe('PersianDatepicker', () => {
     expect(el.min).toEqual(min);
     expect(el.max).toEqual(max);
   });
-}); 
+});

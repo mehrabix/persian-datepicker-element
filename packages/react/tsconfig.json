@@ -19,4 +19,4 @@
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/types/**/*.d.ts"],
   "exclude": ["node_modules", "dist", "example"]
-} 
+}

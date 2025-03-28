@@ -71,4 +71,4 @@ export interface EventsData {
     source: string;
   };
   events: PersianEvent[];
-} 
+}

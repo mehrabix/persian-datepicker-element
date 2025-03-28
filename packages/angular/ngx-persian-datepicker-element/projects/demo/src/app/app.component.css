@@ -11,7 +11,8 @@
   --jdp-holiday-color: #ef4444;
   --jdp-holiday-bg: #fee2e2;
   --jdp-holiday-hover-bg: #fecaca;
-  --jdp-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --jdp-font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --jdp-font-size: 14px;
   --jdp-line-height: 1.5;
   --jdp-font-weight: 400;
@@ -38,7 +39,8 @@
   --jdp-calendar-border-width: 1px;
   --jdp-calendar-border-color: var(--jdp-border);
   --jdp-calendar-border-radius: var(--jdp-border-radius);
-  --jdp-calendar-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2);
+  --jdp-calendar-shadow:
+    0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2);
   --jdp-calendar-z-index: 10;
   --jdp-nav-button-size: 30px;
   --jdp-nav-button-bg: var(--jdp-muted);
@@ -62,7 +64,7 @@
   --jdp-month-transition-duration: 0.3s;
   --jdp-border-radius: 0.5rem;
   --jdp-direction: rtl;
-  
+
   /* Custom variables for the demo */
   --text-color: #333;
   --background-color: white;
@@ -116,19 +118,19 @@ persian-datepicker-element {
   --jdp-input-border-color: #475569;
   --jdp-calendar-shadow: 0px 10px 30px -5px rgba(2, 6, 23, 0.5);
   --jdp-day-hover-bg: #334155;
-  
+
   /* Input field */
   --jdp-input-bg: #1e1e2f;
   --jdp-input-text: #e2e8f0;
   --jdp-input-placeholder: #94a3b8;
-  
+
   /* Calendar body */
   --jdp-calendar-bg: #0f172a;
   --jdp-day-text: #e2e8f0;
   --jdp-day-name-text: #94a3b8;
   --jdp-header-bg: #1e293b;
   --jdp-header-text: #e2e8f0;
-  
+
   /* Keeping important properties consistent in dark mode */
   --jdp-primary: #0891b2;
   --jdp-primary-hover: #0e7490;
@@ -184,7 +186,8 @@ persian-datepicker-element {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f3f4f6;
@@ -249,19 +252,19 @@ p {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 34px;
 }
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 26px;
   width: 26px;
   left: 4px;
   bottom: 4px;
   background-color: white;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 50%;
 }
 
@@ -352,9 +355,9 @@ input:checked + .slider:before {
 }
 
 /* RTL specific adjustments */
-.app[dir="rtl"] input,
-.app[dir="rtl"] select,
-.app[dir="rtl"] textarea {
+.app[dir='rtl'] input,
+.app[dir='rtl'] select,
+.app[dir='rtl'] textarea {
   text-align: right;
 }
 
@@ -363,7 +366,7 @@ input:checked + .slider:before {
   :root {
     --app-padding: 1rem;
   }
-  
+
   .app {
     padding: var(--app-padding);
   }

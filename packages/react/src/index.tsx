@@ -1,4 +1,6 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { forwardRef, useRef, useEffect, useImperativeHandle, CSSProperties } from 'react';
+
 import { PersianDatepicker } from './PersianDatepicker';
 export type { PersianDatepickerProps, PersianDatepickerMethods } from './PersianDatepicker';
 
@@ -8,9 +10,9 @@ export type {
   PersianDateChangeEvent,
   DateTuple,
   CSSVariableMap,
-  PersianEvent
+  PersianEvent,
 } from 'persian-datepicker-element';
 
 // Export the component as default and named export
 export { PersianDatepicker };
-export default PersianDatepicker; 
+export default PersianDatepicker;

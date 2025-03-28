@@ -24,7 +24,7 @@ export async function dispatchEvent(
   const event = new Event(eventType, {
     bubbles: true,
     cancelable: true,
-    ...options
+    ...options,
   });
   element.dispatchEvent(event);
   await wait();
@@ -44,7 +44,7 @@ export async function simulateKeyEvent(
   const event = new KeyboardEvent(eventType, {
     key,
     bubbles: true,
-    cancelable: true
+    cancelable: true,
   });
   element.dispatchEvent(event);
   await wait();
@@ -56,11 +56,7 @@ export async function simulateKeyEvent(
  * @param selector The selector to use
  * @param text The text to search for
  */
-export function findByText(
-  container: Element,
-  selector: string,
-  text: string
-): Element | null {
+export function findByText(container: Element, selector: string, text: string): Element | null {
   const elements = Array.from(container.querySelectorAll(selector));
   return elements.find(el => el.textContent?.trim() === text) || null;
-} 
+}

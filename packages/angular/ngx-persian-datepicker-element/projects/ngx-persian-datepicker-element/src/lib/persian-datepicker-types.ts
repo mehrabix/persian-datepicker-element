@@ -25,6 +25,6 @@ export interface PersianDateChangeEvent {
     jalali: DateTuple;
     gregorian: DateTuple;
     isHoliday: boolean;
-    events?: any[];
-  }
-} 
+    events?: string[];
+  };
+}

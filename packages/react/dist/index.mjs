@@ -35,7 +35,6 @@ var PersianDatepicker = forwardRef(
       scrollbarThumbHoverColor,
       scrollbarTrackColor,
       scrollbarBorderRadius,
-      darkMode,
       ...restProps
     } = props;
     const elementRef = useRef(null);
@@ -58,7 +57,9 @@ var PersianDatepicker = forwardRef(
     useEffect(() => {
       if (containerRef.current) {
         if (!elementRef.current) {
-          const element2 = document.createElement("persian-datepicker-element");
+          const element2 = document.createElement(
+            "persian-datepicker-element"
+          );
           elementRef.current = element2;
           containerRef.current.appendChild(element2);
         }
@@ -79,19 +80,23 @@ var PersianDatepicker = forwardRef(
         if (holidayColor) element.style.setProperty("--jdp-holiday-color", holidayColor);
         if (holidayBg) element.style.setProperty("--jdp-holiday-bg", holidayBg);
         if (scrollbarWidth) element.style.setProperty("--jdp-scrollbar-width", scrollbarWidth);
-        if (scrollbarThumbColor) element.style.setProperty("--jdp-scrollbar-thumb-color", scrollbarThumbColor);
-        if (scrollbarThumbHoverColor) element.style.setProperty("--jdp-scrollbar-thumb-hover-color", scrollbarThumbHoverColor);
-        if (scrollbarTrackColor) element.style.setProperty("--jdp-scrollbar-track-color", scrollbarTrackColor);
-        if (scrollbarBorderRadius) element.style.setProperty("--jdp-scrollbar-border-radius", scrollbarBorderRadius);
-        const handleChange = (e) => {
-          const customEvent = e;
+        if (scrollbarThumbColor)
+          element.style.setProperty("--jdp-scrollbar-thumb-color", scrollbarThumbColor);
+        if (scrollbarThumbHoverColor)
+          element.style.setProperty("--jdp-scrollbar-thumb-hover-color", scrollbarThumbHoverColor);
+        if (scrollbarTrackColor)
+          element.style.setProperty("--jdp-scrollbar-track-color", scrollbarTrackColor);
+        if (scrollbarBorderRadius)
+          element.style.setProperty("--jdp-scrollbar-border-radius", scrollbarBorderRadius);
+        const handleDateChange = (event) => {
+          const customEvent = event;
           if (onChange && customEvent.detail) {
             onChange(customEvent.detail);
           }
         };
-        element.addEventListener("change", handleChange);
+        element.addEventListener("change", handleDateChange);
         return () => {
-          element.removeEventListener("change", handleChange);
+          element.removeEventListener("change", handleDateChange);
         };
       }
     }, [

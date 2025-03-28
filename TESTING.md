@@ -35,7 +35,7 @@ The test suite includes the following files:
 - `src/__tests__/event-utils.test.ts`: Tests for event utility functions
 - `src/__tests__/hijri-utils.test.ts`: Tests for Hijri-to-Jalali calendar conversion
 - `src/__tests__/calendar-events-1404.test.ts`: Persian year 1404 events tests
-- `src/__tests__/datepicker-config-1404.test.ts`: Configuration options tests 
+- `src/__tests__/datepicker-config-1404.test.ts`: Configuration options tests
 - `src/__tests__/integration.test.ts`: Integration tests
 - `src/__tests__/year-change-events.test.ts`: Tests for event updates on year changes
 
@@ -125,4 +125,4 @@ Custom test utilities are provided to make testing easier:
 
 - **Time Zone Differences**: Some tests related to date calculations might fail if run in different time zones. Make sure to account for this in your test logic.
 - **DOM Events**: When testing events, ensure that event propagation is properly handled.
-- **Asynchronous Operations**: Use `async/await` or appropriate Jest matchers for async operations. 
+- **Asynchronous Operations**: Use `async/await` or appropriate Jest matchers for async operations.

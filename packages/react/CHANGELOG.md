@@ -8,22 +8,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.17] - 2024-06-21
 
 ### Added
+
 - Enhanced dark mode support with comprehensive documentation
 - Improved RTL (Right-to-Left) implementation for better Persian language support
 - New CSS variables for more granular styling control
 
 ### Fixed
+
 - Fixed event handling in React components
 - Resolved issues with value prop binding in datepicker instances
 - Improved TypeScript definitions for better developer experience
 
 ### Changed
+
 - Removed `cssVariables` prop in favor of using CSS variables directly in the document or component CSS
 - Simplified theming approach for easier integration with design systems
 
 ## [1.0.16] - 2024-06-19
 
 ### Added
+
 - Initial release with React wrapper for Persian DatePicker web component
 - Support for value prop and onChange handler
 - Holiday type customization (Iran, Afghanistan, Religious)
@@ -33,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - YYYY-MM-DD
 
 ### Added
+
 - Initial release of the React wrapper for the Persian Datepicker web component
 - Support for all properties of the underlying web component
 - Added TypeScript types for better developer experience
@@ -43,8 +48,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full test coverage
 
 ### Changed
+
 - Automatically imports the persian-datepicker-element to ensure it's registered
 
 ### Fixed
+
 - Proper cleanup of event listeners when component unmounts
-- Handle CSS customization properly through React's virtual DOM 
+- Handle CSS customization properly through React's virtual DOM
