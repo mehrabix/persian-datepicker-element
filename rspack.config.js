@@ -1,8 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 
-// Root project directory (two levels up from scripts/build)
-const rootDir = path.resolve(__dirname, '../..');
+// Root project directory
+const rootDir = path.resolve(__dirname);
 
 // Environment variables
 const isProduction = process.env.NODE_ENV === 'production';
