@@ -3,439 +3,707 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تغییر تم | Persian Date Picker</title>
+  <title>Persian Date Picker Element - Theme Switcher</title>
+  <!-- Add Vazir Font from CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
-    :root {
-      --primary: #0891b2;
-      --primary-hover: #0e7490;
-      --background: #ffffff;
-      --foreground: #1e293b;
-      --muted: #f1f5f9;
-      --border: #e2e8f0;
-      --radius: 0.5rem;
-      --font-size: 16px;
-    }
-    
     body {
-      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f9fafb;
-      color: #374151;
-      padding: 1rem;
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
+      padding: 20px;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
       direction: rtl;
       transition: background-color 0.3s, color 0.3s;
+      /* Apply Persian numbers to all elements */
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
+    }
+
+    /* Apply Persian numbers to all elements */
+    * {
       -moz-font-feature-settings: "ss02";
       -webkit-font-feature-settings: "ss02";
       font-feature-settings: "ss02";
     }
 
     body.dark {
-      background-color: #1e293b;
+      background-color: #0f172a;
       color: #e2e8f0;
     }
 
     .container {
-      display: flex;
-      gap: 2rem;
-      max-width: 1200px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    body.dark .container {
-      background-color: #0f172a;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 2rem;
-      height: fit-content;
-      padding: 1.5rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-    }
-
-    body.dark .sidebar {
-      background: #1e293b;
-      border-color: #334155;
-    }
-
-    .sidebar-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--foreground);
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .nav-item {
-      margin-bottom: 0.5rem;
-    }
-
-    .nav-link {
-      display: block;
-      padding: 0.5rem 0.75rem;
-      color: var(--foreground);
-      text-decoration: none;
-      border-radius: var(--radius);
-      transition: all 0.2s;
-      font-size: 0.9rem;
-    }
-
-    .nav-link:hover {
-      background: var(--border);
-      color: var(--primary);
-    }
-
-    body.dark .nav-link:hover {
-      background: #334155;
-    }
-
-    .nav-link.active {
-      background: var(--primary);
-      color: white;
-    }
-
-    .main-content {
-      flex: 1;
-      min-width: 0;
     }
 
     h1 {
-      color: var(--foreground);
-      margin-bottom: 1.5rem;
-      font-size: 2rem;
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: #0f172a;
+      text-align: center;
+      transition: color 0.3s;
+      font-weight: 700;
+    }
+
+    body.dark h1 {
+      color: #f8fafc;
     }
 
     h2 {
-      color: var(--foreground);
-      margin: 2rem 0 1rem;
-      font-size: 1.5rem;
+      font-size: 20px;
+      margin: 24px 0 16px;
+      color: #334155;
+      transition: color 0.3s;
+      font-weight: 700;
+    }
+
+    body.dark h2 {
+      color: #cbd5e1;
     }
 
     p {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      line-height: 1.6;
+      margin-bottom: 16px;
+      color: #4b5563;
+      transition: color 0.3s;
+    }
+
+    body.dark p {
+      color: #94a3b8;
     }
 
     .theme-section {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--background);
+      background-color: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      transition: background-color 0.3s, box-shadow 0.3s;
     }
 
     body.dark .theme-section {
-      background: #1e293b;
-      border-color: #334155;
+      background-color: #1e293b;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
-    .theme-title {
-      font-size: 1.1rem;
-      color: var(--foreground);
-      margin-bottom: 1rem;
+    .theme-controls {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
     }
 
-    .theme-description {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
+    .control-group {
+      margin-bottom: 20px;
     }
 
-    .theme-example {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-      font-family: 'Vazir Code', monospace;
-      font-size: 0.9rem;
-      overflow-x: auto;
+    .control-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #4b5563;
+      transition: color 0.3s;
     }
 
-    body.dark .theme-example {
-      background: #334155;
+    body.dark .control-group label {
+      color: #e2e8f0;
     }
 
-    .theme-result {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-      font-family: 'Vazir Code', monospace;
-      font-size: 0.9rem;
-    }
-
-    body.dark .theme-result {
-      background: #334155;
-    }
-
-    .demo-section {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-    }
-
-    body.dark .demo-section {
-      background: #1e293b;
-    }
-
-    .demo-title {
-      font-size: 1.1rem;
-      color: var(--foreground);
-      margin-bottom: 1rem;
-    }
-
-    .demo-description {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
-    .theme-switch {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      z-index: 100;
-    }
-
-    .theme-switch input {
-      display: none;
-    }
-
-    .theme-switch label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: white;
-      border-radius: 50%;
+    .theme-btn {
+      padding: 8px 16px;
+      background-color: #f1f5f9;
+      border: 2px solid transparent;
+      border-radius: 4px;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-family: inherit;
+      font-size: 14px;
       transition: all 0.2s;
+      color: #1e293b;
     }
 
-    body.dark .theme-switch label {
-      background: #1e293b;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    .theme-btn:hover {
+      background-color: #e2e8f0;
     }
 
-    .theme-switch label:hover {
-      transform: scale(1.1);
+    .theme-btn.active {
+      border-color: #0891b2;
+      background-color: #ecfeff;
+      font-weight: 500;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        padding: 1rem;
-      }
+    body.dark .theme-btn {
+      background-color: #334155;
+      color: #e2e8f0;
+    }
 
-      .sidebar {
-        width: 100%;
-        position: static;
-        margin-bottom: 1rem;
-      }
+    body.dark .theme-btn:hover {
+      background-color: #475569;
+    }
 
-      h1 {
-        font-size: 1.75rem;
-      }
+    body.dark .theme-btn.active {
+      border-color: #0891b2;
+      background-color: #164e63;
+    }
 
-      h2 {
-        font-size: 1.25rem;
-      }
+    .color-input {
+      margin-bottom: 16px;
+    }
 
-      .theme-section {
-        padding: 1rem;
-      }
+    .color-input label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #4b5563;
+      transition: color 0.3s;
+    }
 
-      .theme-example,
-      .theme-result {
-        font-size: 0.8rem;
+    body.dark .color-input label {
+      color: #e2e8f0;
+    }
+
+    .radius-control {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .radius-control label {
+      font-weight: 500;
+      color: #4b5563;
+      transition: color 0.3s;
+      min-width: 120px;
+    }
+
+    body.dark .radius-control label {
+      color: #e2e8f0;
+    }
+
+    .radius-control input {
+      flex-grow: 1;
+    }
+
+    .radius-control span {
+      font-size: 14px;
+      color: #64748b;
+      min-width: 40px;
+      text-align: right;
+      transition: color 0.3s;
+    }
+
+    body.dark .radius-control span {
+      color: #94a3b8;
+    }
+
+    .datepicker-container {
+      margin-top: 24px;
+    }
+
+    persian-datepicker-element {
+      width: 100%;
+      display: block;
+      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      --jdp-font-feature-settings: "ss02";
+      --jdp-font-weight: 400;
+      transition: all 0.3s ease;
+    }
+
+    /* Dark mode styles for the datepicker */
+    body.dark persian-datepicker-element {
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-day-hover-bg: #334155;
+      --jdp-input-border-color: #475569;
+      --jdp-input-bg: #1e1e2f;
+      --jdp-calendar-bg: #1e1e2f;
+      --jdp-holiday-bg: #3f1e2e;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background-color: #f1f5f9;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+
+    body.dark .result {
+      background-color: #1e1e2f;
+    }
+
+    .result p {
+      margin: 8px 0;
+    }
+
+    .result strong {
+      font-weight: 500;
+      color: #0f172a;
+      transition: color 0.3s;
+    }
+
+    body.dark .result strong {
+      color: #e2e8f0;
+    }
+
+    .navigation {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .navigation h2 {
+      margin-top: 0;
+    }
+
+    .link {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #0891b2;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .link:hover {
+      background-color: #0e7490;
+    }
+
+    body.dark .link {
+      background-color: #0e7490;
+    }
+
+    body.dark .link:hover {
+      background-color: #0891b2;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .navigation {
+        border-bottom-color: #334155;
       }
+    }
+
+    /* Make sure form elements also use Persian numbers */
+    input, button, select, textarea {
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
+    }
+
+    .color-input {
+      margin-bottom: 16px;
     }
   </style>
 </head>
 <body>
-  <div class="theme-switch">
-    <input type="checkbox" id="theme-toggle">
-    <label for="theme-toggle">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path class="sun" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        <path class="moon" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-      </svg>
-    </label>
-  </div>
-
   <div class="container">
-    <nav class="sidebar">
-      <h2 class="sidebar-title">مستندات</h2>
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a href="basic.html" class="nav-link">مقدمه</a>
-        </li>
-        <li class="nav-item">
-          <a href="customization.html" class="nav-link">شخصی‌سازی</a>
-        </li>
-        <li class="nav-item">
-          <a href="formats.html" class="nav-link">فرمت‌ها</a>
-        </li>
-        <li class="nav-item">
-          <a href="limits.html" class="nav-link">محدودیت‌ها</a>
-        </li>
-        <li class="nav-item">
-          <a href="holidays.html" class="nav-link">تعطیلات</a>
-        </li>
-        <li class="nav-item">
-          <a href="css-variables.html" class="nav-link">متغیرهای CSS</a>
-        </li>
-        <li class="nav-item">
-          <a href="theme-builder.html" class="nav-link">سازنده تم</a>
-        </li>
-        <li class="nav-item">
-          <a href="theme-switcher.html" class="nav-link active">تغییر تم</a>
-        </li>
-        <li class="nav-item">
-          <a href="accessibility.html" class="nav-link">دسترسی‌پذیری</a>
-        </li>
-      </ul>
-    </nav>
+    <h1>Persian Date Picker Element - Theme Switcher</h1>
+    <p>این صفحه امکان تغییر ظاهر تقویم شمسی را به صورت آنی فراهم می‌کند. می‌توانید از تم‌های آماده استفاده کنید یا با تنظیم متغیرهای CSS، ظاهر دلخواه خود را ایجاد کنید.</p>
 
-    <main class="main-content">
-      <h1>تغییر تم</h1>
-      <p>Persian Date Picker از تغییر تم بین حالت روشن و تاریک پشتیبانی می‌کند.</p>
+    <div class="navigation">
+      <div class="nav-links">
+        <a href="index.html" class="link">نمونه‌های پایه</a>
+        <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+        <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+        <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+        <a href="../../index.html" class="link">دمو</a>
+      </div>
+    </div>
 
-      <div class="theme-section">
-        <h2 class="theme-title">تغییر تم خودکار</h2>
-        <p class="theme-description">کامپوننت به طور خودکار با تنظیمات سیستم عامل شما هماهنگ می‌شود.</p>
-        <div class="theme-example">
-          // تغییر تم خودکار
-          persian-datepicker-element {
-            --jdp-background: var(--background);
-            --jdp-foreground: var(--foreground);
-            --jdp-muted: var(--muted);
-            --jdp-border: var(--border);
+    <div class="theme-section">
+      <h2>انتخاب تم</h2>
+      <div class="theme-controls">
+        <button class="theme-btn active" data-theme="default">پیش‌فرض</button>
+        <button class="theme-btn" data-theme="blue">آبی</button>
+        <button class="theme-btn" data-theme="green">سبز</button>
+        <button class="theme-btn" data-theme="purple">بنفش</button>
+        <button class="theme-btn" data-theme="orange">نارنجی</button>
+        <button class="theme-btn" data-theme="minimal">مینیمال</button>
+      </div>
+      
+      <div class="control-group">
+        <!-- Dark Mode Toggle -->
+        <div class="switch-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <label for="dark-mode-toggle" style="font-weight: 500;">حالت تاریک</label>
+          <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 26px; flex-shrink: 0;">
+            <input type="checkbox" id="dark-mode-toggle">
+            <span class="switch-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px;"></span>
+          </label>
+        </div>
+        <style>
+          /* Switch toggle styles */
+          .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
           }
-        </div>
-        <div class="theme-result">
-          <persian-datepicker-element
-            placeholder="انتخاب تاریخ"
-            show-holidays>
-          </persian-datepicker-element>
-        </div>
-      </div>
-
-      <div class="theme-section">
-        <h2 class="theme-title">تغییر تم دستی</h2>
-        <p class="theme-description">شما می‌توانید تم را به صورت دستی تغییر دهید.</p>
-        <div class="theme-example">
-          // تغییر تم دستی
-          const picker = document.querySelector('persian-datepicker-element');
-          picker.setAttribute('darkmode', 'true'); // فعال کردن حالت تاریک
-          picker.removeAttribute('darkmode'); // غیرفعال کردن حالت تاریک
-        </div>
-        <div class="theme-result">
-          <persian-datepicker-element
-            id="manual-theme"
-            placeholder="انتخاب تاریخ"
-            show-holidays>
-          </persian-datepicker-element>
-          <div style="margin-top: 1rem;">
-            <button onclick="toggleManualTheme()">تغییر تم</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="theme-section">
-        <h2 class="theme-title">ذخیره تنظیمات تم</h2>
-        <p class="theme-description">شما می‌توانید تنظیمات تم را در حافظه مرورگر ذخیره کنید.</p>
-        <div class="theme-example">
-          // ذخیره تنظیمات تم
-          localStorage.setItem('theme', 'dark'); // ذخیره حالت تاریک
-          localStorage.setItem('theme', 'light'); // ذخیره حالت روشن
-        </div>
-        <div class="theme-result">
-          <persian-datepicker-element
-            id="saved-theme"
-            placeholder="انتخاب تاریخ"
-            show-holidays>
-          </persian-datepicker-element>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <h2 class="demo-title">نمونه استفاده</h2>
-        <p class="demo-description">در این مثال، نحوه استفاده از تغییر تم در تقویم نشان داده شده است.</p>
+          
+          .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+          }
+          
+          input:checked + .switch-slider {
+            background-color: var(--jdp-primary, #0891b2);
+          }
+          
+          input:checked + .switch-slider:before {
+            transform: translateX(24px);
+          }
+          
+          body.dark .switch-slider {
+            background-color: #475569;
+          }
+        </style>
         
-        <persian-datepicker-element
-          placeholder="انتخاب تاریخ"
-          show-holidays>
-        </persian-datepicker-element>
+        <div class="color-input">
+          <label for="primary-color">رنگ اصلی:</label>
+          <input type="color" id="primary-color" value="#0891b2">
+        </div>
+      
+        <div class="radius-control">
+          <label for="border-radius">شعاع گوشه‌ها:</label>
+          <input type="range" id="border-radius" min="0" max="20" value="8">
+          <span id="radius-value">8px</span>
+        </div>
       </div>
-    </main>
+      
+      <div class="datepicker-container">
+        <persian-datepicker-element id="theme-datepicker" placeholder="تاریخ را انتخاب کنید"></persian-datepicker-element>
+      </div>
+
+      <div class="result">
+        <p><strong>تاریخ انتخاب شده:</strong> <span id="selected-date">-</span></p>
+      </div>
+    </div>
+    
+    <div class="link-container" style="margin-top: 30px; text-align: center;">
+      <a href="index.html" class="link">نمونه‌های پایه</a>
+      <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+      <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+      <a href="../../index.html" class="link">دمو</a>
+    </div>
   </div>
 
-  <script type="module" src="../../dist/persian-datepicker-element.min.js"></script>
+  <script src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
-    // Theme toggle functionality
-    const themeToggle = document.getElementById('theme-toggle');
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    // Elements
+    const datepicker = document.getElementById('theme-datepicker');
+    const themeButtons = document.querySelectorAll('.theme-btn');
+    const primaryColorInput = document.getElementById('primary-color');
+    const borderRadiusInput = document.getElementById('border-radius');
+    const radiusValueDisplay = document.getElementById('radius-value');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+    // Pre-defined themes
+    const themes = {
+      default: {
+        '--jdp-primary': '#0891b2',
+        '--jdp-primary-hover': '#0e7490',
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
+      },
+      blue: {
+        '--jdp-primary': '#3b82f6',
+        '--jdp-primary-hover': '#2563eb',
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
+      },
+      green: {
+        '--jdp-primary': '#10b981',
+        '--jdp-primary-hover': '#059669',
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
+      },
+      purple: {
+        '--jdp-primary': '#8b5cf6',
+        '--jdp-primary-hover': '#7c3aed',
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
+      },
+      orange: {
+        '--jdp-primary': '#f97316',
+        '--jdp-primary-hover': '#ea580c',
+        '--jdp-border-radius': '0.5rem',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
+      },
+      minimal: {
+        '--jdp-primary': '#000000',
+        '--jdp-primary-hover': '#333333',
+        '--jdp-border-radius': '2px',
+        '--jdp-input-border-width': '1px',
+        '--jdp-day-cell-border-radius': '0',
+        '--jdp-nav-button-border-radius': '0',
+        '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+        '--jdp-font-feature-settings': '"ss02"'
+      }
+    };
+
+    // Dark mode theme
+    const darkTheme = {
+      '--jdp-background': '#1e1e2f',
+      '--jdp-foreground': '#e2e8f0',
+      '--jdp-muted': '#334155',
+      '--jdp-muted-foreground': '#94a3b8',
+      '--jdp-border': '#475569',
+      '--jdp-input-border-color': '#475569',
+      '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
+      '--jdp-day-hover-bg': '#334155',
+      '--jdp-input-bg': '#1e1e2f',
+      '--jdp-calendar-bg': '#1e1e2f',
+      '--jdp-holiday-bg': '#3f1e2e',
+      '--jdp-font-family': "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+      '--jdp-font-feature-settings': '"ss02"'
+    };
+
+    // Apply theme to datepicker
+    function applyTheme(themeValues) {
+      // Set darkmode attribute if applying dark theme
+      if (isDarkTheme(themeValues)) {
+        datepicker.setAttribute('darkmode', 'true');
+      } else {
+        datepicker.removeAttribute('darkmode');
+      }
+      
+      Object.entries(themeValues).forEach(([property, value]) => {
+        datepicker.style.setProperty(property, value);
+      });
+    }
     
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      document.body.classList.toggle('dark', savedTheme === 'dark');
-      themeToggle.checked = savedTheme === 'dark';
-    } else {
-      document.body.classList.toggle('dark', prefersDarkScheme.matches);
-      themeToggle.checked = prefersDarkScheme.matches;
+    // Helper function to check if a theme is dark
+    function isDarkTheme(theme) {
+      return document.body.classList.contains('dark') || 
+             (theme && theme['--jdp-background'] && 
+              (theme['--jdp-background'].includes('1e1e2f') || 
+               theme['--jdp-background'].includes('0f172a')));
     }
 
-    themeToggle.addEventListener('change', () => {
-      document.body.classList.toggle('dark');
-      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    // Convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+
+    // Format date with Persian digits
+    function formatPersianDate(dateArray) {
+      return toPersianNum(dateArray.join('/'));
+    }
+
+    // Apply color to datepicker
+    function applyColor(color) {
+      // Convert the color to a darker shade for hover state
+      const darkerColor = adjustColor(color, -15);
+      
+      datepicker.style.setProperty('--jdp-primary', color);
+      datepicker.style.setProperty('--jdp-primary-hover', darkerColor);
+      
+      // Update color input to match
+      primaryColorInput.value = color;
+    }
+
+    // Apply border radius to datepicker
+    function applyRadius(radius) {
+      const radiusValue = `${radius}px`;
+      datepicker.style.setProperty('--jdp-border-radius', radiusValue);
+      
+      // Update radius display
+      radiusValueDisplay.textContent = radiusValue;
+    }
+
+    // Helper function to adjust color brightness
+    function adjustColor(color, amount) {
+      return '#' + color.replace(/^#/, '').replace(/../g, color => 
+        ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
+      );
+    }
+    
+    // Handle theme button clicks
+    themeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all buttons
+        themeButtons.forEach(b => b.classList.remove('active'));
+        
+        // Add active class to clicked button
+        btn.classList.add('active');
+        
+        // Apply the selected theme
+        const themeName = btn.getAttribute('data-theme');
+        const selectedTheme = themes[themeName];
+        
+        if (selectedTheme) {
+          // Check if dark mode is active
+          if (darkModeToggle.checked) {
+            // Apply dark theme with selected theme's primary color
+            const mergedTheme = {...darkTheme};
+            mergedTheme['--jdp-primary'] = selectedTheme['--jdp-primary'];
+            mergedTheme['--jdp-primary-hover'] = selectedTheme['--jdp-primary-hover'];
+            applyTheme(mergedTheme);
+          } else {
+            applyTheme(selectedTheme);
+          }
+          
+          // Update controls to match theme
+          primaryColorInput.value = selectedTheme['--jdp-primary'];
+          
+          // Update radius input based on the theme
+          const radiusValue = parseInt(selectedTheme['--jdp-border-radius']) || 0;
+          borderRadiusInput.value = radiusValue;
+          radiusValueDisplay.textContent = `${radiusValue}px`;
+        }
+      });
+    });
+    
+    // Color input
+    primaryColorInput.addEventListener('input', () => {
+      const color = primaryColorInput.value;
+      
+      // Apply the color with respect to dark mode
+      if (darkModeToggle.checked) {
+        const mergedTheme = {...darkTheme};
+        mergedTheme['--jdp-primary'] = color;
+        mergedTheme['--jdp-primary-hover'] = adjustColor(color, -15);
+        applyTheme(mergedTheme);
+      } else {
+        applyColor(color);
+      }
     });
 
-    // Manual theme toggle
-    const manualThemePicker = document.getElementById('manual-theme');
-    let isDarkMode = false;
-
-    function toggleManualTheme() {
-      isDarkMode = !isDarkMode;
-      if (isDarkMode) {
-        manualThemePicker.setAttribute('darkmode', 'true');
+    // Border radius input
+    borderRadiusInput.addEventListener('input', () => {
+      const radius = borderRadiusInput.value;
+      
+      // If in dark mode, preserve dark theme properties when applying radius
+      if (darkModeToggle.checked) {
+        // Get current theme properties
+        const activeThemeButton = document.querySelector('.theme-btn.active');
+        if (activeThemeButton) {
+          const themeName = activeThemeButton.getAttribute('data-theme');
+          const currentTheme = themes[themeName];
+          
+          // Create a merged theme
+          const mergedTheme = {...darkTheme};
+          mergedTheme['--jdp-primary'] = currentTheme['--jdp-primary'] || darkTheme['--jdp-primary'];
+          mergedTheme['--jdp-primary-hover'] = currentTheme['--jdp-primary-hover'] || darkTheme['--jdp-primary-hover'];
+          mergedTheme['--jdp-border-radius'] = `${radius}px`;
+          
+          applyTheme(mergedTheme);
+        } else {
+          const mergedTheme = {...darkTheme};
+          mergedTheme['--jdp-border-radius'] = `${radius}px`;
+          applyTheme(mergedTheme);
+        }
       } else {
-        manualThemePicker.removeAttribute('darkmode');
+        applyRadius(radius);
+      }
+      
+      // Update radius display
+      radiusValueDisplay.textContent = `${radius}px`;
+    });
+
+    // Handle date selection
+    datepicker.addEventListener('change', event => {
+      document.getElementById('selected-date').textContent = formatPersianDate(event.detail.jalali);
+    });
+
+    // Apply the default theme initially
+    applyTheme(themes.default);
+
+    // Initialize dark mode based on saved preference or system preference
+    function initDarkMode() {
+      // Check saved preference
+      const savedDarkMode = localStorage.getItem('darkMode');
+      
+      if (savedDarkMode === 'true') {
+        darkModeToggle.checked = true;
+        document.body.classList.add('dark');
+        applyDarkModeToCurrentTheme();
+      } else if (savedDarkMode === 'false') {
+        darkModeToggle.checked = false;
+        document.body.classList.remove('dark');
+      } else {
+        // Check system preference if no saved preference
+        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDarkMode) {
+          darkModeToggle.checked = true;
+          document.body.classList.add('dark');
+          applyDarkModeToCurrentTheme();
+        }
       }
     }
 
-    // Saved theme demo
-    const savedThemePicker = document.getElementById('saved-theme');
-    if (savedTheme === 'dark') {
-      savedThemePicker.setAttribute('darkmode', 'true');
+    // Apply dark mode to the current theme
+    function applyDarkModeToCurrentTheme() {
+      // Find active theme
+      const activeThemeButton = document.querySelector('.theme-btn.active');
+      if (activeThemeButton) {
+        const themeName = activeThemeButton.getAttribute('data-theme');
+        const currentTheme = themes[themeName];
+        
+        // Get primary color from current theme
+        const primaryColor = currentTheme['--jdp-primary'];
+        const primaryHoverColor = currentTheme['--jdp-primary-hover'];
+        
+        // Apply dark theme with current theme's primary colors
+        const mergedTheme = {...darkTheme};
+        mergedTheme['--jdp-primary'] = primaryColor;
+        mergedTheme['--jdp-primary-hover'] = primaryHoverColor;
+        
+        applyTheme(mergedTheme);
+      } else {
+        // If no active theme, apply default dark theme
+        applyTheme(darkTheme);
+      }
     }
+
+    // Dark mode toggle
+    darkModeToggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark', darkModeToggle.checked);
+      
+      if (darkModeToggle.checked) {
+        // Save preference
+        localStorage.setItem('darkMode', 'true');
+        applyDarkModeToCurrentTheme();
+      } else {
+        // Save preference
+        localStorage.setItem('darkMode', 'false');
+        
+        // Reapply the current theme in light mode
+        const activeThemeButton = document.querySelector('.theme-btn.active');
+        if (activeThemeButton) {
+          const themeName = activeThemeButton.getAttribute('data-theme');
+          applyTheme(themes[themeName]);
+        } else {
+          applyTheme(themes.default);
+        }
+      }
+    });
+    
+    // Initialize dark mode
+    initDarkMode();
   </script>
 </body>
 </html> 

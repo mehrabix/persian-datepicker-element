@@ -3,412 +3,636 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>محدودیت‌ها | Persian Date Picker</title>
+  <title>Persian Date Picker Element - Date Selection Limits</title>
+  <!-- Add Vazir Font from CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
-    :root {
-      --primary: #0891b2;
-      --primary-hover: #0e7490;
-      --background: #ffffff;
-      --foreground: #1e293b;
-      --muted: #f1f5f9;
-      --border: #e2e8f0;
-      --radius: 0.5rem;
-      --font-size: 16px;
-    }
-    
     body {
-      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f9fafb;
-      color: #374151;
-      padding: 1rem;
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
+      padding: 20px;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
       direction: rtl;
+      font-weight: 400;
       transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Apply Persian numbers to all elements */
+    * {
       -moz-font-feature-settings: "ss02";
       -webkit-font-feature-settings: "ss02";
       font-feature-settings: "ss02";
     }
 
-    body.dark {
-      background-color: #1e293b;
-      color: #e2e8f0;
-    }
-
-    .container {
-      display: flex;
-      gap: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    body.dark .container {
-      background-color: #0f172a;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 2rem;
-      height: fit-content;
-      padding: 1.5rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-    }
-
-    body.dark .sidebar {
-      background: #1e293b;
-      border-color: #334155;
-    }
-
-    .sidebar-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--foreground);
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .nav-item {
-      margin-bottom: 0.5rem;
-    }
-
-    .nav-link {
-      display: block;
-      padding: 0.5rem 0.75rem;
-      color: var(--foreground);
-      text-decoration: none;
-      border-radius: var(--radius);
-      transition: all 0.2s;
-      font-size: 0.9rem;
-    }
-
-    .nav-link:hover {
-      background: var(--border);
-      color: var(--primary);
-    }
-
-    body.dark .nav-link:hover {
-      background: #334155;
-    }
-
-    .nav-link.active {
-      background: var(--primary);
-      color: white;
-    }
-
-    .main-content {
-      flex: 1;
-      min-width: 0;
-    }
-
     h1 {
-      color: var(--foreground);
-      margin-bottom: 1.5rem;
-      font-size: 2rem;
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: #0f172a;
+      font-weight: 700;
+      transition: color 0.3s;
     }
 
     h2 {
-      color: var(--foreground);
-      margin: 2rem 0 1rem;
-      font-size: 1.5rem;
+      font-size: 20px;
+      margin: 32px 0 16px;
+      color: #334155;
+      font-weight: 700;
+      transition: color 0.3s;
     }
 
     p {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      line-height: 1.6;
+      margin-bottom: 16px;
+      transition: color 0.3s;
     }
 
-    .limit-section {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--background);
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
     }
 
-    body.dark .limit-section {
-      background: #1e293b;
-      border-color: #334155;
+    .example {
+      margin-bottom: 40px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s, box-shadow 0.3s;
     }
 
-    .limit-title {
-      font-size: 1.1rem;
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    .example-label {
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-size: 16px;
     }
 
-    .limit-description {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
+    .result {
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #f1f5f9;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    .limit-example {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-      font-family: 'Vazir Code', monospace;
-      font-size: 0.9rem;
+    pre {
+      background-color: #f1f5f9;
+      padding: 16px;
+      border-radius: 6px;
       overflow-x: auto;
+      font-size: 14px;
+      margin: 20px 0;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    body.dark .limit-example {
-      background: #334155;
+    code {
+      font-family: 'Fira Code', monospace;
+      transition: color 0.3s;
     }
 
-    .demo-section {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background: var(--muted);
-      border-radius: var(--radius);
+    .link {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #0891b2;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
     }
 
-    body.dark .demo-section {
-      background: #1e293b;
+    .link:hover {
+      background-color: #0e7490;
     }
 
-    .demo-title {
-      font-size: 1.1rem;
-      color: var(--foreground);
-      margin-bottom: 1rem;
+    /* Custom element styling */
+    persian-datepicker-element {
+      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
+      --jdp-font-weight: 400;
+      transition: all 0.3s ease;
     }
 
-    .demo-description {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
+    /* Make sure all inputs and form elements also use Persian numbers */
+    input, button, select, textarea {
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
     }
 
+    /* Dark mode styles */
+    body.dark {
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+
+    body.dark h1 {
+      color: #f8fafc;
+    }
+
+    body.dark h2 {
+      color: #cbd5e1;
+    }
+
+    body.dark .example {
+      background-color: #1e293b;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    body.dark .result,
+    body.dark pre {
+      background-color: #1e1e2f;
+      color: #e2e8f0;
+    }
+
+    body.dark code {
+      color: #f8fafc;
+    }
+
+    body.dark persian-datepicker-element {
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-day-hover-bg: #334155;
+      --jdp-input-border-color: #475569;
+      --jdp-input-bg: #1e1e2f;
+      --jdp-calendar-bg: #1e1e2f;
+      --jdp-holiday-bg: #3f1e2e;
+    }
+
+    .navigation {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.3s;
+    }
+
+    .navigation h2 {
+      margin-top: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    body.dark .navigation {
+      border-bottom-color: #334155;
+    }
+
+    /* Dark mode toggle */
     .theme-switch {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      z-index: 100;
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-left: 15px;
     }
 
     .theme-switch input {
-      display: none;
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
 
-    .theme-switch label {
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #0891b2;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .toggle-container {
       display: flex;
       align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: white;
-      border-radius: 50%;
+    }
+
+    .toggle-label {
+      margin-right: 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .form-control {
+      margin-bottom: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-control label {
+      font-weight: 500;
+      min-width: 100px;
+    }
+
+    .form-control input {
+      padding: 8px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      background-color: #fff;
+      transition: border-color 0.3s, background-color 0.3s;
+    }
+
+    body.dark .form-control input {
+      border-color: #475569;
+      background-color: #1e1e2f;
+      color: #e2e8f0;
+    }
+
+    .btn-apply {
+      background-color: #0891b2;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: all 0.2s;
+      font-weight: 500;
+      transition: background-color 0.2s;
     }
 
-    body.dark .theme-switch label {
-      background: #1e293b;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    .btn-apply:hover {
+      background-color: #0e7490;
     }
 
-    .theme-switch label:hover {
-      transform: scale(1.1);
+    .disabled-day {
+      color: #94a3b8;
+      text-decoration: line-through;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        padding: 1rem;
-      }
+    .controls {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f1f5f9;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
 
-      .sidebar {
-        width: 100%;
-        position: static;
-        margin-bottom: 1rem;
-      }
-
-      h1 {
-        font-size: 1.75rem;
-      }
-
-      h2 {
-        font-size: 1.25rem;
-      }
-
-      .limit-section {
-        padding: 1rem;
-      }
-
-      .limit-example {
-        font-size: 0.8rem;
-      }
+    body.dark .controls {
+      background-color: #1e1e2f;
     }
   </style>
 </head>
 <body>
-  <div class="theme-switch">
-    <input type="checkbox" id="theme-toggle">
-    <label for="theme-toggle">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path class="sun" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        <path class="moon" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-      </svg>
-    </label>
-  </div>
-
   <div class="container">
-    <nav class="sidebar">
-      <h2 class="sidebar-title">مستندات</h2>
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a href="basic.html" class="nav-link">مقدمه</a>
-        </li>
-        <li class="nav-item">
-          <a href="customization.html" class="nav-link">شخصی‌سازی</a>
-        </li>
-        <li class="nav-item">
-          <a href="formats.html" class="nav-link">فرمت‌ها</a>
-        </li>
-        <li class="nav-item">
-          <a href="limits.html" class="nav-link active">محدودیت‌ها</a>
-        </li>
-        <li class="nav-item">
-          <a href="holidays.html" class="nav-link">تعطیلات</a>
-        </li>
-        <li class="nav-item">
-          <a href="css-variables.html" class="nav-link">متغیرهای CSS</a>
-        </li>
-        <li class="nav-item">
-          <a href="theme-builder.html" class="nav-link">سازنده تم</a>
-        </li>
-        <li class="nav-item">
-          <a href="theme-switcher.html" class="nav-link">تغییر تم</a>
-        </li>
-        <li class="nav-item">
-          <a href="accessibility.html" class="nav-link">دسترسی‌پذیری</a>
-        </li>
-      </ul>
-    </nav>
-
-    <main class="main-content">
-      <h1>محدودیت‌ها</h1>
-      <p>کامپوننت Persian Date Picker دارای محدودیت‌های زیر است که باید در نظر گرفته شوند:</p>
-
-      <div class="limit-section">
-        <h2 class="limit-title">محدودیت‌های تاریخی</h2>
-        <p class="limit-description">کامپوننت از سال ۱ تا ۱۵۰۰ هجری شمسی را پشتیبانی می‌کند.</p>
-        <div class="limit-example">
-          // محدودیت سال
-          min-year="1"
-          max-year="1500"
-        </div>
+    <h1>Persian Date Picker Element - Date Selection Limits</h1>
+    <p>Learn how to set min and max date restrictions for the Persian Date Picker Element.</p>
+    
+    <div class="navigation">
+      <div class="nav-links">
+        <a href="index.html" class="link">نمونه‌های پایه</a>
+        <a href="basic.html" class="link">استفاده پایه</a>
+        <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+        <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+        <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+        <a href="formats.html" class="link">فرمت‌های تاریخ</a>
+        <a href="../../index.html" class="link">دمو</a>
       </div>
-
-      <div class="limit-section">
-        <h2 class="limit-title">محدودیت‌های انتخاب</h2>
-        <p class="limit-description">می‌توانید محدودیت‌های انتخاب تاریخ را تعیین کنید.</p>
-        <div class="limit-example">
-          // محدودیت انتخاب تاریخ
-          const picker = document.querySelector('persian-datepicker-element');
-          picker.setMinDate(1400, 1, 1); // حداقل تاریخ: 1400/01/01
-          picker.setMaxDate(1400, 12, 29); // حداکثر تاریخ: 1400/12/29
-        </div>
-        <div class="limit-result">
-          <persian-datepicker-element
-            id="date-limits"
-            placeholder="انتخاب تاریخ"
-            show-holidays>
-          </persian-datepicker-element>
-        </div>
+      <div class="toggle-container">
+        <span class="toggle-label">حالت تاریک</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="slider"></span>
+        </label>
       </div>
+    </div>
 
-      <div class="limit-section">
-        <h2 class="limit-title">محدودیت‌های نمایش</h2>
-        <p class="limit-description">می‌توانید محدودیت‌های نمایش تقویم را تنظیم کنید.</p>
-        <div class="limit-example">
-          // محدودیت نمایش
-          show-week-numbers="false"
-          show-holidays="true"
-          show-today="true"
+    <div class="example">
+      <h2>محدودیت حداقل و حداکثر تاریخ</h2>
+      <p>می‌توانید با استفاده از ویژگی‌های min-date و max-date، محدودیت‌هایی برای انتخاب تاریخ تعیین کنید.</p>
+      
+      <div class="example-label">تاریخ‌های بین امروز و یک ماه بعد:</div>
+      <persian-datepicker-element id="min-max-picker"></persian-datepicker-element>
+      <div class="result">تاریخ انتخاب شده: <span id="min-max-result">انتخاب نشده</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  min-date="[1402, 12, 10]" 
+  max-date="[1403, 1, 10]"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+    
+    <div class="example">
+      <h2>تنظیم محدودیت‌ها به صورت پویا</h2>
+      <p>در این مثال، می‌توانید به صورت پویا محدودیت‌ها را تغییر دهید:</p>
+      
+      <div class="controls">
+        <div class="form-control">
+          <label for="min-year">سال حداقل:</label>
+          <input type="number" id="min-year" min="1380" max="1420" value="1402">
+          
+          <label for="min-month">ماه حداقل:</label>
+          <input type="number" id="min-month" min="1" max="12" value="1">
+          
+          <label for="min-day">روز حداقل:</label>
+          <input type="number" id="min-day" min="1" max="31" value="1">
         </div>
-      </div>
-
-      <div class="limit-section">
-        <h2 class="limit-title">محدودیت‌های فرمت</h2>
-        <p class="limit-description">فرمت‌های تاریخ باید مطابق با استاندارد تعیین شده باشند.</p>
-        <div class="limit-example">
-          // فرمت‌های پشتیبانی شده
-          format="YYYY/MM/DD"
-          format="YYYY-MM-DD"
-          format="DD/MM/YYYY"
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <h2 class="demo-title">نمونه استفاده</h2>
-        <p class="demo-description">در این مثال، نحوه استفاده از محدودیت‌ها در تقویم نشان داده شده است.</p>
         
-        <persian-datepicker-element
-          id="demo-limits"
-          placeholder="انتخاب تاریخ"
-          show-holidays>
-        </persian-datepicker-element>
+        <div class="form-control">
+          <label for="max-year">سال حداکثر:</label>
+          <input type="number" id="max-year" min="1380" max="1420" value="1403">
+          
+          <label for="max-month">ماه حداکثر:</label>
+          <input type="number" id="max-month" min="1" max="12" value="12">
+          
+          <label for="max-day">روز حداکثر:</label>
+          <input type="number" id="max-day" min="1" max="31" value="29">
+        </div>
+        
+        <button class="btn-apply" id="apply-limits">اعمال محدودیت‌ها</button>
       </div>
-    </main>
+      
+      <persian-datepicker-element id="dynamic-limits-picker"></persian-datepicker-element>
+      <div class="result">تاریخ انتخاب شده: <span id="dynamic-limits-result">انتخاب نشده</span></div>
+      
+      <pre><code>// تنظیم محدودیت‌ها به صورت پویا با JavaScript
+const picker = document.getElementById('dynamic-limits-picker');
+picker.setMinDate(1402, 1, 1);
+picker.setMaxDate(1403, 12, 29);</code></pre>
+    </div>
+    
+    <div class="example">
+      <h2>غیرفعال کردن روزهای خاص</h2>
+      <p>می‌توانید تابع disabledDates را برای غیرفعال کردن روزهای خاص استفاده کنید:</p>
+      
+      <div class="example-label">غیرفعال کردن روزهای پنجشنبه و جمعه:</div>
+      <persian-datepicker-element id="disabled-days-picker"></persian-datepicker-element>
+      <div class="result">تاریخ انتخاب شده: <span id="disabled-days-result">انتخاب نشده</span></div>
+      
+      <pre><code>// غیرفعال کردن روزهای پنجشنبه و جمعه
+const picker = document.getElementById('disabled-days-picker');
+picker.setAttribute('disabled-dates', 'isWeekend');
+
+// تعریف تابع isWeekend در JavaScript
+function isWeekend(year, month, day) {
+  const date = new Date(picker.jalaliToGregorian(year, month, day));
+  const dayOfWeek = date.getDay();
+  // 5 = پنجشنبه، 6 = جمعه
+  return dayOfWeek === 5 || dayOfWeek === 6;
+}</code></pre>
+    </div>
+    
+    <div class="example">
+      <h2>تعیین بازه تاریخی با تاریخ شروع و پایان</h2>
+      <p>مثالی برای انتخاب بازه تاریخی با استفاده از دو تاریخ شروع و پایان:</p>
+      
+      <div class="example-label">تاریخ شروع:</div>
+      <persian-datepicker-element id="start-date-picker"></persian-datepicker-element>
+      
+      <div class="example-label">تاریخ پایان:</div>
+      <persian-datepicker-element id="end-date-picker"></persian-datepicker-element>
+      
+      <div class="result">
+        بازه انتخاب شده: <span id="date-range-result">انتخاب نشده</span>
+      </div>
+      
+      <pre><code>// تعیین وابستگی بین تاریخ شروع و پایان
+const startDatePicker = document.getElementById('start-date-picker');
+const endDatePicker = document.getElementById('end-date-picker');
+
+startDatePicker.addEventListener('change', (event) => {
+  // تنظیم حداقل تاریخ برای تاریخ پایان به تاریخ شروع
+  const { jalali } = event.detail;
+  endDatePicker.setMinDate(jalali[0], jalali[1], jalali[2]);
+});
+
+endDatePicker.addEventListener('change', (event) => {
+  // تنظیم حداکثر تاریخ برای تاریخ شروع به تاریخ پایان
+  const { jalali } = event.detail;
+  startDatePicker.setMaxDate(jalali[0], jalali[1], jalali[2]);
+});</code></pre>
+    </div>
+    
+    <div class="link-container">
+      <a href="index.html" class="link">بازگشت به صفحه نمونه‌ها</a>
+    </div>
   </div>
 
-  <script type="module" src="../../dist/persian-datepicker-element.min.js"></script>
+  <script src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
-    // Theme toggle functionality
-    const themeToggle = document.getElementById('theme-toggle');
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
     
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      document.body.classList.toggle('dark', savedTheme === 'dark');
-      themeToggle.checked = savedTheme === 'dark';
-    } else {
-      document.body.classList.toggle('dark', prefersDarkScheme.matches);
-      themeToggle.checked = prefersDarkScheme.matches;
+    // Function to apply dark mode to all date picker elements
+    function applyDarkModeToPickers(isDark) {
+      const allPickers = document.querySelectorAll('persian-datepicker-element');
+      allPickers.forEach(picker => {
+        if (isDark) {
+          picker.setAttribute('darkmode', 'true');
+          picker.style.setProperty('--jdp-background', '#1e1e2f');
+          picker.style.setProperty('--jdp-foreground', '#e2e8f0');
+          picker.style.setProperty('--jdp-muted', '#334155');
+          picker.style.setProperty('--jdp-muted-foreground', '#94a3b8');
+          picker.style.setProperty('--jdp-border', '#475569');
+          picker.style.setProperty('--jdp-day-hover-bg', '#334155');
+          picker.style.setProperty('--jdp-input-border-color', '#475569');
+          picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-holiday-bg', '#3f1e2e');
+        } else {
+          picker.removeAttribute('darkmode');
+          picker.style.removeProperty('--jdp-background');
+          picker.style.removeProperty('--jdp-foreground');
+          picker.style.removeProperty('--jdp-muted');
+          picker.style.removeProperty('--jdp-muted-foreground');
+          picker.style.removeProperty('--jdp-border');
+          picker.style.removeProperty('--jdp-day-hover-bg');
+          picker.style.removeProperty('--jdp-input-border-color');
+          picker.style.removeProperty('--jdp-input-bg');
+          picker.style.removeProperty('--jdp-calendar-bg');
+          picker.style.removeProperty('--jdp-holiday-bg');
+        }
+      });
     }
-
-    themeToggle.addEventListener('change', () => {
-      document.body.classList.toggle('dark');
-      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+      darkModeToggle.checked = true;
+      applyDarkModeToPickers(true);
+    }
+    
+    // Toggle dark mode
+    darkModeToggle.addEventListener('change', () => {
+      const isDarkMode = darkModeToggle.checked;
+      if (isDarkMode) {
+        document.body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+      }
+      
+      // Apply dark mode to date pickers
+      applyDarkModeToPickers(isDarkMode);
     });
-
-    // Set date limits for the example
-    const dateLimitsPicker = document.getElementById('date-limits');
-    if (dateLimitsPicker) {
-      dateLimitsPicker.setMinDate(1400, 1, 1);
-      dateLimitsPicker.setMaxDate(1400, 12, 29);
+  
+    // Convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
     }
-
-    // Set date limits for the demo
-    const demoLimitsPicker = document.getElementById('demo-limits');
-    if (demoLimitsPicker) {
-      demoLimitsPicker.setMinDate(1400, 1, 1);
-      demoLimitsPicker.setMaxDate(1400, 12, 29);
+    
+    // Utility to format date arrays
+    function formatDate(dateArray) {
+      return toPersianNum(dateArray.join('/'));
+    }
+    
+    // Function to get today's date and next month in Jalali
+    function getTodayAndNextMonth() {
+      const today = new Date();
+      const jalaliToday = PersianDatePickerElement.gregorianToJalali(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        today.getDate()
+      );
+      
+      let nextMonth = [...jalaliToday];
+      nextMonth[1] += 1;
+      
+      // Handle month overflow
+      if (nextMonth[1] > 12) {
+        nextMonth[1] = 1;
+        nextMonth[0] += 1;
+      }
+      
+      return { jalaliToday, nextMonth };
+    }
+    
+    // Min-Max date picker example
+    const minMaxPicker = document.getElementById('min-max-picker');
+    const minMaxResult = document.getElementById('min-max-result');
+    
+    // Set min and max dates to today and one month from today
+    const { jalaliToday, nextMonth } = getTodayAndNextMonth();
+    minMaxPicker.setMinDate(jalaliToday[0], jalaliToday[1], jalaliToday[2]);
+    minMaxPicker.setMaxDate(nextMonth[0], nextMonth[1], nextMonth[2]);
+    
+    minMaxPicker.addEventListener('change', (event) => {
+      const { jalali } = event.detail;
+      minMaxResult.textContent = formatDate(jalali);
+    });
+    
+    // Dynamic limits picker
+    const dynamicLimitsPicker = document.getElementById('dynamic-limits-picker');
+    const dynamicLimitsResult = document.getElementById('dynamic-limits-result');
+    
+    // Set initial limits
+    dynamicLimitsPicker.setMinDate(1402, 1, 1);
+    dynamicLimitsPicker.setMaxDate(1403, 12, 29);
+    
+    // Handle apply button click
+    document.getElementById('apply-limits').addEventListener('click', () => {
+      const minYear = parseInt(document.getElementById('min-year').value);
+      const minMonth = parseInt(document.getElementById('min-month').value);
+      const minDay = parseInt(document.getElementById('min-day').value);
+      
+      const maxYear = parseInt(document.getElementById('max-year').value);
+      const maxMonth = parseInt(document.getElementById('max-month').value);
+      const maxDay = parseInt(document.getElementById('max-day').value);
+      
+      dynamicLimitsPicker.setMinDate(minYear, minMonth, minDay);
+      dynamicLimitsPicker.setMaxDate(maxYear, maxMonth, maxDay);
+    });
+    
+    dynamicLimitsPicker.addEventListener('change', (event) => {
+      const { jalali } = event.detail;
+      dynamicLimitsResult.textContent = formatDate(jalali);
+    });
+    
+    // Disabled days picker
+    const disabledDaysPicker = document.getElementById('disabled-days-picker');
+    const disabledDaysResult = document.getElementById('disabled-days-result');
+    
+    // Disable weekends (Thursday and Friday in Persian calendar)
+    window.isWeekend = function(year, month, day) {
+      // Convert to Gregorian
+      const gregorian = disabledDaysPicker.jalaliToGregorian(year, month, day);
+      const date = new Date(gregorian[0], gregorian[1] - 1, gregorian[2]);
+      const dayOfWeek = date.getDay();
+      // 4 = Thursday, 5 = Friday in JS Date (0-based, 0 = Sunday)
+      return dayOfWeek === 4 || dayOfWeek === 5;
+    };
+    
+    disabledDaysPicker.setAttribute('disabled-dates', 'isWeekend');
+    
+    disabledDaysPicker.addEventListener('change', (event) => {
+      const { jalali } = event.detail;
+      disabledDaysResult.textContent = formatDate(jalali);
+    });
+    
+    // Date range picker example
+    const startDatePicker = document.getElementById('start-date-picker');
+    const endDatePicker = document.getElementById('end-date-picker');
+    const dateRangeResult = document.getElementById('date-range-result');
+    
+    startDatePicker.addEventListener('change', (event) => {
+      const { jalali } = event.detail;
+      // Set min date for end date picker
+      endDatePicker.setMinDate(jalali[0], jalali[1], jalali[2]);
+      
+      // Update display
+      updateDateRange();
+    });
+    
+    endDatePicker.addEventListener('change', (event) => {
+      const { jalali } = event.detail;
+      // Set max date for start date picker
+      startDatePicker.setMaxDate(jalali[0], jalali[1], jalali[2]);
+      
+      // Update display
+      updateDateRange();
+    });
+    
+    function updateDateRange() {
+      const startValue = startDatePicker.getValue();
+      const endValue = endDatePicker.getValue();
+      
+      if (startValue && endValue) {
+        dateRangeResult.textContent = `از ${formatDate(startValue)} تا ${formatDate(endValue)}`;
+      } else if (startValue) {
+        dateRangeResult.textContent = `از ${formatDate(startValue)} تا (انتخاب نشده)`;
+      } else if (endValue) {
+        dateRangeResult.textContent = `از (انتخاب نشده) تا ${formatDate(endValue)}`;
+      } else {
+        dateRangeResult.textContent = 'انتخاب نشده';
+      }
     }
   </script>
 </body>
