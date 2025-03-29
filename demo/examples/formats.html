@@ -476,6 +476,7 @@
     const basicFormatResult = document.getElementById('basic-format-result');
     
     basicFormatPicker.addEventListener('change', (event) => {
+      console.log(event);
       basicFormatResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
@@ -484,6 +485,7 @@
     const monthNameResult = document.getElementById('month-name-result');
     
     monthNamePicker.addEventListener('change', (event) => {
+      console.log(event);
       monthNameResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
@@ -492,6 +494,7 @@
     const weekdayResult = document.getElementById('weekday-result');
     
     weekdayPicker.addEventListener('change', (event) => {
+      console.log(event);
       weekdayResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
@@ -500,6 +503,7 @@
     const shortFormatResult = document.getElementById('short-format-result');
     
     shortFormatPicker.addEventListener('change', (event) => {
+      console.log(event);
       shortFormatResult.textContent = formatPersianDate(event.detail.jalali);
     });
   </script>

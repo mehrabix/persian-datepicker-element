@@ -461,6 +461,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
     const basicRangeResult = document.getElementById('basic-range-result');
     
     basicRangePicker.addEventListener('change', (event) => {
+      console.log(event);
       if (event.detail.isRange) {
         basicRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
       }
@@ -471,6 +472,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
     const formatRangeResult = document.getElementById('format-range-result');
     
     formatRangePicker.addEventListener('change', (event) => {
+      console.log(event);
       if (event.detail.isRange) {
         formatRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
       }
@@ -484,6 +486,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
     initialRangeResult.textContent = formatRange([1403, 3, 1], [1403, 3, 15]);
     
     initialRangePicker.addEventListener('change', (event) => {
+      console.log(event);
       if (event.detail.isRange) {
         initialRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
       }
@@ -496,6 +499,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
     const rangeDaysResult = document.getElementById('range-days-result');
     
     eventRangePicker.addEventListener('change', (event) => {
+      console.log(event);
       if (event.detail.isRange) {
         const { start, end } = event.detail.range;
         rangeStartResult.textContent = formatPersianDate(start);
@@ -515,6 +519,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
     const styledRangeResult = document.getElementById('styled-range-result');
     
     styledRangePicker.addEventListener('change', (event) => {
+      console.log(event);
       if (event.detail.isRange) {
         styledRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
       }
@@ -525,6 +530,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
     const limitedRangeResult = document.getElementById('limited-range-result');
     
     limitedRangePicker.addEventListener('change', (event) => {
+      console.log(event);
       if (event.detail.isRange) {
         limitedRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
       }

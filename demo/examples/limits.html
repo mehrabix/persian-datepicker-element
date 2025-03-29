@@ -418,6 +418,7 @@ function isWeekend(year, month, day) {
     const rangeResult = document.getElementById('range-result');
     
     rangePicker.addEventListener('change', (event) => {
+      console.log(event);
       rangeResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
@@ -426,6 +427,7 @@ function isWeekend(year, month, day) {
     const disabledResult = document.getElementById('disabled-result');
     
     disabledPicker.addEventListener('change', (event) => {
+      console.log(event);
       disabledResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
@@ -434,6 +436,7 @@ function isWeekend(year, month, day) {
     const combinedResult = document.getElementById('combined-result');
     
     combinedPicker.addEventListener('change', (event) => {
+      console.log(event);
       combinedResult.textContent = formatPersianDate(event.detail.jalali);
     });
   </script>

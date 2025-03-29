@@ -457,6 +457,7 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     const basicResult = document.getElementById('basic-result');
     
     basicPicker.addEventListener('change', (event) => {
+      console.log(event);
       basicResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
@@ -465,6 +466,7 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     const placeholderResult = document.getElementById('placeholder-result');
     
     placeholderPicker.addEventListener('change', (event) => {
+      console.log(event);
       placeholderResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
@@ -473,6 +475,8 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     const formatResult = document.getElementById('format-result');
     
     formatPicker.addEventListener('change', (event) => {
+      console.log(event);
+      
       formatResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
@@ -484,6 +488,7 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     initialResult.textContent = toPersianNum('1403/3/15');
     
     initialPicker.addEventListener('change', (event) => {
+      console.log(event);
       initialResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
@@ -493,6 +498,7 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     const gregorianResult = document.getElementById('gregorian-result');
     
     eventPicker.addEventListener('change', (event) => {
+      console.log(event);
       const { jalali, gregorian } = event.detail;
       jalaliResult.textContent = formatPersianDate(jalali);
       gregorianResult.textContent = formatPersianDate(gregorian);
@@ -503,11 +509,13 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     const styledResult = document.getElementById('styled-result');
     
     styledPicker.addEventListener('change', (event) => {
+      console.log(event);
       styledResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
     // Persian number picker
     document.getElementById('persian-number-picker').addEventListener('change', (event) => {
+      console.log(event);
       document.getElementById('persian-number-result').textContent = formatPersianDate(event.detail.jalali);
     });
   </script>
