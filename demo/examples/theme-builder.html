@@ -3,84 +3,405 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Persian Date Picker Element - Full Feature Theme Builder</title>
-  <!-- Add Vazir Font from CDN -->
+  <title>سازنده تم | Persian Date Picker</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
     :root {
-      --border-radius: 8px;
-      --border-color: #e2e8f0;
       --primary: #0891b2;
       --primary-hover: #0e7490;
-      --primary-foreground: #ffffff;
+      --background: #ffffff;
       --foreground: #1e293b;
       --muted: #f1f5f9;
-      --muted-foreground: #64748b;
-      --background: #ffffff;
-      --font-size: 14px;
-      --spacing: 16px;
+      --border: #e2e8f0;
+      --radius: 0.5rem;
+      --font-size: 16px;
     }
     
-    html, body {
-      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    body {
+      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f9fafb;
+      color: #374151;
+      padding: 1rem;
       margin: 0;
-      padding: 0;
-      background-color: #f8fafc;
-      color: var(--foreground);
-      font-size: var(--font-size);
-      line-height: 1.5;
+      direction: rtl;
+      transition: background-color 0.3s, color 0.3s;
       -moz-font-feature-settings: "ss02";
       -webkit-font-feature-settings: "ss02";
       font-feature-settings: "ss02";
     }
-    
+
     body.dark {
-      background-color: #0f172a;
+      background-color: #1e293b;
       color: #e2e8f0;
     }
-    
-    .dark .theme-builder,
-    .dark .controls,
-    .dark .preview {
-      background-color: #1e293b;
-    }
-    
-    .dark .preview-container {
-      background-color: #0f172a;
-    }
-    
-    * {
-      box-sizing: border-box;
-    }
-    
+
     .container {
+      display: flex;
+      gap: 2rem;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 2rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
-    
-    h1, h2, h3 {
+
+    body.dark .container {
+      background-color: #0f172a;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 2rem;
+      height: fit-content;
+      padding: 1.5rem;
+      background: var(--muted);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    body.dark .sidebar {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    .sidebar-title {
+      font-size: 1.1rem;
       font-weight: 600;
-      line-height: 1.25;
-      margin-top: 0;
-      margin-bottom: 1rem;
-    }
-    
-    h1 {
-      font-size: 1.875rem;
       color: var(--foreground);
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    
-    h2 {
-      font-size: 1.25rem;
-      color: var(--foreground);
-      margin-top: 1.5rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border);
     }
+
+    .nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-item {
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      color: var(--foreground);
+      text-decoration: none;
+      border-radius: var(--radius);
+      transition: all 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .nav-link:hover {
+      background: var(--border);
+      color: var(--primary);
+    }
+
+    body.dark .nav-link:hover {
+      background: #334155;
+    }
+
+    .nav-link.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .main-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    h1 {
+      color: var(--foreground);
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+    }
+
+    h2 {
+      color: var(--foreground);
+      margin: 2rem 0 1rem;
+      font-size: 1.5rem;
+    }
+
+    p {
+      color: var(--foreground);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .theme-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--background);
+    }
+
+    body.dark .theme-section {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    .theme-title {
+      font-size: 1.1rem;
+      color: var(--foreground);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .theme-description {
+      color: var(--foreground);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .theme-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .control-group label {
+      font-size: 0.9rem;
+      color: var(--foreground);
+      opacity: 0.8;
+    }
+
+    .control-group input {
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--background);
+      color: var(--foreground);
+      font-family: inherit;
+    }
+
+    body.dark .control-group input {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    .theme-example {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--muted);
+      border-radius: var(--radius);
+      font-family: 'Vazir Code', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    body.dark .theme-example {
+      background: #334155;
+    }
+
+    .theme-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--muted);
+      border-radius: var(--radius);
+      font-family: 'Vazir Code', monospace;
+      font-size: 0.9rem;
+    }
+
+    body.dark .theme-result {
+      background: #334155;
+    }
+
+    .demo-section {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--muted);
+      border-radius: var(--radius);
+    }
+
+    body.dark .demo-section {
+      background: #1e293b;
+    }
+
+    .demo-title {
+      font-size: 1.1rem;
+      color: var(--foreground);
+      margin-bottom: 1rem;
+    }
+
+    .demo-description {
+      color: var(--foreground);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .theme-switch {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 100;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .theme-switch label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s;
+    }
+
+    body.dark .theme-switch label {
+      background: #1e293b;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .theme-switch label:hover {
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        padding: 1rem;
+      }
+
+      .sidebar {
+        width: 100%;
+        position: static;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+      }
+
+      .theme-section {
+        padding: 1rem;
+      }
+
+      .theme-example,
+      .theme-result {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-switch">
+    <input type="checkbox" id="theme-toggle">
+    <label for="theme-toggle">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path class="sun" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        <path class="moon" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+      </svg>
+    </label>
+  </div>
+
+  <div class="container">
+    <nav class="sidebar">
+      <h2 class="sidebar-title">مستندات</h2>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="basic.html" class="nav-link">مقدمه</a>
+        </li>
+        <li class="nav-item">
+          <a href="customization.html" class="nav-link">شخصی‌سازی</a>
+        </li>
+        <li class="nav-item">
+          <a href="formats.html" class="nav-link">فرمت‌ها</a>
+        </li>
+        <li class="nav-item">
+          <a href="limits.html" class="nav-link">محدودیت‌ها</a>
+        </li>
+        <li class="nav-item">
+          <a href="holidays.html" class="nav-link">تعطیلات</a>
+        </li>
+        <li class="nav-item">
+          <a href="css-variables.html" class="nav-link">متغیرهای CSS</a>
+        </li>
+        <li class="nav-item">
+          <a href="theme-builder.html" class="nav-link active">سازنده تم</a>
+        </li>
+        <li class="nav-item">
+          <a href="theme-switcher.html" class="nav-link">تغییر تم</a>
+        </li>
+        <li class="nav-item">
+          <a href="accessibility.html" class="nav-link">دسترسی‌پذیری</a>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="main-content">
+      <h1>سازنده تم</h1>
+      <p>با استفاده از سازنده تم می‌توانید ظاهر تقویم را به صورت کامل شخصی‌سازی کنید.</p>
+
+      <div class="theme-section">
+        <h2 class="theme-title">رنگ‌ها</h2>
+        <p class="theme-description">تنظیم رنگ‌های اصلی و فرعی تقویم</p>
+        <div class="theme-controls">
+          <div class="control-group">
+            <label for="primary-color">رنگ اصلی</label>
+            <input type="color" id="primary-color" value="#0891b2">
+          </div>
+          <div class="control-group">
+            <label for="background-color">رنگ پس‌زمینه</label>
+            <input type="color" id="background-color" value="#ffffff">
+          </div>
+          <div class="control-group">
+            <label for="foreground-color">رنگ متن</label>
+            <input type="color" id="foreground-color" value="#1e293b">
+          </div>
+          <div class="control-group">
+            <label for="border-color">رنگ حاشیه</label>
+            <input type="color" id="border-color" value="#e2e8f0">
+          </div>
+        </div>
+        <div class="theme-example">
+          // تنظیم رنگ‌ها
+          persian-datepicker-element {
+            --jdp-primary: #0891b2;
+            --jdp-background: #ffffff;
+            --jdp-foreground: #1e293b;
+            --jdp-border: #e2e8f0;
+          }
+        </div>
+        <div class="theme-result">
+          <persian-datepicker-element
+            id="color-picker"
+            placeholder="انتخاب تاریخ"
+            show-holidays>
+          </persian-datepicker-element>
+        </div>
+      </div>
+
+      <div class="theme-section">
+        <h2 class="theme-title">فونت</h2>
+        <p class="theme-description">تنظیم نوع و اندازه فونت</p>
     
     /* Tabs Navigation for Mobile */
     .tabs {

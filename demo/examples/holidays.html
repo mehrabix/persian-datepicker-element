@@ -3,9 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تعطیلات و رویدادها | Persian Date Picker</title>
+  <title>تعطیلات | Persian Date Picker</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
+    :root {
+      --primary: #0891b2;
+      --primary-hover: #0e7490;
+      --background: #ffffff;
+      --foreground: #1e293b;
+      --muted: #f1f5f9;
+      --border: #e2e8f0;
+      --radius: 0.5rem;
+      --font-size: 16px;
+    }
+    
     body {
       font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #f9fafb;
@@ -19,8 +30,15 @@
       font-feature-settings: "ss02";
     }
 
+    body.dark {
+      background-color: #1e293b;
+      color: #e2e8f0;
+    }
+
     .container {
-      max-width: 800px;
+      display: flex;
+      gap: 2rem;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 2rem;
       background: white;
@@ -28,311 +46,393 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    h1, h2 {
-      color: #1e293b;
-      margin-bottom: 1.5rem;
+    body.dark .container {
+      background-color: #0f172a;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
 
-    .example-section {
-      margin-bottom: 2rem;
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 2rem;
+      height: fit-content;
       padding: 1.5rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
+      background: var(--muted);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
     }
 
-    .example-title {
+    body.dark .sidebar {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    .sidebar-title {
       font-size: 1.1rem;
-      color: #334155;
-      margin-bottom: 1rem;
-    }
-
-    .example-description {
-      color: #64748b;
+      font-weight: 600;
+      color: var(--foreground);
       margin-bottom: 1.5rem;
-      font-size: 0.9rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    .holiday-types {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .holiday-type {
-      padding: 1rem;
-      background: #f8fafc;
-      border-radius: 6px;
-      border: 1px solid #e2e8f0;
-    }
-
-    .holiday-type h3 {
-      color: #0f172a;
-      margin-top: 0;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
-
-    .result {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #f1f5f9;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-
-    .result strong {
-      color: #0f172a;
-    }
-
-    .code-example {
-      background-color: var(--muted);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-    
-    .code-example pre {
-      margin: 0;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-family: 'Vazir Code', monospace;
-      font-size: 0.875rem;
-      line-height: 1.5;
-      direction: ltr;
-      text-align: left;
-    }
-    
-    .code-example code {
-      display: block;
+    .nav-list {
+      list-style: none;
       padding: 0;
-      background: none;
-      border: none;
-      border-radius: 0;
-      font-family: inherit;
-      font-size: inherit;
-      color: inherit;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    .result {
-      background-color: var(--muted);
-      border-radius: var(--radius);
-      padding: 1rem;
-      margin-top: 1rem;
-      font-family: 'Vazir Code', monospace;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      margin: 0;
     }
 
-    persian-datepicker-element {
-      width: 100%;
-      margin-bottom: 1rem;
-      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      --jdp-font-feature-settings: "ss02";
+    .nav-item {
+      margin-bottom: 0.5rem;
     }
 
-    .nav-links {
-      margin-top: 2rem;
-      padding-top: 1rem;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .nav-links a {
-      color: #0891b2;
+    .nav-link {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      color: var(--foreground);
       text-decoration: none;
+      border-radius: var(--radius);
+      transition: all 0.2s;
       font-size: 0.9rem;
     }
 
-    .nav-links a:hover {
-      text-decoration: underline;
+    .nav-link:hover {
+      background: var(--border);
+      color: var(--primary);
+    }
+
+    body.dark .nav-link:hover {
+      background: #334155;
+    }
+
+    .nav-link.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .main-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    h1 {
+      color: var(--foreground);
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+    }
+
+    h2 {
+      color: var(--foreground);
+      margin: 2rem 0 1rem;
+      font-size: 1.5rem;
+    }
+
+    p {
+      color: var(--foreground);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .holiday-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--background);
+    }
+
+    body.dark .holiday-section {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    .holiday-title {
+      font-size: 1.1rem;
+      color: var(--foreground);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .holiday-description {
+      color: var(--foreground);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .holiday-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .holiday-item {
+      padding: 1rem;
+      background: var(--muted);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    body.dark .holiday-item {
+      background: #334155;
+      border-color: #475569;
+    }
+
+    .holiday-name {
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: 0.5rem;
+    }
+
+    .holiday-date {
+      color: var(--foreground);
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .demo-section {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--muted);
+      border-radius: var(--radius);
+    }
+
+    body.dark .demo-section {
+      background: #1e293b;
+    }
+
+    .demo-title {
+      font-size: 1.1rem;
+      color: var(--foreground);
+      margin-bottom: 1rem;
+    }
+
+    .demo-description {
+      color: var(--foreground);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .theme-switch {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 100;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .theme-switch label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s;
+    }
+
+    body.dark .theme-switch label {
+      background: #1e293b;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .theme-switch label:hover {
+      transform: scale(1.1);
     }
 
     @media (max-width: 768px) {
       .container {
+        flex-direction: column;
         padding: 1rem;
       }
 
-      .holiday-types {
-        grid-template-columns: 1fr;
+      .sidebar {
+        width: 100%;
+        position: static;
+        margin-bottom: 1rem;
       }
 
-      .code-example {
-        margin: 1rem 0;
-        padding: 1rem;
-      }
-      
-      .code-example pre {
-        font-size: 0.75rem;
-      }
-      
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
       }
-      
-      .description {
-        font-size: 0.875rem;
+
+      h2 {
+        font-size: 1.25rem;
       }
-      
-      .result {
-        font-size: 0.75rem;
-        padding: 0.75rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .code-example {
-        padding: 0.75rem;
-      }
-      
-      .code-example pre {
-        font-size: 0.7rem;
-      }
-      
-      .example-section {
+
+      .holiday-section {
         padding: 1rem;
       }
-      
-      .result {
-        font-size: 0.7rem;
-        padding: 0.5rem;
+
+      .holiday-list {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
+  <div class="theme-switch">
+    <input type="checkbox" id="theme-toggle">
+    <label for="theme-toggle">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path class="sun" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        <path class="moon" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+      </svg>
+    </label>
+  </div>
+
   <div class="container">
-    <h1>تعطیلات و رویدادها</h1>
-    <p>در این مثال، نحوه استفاده از انواع مختلف تعطیلات و رویدادها در تقویم نمایش داده شده است.</p>
+    <nav class="sidebar">
+      <h2 class="sidebar-title">مستندات</h2>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="basic.html" class="nav-link">مقدمه</a>
+        </li>
+        <li class="nav-item">
+          <a href="customization.html" class="nav-link">شخصی‌سازی</a>
+        </li>
+        <li class="nav-item">
+          <a href="formats.html" class="nav-link">فرمت‌ها</a>
+        </li>
+        <li class="nav-item">
+          <a href="limits.html" class="nav-link">محدودیت‌ها</a>
+        </li>
+        <li class="nav-item">
+          <a href="holidays.html" class="nav-link active">تعطیلات</a>
+        </li>
+        <li class="nav-item">
+          <a href="css-variables.html" class="nav-link">متغیرهای CSS</a>
+        </li>
+        <li class="nav-item">
+          <a href="theme-builder.html" class="nav-link">سازنده تم</a>
+        </li>
+        <li class="nav-item">
+          <a href="theme-switcher.html" class="nav-link">تغییر تم</a>
+        </li>
+        <li class="nav-item">
+          <a href="accessibility.html" class="nav-link">دسترسی‌پذیری</a>
+        </li>
+      </ul>
+    </nav>
 
-    <div class="example-section">
-      <h2 class="example-title">تعطیلات ایران</h2>
-      <p class="example-description">نمایش تعطیلات رسمی ایران در تقویم</p>
-      <persian-datepicker-element
-        id="iran-holidays"
-        holiday-types="Iran"
-        placeholder="انتخاب تاریخ"
-        show-holidays>
-      </persian-datepicker-element>
-      <div class="result" id="iran-result">
-        <strong>رویدادهای انتخاب شده:</strong> <span>-</span>
+    <main class="main-content">
+      <h1>تعطیلات</h1>
+      <p>کامپوننت Persian Date Picker از نمایش تعطیلات و رویدادهای مهم تقویم شمسی پشتیبانی می‌کند.</p>
+
+      <div class="holiday-section">
+        <h2 class="holiday-title">تعطیلات رسمی</h2>
+        <p class="holiday-description">تعطیلات رسمی تقویم شمسی شامل مناسبت‌های مذهبی و ملی است.</p>
+        <ul class="holiday-list">
+          <li class="holiday-item">
+            <div class="holiday-name">نوروز</div>
+            <div class="holiday-date">۱ تا ۴ فروردین</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">تاسوعا و عاشورا</div>
+            <div class="holiday-date">۹ و ۱۰ محرم</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">ولادت پیامبر</div>
+            <div class="holiday-date">۱۷ ربیع‌الاول</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">ولادت امام علی</div>
+            <div class="holiday-date">۱۳ رجب</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">ولادت امام مهدی</div>
+            <div class="holiday-date">۱۵ شعبان</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">عید فطر</div>
+            <div class="holiday-date">۱ و ۲ شوال</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">عید قربان</div>
+            <div class="holiday-date">۱۰ ذی‌الحجه</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">عید غدیر</div>
+            <div class="holiday-date">۱۸ ذی‌الحجه</div>
+          </li>
+        </ul>
       </div>
-    </div>
 
-    <div class="example-section">
-      <h2 class="example-title">تعطیلات مذهبی</h2>
-      <p class="example-description">نمایش تعطیلات و مناسبت‌های مذهبی در تقویم</p>
-      <persian-datepicker-element
-        id="religious-holidays"
-        holiday-types="Religious"
-        placeholder="انتخاب تاریخ"
-        show-holidays>
-      </persian-datepicker-element>
-      <div class="result" id="religious-result">
-        <strong>رویدادهای انتخاب شده:</strong> <span>-</span>
+      <div class="holiday-section">
+        <h2 class="holiday-title">رویدادهای مهم</h2>
+        <p class="holiday-description">رویدادهای مهم تاریخی و فرهنگی که در تقویم ثبت شده‌اند.</p>
+        <ul class="holiday-list">
+          <li class="holiday-item">
+            <div class="holiday-name">روز معلم</div>
+            <div class="holiday-date">۱۲ اردیبهشت</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">روز مادر</div>
+            <div class="holiday-date">۲۰ جمادی‌الثانی</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">روز پدر</div>
+            <div class="holiday-date">۱۳ رجب</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">روز دانشجو</div>
+            <div class="holiday-date">۱۶ آذر</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">روز کارگر</div>
+            <div class="holiday-date">۱۱ اردیبهشت</div>
+          </li>
+          <li class="holiday-item">
+            <div class="holiday-name">روز پزشک</div>
+            <div class="holiday-date">۱ شهریور</div>
+          </li>
+        </ul>
       </div>
-    </div>
 
-    <div class="example-section">
-      <h2 class="example-title">تعطیلات افغانستان</h2>
-      <p class="example-description">نمایش تعطیلات رسمی افغانستان در تقویم</p>
-      <persian-datepicker-element
-        id="afghanistan-holidays"
-        holiday-types="Afghanistan"
-        placeholder="انتخاب تاریخ"
-        show-holidays>
-      </persian-datepicker-element>
-      <div class="result" id="afghanistan-result">
-        <strong>رویدادهای انتخاب شده:</strong> <span>-</span>
+      <div class="demo-section">
+        <h2 class="demo-title">نمونه استفاده</h2>
+        <p class="demo-description">در این مثال، نحوه نمایش تعطیلات در تقویم نشان داده شده است.</p>
+        
+        <persian-datepicker-element
+          placeholder="انتخاب تاریخ"
+          show-holidays>
+        </persian-datepicker-element>
       </div>
-    </div>
-
-    <div class="example-section">
-      <h2 class="example-title">همه تعطیلات</h2>
-      <p class="example-description">نمایش همه تعطیلات و مناسبت‌ها در تقویم</p>
-      <persian-datepicker-element
-        id="all-holidays"
-        holiday-types="Iran,Religious,Afghanistan"
-        placeholder="انتخاب تاریخ"
-        show-holidays>
-      </persian-datepicker-element>
-      <div class="result" id="all-result">
-        <strong>رویدادهای انتخاب شده:</strong> <span>-</span>
-      </div>
-    </div>
-
-    <div class="code-example">
-// نحوه تنظیم نوع تعطیلات
-<persian-datepicker-element
-  holiday-types="Iran,Religious,Afghanistan"
-  show-holidays>
-</persian-datepicker-element>
-
-// یا در فریمورک‌ها
-// React
-<PersianDatepicker
-  holidayTypes={['Iran', 'Religious']}
-  showHolidays={true}
-/>
-
-// Vue
-<persian-datepicker
-  :holiday-types="['Iran', 'Religious']"
-  :show-holidays="true"
-/>
-
-// Angular
-<ngx-persian-datepicker
-  [holidayTypes]="['Iran', 'Religious']"
-  [showHolidays]="true"
->
-</ngx-persian-datepicker></div>
-
-    <div class="nav-links">
-      <a href="index.html">← نمونه‌های پایه</a>
-      <a href="customization.html">شخصی‌سازی →</a>
-    </div>
+    </main>
   </div>
 
   <script type="module" src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
-    // تابع تبدیل اعداد به فارسی
-    function toPersianNum(num) {
-      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-      return num.toString().replace(/\d/g, x => persianDigits[x]);
-    }
-
-    // فرمت‌بندی رویدادها
-    function formatEvents(events) {
-      if (!events || events.length === 0) return 'هیچ رویدادی وجود ندارد';
-      
-      return events.map(event => {
-        const holidayMark = event.holiday ? '🔴 ' : '';
-        return `${holidayMark}${event.title} (${event.type})`;
-      }).join(' | ');
-    }
-
-    // تنظیم رویدادها برای هر تقویم
-    const datepickers = ['iran', 'religious', 'afghanistan', 'all'];
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     
-    datepickers.forEach(id => {
-      const picker = document.getElementById(`${id}-holidays`);
-      const result = document.getElementById(`${id}-result`).querySelector('span');
-      
-      picker.addEventListener('change', event => {
-        const events = event.detail.events;
-        result.textContent = formatEvents(events);
-      });
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.classList.toggle('dark', savedTheme === 'dark');
+      themeToggle.checked = savedTheme === 'dark';
+    } else {
+      document.body.classList.toggle('dark', prefersDarkScheme.matches);
+      themeToggle.checked = prefersDarkScheme.matches;
+    }
+
+    themeToggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
     });
   </script>
 </body>

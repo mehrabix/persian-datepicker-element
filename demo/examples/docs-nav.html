@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>فرمت‌ها | Persian Date Picker</title>
+  <title>مستندات | Persian Date Picker</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
     :root {
@@ -134,86 +134,6 @@
       line-height: 1.6;
     }
 
-    .format-section {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--background);
-    }
-
-    body.dark .format-section {
-      background: #1e293b;
-      border-color: #334155;
-    }
-
-    .format-title {
-      font-size: 1.1rem;
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .format-description {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
-    .format-example {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-      font-family: 'Vazir Code', monospace;
-      font-size: 0.9rem;
-      overflow-x: auto;
-    }
-
-    body.dark .format-example {
-      background: #334155;
-    }
-
-    .format-result {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-      font-family: 'Vazir Code', monospace;
-      font-size: 0.9rem;
-    }
-
-    body.dark .format-result {
-      background: #334155;
-    }
-
-    .demo-section {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-    }
-
-    body.dark .demo-section {
-      background: #1e293b;
-    }
-
-    .demo-title {
-      font-size: 1.1rem;
-      color: var(--foreground);
-      margin-bottom: 1rem;
-    }
-
-    .demo-description {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
     .theme-switch {
       position: fixed;
       top: 1rem;
@@ -266,15 +186,6 @@
       h2 {
         font-size: 1.25rem;
       }
-
-      .format-section {
-        padding: 1rem;
-      }
-
-      .format-example,
-      .format-result {
-        font-size: 0.8rem;
-      }
     }
   </style>
 </head>
@@ -300,7 +211,7 @@
           <a href="customization.html" class="nav-link">شخصی‌سازی</a>
         </li>
         <li class="nav-item">
-          <a href="formats.html" class="nav-link active">فرمت‌ها</a>
+          <a href="formats.html" class="nav-link">فرمت‌ها</a>
         </li>
         <li class="nav-item">
           <a href="limits.html" class="nav-link">محدودیت‌ها</a>
@@ -324,83 +235,10 @@
     </nav>
 
     <main class="main-content">
-      <h1>فرمت‌ها</h1>
-      <p>کامپوننت Persian Date Picker از فرمت‌های مختلف تاریخ پشتیبانی می‌کند.</p>
-
-      <div class="format-section">
-        <h2 class="format-title">فرمت استاندارد</h2>
-        <p class="format-description">فرمت استاندارد برای نمایش تاریخ در تقویم شمسی.</p>
-        <div class="format-example">
-          // فرمت استاندارد
-          format="YYYY/MM/DD"
-        </div>
-        <div class="format-result">
-          مثال: ۱۴۰۲/۰۳/۱۵
-        </div>
-      </div>
-
-      <div class="format-section">
-        <h2 class="format-title">فرمت با خط تیره</h2>
-        <p class="format-description">فرمت تاریخ با استفاده از خط تیره به عنوان جداکننده.</p>
-        <div class="format-example">
-          // فرمت با خط تیره
-          format="YYYY-MM-DD"
-        </div>
-        <div class="format-result">
-          مثال: ۱۴۰۲-۰۳-۱۵
-        </div>
-      </div>
-
-      <div class="format-section">
-        <h2 class="format-title">فرمت با نام ماه</h2>
-        <p class="format-description">فرمت تاریخ با نمایش نام ماه به صورت متنی.</p>
-        <div class="format-example">
-          // فرمت با نام ماه
-          format="DD MMMM YYYY"
-        </div>
-        <div class="format-result">
-          مثال: ۱۵ خرداد ۱۴۰۲
-        </div>
-      </div>
-
-      <div class="format-section">
-        <h2 class="format-title">فرمت کوتاه</h2>
-        <p class="format-description">فرمت کوتاه تاریخ با نمایش خلاصه‌شده ماه.</p>
-        <div class="format-example">
-          // فرمت کوتاه
-          format="DD MMM YYYY"
-        </div>
-        <div class="format-result">
-          مثال: ۱۵ خرد ۱۴۰۲
-        </div>
-      </div>
-
-      <div class="format-section">
-        <h2 class="format-title">فرمت با روز هفته</h2>
-        <p class="format-description">فرمت تاریخ با نمایش روز هفته.</p>
-        <div class="format-example">
-          // فرمت با روز هفته
-          format="dddd DD MMMM YYYY"
-        </div>
-        <div class="format-result">
-          مثال: چهارشنبه ۱۵ خرداد ۱۴۰۲
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <h2 class="demo-title">نمونه استفاده</h2>
-        <p class="demo-description">در این مثال، نحوه استفاده از فرمت‌های مختلف در تقویم نشان داده شده است.</p>
-        
-        <persian-datepicker-element
-          placeholder="انتخاب تاریخ"
-          format="DD MMMM YYYY"
-          show-holidays>
-        </persian-datepicker-element>
-      </div>
+      <!-- Content will be injected here -->
     </main>
   </div>
 
-  <script type="module" src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
     // Theme toggle functionality
     const themeToggle = document.getElementById('theme-toggle');
@@ -419,6 +257,15 @@
     themeToggle.addEventListener('change', () => {
       document.body.classList.toggle('dark');
       localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // Set active nav link
+    const currentPath = window.location.pathname.split('/').pop();
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+      }
     });
   </script>
 </body>
