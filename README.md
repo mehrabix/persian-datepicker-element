@@ -79,7 +79,7 @@ import { PersianDatepicker } from 'react-persian-datepicker-element';
 
 function App() {
   const handleChange = (event) => {
-    console.log('Selected date:', event.detail);
+    console.log('تاریخ انتخاب شده:', event.detail);
   };
 
   return (
@@ -111,7 +111,7 @@ function App() {
 import { PersianDatepicker } from 'vue-persian-datepicker-element';
 
 const handleChange = (event) => {
-  console.log('Selected date:', event.detail);
+  console.log('تاریخ انتخاب شده:', event.detail);
 };
 </script>
 ```
@@ -145,7 +145,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   handleChange(event: any) {
-    console.log('Selected date:', event.detail);
+    console.log('تاریخ انتخاب شده:', event.detail);
   }
 }
 ```

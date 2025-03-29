@@ -29,7 +29,7 @@ pnpm add vue-persian-datepicker-element persian-datepicker-element
 import { PersianDatepicker } from 'vue-persian-datepicker-element';
 
 const handleChange = (event) => {
-  console.log('Selected date:', event.detail);
+  console.log('تاریخ انتخاب شده:', event.detail);
 };
 </script>
 ```
@@ -121,7 +121,7 @@ const handleChange = (event: CustomEvent<{
   isHoliday: boolean;
   events: Array<any>;
 }>) => {
-  console.log('Selected date:', event.detail);
+  console.log('تاریخ انتخاب شده:', event.detail);
 };
 </script>
 ```

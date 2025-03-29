@@ -47,7 +47,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   handleChange(event: any) {
-    console.log('Selected date:', event.detail);
+    console.log('تاریخ انتخاب شده:', event.detail);
   }
 }
 ```

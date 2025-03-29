@@ -19,7 +19,7 @@ import { PersianDatepicker } from 'react-persian-datepicker-element';
 
 function App() {
   const handleChange = (event) => {
-    console.log('Selected date:', event.detail);
+    console.log('تاریخ انتخاب شده:', event.detail);
   };
 
   return (
