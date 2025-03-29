@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Persian Date Picker Element - Range Selection</title>
+  <!-- Add Vazir Font from CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
+  <style>
+    body {
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
+      direction: rtl;
+      font-weight: 400;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Apply Persian numbers to all elements */
+    * {
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: #0f172a;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 32px 0 16px;
+      color: #334155;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    p {
+      margin-bottom: 16px;
+      transition: color 0.3s;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .example {
+      margin-bottom: 40px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .example-label {
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #f1f5f9;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    pre {
+      background-color: #f1f5f9;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 14px;
+      margin: 20px 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      transition: color 0.3s;
+    }
+
+    .link {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #0891b2;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .link:hover {
+      background-color: #0e7490;
+    }
+
+    /* Custom element styling */
+    persian-datepicker-element {
+      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
+      --jdp-font-weight: 400;
+      transition: all 0.3s ease;
+    }
+
+    /* Make sure all inputs and form elements also use Persian numbers */
+    input, button, select, textarea {
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
+    }
+
+    /* Dark mode styles */
+    body.dark {
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+
+    body.dark h1 {
+      color: #f8fafc;
+    }
+
+    body.dark h2 {
+      color: #cbd5e1;
+    }
+
+    body.dark .example {
+      background-color: #1e293b;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    body.dark .result,
+    body.dark pre {
+      background-color: #1e1e2f;
+      color: #e2e8f0;
+    }
+
+    body.dark code {
+      color: #f8fafc;
+    }
+
+    body.dark persian-datepicker-element {
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-day-hover-bg: #334155;
+      --jdp-input-border-color: #475569;
+      --jdp-input-bg: #1e1e2f;
+      --jdp-calendar-bg: #1e1e2f;
+      --jdp-holiday-bg: #3f1e2e;
+    }
+
+    .navigation {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.3s;
+    }
+
+    .navigation h2 {
+      margin-top: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    body.dark .navigation {
+      border-bottom-color: #334155;
+    }
+
+    /* Dark mode toggle */
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-left: 15px;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #0891b2;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-label {
+      margin-right: 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Persian Date Picker Element - Range Selection</h1>
+    <p>Examples of how to use the Persian Date Picker Element component with range selection functionality.</p>
+    
+    <div class="navigation">
+      <div class="nav-links">
+        <a href="index.html" class="link">نمونه‌های پایه</a>
+        <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+        <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+        <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+        <a href="../../index.html" class="link">دمو</a>
+      </div>
+      <div class="toggle-container">
+        <span class="toggle-label">حالت تاریک</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="example">
+      <h2>Basic Range Selection</h2>
+      <div class="example-label">Simple range selection with default settings:</div>
+      <persian-datepicker-element id="basic-range-picker" range-mode></persian-datepicker-element>
+      <div class="result">Selected range: <span id="basic-range-result">None</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element id="basic-range-picker" range-mode&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>Range Selection with Custom Format</h2>
+      <div class="example-label">Range selection with custom date format:</div>
+      <persian-datepicker-element 
+        id="format-range-picker" 
+        range-mode 
+        format="YYYY/MM/DD"
+      ></persian-datepicker-element>
+      <div class="result">Selected range: <span id="format-range-result">None</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  id="format-range-picker" 
+  range-mode 
+  format="YYYY/MM/DD"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>Range Selection with Initial Value</h2>
+      <div class="example-label">Range selection with programmatically set initial range:</div>
+      <persian-datepicker-element id="initial-range-picker" range-mode></persian-datepicker-element>
+      <div class="result">Selected range: <span id="initial-range-result">None</span></div>
+      
+      <pre><code>// Set initial range programmatically 
+const initialRangePicker = document.getElementById('initial-range-picker');
+initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>Range Selection with Event Handling</h2>
+      <div class="example-label">Range selection with detailed event handling:</div>
+      <persian-datepicker-element id="event-range-picker" range-mode></persian-datepicker-element>
+      <div class="result">
+        Range Start: <span id="range-start-result">None</span><br>
+        Range End: <span id="range-end-result">None</span><br>
+        Total Days: <span id="range-days-result">None</span>
+      </div>
+
+      <pre><code>document.getElementById('event-range-picker').addEventListener('change', (event) => {
+  if (event.detail.isRange) {
+    const { start, end } = event.detail.range;
+    // Handle range selection
+  }
+});</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>Range Selection with Custom Styling</h2>
+      <div class="example-label">Range selection with custom styling:</div>
+      <persian-datepicker-element 
+        id="styled-range-picker" 
+        range-mode
+        style="
+          --jdp-primary: #8b5cf6;
+          --jdp-primary-hover: #7c3aed;
+          --jdp-range-bg: rgba(139, 92, 246, 0.1);
+          --jdp-border-radius: 0.75rem;
+          --jdp-font-size: 15px;
+          --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+          --jdp-font-feature-settings: 'ss02';
+        "
+      ></persian-datepicker-element>
+      <div class="result">Selected range: <span id="styled-range-result">None</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  id="styled-range-picker" 
+  range-mode
+  style="
+    --jdp-primary: #8b5cf6;
+    --jdp-primary-hover: #7c3aed;
+    --jdp-range-bg: rgba(139, 92, 246, 0.1);
+    --jdp-border-radius: 0.75rem;
+    --jdp-font-size: 15px;
+    --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --jdp-font-feature-settings: 'ss02';
+  "
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>Range Selection with Date Limits</h2>
+      <div class="example-label">Range selection with minimum and maximum date constraints:</div>
+      <persian-datepicker-element 
+        id="limited-range-picker" 
+        range-mode
+        min-date="[1403, 1, 1]"
+        max-date="[1403, 12, 29]"
+      ></persian-datepicker-element>
+      <div class="result">Selected range: <span id="limited-range-result">None</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  id="limited-range-picker" 
+  range-mode
+  min-date="[1403, 1, 1]"
+  max-date="[1403, 12, 29]"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="link-container">
+      <a href="index.html" class="link">Back to Examples</a>
+    </div>
+  </div>
+
+  <script src="../../dist/persian-datepicker-element.min.js"></script>
+  <script>
+    // Dark mode toggle functionality
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+    function applyDarkModeToPickers(isDark) {
+      const allPickers = document.querySelectorAll('persian-datepicker-element');
+      allPickers.forEach(picker => {
+        if (isDark) {
+          picker.setAttribute('darkmode', 'true');
+          picker.style.setProperty('--jdp-background', '#1e1e2f');
+          picker.style.setProperty('--jdp-foreground', '#e2e8f0');
+          picker.style.setProperty('--jdp-muted', '#334155');
+          picker.style.setProperty('--jdp-muted-foreground', '#94a3b8');
+          picker.style.setProperty('--jdp-border', '#475569');
+          picker.style.setProperty('--jdp-day-hover-bg', '#334155');
+          picker.style.setProperty('--jdp-input-border-color', '#475569');
+          picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-holiday-bg', '#3f1e2e');
+        } else {
+          picker.removeAttribute('darkmode');
+          picker.style.removeProperty('--jdp-background');
+          picker.style.removeProperty('--jdp-foreground');
+          picker.style.removeProperty('--jdp-muted');
+          picker.style.removeProperty('--jdp-muted-foreground');
+          picker.style.removeProperty('--jdp-border');
+          picker.style.removeProperty('--jdp-day-hover-bg');
+          picker.style.removeProperty('--jdp-input-border-color');
+          picker.style.removeProperty('--jdp-input-bg');
+          picker.style.removeProperty('--jdp-calendar-bg');
+          picker.style.removeProperty('--jdp-holiday-bg');
+        }
+      });
+    }
+    
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+      darkModeToggle.checked = true;
+      applyDarkModeToPickers(true);
+    }
+    
+    darkModeToggle.addEventListener('change', () => {
+      const isDarkMode = darkModeToggle.checked;
+      if (isDarkMode) {
+        document.body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+      }
+      applyDarkModeToPickers(isDarkMode);
+    });
+
+    // Helper function to format date range
+    function formatRange(start, end) {
+      if (!start || !end) return 'None';
+      return `${formatPersianDate(start)} - ${formatPersianDate(end)}`;
+    }
+
+    // Helper function to format date
+    function formatPersianDate(dateArray) {
+      return toPersianNum(dateArray.join('/'));
+    }
+
+    // Helper function to convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+
+    // Basic range picker
+    const basicRangePicker = document.getElementById('basic-range-picker');
+    const basicRangeResult = document.getElementById('basic-range-result');
+    
+    basicRangePicker.addEventListener('change', (event) => {
+      if (event.detail.isRange) {
+        basicRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
+      }
+    });
+
+    // Format range picker
+    const formatRangePicker = document.getElementById('format-range-picker');
+    const formatRangeResult = document.getElementById('format-range-result');
+    
+    formatRangePicker.addEventListener('change', (event) => {
+      if (event.detail.isRange) {
+        formatRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
+      }
+    });
+
+    // Initial range picker
+    const initialRangePicker = document.getElementById('initial-range-picker');
+    const initialRangeResult = document.getElementById('initial-range-result');
+    
+    initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);
+    initialRangeResult.textContent = formatRange([1403, 3, 1], [1403, 3, 15]);
+    
+    initialRangePicker.addEventListener('change', (event) => {
+      if (event.detail.isRange) {
+        initialRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
+      }
+    });
+
+    // Event range picker
+    const eventRangePicker = document.getElementById('event-range-picker');
+    const rangeStartResult = document.getElementById('range-start-result');
+    const rangeEndResult = document.getElementById('range-end-result');
+    const rangeDaysResult = document.getElementById('range-days-result');
+    
+    eventRangePicker.addEventListener('change', (event) => {
+      if (event.detail.isRange) {
+        const { start, end } = event.detail.range;
+        rangeStartResult.textContent = formatPersianDate(start);
+        rangeEndResult.textContent = formatPersianDate(end);
+        
+        // Calculate days between dates
+        const startDate = new Date(start[0], start[1] - 1, start[2]);
+        const endDate = new Date(end[0], end[1] - 1, end[2]);
+        const diffTime = Math.abs(endDate - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        rangeDaysResult.textContent = toPersianNum(diffDays);
+      }
+    });
+
+    // Styled range picker
+    const styledRangePicker = document.getElementById('styled-range-picker');
+    const styledRangeResult = document.getElementById('styled-range-result');
+    
+    styledRangePicker.addEventListener('change', (event) => {
+      if (event.detail.isRange) {
+        styledRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
+      }
+    });
+
+    // Limited range picker
+    const limitedRangePicker = document.getElementById('limited-range-picker');
+    const limitedRangeResult = document.getElementById('limited-range-result');
+    
+    limitedRangePicker.addEventListener('change', (event) => {
+      if (event.detail.isRange) {
+        limitedRangeResult.textContent = formatRange(event.detail.range.start, event.detail.range.end);
+      }
+    });
+  </script>
+</body>
+</html> 

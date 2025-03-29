@@ -649,6 +649,14 @@ const styles = `:host {
   --jdp-holiday-bg: #fee2e2;
   --jdp-holiday-hover-bg: #fecaca;
   
+  /* Range selection colors */
+  --jdp-range-bg: rgba(8, 145, 178, 0.1);
+  --jdp-range-color: var(--jdp-foreground);
+  --jdp-range-start-bg: var(--jdp-primary);
+  --jdp-range-start-color: var(--jdp-primary-foreground);
+  --jdp-range-end-bg: var(--jdp-primary);
+  --jdp-range-end-color: var(--jdp-primary-foreground);
+  
   /* Typography */
   --jdp-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --jdp-font-size: 14px;
@@ -1344,6 +1352,37 @@ input:focus {
     --jdp-scrollbar-thumb: rgba(124, 124, 124, 0.15);
     --jdp-scrollbar-thumb-hover: rgba(41, 41, 41, 0.25);
 }
+
+/* Range selection styles */
+.day.in-range {
+  background-color: var(--jdp-range-bg);
+  color: var(--jdp-range-color);
+}
+
+.day.range-start,
+.day.range-end {
+  background-color: var(--jdp-range-start-bg);
+  color: var(--jdp-range-start-color);
+}
+
+.day.range-start {
+  border-radius: var(--jdp-border-radius) 0 0 var(--jdp-border-radius);
+}
+
+.day.range-end {
+  border-radius: 0 var(--jdp-border-radius) var(--jdp-border-radius) 0;
+}
+
+/* RTL specific range styles */
+:host([rtl="true"]) .day.range-start,
+:host([dir="rtl"]) .day.range-start {
+  border-radius: 0 var(--jdp-border-radius) var(--jdp-border-radius) 0;
+}
+
+:host([rtl="true"]) .day.range-end,
+:host([dir="rtl"]) .day.range-end {
+  border-radius: var(--jdp-border-radius) 0 0 var(--jdp-border-radius);
+}
 `;
 // Default holiday types
 const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
@@ -1439,6 +1478,7 @@ class PersianDatePickerElement extends HTMLElement {
             'min-date',
             'max-date',
             'disabled-dates',
+            'range-mode', // Add new attribute
             // UI visibility props
             'show-month-selector',
             'show-year-selector',
@@ -1455,6 +1495,11 @@ class PersianDatePickerElement extends HTMLElement {
         this.jalaliMonth = 0;
         this.jalaliDay = 0;
         this.selectedDate = null;
+        // Range selection state
+        this.isRangeMode = false;
+        this.rangeStart = null;
+        this.rangeEnd = null;
+        this.isSelectingRange = false;
         this.showHolidays = true;
         this.holidayTypes = [...DEFAULT_HOLIDAY_TYPES];
         this.includeAllTypes = false;
@@ -1653,6 +1698,12 @@ class PersianDatePickerElement extends HTMLElement {
             case 'today-button-class':
             case 'tomorrow-button-class':
                 this.updateButtonClass(name, newValue);
+                break;
+            case 'range-mode':
+                this.isRangeMode = newValue !== null && newValue !== 'false';
+                if (this.calendar) {
+                    this.renderCalendar();
+                }
                 break;
             // Visibility attributes that require re-rendering
             case 'show-month-selector':
@@ -2197,8 +2248,29 @@ class PersianDatePickerElement extends HTMLElement {
             if (this.jalaliYear === jalaliToday[0] && this.jalaliMonth === jalaliToday[1] && i === jalaliToday[2]) {
                 dayElement.classList.add("today");
             }
-            // Highlight selected date
-            if (this.selectedDate &&
+            // Handle range selection highlighting
+            if (this.isRangeMode) {
+                const currentDate = [this.jalaliYear, this.jalaliMonth, i];
+                if (this.rangeStart && this.rangeEnd) {
+                    // Complete range
+                    if (currentDate >= this.rangeStart && currentDate <= this.rangeEnd) {
+                        dayElement.classList.add("in-range");
+                    }
+                    if (currentDate.toString() === this.rangeStart.toString()) {
+                        dayElement.classList.add("range-start");
+                    }
+                    if (currentDate.toString() === this.rangeEnd.toString()) {
+                        dayElement.classList.add("range-end");
+                    }
+                }
+                else if (this.rangeStart && !this.rangeEnd) {
+                    // Selecting range
+                    if (currentDate.toString() === this.rangeStart.toString()) {
+                        dayElement.classList.add("range-start");
+                    }
+                }
+            }
+            else if (this.selectedDate &&
                 this.jalaliYear === this.selectedDate[0] &&
                 this.jalaliMonth === this.selectedDate[1] &&
                 i === this.selectedDate[2]) {
@@ -2251,13 +2323,13 @@ class PersianDatePickerElement extends HTMLElement {
                     }
                 }
                 else {
-                    // Single tap - select the date
-                    this.selectDate(day);
+                    // Single tap - handle range or single selection
+                    this.handleRangeSelection(day);
                 }
             }
             else {
-                // For non-mobile, just select the date
-                this.selectDate(day);
+                // For non-mobile, handle range or single selection
+                this.handleRangeSelection(day);
             }
             lastTapTime = currentTime;
         });
@@ -2370,13 +2442,52 @@ class PersianDatePickerElement extends HTMLElement {
      * Format the selected date and set input value
      */
     formatAndSetValue() {
+        if (this.isRangeMode) {
+            if (!this.rangeStart || !this.rangeEnd) {
+                this.input.value = '';
+                return;
+            }
+            const formatRange = (date) => {
+                let formattedDate = this.format;
+                const [year, month, day] = date;
+                Object.entries(this.formatPatterns).forEach(([pattern, type]) => {
+                    let value = '';
+                    switch (type) {
+                        case 'year':
+                            value = this.toPersianNum(year.toString());
+                            break;
+                        case 'month':
+                            value = this.toPersianNum(month.toString().padStart(2, '0'));
+                            break;
+                        case 'day':
+                            value = this.toPersianNum(day.toString().padStart(2, '0'));
+                            break;
+                        case 'monthName':
+                            value = this.persianMonths[month - 1];
+                            break;
+                        case 'shortMonthName':
+                            value = this.persianMonths[month - 1].substring(0, 3);
+                            break;
+                        case 'weekday':
+                            value = this.getWeekdayName(year, month, day);
+                            break;
+                        case 'shortWeekday':
+                            value = this.getWeekdayName(year, month, day).substring(0, 3);
+                            break;
+                    }
+                    formattedDate = formattedDate.replace(pattern, value);
+                });
+                return formattedDate;
+            };
+            this.input.value = `${formatRange(this.rangeStart)} - ${formatRange(this.rangeEnd)}`;
+            return;
+        }
         if (!this.selectedDate) {
             this.input.value = '';
             return;
         }
         const [year, month, day] = this.selectedDate;
         let formattedDate = this.format;
-        // Replace format patterns with actual values
         Object.entries(this.formatPatterns).forEach(([pattern, type]) => {
             let value = '';
             switch (type) {
@@ -2472,7 +2583,13 @@ class PersianDatePickerElement extends HTMLElement {
      * Clears the selected date
      */
     clear() {
-        this.selectedDate = null;
+        if (this.isRangeMode) {
+            this.rangeStart = null;
+            this.rangeEnd = null;
+        }
+        else {
+            this.selectedDate = null;
+        }
         this.input.value = '';
         this.renderCalendar();
     }
@@ -2686,6 +2803,65 @@ class PersianDatePickerElement extends HTMLElement {
         const invalidPatterns = /[^YMD\/\- ]/g;
         const hasInvalidPatterns = invalidPatterns.test(format);
         return hasYear && hasMonth && hasDay && !hasInvalidPatterns;
+    }
+    handleRangeSelection(day) {
+        if (!this.isRangeMode) {
+            this.selectDate(day);
+            return;
+        }
+        if (!this.isSelectingRange) {
+            // Start new range
+            this.rangeStart = [this.jalaliYear, this.jalaliMonth, day];
+            this.rangeEnd = null;
+            this.isSelectingRange = true;
+        }
+        else {
+            // Complete range
+            this.rangeEnd = [this.jalaliYear, this.jalaliMonth, day];
+            this.isSelectingRange = false;
+            // Ensure range is in correct order (start before end)
+            if (this.rangeStart && this.rangeEnd) {
+                if (this.rangeStart > this.rangeEnd) {
+                    [this.rangeStart, this.rangeEnd] = [this.rangeEnd, this.rangeStart];
+                }
+            }
+            // Format and display the range
+            this.formatAndSetValue();
+            // Dispatch change event with range data
+            this.dispatchEvent(new CustomEvent("change", {
+                detail: {
+                    range: {
+                        start: this.rangeStart,
+                        end: this.rangeEnd
+                    },
+                    isRange: true
+                },
+                bubbles: true
+            }));
+            // Close calendar
+            this.closeAllDropdowns();
+            this.toggleCalendar();
+        }
+        this.renderCalendar();
+    }
+    // Add new methods for range selection
+    setRange(start, end) {
+        if (!this.isRangeMode)
+            return;
+        // Ensure range is in correct order
+        if (start > end) {
+            [start, end] = [end, start];
+        }
+        this.rangeStart = [...start];
+        this.rangeEnd = [...end];
+        this.formatAndSetValue();
+        this.renderCalendar();
+    }
+    getRange() {
+        return {
+            start: this.rangeStart ? [...this.rangeStart] : null,
+            end: this.rangeEnd ? [...this.rangeEnd] : null
+        };
     }
 }
 // Static property to track currently open calendar instance
