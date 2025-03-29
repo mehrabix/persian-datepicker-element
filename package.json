@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.js",
   "module": "dist/persian-datepicker-element.esm.js",
@@ -69,6 +69,15 @@
       "Added proper touch-action properties to all interactive elements",
       "Fixed mobile swipe interactions to work more reliably",
       "Improved touch event handling for smoother mobile experience"
+    ],
+    "1.0.33": [
+      "Improved date format handling with better pattern support",
+      "Added validation for date formats to prevent invalid patterns",
+      "Enhanced format pattern handling with structured approach",
+      "Fixed weekday name display in Persian format",
+      "Improved empty date handling in format display",
+      "Added support for short month names in formats",
+      "Enhanced format pattern replacement logic"
     ]
   },
   "scripts": {

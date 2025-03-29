@@ -837,6 +837,15 @@ export class PersianDatePickerElement extends HTMLElement {
 
   // Add format and limits properties
   private format: string = 'YYYY/MM/DD';
+  private formatPatterns: { [key: string]: string } = {
+    'YYYY': 'year',
+    'MM': 'month',
+    'DD': 'day',
+    'MMMM': 'monthName',
+    'MMM': 'shortMonthName',
+    'dddd': 'weekday',
+    'dd': 'shortWeekday'
+  };
   private minDate: DateTuple | null = null;
   private maxDate: DateTuple | null = null;
   private disabledDatesFn: ((year: number, month: number, day: number) => boolean) | null = null;
@@ -976,8 +985,8 @@ export class PersianDatePickerElement extends HTMLElement {
         break;
         
       case 'format':
-        this.format = newValue || 'YYYY/MM/DD';
-        if (this.selectedDate) {
+        if (newValue && this.isValidFormat(newValue)) {
+          this.format = newValue;
           this.formatAndSetValue();
         }
         break;
@@ -1905,32 +1914,51 @@ export class PersianDatePickerElement extends HTMLElement {
    * Format the selected date and set input value
    */
   private formatAndSetValue() {
-    if (!this.selectedDate) return;
-    
-    const [year, month, day] = this.selectedDate;
-    let formattedDate = this.format
-      .replace('YYYY', this.toPersianNum(year))
-      .replace('YY', this.toPersianNum(year.toString().slice(-2)))
-      .replace('MM', this.toPersianNum(month.toString().padStart(2, '0')))
-      .replace('M', this.toPersianNum(month))
-      .replace('MMM', this.persianMonths[month - 1].slice(0, 3))
-      .replace('MMMM', this.persianMonths[month - 1])
-      .replace('DD', this.toPersianNum(day.toString().padStart(2, '0')))
-      .replace('D', this.toPersianNum(day));
-
-    // Add day of week if requested
-    if (this.format.includes('d')) {
-      const dayOfWeek = PersianDate.getDayOfWeek(year, month, day);
-      const dayNames = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
-      const shortDayNames = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
-      
-      formattedDate = formattedDate
-        .replace('dddd', dayNames[dayOfWeek])
-        .replace('ddd', shortDayNames[dayOfWeek])
-        .replace('d', dayOfWeek.toString());
+    if (!this.selectedDate) {
+      this.input.value = '';
+      return;
     }
-      
+
+    const [year, month, day] = this.selectedDate;
+    let formattedDate = this.format;
+
+    // Replace format patterns with actual values
+    Object.entries(this.formatPatterns).forEach(([pattern, type]) => {
+      let value = '';
+      switch (type) {
+        case 'year':
+          value = this.toPersianNum(year.toString());
+          break;
+        case 'month':
+          value = this.toPersianNum(month.toString().padStart(2, '0'));
+          break;
+        case 'day':
+          value = this.toPersianNum(day.toString().padStart(2, '0'));
+          break;
+        case 'monthName':
+          value = this.persianMonths[month - 1];
+          break;
+        case 'shortMonthName':
+          value = this.persianMonths[month - 1].substring(0, 3);
+          break;
+        case 'weekday':
+          value = this.getWeekdayName(year, month, day);
+          break;
+        case 'shortWeekday':
+          value = this.getWeekdayName(year, month, day).substring(0, 3);
+          break;
+      }
+      formattedDate = formattedDate.replace(pattern, value);
+    });
+
     this.input.value = formattedDate;
+  }
+
+  private getWeekdayName(year: number, month: number, day: number): string {
+    const weekdays = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
+    const date = new Date(year, month - 1, day);
+    const weekday = date.getDay();
+    return weekdays[weekday];
   }
 
   /**
@@ -2246,6 +2274,19 @@ export class PersianDatePickerElement extends HTMLElement {
   private isDateDisabled(year: number, month: number, day: number): boolean {
     if (!this.disabledDatesFn) return false;
     return this.disabledDatesFn(year, month, day);
+  }
+
+  private isValidFormat(format: string): boolean {
+    // Check if format contains required patterns
+    const hasYear = format.includes('YYYY');
+    const hasMonth = format.includes('MM');
+    const hasDay = format.includes('DD');
+
+    // Check for invalid patterns
+    const invalidPatterns = /[^YMD\/\- ]/g;
+    const hasInvalidPatterns = invalidPatterns.test(format);
+
+    return hasYear && hasMonth && hasDay && !hasInvalidPatterns;
   }
 }
 

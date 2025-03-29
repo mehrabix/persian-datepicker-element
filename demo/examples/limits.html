@@ -328,8 +328,16 @@
         <p class="limit-description">می‌توانید محدودیت‌های انتخاب تاریخ را تعیین کنید.</p>
         <div class="limit-example">
           // محدودیت انتخاب تاریخ
-          min-date="1400/01/01"
-          max-date="1400/12/29"
+          const picker = document.querySelector('persian-datepicker-element');
+          picker.setMinDate(1400, 1, 1); // حداقل تاریخ: 1400/01/01
+          picker.setMaxDate(1400, 12, 29); // حداکثر تاریخ: 1400/12/29
+        </div>
+        <div class="limit-result">
+          <persian-datepicker-element
+            id="date-limits"
+            placeholder="انتخاب تاریخ"
+            show-holidays>
+          </persian-datepicker-element>
         </div>
       </div>
 
@@ -360,9 +368,8 @@
         <p class="demo-description">در این مثال، نحوه استفاده از محدودیت‌ها در تقویم نشان داده شده است.</p>
         
         <persian-datepicker-element
+          id="demo-limits"
           placeholder="انتخاب تاریخ"
-          min-date="1400/01/01"
-          max-date="1400/12/29"
           show-holidays>
         </persian-datepicker-element>
       </div>
@@ -389,6 +396,20 @@
       document.body.classList.toggle('dark');
       localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
     });
+
+    // Set date limits for the example
+    const dateLimitsPicker = document.getElementById('date-limits');
+    if (dateLimitsPicker) {
+      dateLimitsPicker.setMinDate(1400, 1, 1);
+      dateLimitsPicker.setMaxDate(1400, 12, 29);
+    }
+
+    // Set date limits for the demo
+    const demoLimitsPicker = document.getElementById('demo-limits');
+    if (demoLimitsPicker) {
+      demoLimitsPicker.setMinDate(1400, 1, 1);
+      demoLimitsPicker.setMaxDate(1400, 12, 29);
+    }
   </script>
 </body>
 </html> 
