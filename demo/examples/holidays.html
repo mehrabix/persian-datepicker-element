@@ -86,14 +86,51 @@
     }
 
     .code-example {
-      background: #1e293b;
-      color: #e2e8f0;
-      padding: 1rem;
-      border-radius: 4px;
-      margin: 1rem 0;
-      font-family: monospace;
+      background-color: var(--muted);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+    
+    .code-example pre {
+      margin: 0;
       white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Vazir Code', monospace;
+      font-size: 0.875rem;
+      line-height: 1.5;
       direction: ltr;
+      text-align: left;
+    }
+    
+    .code-example code {
+      display: block;
+      padding: 0;
+      background: none;
+      border: none;
+      border-radius: 0;
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .result {
+      background-color: var(--muted);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 1rem;
+      font-family: 'Vazir Code', monospace;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     persian-datepicker-element {
@@ -128,6 +165,47 @@
 
       .holiday-types {
         grid-template-columns: 1fr;
+      }
+
+      .code-example {
+        margin: 1rem 0;
+        padding: 1rem;
+      }
+      
+      .code-example pre {
+        font-size: 0.75rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .description {
+        font-size: 0.875rem;
+      }
+      
+      .result {
+        font-size: 0.75rem;
+        padding: 0.75rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .code-example {
+        padding: 0.75rem;
+      }
+      
+      .code-example pre {
+        font-size: 0.7rem;
+      }
+      
+      .example-section {
+        padding: 1rem;
+      }
+      
+      .result {
+        font-size: 0.7rem;
+        padding: 0.5rem;
       }
     }
   </style>

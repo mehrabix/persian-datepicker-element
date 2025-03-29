@@ -23,9 +23,9 @@ function App() {
   };
 
   return (
-    <PersianDatepicker
-      placeholder="انتخاب تاریخ"
-      format="YYYY/MM/DD"
+      <PersianDatepicker
+        placeholder="انتخاب تاریخ"
+        format="YYYY/MM/DD"
       showHolidays
       rtl
       onChange={handleChange}
@@ -122,10 +122,10 @@ import { PersianDatepicker } from '@persian-datepicker/react';
 
 function BasicExample() {
   return (
-    <PersianDatepicker
+      <PersianDatepicker 
       placeholder="انتخاب تاریخ"
       format="YYYY/MM/DD"
-    />
+      />
   );
 }
 ```
@@ -145,9 +145,9 @@ function EventExample() {
   };
 
   return (
-    <PersianDatepicker
+      <PersianDatepicker
       onChange={handleChange}
-    />
+      />
   );
 }
 ```
@@ -175,7 +175,7 @@ import { PersianDatepicker } from '@persian-datepicker/react';
 
 function StyledExample() {
   return (
-    <PersianDatepicker
+<PersianDatepicker
       className="custom-datepicker"
       style={{ width: '300px' }}
     />

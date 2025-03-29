@@ -83,9 +83,9 @@ function App() {
   };
 
   return (
-    <PersianDatepicker
-      placeholder="انتخاب تاریخ"
-      format="YYYY/MM/DD"
+      <PersianDatepicker
+        placeholder="انتخاب تاریخ"
+        format="YYYY/MM/DD"
       showHolidays
       rtl
       onChange={handleChange}
@@ -98,13 +98,13 @@ function App() {
 
 ```vue
 <template>
-  <PersianDatepicker
-    placeholder="انتخاب تاریخ"
-    format="YYYY/MM/DD"
-    :show-holidays="true"
+    <PersianDatepicker
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+      :show-holidays="true"
     :rtl="true"
     @change="handleChange"
-  />
+    />
 </template>
 
 <script setup>
