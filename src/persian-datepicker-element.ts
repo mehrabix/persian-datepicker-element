@@ -952,7 +952,7 @@ export class PersianDatePickerElement extends HTMLElement {
     }
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     try {
       if (!this.shadowRoot) {
         console.error("Shadow root not available");
@@ -964,6 +964,9 @@ export class PersianDatePickerElement extends HTMLElement {
       
       // Initialize with today's date
       this.initializeCurrentDate();
+      
+      // Initialize events data
+      await EventUtils.initialize();
       
       // Setup initial UI components
       this.initializeUIComponents();

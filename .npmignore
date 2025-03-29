@@ -37,6 +37,7 @@ webpack.config.js
 # Scripts
 *.js
 !dist/*.js
+!dist/data/*.json
 
 # Other
 screenshots/

@@ -1,43 +1,4 @@
 import { PersianEvent } from '../types';
-// Import the original JSON file from the Persian Calendar repo
-// Handle direct import or dynamic import based on environment
-let persianCalendarData: any = {};
-
-// Add type declaration for require
-declare function require(path: string): any;
-
-try {
-  // First try to load the original JSON file
-  try {
-    persianCalendarData = require('../data/persian-calendar-repo/PersianCalendar/data/events.json');
-  } catch (originalError) {
-    console.warn('Could not load original events.json file, trying fallback', originalError);
-    
-    // If the original file fails, try loading the fallback file
-    try {
-      persianCalendarData = require('../data/events-fallback.json');
-      console.log('Successfully loaded fallback events data');
-    } catch (fallbackError) {
-      console.error('Could not load fallback events file either', fallbackError);
-      // Use hard-coded fallback data structure
-      persianCalendarData = {
-        "Persian Calendar": [],
-        "Hijri Calendar": [],
-        "Source": { "name": "Inline Fallback Data", "url": "" }
-      };
-    }
-  }
-} catch (error) {
-  console.error('Unexpected error loading events data', error);
-  // Use hard-coded fallback data structure
-  persianCalendarData = {
-    "Persian Calendar": [],
-    "Hijri Calendar": [],
-    "Source": { "name": "Inline Fallback Data", "url": "" }
-  };
-}
-
-// Import the Hijri utilities for date conversion
 import HijriUtils from './hijri-utils';
 import { PersianDate } from '../persian-date';
 
@@ -50,6 +11,14 @@ const fallbackEvents: PersianEvent[] = [
   { title: 'تاسوعا', month: 7, day: 9, type: 'Religious', holiday: true },
   { title: 'عاشورا', month: 7, day: 10, type: 'Religious', holiday: true },
 ];
+
+// Initialize empty events array
+let mappedEvents: PersianEvent[] = [...fallbackEvents];
+let persianCalendarData: any = {
+  "Persian Calendar": [],
+  "Hijri Calendar": [],
+  "Source": { "name": "Fallback Data", "url": "" }
+};
 
 /**
  * Maps events from the Persian Calendar repo format to our PersianEvent format
@@ -71,63 +40,61 @@ function mapPersianCalendarEvents(): PersianEvent[] {
       allEvents = [...persianEvents];
     }
     
-    // Process Hijri Calendar events - Convert them to current Jalali year
+    // Process Hijri Calendar events
     if (persianCalendarData && Array.isArray(persianCalendarData["Hijri Calendar"])) {
-      // Get current Jalali year
-      const today = new Date();
-      const jalaliToday = PersianDate.gregorianToJalali(
-        today.getFullYear(),
-        today.getMonth() + 1,
-        today.getDate()
-      );
-      const currentJalaliYear = jalaliToday[0];
-      
-      // Process each Hijri event
-      const hijriEvents: PersianEvent[] = [];
-      
-      persianCalendarData["Hijri Calendar"].forEach((event: any) => {
-        // Convert Hijri date to Jalali for current year
-        const jalaliDate = HijriUtils.getHijriEventDateInJalaliYear(
-          currentJalaliYear, 
-          event.month, 
+      const hijriEvents = persianCalendarData["Hijri Calendar"].map((event: any) => {
+        // Convert Hijri date to Jalali
+        const jalaliDate = HijriUtils.hijriToJalali(
+          event.year,
+          event.month,
           event.day
         );
         
-        // Only add the event if it occurs in the current Jalali year
-        if (jalaliDate) {
-          const [jMonth, jDay] = jalaliDate;
-          
-          hijriEvents.push({
-            title: event.title,
-            month: jMonth,
-            day: jDay,
-            type: event.type,
-            holiday: event.holiday,
-            // Add original Hijri date for reference
-            originalHijriMonth: event.month,
-            originalHijriDay: event.day
-          });
-        }
+        return {
+          title: event.title,
+          month: jalaliDate[1],
+          day: jalaliDate[2],
+          type: event.type,
+          holiday: event.holiday,
+          hijri: {
+            year: event.year,
+            month: event.month,
+            day: event.day
+          }
+        };
       });
       
-      // Add converted Hijri events to all events
       allEvents = [...allEvents, ...hijriEvents];
-    }
-    
-    if (allEvents.length === 0) {
-      console.warn('Persian Calendar data not found in expected format, using fallback events');
-      return fallbackEvents;
     }
     
     return allEvents;
   } catch (error) {
-    console.error('Error mapping Persian Calendar events:', error);
-    return fallbackEvents;
+    console.error('Error mapping calendar events:', error);
+    return [...fallbackEvents];
   }
 }
 
-// Cache the mapped events to avoid reprocessing on every call
-const mappedEvents = mapPersianCalendarEvents();
+/**
+ * Loads events data from the external JSON file
+ */
+async function loadEventsData(): Promise<void> {
+  try {
+    // Try to load the events.json file
+    const response = await fetch('/data/events.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    persianCalendarData = await response.json();
+    
+    // Update mapped events with the new data
+    const newEvents = mapPersianCalendarEvents();
+    mappedEvents = [...newEvents];
+  } catch (error) {
+    console.error('Error loading events data:', error);
+    // Keep using fallback events
+    mappedEvents = [...fallbackEvents];
+  }
+}
 
 /**
  * Event utilities for working with Persian calendar events
@@ -245,20 +212,19 @@ export const EventUtils = {
   },
   
   /**
+   * Initialize the events data by loading from external JSON
+   */
+  async initialize(): Promise<void> {
+    await loadEventsData();
+  },
+
+  /**
    * Refresh the events data to update Hijri calendar events for the current year
    * This should be called when the component is initialized or the year changes
    */
-  refreshEvents(): PersianEvent[] {
-    // Recalculate all events (especially Hijri events for current year)
-    const refreshedEvents = mapPersianCalendarEvents();
-    
-    // Replace the cached events with the new ones
-    while (mappedEvents.length > 0) {
-      mappedEvents.pop();
-    }
-    
-    refreshedEvents.forEach(event => mappedEvents.push(event));
-    
+  async refreshEvents(): Promise<PersianEvent[]> {
+    // Reload events data
+    await loadEventsData();
     return [...mappedEvents];
   }
 };
