@@ -398,6 +398,18 @@ input:focus {
   background-color: var(--jdp-holiday-hover-bg);
 }
 
+/* Special styling for holidays within a range */
+.day.holiday.in-range {
+  background-color: var(--jdp-range-bg);
+  color: var(--jdp-range-color);
+}
+
+.day.holiday.range-start,
+.day.holiday.range-end {
+  background-color: var(--jdp-range-start-bg);
+  color: var(--jdp-range-start-color);
+}
+
 .day.friday {
   color: var(--jdp-holiday-color);
 }
@@ -1763,22 +1775,29 @@ export class PersianDatePickerElement extends HTMLElement {
       
       // Handle range selection highlighting
       if (this.isRangeMode) {
-        const currentDate = [this.jalaliYear, this.jalaliMonth, i];
+        const currentDate: DateTuple = [this.jalaliYear, this.jalaliMonth, i];
         
         if (this.rangeStart && this.rangeEnd) {
-          // Complete range
-          if (currentDate >= this.rangeStart && currentDate <= this.rangeEnd) {
+          // Complete range - check if current date is between start and end
+          const isInRange = this.compareDates(currentDate, this.rangeStart) >= 0 && 
+                           this.compareDates(currentDate, this.rangeEnd) <= 0;
+          
+          if (isInRange) {
             dayElement.classList.add("in-range");
           }
-          if (currentDate.toString() === this.rangeStart.toString()) {
+          
+          // Add range-start class if this is the start date
+          if (this.compareDates(currentDate, this.rangeStart) === 0) {
             dayElement.classList.add("range-start");
           }
-          if (currentDate.toString() === this.rangeEnd.toString()) {
+          
+          // Add range-end class if this is the end date
+          if (this.compareDates(currentDate, this.rangeEnd) === 0) {
             dayElement.classList.add("range-end");
           }
         } else if (this.rangeStart && !this.rangeEnd) {
-          // Selecting range
-          if (currentDate.toString() === this.rangeStart.toString()) {
+          // Selecting range - only highlight start date
+          if (this.compareDates(currentDate, this.rangeStart) === 0) {
             dayElement.classList.add("range-start");
           }
         }
@@ -1791,11 +1810,35 @@ export class PersianDatePickerElement extends HTMLElement {
       
       // Add holiday information if enabled
       if (this.showHolidays) {
-        this.addHolidayInfo(dayElement, i);
+        const isHoliday = this.addHolidayInfo(dayElement, i);
+        
+        // If in range mode and we have a complete range
+        if (this.isRangeMode && this.rangeStart && this.rangeEnd) {
+          const currentDate: DateTuple = [this.jalaliYear, this.jalaliMonth, i];
+          const isStartDate = this.compareDates(currentDate, this.rangeStart) === 0;
+          const isEndDate = this.compareDates(currentDate, this.rangeEnd) === 0;
+          const isInRange = this.compareDates(currentDate, this.rangeStart) >= 0 && 
+                           this.compareDates(currentDate, this.rangeEnd) <= 0;
+          
+          // Remove holiday styling for dates in between
+          if (isInRange && !isStartDate && !isEndDate) {
+            dayElement.classList.remove("holiday", "friday");
+          }
+        }
       }
       
       this.daysContainer.appendChild(dayElement);
     }
+  }
+
+  /**
+   * Compare two dates in [year, month, day] format
+   * Returns -1 if date1 < date2, 0 if date1 = date2, 1 if date1 > date2
+   */
+  private compareDates(date1: DateTuple, date2: DateTuple): number {
+    if (date1[0] !== date2[0]) return date1[0] - date2[0];
+    if (date1[1] !== date2[1]) return date1[1] - date2[1];
+    return date1[2] - date2[2];
   }
 
   /**
@@ -1856,17 +1899,22 @@ export class PersianDatePickerElement extends HTMLElement {
 
   /**
    * Add holiday information to a day element
+   * Returns true if the day is a holiday
    */
-  private addHolidayInfo(dayElement: HTMLElement, day: number): void {
+  private addHolidayInfo(dayElement: HTMLElement, day: number): boolean {
+    let isHoliday = false;
+    
     // Check if it's Friday (6th day in JavaScript's getDay, where 0 is Sunday)
     const dayOfWeek = PersianDate.getDayOfWeek(this.jalaliYear, this.jalaliMonth, day);
     if (dayOfWeek === 5) { // Friday
       dayElement.classList.add("friday");
+      isHoliday = true;
     }
     
     // Check if it's a holiday from events.json based on holiday types
     if (EventUtils.isHoliday(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes)) {
       dayElement.classList.add("holiday");
+      isHoliday = true;
       
       // Add tooltip with event titles
       const events = EventUtils.getEvents(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes);
@@ -1875,6 +1923,8 @@ export class PersianDatePickerElement extends HTMLElement {
         dayElement.appendChild(tooltip);
       }
     }
+    
+    return isHoliday;
   }
 
   /**
