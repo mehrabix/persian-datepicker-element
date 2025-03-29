@@ -1,6 +1,6 @@
 {
   "name": "ngx-persian-datepicker-element",
-  "version": "1.0.18",
+  "version": "1.0.21",
   "description": "Angular wrapper for Persian DatePicker Web Component with signal-based inputs (English/Persian docs)",
   "author": "Ahmad",
   "license": "MIT",
