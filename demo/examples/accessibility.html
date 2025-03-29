@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دسترسی‌پذیری | Persian Date Picker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
+  <style>
+    body {
+      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f9fafb;
+      color: #374151;
+      padding: 1rem;
+      margin: 0;
+      direction: rtl;
+      transition: background-color 0.3s, color 0.3s;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      color: #1e293b;
+      margin-bottom: 1.5rem;
+    }
+
+    .example-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+    }
+
+    .example-title {
+      font-size: 1.1rem;
+      color: #334155;
+      margin-bottom: 1rem;
+    }
+
+    .example-description {
+      color: #64748b;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .keyboard-shortcuts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .shortcut {
+      padding: 0.75rem;
+      background: #f8fafc;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .shortcut kbd {
+      background: #e2e8f0;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      margin-left: 0.5rem;
+    }
+
+    .code-example {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      font-family: monospace;
+      white-space: pre-wrap;
+      direction: ltr;
+    }
+
+    persian-datepicker-element {
+      width: 100%;
+      margin-bottom: 1rem;
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .nav-links a {
+      color: #0891b2;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    .high-contrast {
+      --jdp-primary: #000000;
+      --jdp-primary-hover: #333333;
+      --jdp-primary-foreground: #ffffff;
+      --jdp-background: #ffffff;
+      --jdp-foreground: #000000;
+      --jdp-border: #666666;
+      --jdp-holiday-color: #ff0000;
+      --jdp-holiday-bg: #ffebee;
+    }
+
+    .large-text {
+      --jdp-font-size: 16px;
+      --jdp-nav-button-size: 44px;
+      --jdp-day-cell-size: 42px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .keyboard-shortcuts {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>دسترسی‌پذیری</h1>
+    <p>این مثال نشان می‌دهد چگونه می‌توان از ویژگی‌های دسترسی‌پذیری تقویم استفاده کرد.</p>
+
+    <div class="example-section">
+      <h2 class="example-title">کنترل با صفحه کلید</h2>
+      <p class="example-description">تقویم به طور کامل با صفحه کلید قابل کنترل است</p>
+      
+      <persian-datepicker-element
+        id="keyboard-nav"
+        placeholder="با Tab به اینجا بروید"
+        show-holidays>
+      </persian-datepicker-element>
+
+      <div class="keyboard-shortcuts">
+        <div class="shortcut">
+          <kbd>Tab</kbd>
+          <span>حرکت بین عناصر</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Space</kbd>
+          <span>باز/بسته کردن تقویم</span>
+        </div>
+        <div class="shortcut">
+          <kbd>←</kbd>
+          <kbd>→</kbd>
+          <span>حرکت بین روزها</span>
+        </div>
+        <div class="shortcut">
+          <kbd>↑</kbd>
+          <kbd>↓</kbd>
+          <span>حرکت بین هفته‌ها</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Home</kbd>
+          <span>رفتن به اول ماه</span>
+        </div>
+        <div class="shortcut">
+          <kbd>End</kbd>
+          <span>رفتن به آخر ماه</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Page Up</kbd>
+          <span>ماه قبل</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Page Down</kbd>
+          <span>ماه بعد</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Enter</kbd>
+          <span>انتخاب تاریخ</span>
+        </div>
+        <div class="shortcut">
+          <kbd>Esc</kbd>
+          <span>بستن تقویم</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-section">
+      <h2 class="example-title">کنتراست بالا</h2>
+      <p class="example-description">تقویم با کنتراست بالا برای افراد با مشکلات بینایی</p>
+      
+      <persian-datepicker-element
+        class="high-contrast"
+        placeholder="تقویم با کنتراست بالا"
+        show-holidays>
+      </persian-datepicker-element>
+    </div>
+
+    <div class="example-section">
+      <h2 class="example-title">متن بزرگ</h2>
+      <p class="example-description">تقویم با اندازه متن و دکمه‌های بزرگتر</p>
+      
+      <persian-datepicker-element
+        class="large-text"
+        placeholder="تقویم با متن بزرگ"
+        show-holidays>
+      </persian-datepicker-element>
+    </div>
+
+    <div class="code-example">
+// تنظیمات دسترسی‌پذیری
+<persian-datepicker-element
+  class="high-contrast large-text"
+  style="
+    --jdp-font-size: 16px;
+    --jdp-nav-button-size: 44px;
+    --jdp-day-cell-size: 42px;
+    --jdp-primary: #000000;
+    --jdp-foreground: #000000;
+    --jdp-border: #666666;
+  "
+></persian-datepicker-element></div>
+
+    <div class="nav-links">
+      <a href="holidays.html">← تعطیلات و رویدادها</a>
+      <a href="theme-builder.html">سازنده تم →</a>
+    </div>
+  </div>
+
+  <script type="module" src="../../dist/persian-datepicker-element.min.js"></script>
+  <script>
+    // تابع تبدیل اعداد به فارسی
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+
+    // اضافه کردن توضیحات دسترسی‌پذیری به تقویم‌ها
+    document.querySelectorAll('persian-datepicker-element').forEach(picker => {
+      picker.setAttribute('aria-label', 'انتخاب تاریخ');
+      picker.setAttribute('role', 'application');
+    });
+  </script>
+</body>
+</html> 

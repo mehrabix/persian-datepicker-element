@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تعطیلات و رویدادها | Persian Date Picker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
+  <style>
+    body {
+      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f9fafb;
+      color: #374151;
+      padding: 1rem;
+      margin: 0;
+      direction: rtl;
+      transition: background-color 0.3s, color 0.3s;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      color: #1e293b;
+      margin-bottom: 1.5rem;
+    }
+
+    .example-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+    }
+
+    .example-title {
+      font-size: 1.1rem;
+      color: #334155;
+      margin-bottom: 1rem;
+    }
+
+    .example-description {
+      color: #64748b;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .holiday-types {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .holiday-type {
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .holiday-type h3 {
+      color: #0f172a;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f1f5f9;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .result strong {
+      color: #0f172a;
+    }
+
+    .code-example {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      font-family: monospace;
+      white-space: pre-wrap;
+      direction: ltr;
+    }
+
+    persian-datepicker-element {
+      width: 100%;
+      margin-bottom: 1rem;
+      --jdp-font-family: 'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
+    }
+
+    .nav-links {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .nav-links a {
+      color: #0891b2;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .holiday-types {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>تعطیلات و رویدادها</h1>
+    <p>در این مثال، نحوه استفاده از انواع مختلف تعطیلات و رویدادها در تقویم نمایش داده شده است.</p>
+
+    <div class="example-section">
+      <h2 class="example-title">تعطیلات ایران</h2>
+      <p class="example-description">نمایش تعطیلات رسمی ایران در تقویم</p>
+      <persian-datepicker-element
+        id="iran-holidays"
+        holiday-types="Iran"
+        placeholder="انتخاب تاریخ"
+        show-holidays>
+      </persian-datepicker-element>
+      <div class="result" id="iran-result">
+        <strong>رویدادهای انتخاب شده:</strong> <span>-</span>
+      </div>
+    </div>
+
+    <div class="example-section">
+      <h2 class="example-title">تعطیلات مذهبی</h2>
+      <p class="example-description">نمایش تعطیلات و مناسبت‌های مذهبی در تقویم</p>
+      <persian-datepicker-element
+        id="religious-holidays"
+        holiday-types="Religious"
+        placeholder="انتخاب تاریخ"
+        show-holidays>
+      </persian-datepicker-element>
+      <div class="result" id="religious-result">
+        <strong>رویدادهای انتخاب شده:</strong> <span>-</span>
+      </div>
+    </div>
+
+    <div class="example-section">
+      <h2 class="example-title">تعطیلات افغانستان</h2>
+      <p class="example-description">نمایش تعطیلات رسمی افغانستان در تقویم</p>
+      <persian-datepicker-element
+        id="afghanistan-holidays"
+        holiday-types="Afghanistan"
+        placeholder="انتخاب تاریخ"
+        show-holidays>
+      </persian-datepicker-element>
+      <div class="result" id="afghanistan-result">
+        <strong>رویدادهای انتخاب شده:</strong> <span>-</span>
+      </div>
+    </div>
+
+    <div class="example-section">
+      <h2 class="example-title">همه تعطیلات</h2>
+      <p class="example-description">نمایش همه تعطیلات و مناسبت‌ها در تقویم</p>
+      <persian-datepicker-element
+        id="all-holidays"
+        holiday-types="Iran,Religious,Afghanistan"
+        placeholder="انتخاب تاریخ"
+        show-holidays>
+      </persian-datepicker-element>
+      <div class="result" id="all-result">
+        <strong>رویدادهای انتخاب شده:</strong> <span>-</span>
+      </div>
+    </div>
+
+    <div class="code-example">
+// نحوه تنظیم نوع تعطیلات
+<persian-datepicker-element
+  holiday-types="Iran,Religious,Afghanistan"
+  show-holidays>
+</persian-datepicker-element>
+
+// یا در فریمورک‌ها
+// React
+<PersianDatepicker
+  holidayTypes={['Iran', 'Religious']}
+  showHolidays={true}
+/>
+
+// Vue
+<persian-datepicker
+  :holiday-types="['Iran', 'Religious']"
+  :show-holidays="true"
+/>
+
+// Angular
+<ngx-persian-datepicker
+  [holidayTypes]="['Iran', 'Religious']"
+  [showHolidays]="true"
+>
+</ngx-persian-datepicker></div>
+
+    <div class="nav-links">
+      <a href="index.html">← نمونه‌های پایه</a>
+      <a href="customization.html">شخصی‌سازی →</a>
+    </div>
+  </div>
+
+  <script type="module" src="../../dist/persian-datepicker-element.min.js"></script>
+  <script>
+    // تابع تبدیل اعداد به فارسی
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+
+    // فرمت‌بندی رویدادها
+    function formatEvents(events) {
+      if (!events || events.length === 0) return 'هیچ رویدادی وجود ندارد';
+      
+      return events.map(event => {
+        const holidayMark = event.holiday ? '🔴 ' : '';
+        return `${holidayMark}${event.title} (${event.type})`;
+      }).join(' | ');
+    }
+
+    // تنظیم رویدادها برای هر تقویم
+    const datepickers = ['iran', 'religious', 'afghanistan', 'all'];
+    
+    datepickers.forEach(id => {
+      const picker = document.getElementById(`${id}-holidays`);
+      const result = document.getElementById(`${id}-result`).querySelector('span');
+      
+      picker.addEventListener('change', event => {
+        const events = event.detail.events;
+        result.textContent = formatEvents(events);
+      });
+    });
+  </script>
+</body>
+</html> 
