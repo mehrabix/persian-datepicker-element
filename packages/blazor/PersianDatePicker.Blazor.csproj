@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>PersianDatePicker.Blazor</PackageId>
+    <Title>Persian Date Picker for Blazor</Title>
+    <Authors>Ahmad Mehrabi</Authors>
+    <Description>A modern Jalali (Shamsi) Date Picker web component for Blazor applications</Description>
+    <PackageTags>blazor;datepicker;persian;jalali;shamsi;calendar;webcomponent</PackageTags>
+    <PackageProjectUrl>https://github.com/mehrabix/persian-datepicker-element</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mehrabix/persian-datepicker-element.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>
+      - Initial release
+      - Full support for Jalali calendar
+      - Holiday highlighting
+      - Range selection
+      - RTL support
+      - Touch gesture support
+      - Customizable styling
+    </PackageReleaseNotes>
+    <Version>1.0.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
+    <PackageReference Include="Microsoft.JSInterop" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project> 

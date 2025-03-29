@@ -1,0 +1,132 @@
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+@inject IJSObjectReference JSDotNet
+@inject ElementReference ElementRef
+
+<div @ref="ElementRef">
+    <persian-datepicker-element
+        @ref="datePickerElement"
+        placeholder="@Placeholder"
+        format="@Format"
+        rtl="@Rtl"
+        show-holidays="@ShowHolidays"
+        holiday-types="@HolidayTypes"
+        today-button-text="@TodayButtonText"
+        today-button-class="@TodayButtonClass"
+        tomorrow-button-text="@TomorrowButtonText"
+        tomorrow-button-class="@TomorrowButtonClass"
+        show-month-selector="@ShowMonthSelector"
+        show-year-selector="@ShowYearSelector"
+        show-prev-button="@ShowPrevButton"
+        show-next-button="@ShowNextButton"
+        show-today-button="@ShowTodayButton"
+        show-tomorrow-button="@ShowTomorrowButton"
+        range-mode="@RangeMode"
+        @onchange="HandleChange">
+    </persian-datepicker-element>
+</div>
+
+@code {
+    private ElementReference datePickerElement;
+
+    [Parameter]
+    public string Placeholder { get; set; } = "انتخاب تاریخ";
+
+    [Parameter]
+    public string Format { get; set; } = "YYYY/MM/DD";
+
+    [Parameter]
+    public bool Rtl { get; set; } = true;
+
+    [Parameter]
+    public bool ShowHolidays { get; set; } = true;
+
+    [Parameter]
+    public string HolidayTypes { get; set; } = "Iran,Religious";
+
+    [Parameter]
+    public string TodayButtonText { get; set; } = "امروز";
+
+    [Parameter]
+    public string TodayButtonClass { get; set; }
+
+    [Parameter]
+    public string TomorrowButtonText { get; set; } = "فردا";
+
+    [Parameter]
+    public string TomorrowButtonClass { get; set; }
+
+    [Parameter]
+    public bool ShowMonthSelector { get; set; } = true;
+
+    [Parameter]
+    public bool ShowYearSelector { get; set; } = true;
+
+    [Parameter]
+    public bool ShowPrevButton { get; set; } = true;
+
+    [Parameter]
+    public bool ShowNextButton { get; set; } = true;
+
+    [Parameter]
+    public bool ShowTodayButton { get; set; } = true;
+
+    [Parameter]
+    public bool ShowTomorrowButton { get; set; } = true;
+
+    [Parameter]
+    public bool RangeMode { get; set; }
+
+    [Parameter]
+    public EventCallback<PersianDatePickerEventArgs> OnChange { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSDotNet.InvokeVoidAsync("initializePersianDatePicker", ElementRef);
+        }
+    }
+
+    private async Task HandleChange(ChangeEventArgs e)
+    {
+        if (OnChange.HasDelegate)
+        {
+            var args = new PersianDatePickerEventArgs
+            {
+                Jalali = e.Value.GetProperty("jalali").EnumerateArray()
+                    .Select(x => x.GetInt32())
+                    .ToArray(),
+                Gregorian = e.Value.GetProperty("gregorian").EnumerateArray()
+                    .Select(x => x.GetInt32())
+                    .ToArray(),
+                IsHoliday = e.Value.GetProperty("isHoliday").GetBoolean(),
+                Events = e.Value.GetProperty("events").EnumerateArray()
+                    .Select(x => new PersianDatePickerEvent
+                    {
+                        Title = x.GetProperty("title").GetString(),
+                        Type = x.GetProperty("type").GetString(),
+                        Holiday = x.GetProperty("holiday").GetBoolean()
+                    })
+                    .ToList()
+            };
+
+            await OnChange.InvokeAsync(args);
+        }
+    }
+}
+
+public class PersianDatePickerEventArgs
+{
+    public int[] Jalali { get; set; }
+    public int[] Gregorian { get; set; }
+    public bool IsHoliday { get; set; }
+    public List<PersianDatePickerEvent> Events { get; set; }
+}
+
+public class PersianDatePickerEvent
+{
+    public string Title { get; set; }
+    public string Type { get; set; }
+    public bool Holiday { get; set; }
+} 
