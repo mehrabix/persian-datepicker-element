@@ -40,49 +40,33 @@ var import_react = __toESM(require("react"));
 if (typeof window !== "undefined") {
   import("persian-datepicker-element");
 }
-var toKebabCase = (str) => {
-  return str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-};
-var convertValueToAttribute = (value) => {
-  if (typeof value === "boolean") {
-    return value ? "true" : "false";
-  }
-  if (Array.isArray(value)) {
-    return JSON.stringify(value);
-  }
-  return String(value);
-};
 var PersianDatepicker = (0, import_react.forwardRef)(
   (props, ref) => {
     const {
+      value,
       onChange,
+      placeholder,
+      format,
+      showHolidays,
+      rtl,
+      minDate,
+      maxDate,
+      disabledDates,
+      disabled,
       className,
       style,
-      primaryColor,
-      primaryHover,
-      backgroundColor,
-      foregroundColor,
-      borderColor,
-      borderRadius,
-      fontFamily,
-      holidayColor,
-      holidayBg,
-      scrollbarWidth,
-      scrollbarThumbColor,
-      scrollbarThumbHoverColor,
-      scrollbarTrackColor,
-      scrollbarBorderRadius,
       darkMode,
-      ...restProps
+      ...rest
     } = props;
     const elementRef = (0, import_react.useRef)(null);
-    const containerRef = (0, import_react.useRef)(null);
+    const handleChange = (0, import_react.useRef)(null);
     (0, import_react.useImperativeHandle)(ref, () => ({
-      getValue: () => {
-        return elementRef.current?.getValue?.() || [0, 0, 0];
-      },
       setValue: (year, month, day) => {
         elementRef.current?.setValue?.(year, month, day);
+      },
+      getValue: () => {
+        const value2 = elementRef.current?.getValue?.();
+        return value2 || [1400, 1, 1];
       },
       open: () => {
         elementRef.current?.open?.();
@@ -93,63 +77,61 @@ var PersianDatepicker = (0, import_react.forwardRef)(
       getElement: () => elementRef.current
     }));
     (0, import_react.useEffect)(() => {
-      if (containerRef.current) {
-        if (!elementRef.current) {
-          const element2 = document.createElement("persian-datepicker-element");
-          elementRef.current = element2;
-          containerRef.current.appendChild(element2);
-        }
-        const element = elementRef.current;
-        Object.entries(restProps).forEach(([key, value]) => {
-          if (value !== void 0 && value !== null) {
-            const attributeName = toKebabCase(key);
-            element.setAttribute(attributeName, convertValueToAttribute(value));
-          }
-        });
-        if (primaryColor) element.style.setProperty("--jdp-primary", primaryColor);
-        if (primaryHover) element.style.setProperty("--jdp-primary-hover", primaryHover);
-        if (backgroundColor) element.style.setProperty("--jdp-background", backgroundColor);
-        if (foregroundColor) element.style.setProperty("--jdp-foreground", foregroundColor);
-        if (borderColor) element.style.setProperty("--jdp-border", borderColor);
-        if (borderRadius) element.style.setProperty("--jdp-border-radius", borderRadius);
-        if (fontFamily) element.style.setProperty("--jdp-font-family", fontFamily);
-        if (holidayColor) element.style.setProperty("--jdp-holiday-color", holidayColor);
-        if (holidayBg) element.style.setProperty("--jdp-holiday-bg", holidayBg);
-        if (scrollbarWidth) element.style.setProperty("--jdp-scrollbar-width", scrollbarWidth);
-        if (scrollbarThumbColor) element.style.setProperty("--jdp-scrollbar-thumb-color", scrollbarThumbColor);
-        if (scrollbarThumbHoverColor) element.style.setProperty("--jdp-scrollbar-thumb-hover-color", scrollbarThumbHoverColor);
-        if (scrollbarTrackColor) element.style.setProperty("--jdp-scrollbar-track-color", scrollbarTrackColor);
-        if (scrollbarBorderRadius) element.style.setProperty("--jdp-scrollbar-border-radius", scrollbarBorderRadius);
-        const handleChange = (e) => {
+      if (onChange) {
+        handleChange.current = (e) => {
           const customEvent = e;
-          if (onChange && customEvent.detail) {
-            onChange(customEvent.detail);
-          }
-        };
-        element.addEventListener("change", handleChange);
-        return () => {
-          element.removeEventListener("change", handleChange);
+          onChange(customEvent.detail);
         };
       }
-    }, [
-      onChange,
-      primaryColor,
-      primaryHover,
-      backgroundColor,
-      foregroundColor,
-      borderColor,
-      borderRadius,
-      fontFamily,
-      holidayColor,
-      holidayBg,
-      scrollbarWidth,
-      scrollbarThumbColor,
-      scrollbarThumbHoverColor,
-      scrollbarTrackColor,
-      scrollbarBorderRadius,
-      ...Object.values(restProps)
-    ]);
-    return /* @__PURE__ */ import_react.default.createElement("div", { ref: containerRef, className, style });
+    }, [onChange]);
+    (0, import_react.useEffect)(() => {
+      const element = elementRef.current;
+      const handler = handleChange.current;
+      if (element && handler) {
+        element.addEventListener("change", handler);
+        return () => {
+          element.removeEventListener("change", handler);
+        };
+      }
+    }, []);
+    const convertDateTupleToString = (date) => {
+      if (!date) return "";
+      return JSON.stringify(date);
+    };
+    (0, import_react.useEffect)(() => {
+      if (elementRef.current) {
+        if (value) elementRef.current.setAttribute("value", Array.isArray(value) ? value.join("/") : String(value));
+        if (placeholder) elementRef.current.setAttribute("placeholder", placeholder);
+        if (format) elementRef.current.setAttribute("format", format);
+        if (showHolidays !== void 0) elementRef.current.setAttribute("show-holidays", String(showHolidays));
+        if (rtl !== void 0) elementRef.current.setAttribute("rtl", String(rtl));
+        if (minDate) elementRef.current.setAttribute("min-date", convertDateTupleToString(minDate));
+        if (maxDate) elementRef.current.setAttribute("max-date", convertDateTupleToString(maxDate));
+        if (disabledDates) elementRef.current.setAttribute("disabled-dates", disabledDates);
+        if (disabled !== void 0) elementRef.current.setAttribute("disabled", String(disabled));
+      }
+    }, [value, placeholder, format, showHolidays, rtl, minDate, maxDate, disabledDates, disabled]);
+    const minDateStr = convertDateTupleToString(minDate);
+    const maxDateStr = convertDateTupleToString(maxDate);
+    const elementProps = {
+      value,
+      placeholder,
+      format,
+      "show-holidays": showHolidays,
+      rtl,
+      "min-date": minDateStr,
+      "max-date": maxDateStr,
+      "disabled-dates": disabledDates,
+      disabled,
+      ...rest
+    };
+    return /* @__PURE__ */ import_react.default.createElement("div", { className, style }, /* @__PURE__ */ import_react.default.createElement(
+      "persian-datepicker-element",
+      {
+        ref: elementRef,
+        ...elementProps
+      }
+    ));
   }
 );
 

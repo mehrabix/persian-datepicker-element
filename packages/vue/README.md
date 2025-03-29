@@ -1,238 +1,229 @@
-# Vue Persian Datepicker Element
+# vue-persian-datepicker-element
 
-A Vue 3 wrapper for the Persian Datepicker Web Component, providing a beautiful and fully customizable Jalali (Shamsi) date picker for Vue applications.
-
-![Persian Datepicker Screenshot](https://raw.githubusercontent.com/mehrabhossain1/persian-datepicker-element/main/docs/assets/react-datepicker-screenshot.png)
-
-## Features
-
-- 🌙 Jalali (Solar Hijri) calendar system
-- 🎨 Highly customizable with native CSS variables
-- 🌈 Supports light/dark mode via CSS variables
-- 🔄 Two-way binding with v-model
-- 📅 Show and customize holidays and events
-- 📱 Responsive and mobile-friendly
-- 🌐 RTL support by default
-- 🛠️ Imperative API via refs
+Vue 3 integration for the Persian Date Picker web component.
 
 ## Installation
 
 ```bash
-# Using npm
 npm install vue-persian-datepicker-element persian-datepicker-element
-
-# Using Yarn
+# or
 yarn add vue-persian-datepicker-element persian-datepicker-element
-
-# Using pnpm
+# or
 pnpm add vue-persian-datepicker-element persian-datepicker-element
 ```
 
-## Basic Usage
+## Usage
 
 ```vue
 <template>
-  <div>
-    <h1>Persian Datepicker Example</h1>
-    <PersianDatepicker
-      v-model="date"
-      placeholder="انتخاب تاریخ"
-      format="YYYY/MM/DD"
-      :show-holidays="true"
-      @change="handleDateChange"
-    />
-  </div>
+  <PersianDatepicker
+    placeholder="انتخاب تاریخ"
+    format="YYYY/MM/DD"
+    :show-holidays="true"
+    :rtl="true"
+    @change="handleChange"
+  />
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import { PersianDatepicker } from 'vue-persian-datepicker-element';
-import type { DateTuple, PersianDateChangeEvent } from 'persian-datepicker-element';
-
-const date = ref<DateTuple>([1402, 12, 15]);
-
-const handleDateChange = (event: PersianDateChangeEvent) => {
-  console.log('Selected date (Jalali):', event.jalali);
-  console.log('Gregorian date:', event.gregorian);
-  console.log('Is holiday:', event.isHoliday);
-  console.log('Events:', event.events);
-};
-</script>
-```
-
-## Customizing with CSS Variables
-
-You can customize the appearance using CSS variables directly in your CSS:
-
-```css
-/* In your CSS file or style block */
-:root {
-  --jdp-primary: #3b82f6;
-  --jdp-primary-hover: #2563eb;
-  --jdp-ring: #60a5fa;
-  --jdp-border-radius: 0.5rem;
-}
-
-/* For dark mode */
-.dark-theme persian-datepicker-element {
-  --jdp-background: #1e1e2f;
-  --jdp-foreground: #e2e8f0;
-  --jdp-muted: #334155;
-  --jdp-muted-foreground: #94a3b8;
-  --jdp-border: #475569;
-  --jdp-input-border-color: #475569;
-  --jdp-calendar-shadow: 0px 10px 30px -5px rgba(2, 6, 23, 0.5);
-  --jdp-day-hover-bg: #334155;
-  
-  /* Input field */
-  --jdp-input-bg: #1e1e2f;
-  --jdp-input-text: #e2e8f0;
-  
-  /* Calendar body */
-  --jdp-calendar-bg: #0f172a;
-  --jdp-day-text: #e2e8f0;
-}
-```
-
-## Dark Mode Support
-
-```vue
-<template>
-  <div :class="{'dark-theme': isDarkMode}">
-    <button @click="isDarkMode = !isDarkMode">
-      Toggle {{ isDarkMode ? 'Light' : 'Dark' }} Mode
-    </button>
-    
-    <PersianDatepicker
-      placeholder="تاریخ را انتخاب کنید"
-    />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
+<script setup>
 import { PersianDatepicker } from 'vue-persian-datepicker-element';
 
-const isDarkMode = ref(false);
-</script>
-
-<style>
-/* Define your dark theme styles as shown in the previous example */
-</style>
-```
-
-## Using with Ref (Imperative API)
-
-```vue
-<template>
-  <div>
-    <PersianDatepicker ref="datepickerRef" placeholder="از دکمه‌ها استفاده کنید" />
-    
-    <div style="margin-top: 1rem">
-      <button @click="handleGetValue">Get Value</button>
-      <button @click="handleSetValue">Set to 15 Dey 1402</button>
-      <button @click="handleOpenCalendar">Open Calendar</button>
-      <button @click="handleCloseCalendar">Close Calendar</button>
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { PersianDatepicker } from 'vue-persian-datepicker-element';
-
-const datepickerRef = ref<InstanceType<typeof PersianDatepicker> | null>(null);
-
-const handleGetValue = () => {
-  const value = datepickerRef.value?.getValue();
-  console.log('Current value:', value);
-};
-
-const handleSetValue = () => {
-  datepickerRef.value?.setValue(1402, 10, 15);
-};
-
-const handleOpenCalendar = () => {
-  datepickerRef.value?.open();
-};
-
-const handleCloseCalendar = () => {
-  datepickerRef.value?.close();
+const handleChange = (event) => {
+  console.log('Selected date:', event.detail);
 };
 </script>
-```
-
-## Holiday Types
-
-You can specify which types of holidays to display:
-
-```vue
-<PersianDatepicker
-  holiday-types="Iran,Religious"
-  placeholder="تعطیلات ایران و مذهبی"
-/>
-
-<PersianDatepicker
-  holiday-types="Afghanistan"
-  placeholder="تعطیلات افغانستان"
-/>
 ```
 
 ## Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `modelValue` | `DateTuple` | v-model binding for the selected date |
-| `placeholder` | `string` | Input placeholder text |
-| `format` | `string` | Date format (e.g., "YYYY/MM/DD") |
-| `showHolidays` | `boolean` | Whether to show holiday indicators |
-| `holidayTypes` | `string` | Types of holidays to show (comma-separated: "Iran", "Religious", "Afghanistan") |
-| `rtl` | `boolean` | Right-to-left layout |
-| `disabled` | `boolean` | Disable the datepicker |
-| `min` | `DateTuple` | Minimum selectable date |
-| `max` | `DateTuple` | Maximum selectable date |
-| `className` | `string` | Custom class for the container |
-| `style` | `object` | Custom styles for the container |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| value | string \| [number, number, number] | - | The selected date value |
+| placeholder | string | - | Placeholder text |
+| format | string | "YYYY/MM/DD" | Date format string |
+| show-holidays | boolean | false | Show holiday indicators |
+| rtl | boolean | false | Right-to-left layout |
+| min-date | [number, number, number] | - | Minimum selectable date |
+| max-date | [number, number, number] | - | Maximum selectable date |
+| disabled-dates | string | - | Disabled dates expression |
+| disabled | boolean | false | Disable the datepicker |
+| dark-mode | boolean | false | Enable dark mode |
 
 ## Events
 
-| Event | Type | Description |
-|-------|------|-------------|
-| `update:modelValue` | `DateTuple` | Emitted when the date value changes |
-| `change` | `PersianDateChangeEvent` | Emitted when the date changes with full event details |
+| Event | Detail Type | Description |
+|-------|-------------|-------------|
+| change | { jalali: [number, number, number], gregorian: [number, number, number], isHoliday: boolean, events: Array } | Fired when a date is selected |
 
-## CSS Variables for Styling
+## Template Refs
 
-All CSS variables use the `--jdp-` prefix (Jalali DatePicker). You can customize these variables in your CSS:
+The component supports template refs with the following methods:
 
-| CSS Variable | Description |
-|--------------|-------------|
-| `--jdp-primary` | Primary color for selected dates and focus states |
-| `--jdp-primary-hover` | Color for hover states |
-| `--jdp-primary-foreground` | Text color on primary background |
-| `--jdp-background` | Main background color |
-| `--jdp-foreground` | Main text color |
-| `--jdp-muted` | Muted background color for alternate elements |
-| `--jdp-muted-foreground` | Text color for muted elements |
-| `--jdp-border` | Border color |
-| `--jdp-input-border-color` | Input field border color |
-| `--jdp-input-bg` | Input field background color |
-| `--jdp-input-text` | Input field text color |
-| `--jdp-input-placeholder` | Input placeholder text color |
-| `--jdp-calendar-bg` | Calendar dropdown background color |
-| `--jdp-day-hover-bg` | Background color when hovering over a day |
-| `--jdp-holiday-color` | Holiday text color |
-| `--jdp-holiday-bg` | Holiday background color |
-| `--jdp-font-size` | Base font size |
-| `--jdp-font-family` | Font family |
-| `--jdp-border-radius` | Base border radius |
-| `--jdp-input-border-radius` | Input field border radius |
-| `--jdp-calendar-border-radius` | Calendar dropdown border radius |
-| `--jdp-day-cell-border-radius` | Day cell border radius |
+```vue
+<template>
+  <PersianDatepicker ref="datepicker" />
+</template>
 
-## Browser Support
+<script setup>
+import { ref } from 'vue';
+import { PersianDatepicker } from '@persian-datepicker/vue';
 
-This component uses Web Components and is compatible with all modern browsers.
+const datepicker = ref(null);
+
+// Set a date
+datepicker.value?.setValue(1401, 7, 1);
+
+// Get current date
+const date = datepicker.value?.getValue();
+
+// Open the datepicker
+datepicker.value?.open();
+
+// Close the datepicker
+datepicker.value?.close();
+
+// Get the underlying element
+const element = datepicker.value?.getElement();
+</script>
+```
+
+## TypeScript Support
+
+The package includes full TypeScript support:
+
+```vue
+<template>
+  <PersianDatepicker
+    :placeholder="placeholder"
+    :format="format"
+    :show-holidays="showHolidays"
+    :rtl="rtl"
+    @change="handleChange"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { PersianDatepicker, PersianDatepickerProps, PersianDatepickerMethods } from '@persian-datepicker/vue';
+
+const props: PersianDatepickerProps = {
+  placeholder: "انتخاب تاریخ",
+  format: "YYYY/MM/DD",
+  showHolidays: true,
+  rtl: true
+};
+
+const datepicker = ref<PersianDatepickerMethods | null>(null);
+
+const handleChange = (event: CustomEvent<{
+  jalali: [number, number, number];
+  gregorian: [number, number, number];
+  isHoliday: boolean;
+  events: Array<any>;
+}>) => {
+  console.log('Selected date:', event.detail);
+};
+</script>
+```
+
+## Styling
+
+You can style the component using CSS variables:
+
+```vue
+<template>
+  <PersianDatepicker class="custom-datepicker" />
+</template>
+
+<style>
+.custom-datepicker {
+  --jdp-primary: #0891b2;
+  --jdp-primary-hover: #0e7490;
+  --jdp-primary-foreground: #ffffff;
+  --jdp-background: #ffffff;
+  --jdp-foreground: #1e293b;
+  --jdp-border: #e2e8f0;
+  --jdp-border-radius: 0.5rem;
+  --jdp-font-family: system-ui;
+  --jdp-font-size: 14px;
+  --jdp-nav-button-size: 38px;
+  --jdp-day-cell-size: 36px;
+}
+</style>
+```
+
+## Examples
+
+### Basic Usage
+
+```vue
+<template>
+  <PersianDatepicker
+    placeholder="انتخاب تاریخ"
+    format="YYYY/MM/DD"
+  />
+</template>
+
+<script setup>
+import { PersianDatepicker } from '@persian-datepicker/vue';
+</script>
+```
+
+### With Event Handling
+
+```vue
+<template>
+  <PersianDatepicker @change="handleChange" />
+</template>
+
+<script setup>
+import { PersianDatepicker } from '@persian-datepicker/vue';
+
+const handleChange = (event) => {
+  const { jalali, gregorian, isHoliday, events } = event.detail;
+  console.log('Jalali:', jalali);
+  console.log('Gregorian:', gregorian);
+  console.log('Is Holiday:', isHoliday);
+  console.log('Events:', events);
+};
+</script>
+```
+
+### With Date Limits
+
+```vue
+<template>
+  <PersianDatepicker
+    :min-date="[1400, 1, 1]"
+    :max-date="[1402, 12, 29]"
+    disabled-dates="isWeekend"
+  />
+</template>
+
+<script setup>
+import { PersianDatepicker } from '@persian-datepicker/vue';
+</script>
+```
+
+### With Custom Styling
+
+```vue
+<template>
+  <PersianDatepicker class="custom-datepicker" />
+</template>
+
+<script setup>
+import { PersianDatepicker } from '@persian-datepicker/vue';
+</script>
+
+<style>
+.custom-datepicker {
+  width: 300px;
+  --jdp-primary: #3b82f6;
+  --jdp-primary-hover: #2563eb;
+}
+</style>
+```
 
 ## License
 

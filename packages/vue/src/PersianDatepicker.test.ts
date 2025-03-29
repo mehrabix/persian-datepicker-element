@@ -49,6 +49,9 @@ describe('PersianDatepicker', () => {
   it('applies props to the web component', () => {
     const datepicker = wrapper.find('persian-datepicker-element');
     expect(datepicker.attributes('value')).toBe('1403/1/1');
+    expect(datepicker.attributes('min-date')).toBe('[1403,1,1]');
+    expect(datepicker.attributes('max-date')).toBe('[1403,12,29]');
+    expect(datepicker.attributes('disabled-dates')).toBe('isWeekend');
   });
 
   it('handles onChange event', async () => {
@@ -67,12 +70,18 @@ describe('PersianDatepicker', () => {
   });
 
   it('handles min and max date constraints', async () => {
-    const min = [1403, 1, 1];
-    const max = [1403, 12, 29];
-    await wrapper.setProps({ min, max });
+    const minDate = [1403, 1, 1];
+    const maxDate = [1403, 12, 29];
+    await wrapper.setProps({ minDate, maxDate });
     const datepicker = wrapper.find('persian-datepicker-element');
-    const el = datepicker.element as HTMLElementTagNameMap['persian-datepicker-element'];
-    expect(el.min).toEqual(min);
-    expect(el.max).toEqual(max);
+    expect(datepicker.attributes('min-date')).toBe('[1403,1,1]');
+    expect(datepicker.attributes('max-date')).toBe('[1403,12,29]');
+  });
+
+  it('handles disabled dates function', async () => {
+    const disabledDates = 'isWeekend';
+    await wrapper.setProps({ disabledDates });
+    const datepicker = wrapper.find('persian-datepicker-element');
+    expect(datepicker.attributes('disabled-dates')).toBe('isWeekend');
   });
 }); 

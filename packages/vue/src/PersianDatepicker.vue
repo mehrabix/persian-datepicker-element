@@ -8,8 +8,9 @@
       :show-holidays="showHolidays"
       :rtl="rtl"
       :disabled="disabled"
-      :min="min"
-      :max="max"
+      :min-date="minDate"
+      :max-date="maxDate"
+      :disabled-dates="disabledDates"
       :holiday-types="holidayTypes"
       @change="handleChange"
     />
@@ -46,12 +47,16 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  min: {
+  minDate: {
     type: Array as () => DateTuple,
     default: undefined
   },
-  max: {
+  maxDate: {
     type: Array as () => DateTuple,
+    default: undefined
+  },
+  disabledDates: {
+    type: String,
     default: undefined
   },
   holidayTypes: {
@@ -108,15 +113,36 @@ watch(() => props.modelValue, (newValue) => {
   });
 }, { immediate: false });
 
-// Watch for min/max changes
-watch([() => props.min, () => props.max], ([newMin, newMax]) => {
+// Watch for min/max date changes
+watch(() => props.minDate, (newValue) => {
   nextTick(() => {
     if (elementRef.value) {
-      if (newMin) {
-        (elementRef.value as any).min = newMin;
+      if (newValue) {
+        elementRef.value.setAttribute('min-date', JSON.stringify(newValue));
       }
-      if (newMax) {
-        (elementRef.value as any).max = newMax;
+    }
+  });
+});
+
+// Watch for max date changes
+watch(() => props.maxDate, (newValue) => {
+  nextTick(() => {
+    if (elementRef.value) {
+      if (newValue) {
+        elementRef.value.setAttribute('max-date', JSON.stringify(newValue));
+      }
+    }
+  });
+});
+
+// Watch for disabled dates changes
+watch(() => props.disabledDates, (newValue) => {
+  nextTick(() => {
+    if (elementRef.value) {
+      if (newValue) {
+        elementRef.value.setAttribute('disabled-dates', JSON.stringify(newValue));
+      } else {
+        elementRef.value.removeAttribute('disabled-dates');
       }
     }
   });

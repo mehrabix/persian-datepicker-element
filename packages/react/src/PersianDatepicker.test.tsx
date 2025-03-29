@@ -4,6 +4,11 @@ import { PersianDatepicker } from './PersianDatepicker';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
+// Mock the web component registration
+jest.mock('persian-datepicker-element', () => {
+  return {};
+});
+
 describe('PersianDatepicker', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -22,8 +27,9 @@ describe('PersianDatepicker', () => {
         format="YYYY-MM-DD"
         showHolidays={true}
         rtl={true}
-        min={[1400, 1, 1]}
-        max={[1402, 12, 29]}
+        minDate={[1400, 1, 1]}
+        maxDate={[1402, 12, 29]}
+        disabledDates="isWeekend"
         disabled={false}
       />
     );
@@ -34,8 +40,9 @@ describe('PersianDatepicker', () => {
     expect(element?.getAttribute('format')).toBe('YYYY-MM-DD');
     expect(element?.getAttribute('show-holidays')).toBe('true');
     expect(element?.getAttribute('rtl')).toBe('true');
-    expect(element?.getAttribute('min')).toBe('[1400,1,1]');
-    expect(element?.getAttribute('max')).toBe('[1402,12,29]');
+    expect(element?.getAttribute('min-date')).toBe('[1400,1,1]');
+    expect(element?.getAttribute('max-date')).toBe('[1402,12,29]');
+    expect(element?.getAttribute('disabled-dates')).toBe('isWeekend');
     expect(element?.getAttribute('disabled')).toBe('false');
   });
 
@@ -70,40 +77,69 @@ describe('PersianDatepicker', () => {
 
   test('forwards ref correctly', () => {
     const ref = React.createRef<any>();
-    const { container } = render(<PersianDatepicker ref={ref} />);
     
-    // Call setValue through ref
+    // Create mock functions
+    const mockSetValue = jest.fn();
+    const mockGetValue = jest.fn().mockReturnValue([1401, 6, 15]);
+    const mockOpen = jest.fn();
+    const mockClose = jest.fn();
+    
+    // Create a mock element that extends HTMLElement
+    class MockPersianDatepickerElement extends HTMLElement {
+      getValue = mockGetValue;
+      setValue = mockSetValue;
+      open = mockOpen;
+      close = mockClose;
+      addEventListener = jest.fn();
+      removeEventListener = jest.fn();
+      setAttribute = jest.fn();
+    }
+    
+    // Define the custom element
+    if (!customElements.get('persian-datepicker-element')) {
+      customElements.define('persian-datepicker-element', MockPersianDatepickerElement);
+    }
+    
+    // Render component
+    render(<PersianDatepicker ref={ref} />);
+    
+    // Test setValue
     act(() => {
       ref.current.setValue(1401, 7, 1);
     });
+    expect(mockSetValue).toHaveBeenCalledWith(1401, 7, 1);
     
-    const element = container.querySelector('persian-datepicker-element') as any;
-    expect(element.setValue).toHaveBeenCalledWith(1401, 7, 1);
-    
-    // Call getValue through ref
+    // Test getValue
     act(() => {
       const value = ref.current.getValue();
       expect(value).toEqual([1401, 6, 15]);
     });
-    expect(element.getValue).toHaveBeenCalled();
+    expect(mockGetValue).toHaveBeenCalled();
     
-    // Call open/close through ref
+    // Test open/close
     act(() => {
       ref.current.open();
-    });
-    expect(element.open).toHaveBeenCalled();
-    
-    act(() => {
       ref.current.close();
     });
-    expect(element.close).toHaveBeenCalled();
+    expect(mockOpen).toHaveBeenCalled();
+    expect(mockClose).toHaveBeenCalled();
     
     // Test getElement
-    expect(ref.current.getElement()).toBe(element);
+    const element = ref.current.getElement();
+    expect(element).toBeInstanceOf(MockPersianDatepickerElement);
   });
 
-
   test('applies className and style to container div', () => {
+    class MockPersianDatepickerElement extends HTMLElement {
+      addEventListener = jest.fn();
+      removeEventListener = jest.fn();
+      setAttribute = jest.fn();
+    }
+    
+    if (!customElements.get('persian-datepicker-element')) {
+      customElements.define('persian-datepicker-element', MockPersianDatepickerElement);
+    }
+    
     const { container } = render(
       <PersianDatepicker 
         className="custom-class"
@@ -121,18 +157,31 @@ describe('PersianDatepicker', () => {
 
   test('cleans up event listeners on unmount', () => {
     const handleChange = jest.fn();
-    const { container, unmount } = render(<PersianDatepicker onChange={handleChange} />);
     
-    const element = container.querySelector('persian-datepicker-element');
-    expect(element).toBeInTheDocument();
+    // Create a mock element that extends HTMLElement
+    class MockPersianDatepickerElement extends HTMLElement {
+      addEventListener = jest.fn();
+      removeEventListener = jest.fn();
+      setAttribute = jest.fn();
+    }
     
-    // Add spy to removeEventListener
-    const removeEventListenerSpy = jest.spyOn(element as HTMLElement, 'removeEventListener');
+    if (!customElements.get('persian-datepicker-element')) {
+      customElements.define('persian-datepicker-element', MockPersianDatepickerElement);
+    }
     
-    // Unmount the component
+    // Render component
+    const { unmount } = render(<PersianDatepicker onChange={handleChange} />);
+    
+    // Get the element instance
+    const element = document.querySelector('persian-datepicker-element');
+    
+    // Verify event listener was added
+    expect(element?.addEventListener).toHaveBeenCalledWith('change', expect.any(Function));
+    
+    // Unmount component
     unmount();
     
-    // Check if removeEventListener was called for the change event
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('change', expect.any(Function));
+    // Verify cleanup
+    expect(element?.removeEventListener).toHaveBeenCalledWith('change', expect.any(Function));
   });
 }); 

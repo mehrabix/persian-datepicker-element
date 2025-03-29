@@ -40,6 +40,11 @@ export interface PersianDatepickerProps extends Omit<PersianDatePickerElementOpt
   
   // Dark mode helper prop
   darkMode?: boolean;
+
+  // New props for format and limits
+  minDate?: DateTuple;
+  maxDate?: DateTuple;
+  disabledDates?: string;
 }
 
 // Methods that will be available via ref
@@ -57,6 +62,7 @@ interface PersianDatepickerElement extends HTMLElement {
   setValue?: (year: number, month: number, day: number) => void;
   open?: () => void;
   close?: () => void;
+  setAttribute(name: string, value: string): void;
 }
 
 // Helper to convert camelCase to kebab-case for HTML attributes
@@ -79,40 +85,32 @@ const convertValueToAttribute = (value: any): string => {
 export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDatepickerProps>(
   (props, ref) => {
     const {
+      value,
       onChange,
+      placeholder,
+      format,
+      showHolidays,
+      rtl,
+      minDate,
+      maxDate,
+      disabledDates,
+      disabled,
       className,
       style,
-      primaryColor,
-      primaryHover,
-      backgroundColor,
-      foregroundColor,
-      borderColor,
-      borderRadius,
-      fontFamily,
-      holidayColor,
-      holidayBg,
-      scrollbarWidth,
-      scrollbarThumbColor,
-      scrollbarThumbHoverColor,
-      scrollbarTrackColor,
-      scrollbarBorderRadius,
       darkMode,
-      ...restProps
+      ...rest
     } = props;
-    
-    // Reference to the web component element
+
     const elementRef = useRef<PersianDatepickerElement | null>(null);
-    
-    // Container div reference for styling
-    const containerRef = useRef<HTMLDivElement>(null);
-    
-    // Expose methods to parent component via ref
+    const handleChange = useRef<((e: Event) => void) | null>(null);
+
     useImperativeHandle(ref, () => ({
-      getValue: () => {
-        return elementRef.current?.getValue?.() || [0, 0, 0];
-      },
       setValue: (year: number, month: number, day: number) => {
         elementRef.current?.setValue?.(year, month, day);
+      },
+      getValue: () => {
+        const value = elementRef.current?.getValue?.();
+        return value || [1400, 1, 1] as DateTuple;
       },
       open: () => {
         elementRef.current?.open?.();
@@ -122,78 +120,92 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       },
       getElement: () => elementRef.current
     }));
-    
-    // Create and configure the web component on mount
+
+    // Create the event handler
     useEffect(() => {
-      if (containerRef.current) {
-        // Create the element if it doesn't exist
-        if (!elementRef.current) {
-          const element = document.createElement('persian-datepicker-element') as PersianDatepickerElement;
-          elementRef.current = element;
-          containerRef.current.appendChild(element);
-        }
-        
-        // Set element properties from props
-        const element = elementRef.current;
-        
-        // Apply all props as attributes
-        Object.entries(restProps).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            const attributeName = toKebabCase(key);
-            element.setAttribute(attributeName, convertValueToAttribute(value));
-          }
-        });
-        
-        // Apply CSS custom properties
-        if (primaryColor) element.style.setProperty('--jdp-primary', primaryColor);
-        if (primaryHover) element.style.setProperty('--jdp-primary-hover', primaryHover);
-        if (backgroundColor) element.style.setProperty('--jdp-background', backgroundColor);
-        if (foregroundColor) element.style.setProperty('--jdp-foreground', foregroundColor);
-        if (borderColor) element.style.setProperty('--jdp-border', borderColor);
-        if (borderRadius) element.style.setProperty('--jdp-border-radius', borderRadius);
-        if (fontFamily) element.style.setProperty('--jdp-font-family', fontFamily);
-        if (holidayColor) element.style.setProperty('--jdp-holiday-color', holidayColor);
-        if (holidayBg) element.style.setProperty('--jdp-holiday-bg', holidayBg);
-        if (scrollbarWidth) element.style.setProperty('--jdp-scrollbar-width', scrollbarWidth);
-        if (scrollbarThumbColor) element.style.setProperty('--jdp-scrollbar-thumb-color', scrollbarThumbColor);
-        if (scrollbarThumbHoverColor) element.style.setProperty('--jdp-scrollbar-thumb-hover-color', scrollbarThumbHoverColor);
-        if (scrollbarTrackColor) element.style.setProperty('--jdp-scrollbar-track-color', scrollbarTrackColor);
-        if (scrollbarBorderRadius) element.style.setProperty('--jdp-scrollbar-border-radius', scrollbarBorderRadius);
-        
-        // Add change event listener
-        const handleChange = (e: Event) => {
+      if (onChange) {
+        handleChange.current = (e: Event) => {
           const customEvent = e as CustomEvent<PersianDateChangeEvent>;
-          if (onChange && customEvent.detail) {
-            onChange(customEvent.detail);
-          }
-        };
-        
-        element.addEventListener('change', handleChange);
-        return () => {
-          element.removeEventListener('change', handleChange);
+          onChange(customEvent.detail);
         };
       }
-    }, [
-      onChange, 
-      primaryColor, 
-      primaryHover, 
-      backgroundColor, 
-      foregroundColor, 
-      borderColor, 
-      borderRadius, 
-      fontFamily, 
-      holidayColor, 
-      holidayBg,
-      scrollbarWidth,
-      scrollbarThumbColor,
-      scrollbarThumbHoverColor,
-      scrollbarTrackColor,
-      scrollbarBorderRadius,
-      ...Object.values(restProps)
-    ]);
-    
+    }, [onChange]);
+
+    // Add/remove event listener
+    useEffect(() => {
+      const element = elementRef.current;
+      const handler = handleChange.current;
+
+      if (element && handler) {
+        element.addEventListener('change', handler);
+        return () => {
+          element.removeEventListener('change', handler);
+        };
+      }
+    }, []);
+
+    // Convert DateTuple to string for attributes
+    const convertDateTupleToString = (date: DateTuple | undefined): string => {
+      if (!date) return '';
+      return JSON.stringify(date);
+    };
+
+    useEffect(() => {
+      if (elementRef.current) {
+        if (value) elementRef.current.setAttribute('value', Array.isArray(value) ? value.join('/') : String(value));
+        if (placeholder) elementRef.current.setAttribute('placeholder', placeholder);
+        if (format) elementRef.current.setAttribute('format', format);
+        if (showHolidays !== undefined) elementRef.current.setAttribute('show-holidays', String(showHolidays));
+        if (rtl !== undefined) elementRef.current.setAttribute('rtl', String(rtl));
+        if (minDate) elementRef.current.setAttribute('min-date', convertDateTupleToString(minDate));
+        if (maxDate) elementRef.current.setAttribute('max-date', convertDateTupleToString(maxDate));
+        if (disabledDates) elementRef.current.setAttribute('disabled-dates', disabledDates);
+        if (disabled !== undefined) elementRef.current.setAttribute('disabled', String(disabled));
+      }
+    }, [value, placeholder, format, showHolidays, rtl, minDate, maxDate, disabledDates, disabled]);
+
+    const minDateStr = convertDateTupleToString(minDate);
+    const maxDateStr = convertDateTupleToString(maxDate);
+
+    const elementProps = {
+      value,
+      placeholder,
+      format,
+      'show-holidays': showHolidays,
+      rtl,
+      'min-date': minDateStr,
+      'max-date': maxDateStr,
+      'disabled-dates': disabledDates,
+      disabled,
+      ...rest
+    } as React.HTMLAttributes<HTMLElement>;
+
     return (
-      <div ref={containerRef} className={className} style={style}></div>
+      <div className={className} style={style}>
+        <persian-datepicker-element
+          ref={elementRef}
+          {...elementProps}
+        />
+      </div>
     );
   }
-); 
+);
+
+// Add custom element declaration
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'persian-datepicker-element': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        value?: string;
+        placeholder?: string;
+        format?: string;
+        'show-holidays'?: boolean;
+        rtl?: boolean;
+        'min-date'?: string;
+        'max-date'?: string;
+        'disabled-dates'?: string;
+        disabled?: boolean;
+      }, HTMLElement>;
+    }
+  }
+} 

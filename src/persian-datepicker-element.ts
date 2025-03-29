@@ -828,6 +828,25 @@ export class PersianDatePickerElement extends HTMLElement {
     "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
   ];
 
+  // Add mapping for holiday type labels
+  private readonly holidayTypeLabels: { [key: string]: string } = {
+    'Iran': 'ایران',
+    'Afghanistan': 'افغانستان',
+    'Religious': 'مذهبی'
+  };
+
+  // Add format and limits properties
+  private format: string = 'YYYY/MM/DD';
+  private minDate: DateTuple | null = null;
+  private maxDate: DateTuple | null = null;
+  private disabledDatesFn: ((year: number, month: number, day: number) => boolean) | null = null;
+
+  // Add helper function to convert numbers to Persian numerals
+  private toPersianNum(num: number | string): string {
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return num.toString().replace(/\d/g, x => persianDigits[parseInt(x)]);
+  }
+
   static get observedAttributes() {
     return [
       'placeholder', 
@@ -839,6 +858,9 @@ export class PersianDatePickerElement extends HTMLElement {
       'today-button-class',
       'tomorrow-button-text',
       'tomorrow-button-class',
+      'min-date',
+      'max-date',
+      'disabled-dates',
       // UI visibility props
       'show-month-selector',
       'show-year-selector',
@@ -947,6 +969,59 @@ export class PersianDatePickerElement extends HTMLElement {
         } else {
           this.holidayTypes = [...DEFAULT_HOLIDAY_TYPES];
           this.includeAllTypes = false;
+        }
+        if (this.calendar) {
+          this.renderCalendar();
+        }
+        break;
+        
+      case 'format':
+        this.format = newValue || 'YYYY/MM/DD';
+        if (this.selectedDate) {
+          this.formatAndSetValue();
+        }
+        break;
+
+      case 'min-date':
+        if (newValue) {
+          try {
+            const [year, month, day] = JSON.parse(newValue);
+            this.setMinDate(year, month, day);
+          } catch (e) {
+            console.error('Invalid min-date format');
+          }
+        } else {
+          this.minDate = null;
+        }
+        if (this.calendar) {
+          this.renderCalendar();
+        }
+        break;
+
+      case 'max-date':
+        if (newValue) {
+          try {
+            const [year, month, day] = JSON.parse(newValue);
+            this.setMaxDate(year, month, day);
+          } catch (e) {
+            console.error('Invalid max-date format');
+          }
+        } else {
+          this.maxDate = null;
+        }
+        if (this.calendar) {
+          this.renderCalendar();
+        }
+        break;
+
+      case 'disabled-dates':
+        if (newValue) {
+          const disabledFn = (window as any)[newValue];
+          if (typeof disabledFn === 'function') {
+            this.disabledDatesFn = disabledFn;
+          }
+        } else {
+          this.disabledDatesFn = null;
         }
         if (this.calendar) {
           this.renderCalendar();
@@ -1164,12 +1239,12 @@ export class PersianDatePickerElement extends HTMLElement {
     for (let year = startYear; year <= endYear; year++) {
       const yearItem = document.createElement("div");
       yearItem.classList.add("select-item");
-      yearItem.textContent = year.toString();
+      yearItem.textContent = this.toPersianNum(year);
       yearItem.dataset.value = year.toString();
       
       if (year === this.jalaliYear) {
         yearItem.classList.add("selected");
-        yearSelectValue.textContent = year.toString();
+        yearSelectValue.textContent = this.toPersianNum(year);
       }
       
       yearItem.addEventListener("click", (e) => {
@@ -1524,7 +1599,7 @@ export class PersianDatePickerElement extends HTMLElement {
     }
     
     if (yearSelectValue) {
-      yearSelectValue.textContent = this.jalaliYear.toString();
+      yearSelectValue.textContent = this.toPersianNum(this.jalaliYear);
     }
     
     // Update selected items in dropdowns
@@ -1598,13 +1673,23 @@ export class PersianDatePickerElement extends HTMLElement {
     for (let i = 1; i <= daysInMonth; i++) {
       const dayElement = document.createElement("div");
       dayElement.classList.add("day");
-      dayElement.textContent = i.toString();
+      dayElement.textContent = this.toPersianNum(i);
       
-      // Add hover handler for tooltips
-      this.setupDayTooltips(dayElement);
+      // Check if date is in range and not disabled
+      const isInRange = this.isDateInRange(this.jalaliYear, this.jalaliMonth, i);
+      const isDisabled = this.isDateDisabled(this.jalaliYear, this.jalaliMonth, i);
       
-      // Add click handler
-      this.setupDayClickHandler(dayElement, i);
+      if (!isInRange || isDisabled) {
+        dayElement.classList.add("disabled");
+        dayElement.style.opacity = "0.4";
+        dayElement.style.cursor = "not-allowed";
+      } else {
+        // Add hover handler for tooltips
+        this.setupDayTooltips(dayElement);
+        
+        // Add click handler
+        this.setupDayClickHandler(dayElement, i);
+      }
       
       // Highlight today
       if (this.jalaliYear === jalaliToday[0] && this.jalaliMonth === jalaliToday[1] && i === jalaliToday[2]) {
@@ -1723,10 +1808,10 @@ export class PersianDatePickerElement extends HTMLElement {
         eventItem.classList.add("holiday");
       }
       
-      // Add type label
+      // Add type label with Persian text
       const typeLabel = document.createElement("span");
       typeLabel.classList.add("event-type-label");
-      typeLabel.textContent = event.type;
+      typeLabel.textContent = this.holidayTypeLabels[event.type] || event.type;
       eventItem.appendChild(typeLabel);
       
       // Add event title
@@ -1822,12 +1907,28 @@ export class PersianDatePickerElement extends HTMLElement {
   private formatAndSetValue() {
     if (!this.selectedDate) return;
     
-    const format = this.getAttribute('format') || this.options.format || 'YYYY/MM/DD';
-    
-    let formattedDate = format
-      .replace('YYYY', this.selectedDate[0].toString())
-      .replace('MM', this.selectedDate[1].toString().padStart(2, '0'))
-      .replace('DD', this.selectedDate[2].toString().padStart(2, '0'));
+    const [year, month, day] = this.selectedDate;
+    let formattedDate = this.format
+      .replace('YYYY', this.toPersianNum(year))
+      .replace('YY', this.toPersianNum(year.toString().slice(-2)))
+      .replace('MM', this.toPersianNum(month.toString().padStart(2, '0')))
+      .replace('M', this.toPersianNum(month))
+      .replace('MMM', this.persianMonths[month - 1].slice(0, 3))
+      .replace('MMMM', this.persianMonths[month - 1])
+      .replace('DD', this.toPersianNum(day.toString().padStart(2, '0')))
+      .replace('D', this.toPersianNum(day));
+
+    // Add day of week if requested
+    if (this.format.includes('d')) {
+      const dayOfWeek = PersianDate.getDayOfWeek(year, month, day);
+      const dayNames = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
+      const shortDayNames = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
+      
+      formattedDate = formattedDate
+        .replace('dddd', dayNames[dayOfWeek])
+        .replace('ddd', shortDayNames[dayOfWeek])
+        .replace('d', dayOfWeek.toString());
+    }
       
     this.input.value = formattedDate;
   }
@@ -2103,6 +2204,48 @@ export class PersianDatePickerElement extends HTMLElement {
     if (this.calendar.classList.contains("visible")) {
       this.toggleCalendar();
     }
+  }
+
+  /**
+   * Set minimum date
+   */
+  public setMinDate(year: number, month: number, day: number): void {
+    this.minDate = [year, month, day];
+    if (this.calendar) {
+      this.renderCalendar();
+    }
+  }
+
+  /**
+   * Set maximum date
+   */
+  public setMaxDate(year: number, month: number, day: number): void {
+    this.maxDate = [year, month, day];
+    if (this.calendar) {
+      this.renderCalendar();
+    }
+  }
+
+  /**
+   * Check if a date is within the allowed range
+   */
+  private isDateInRange(year: number, month: number, day: number): boolean {
+    if (!this.minDate && !this.maxDate) return true;
+    
+    const date = [year, month, day];
+    
+    if (this.minDate && date < this.minDate) return false;
+    if (this.maxDate && date > this.maxDate) return false;
+    
+    return true;
+  }
+
+  /**
+   * Check if a date is disabled
+   */
+  private isDateDisabled(year: number, month: number, day: number): boolean {
+    if (!this.disabledDatesFn) return false;
+    return this.disabledDatesFn(year, month, day);
   }
 }
 
