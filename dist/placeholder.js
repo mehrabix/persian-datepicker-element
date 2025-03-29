@@ -1369,12 +1369,16 @@ input:focus {
 .day.in-range {
   background-color: var(--jdp-range-bg);
   color: var(--jdp-range-color);
+  position: relative;
+  z-index: 1;
 }
 
 .day.range-start,
 .day.range-end {
   background-color: var(--jdp-range-start-bg);
   color: var(--jdp-range-start-color);
+  position: relative;
+  z-index: 2;
 }
 
 .day.range-start {
@@ -1394,6 +1398,36 @@ input:focus {
 :host([rtl="true"]) .day.range-end,
 :host([dir="rtl"]) .day.range-end {
   border-radius: var(--jdp-border-radius) 0 0 var(--jdp-border-radius);
+}
+
+/* Special handling for single day range */
+.day.range-start.range-end {
+  border-radius: var(--jdp-border-radius);
+}
+
+/* Ensure range styles take precedence over other styles */
+.day.in-range:not(.range-start):not(.range-end) {
+  background-color: var(--jdp-range-bg);
+  color: var(--jdp-range-color);
+}
+
+/* Handle disabled dates in range */
+.day.disabled.in-range {
+  opacity: 0.4;
+  background-color: var(--jdp-range-bg);
+  color: var(--jdp-range-color);
+}
+
+/* Handle holidays in range */
+.day.holiday.in-range:not(.range-start):not(.range-end) {
+  background-color: var(--jdp-range-bg);
+  color: var(--jdp-range-color);
+}
+
+.day.holiday.range-start,
+.day.holiday.range-end {
+  background-color: var(--jdp-range-start-bg);
+  color: var(--jdp-range-start-color);
 }
 `;
 // Default holiday types
@@ -2266,26 +2300,50 @@ class PersianDatePickerElement extends HTMLElement {
             // Handle range selection highlighting
             if (this.isRangeMode) {
                 const currentDate = [this.jalaliYear, this.jalaliMonth, i];
+                // First remove any existing range classes
+                dayElement.classList.remove("in-range", "range-start", "range-end");
                 if (this.rangeStart && this.rangeEnd) {
                     // Complete range - check if current date is between start and end
                     const isInRange = this.compareDates(currentDate, this.rangeStart) >= 0 &&
                         this.compareDates(currentDate, this.rangeEnd) <= 0;
-                    if (isInRange) {
-                        dayElement.classList.add("in-range");
-                    }
-                    // Add range-start class if this is the start date
+                    // Handle start date
                     if (this.compareDates(currentDate, this.rangeStart) === 0) {
                         dayElement.classList.add("range-start");
+                        // If start and end are the same date, add both classes
+                        if (this.compareDates(currentDate, this.rangeEnd) === 0) {
+                            dayElement.classList.add("range-end");
+                        }
                     }
-                    // Add range-end class if this is the end date
-                    if (this.compareDates(currentDate, this.rangeEnd) === 0) {
+                    // Handle end date
+                    else if (this.compareDates(currentDate, this.rangeEnd) === 0) {
                         dayElement.classList.add("range-end");
+                    }
+                    // Handle dates in between
+                    else if (isInRange) {
+                        dayElement.classList.add("in-range");
                     }
                 }
                 else if (this.rangeStart && !this.rangeEnd) {
                     // Selecting range - only highlight start date
                     if (this.compareDates(currentDate, this.rangeStart) === 0) {
                         dayElement.classList.add("range-start");
+                    }
+                }
+                // Handle disabled dates in range
+                if (dayElement.classList.contains("disabled")) {
+                    dayElement.style.opacity = "0.4";
+                    dayElement.style.cursor = "not-allowed";
+                }
+                // Handle holidays in range
+                if (this.showHolidays) {
+                    const isHoliday = this.addHolidayInfo(dayElement, i);
+                    if (isHoliday) {
+                        // Remove holiday styling for dates in range
+                        if (dayElement.classList.contains("in-range") ||
+                            dayElement.classList.contains("range-start") ||
+                            dayElement.classList.contains("range-end")) {
+                            dayElement.classList.remove("holiday", "friday");
+                        }
                     }
                 }
             }
@@ -2295,22 +2353,6 @@ class PersianDatePickerElement extends HTMLElement {
                 i === this.selectedDate[2]) {
                 dayElement.classList.add("selected");
             }
-            // Add holiday information if enabled
-            if (this.showHolidays) {
-                const isHoliday = this.addHolidayInfo(dayElement, i);
-                // If in range mode and we have a complete range
-                if (this.isRangeMode && this.rangeStart && this.rangeEnd) {
-                    const currentDate = [this.jalaliYear, this.jalaliMonth, i];
-                    const isStartDate = this.compareDates(currentDate, this.rangeStart) === 0;
-                    const isEndDate = this.compareDates(currentDate, this.rangeEnd) === 0;
-                    const isInRange = this.compareDates(currentDate, this.rangeStart) >= 0 &&
-                        this.compareDates(currentDate, this.rangeEnd) <= 0;
-                    // Remove holiday styling for dates in between
-                    if (isInRange && !isStartDate && !isEndDate) {
-                        dayElement.classList.remove("holiday", "friday");
-                    }
-                }
-            }
             this.daysContainer.appendChild(dayElement);
         }
     }
@@ -2319,10 +2361,15 @@ class PersianDatePickerElement extends HTMLElement {
      * Returns -1 if date1 < date2, 0 if date1 = date2, 1 if date1 > date2
      */
     compareDates(date1, date2) {
-        if (date1[0] !== date2[0])
+        // First compare years
+        if (date1[0] !== date2[0]) {
             return date1[0] - date2[0];
-        if (date1[1] !== date2[1])
+        }
+        // Then compare months
+        if (date1[1] !== date2[1]) {
             return date1[1] - date2[1];
+        }
+        // Finally compare days
         return date1[2] - date2[2];
     }
     /**
@@ -2887,19 +2934,22 @@ class PersianDatePickerElement extends HTMLElement {
             this.selectDate(day);
             return;
         }
+        const currentDate = [this.jalaliYear, this.jalaliMonth, day];
         if (!this.isSelectingRange) {
             // Start new range
-            this.rangeStart = [this.jalaliYear, this.jalaliMonth, day];
+            this.rangeStart = currentDate;
             this.rangeEnd = null;
             this.isSelectingRange = true;
         }
         else {
             // Complete range
-            this.rangeEnd = [this.jalaliYear, this.jalaliMonth, day];
+            this.rangeEnd = currentDate;
             this.isSelectingRange = false;
             // Ensure range is in correct order (start before end)
             if (this.rangeStart && this.rangeEnd) {
-                if (this.rangeStart > this.rangeEnd) {
+                const comparison = this.compareDates(this.rangeStart, this.rangeEnd);
+                if (comparison > 0) {
+                    // Swap start and end if they're in wrong order
                     [this.rangeStart, this.rangeEnd] = [this.rangeEnd, this.rangeStart];
                 }
             }
@@ -2920,6 +2970,7 @@ class PersianDatePickerElement extends HTMLElement {
             this.closeAllDropdowns();
             this.toggleCalendar();
         }
+        // Force a re-render of the calendar to update the range highlighting
         this.renderCalendar();
     }
     // Add new methods for range selection
