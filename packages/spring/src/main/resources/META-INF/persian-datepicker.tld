@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+         version="2.1">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>persian-datepicker</short-name>
+    <uri>http://github.com/mehrabix/persian-datepicker</uri>
+    <description>Persian Date Picker Tag Library</description>
+
+    <tag>
+        <name>datePicker</name>
+        <tag-class>com.github.mehrabix.persian.datepicker.tag.PersianDatePickerTag</tag-class>
+        <body-content>empty</body-content>
+        <description>Renders a Persian Date Picker input field</description>
+        <attribute>
+            <name>path</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>The path to the property to bind to</description>
+        </attribute>
+        <attribute>
+            <name>placeholder</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Placeholder text for the input field</description>
+        </attribute>
+        <attribute>
+            <name>format</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Date format pattern</description>
+        </attribute>
+        <attribute>
+            <name>rtl</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>Whether to use RTL direction</description>
+        </attribute>
+        <attribute>
+            <name>showHolidays</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>Whether to highlight holidays</description>
+        </attribute>
+        <attribute>
+            <name>holidayTypes</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Comma-separated list of holiday types</description>
+        </attribute>
+        <attribute>
+            <name>todayButtonText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Text for the Today button</description>
+        </attribute>
+        <attribute>
+            <name>todayButtonClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Additional CSS classes for Today button</description>
+        </attribute>
+        <attribute>
+            <name>tomorrowButtonText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Text for the Tomorrow button</description>
+        </attribute>
+        <attribute>
+            <name>tomorrowButtonClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Additional CSS classes for Tomorrow button</description>
+        </attribute>
+        <attribute>
+            <name>showMonthSelector</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>Whether to show month selector</description>
+        </attribute>
+        <attribute>
+            <name>showYearSelector</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>Whether to show year selector</description>
+        </attribute>
+        <attribute>
+            <name>showPrevButton</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>Whether to show previous month button</description>
+        </attribute>
+        <attribute>
+            <name>showNextButton</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>Whether to show next month button</description>
+        </attribute>
+        <attribute>
+            <name>showTodayButton</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>Whether to show Today button</description>
+        </attribute>
+        <attribute>
+            <name>showTomorrowButton</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>Whether to show Tomorrow button</description>
+        </attribute>
+        <attribute>
+            <name>rangeMode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+            <description>Whether to enable range selection mode</description>
+        </attribute>
+    </tag>
+</taglib> 
