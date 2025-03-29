@@ -106,6 +106,11 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
   readonly holidayColor = input<string | undefined>(undefined, { alias: 'holidayColorInput' });
   readonly holidayBg = input<string | undefined>(undefined, { alias: 'holidayBgInput' });
   
+  // Range picker inputs
+  readonly rangeMode = input<boolean | undefined>(undefined, { alias: 'rangeModeInput' });
+  readonly rangeStart = input<DateTuple | undefined>(undefined, { alias: 'rangeStartInput' });
+  readonly rangeEnd = input<DateTuple | undefined>(undefined, { alias: 'rangeEndInput' });
+  
   // #endregion
 
   // #region Outputs
@@ -186,7 +191,27 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
       }
     });
 
+    // Range picker effects
+    effect(() => {
+      const value = this.rangeMode();
+      if (value !== undefined) {
+        this.updateAttribute('range-mode', String(value));
+      }
+    });
 
+    effect(() => {
+      const value = this.rangeStart();
+      if (value !== undefined) {
+        this.updateAttribute('range-start', JSON.stringify(value));
+      }
+    });
+
+    effect(() => {
+      const value = this.rangeEnd();
+      if (value !== undefined) {
+        this.updateAttribute('range-end', JSON.stringify(value));
+      }
+    });
   }
 
   ngOnInit() {
@@ -262,14 +287,16 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
     // Use NgZone to ensure the change is detected by Angular
     this.zone.run(() => {
       // Get the selected date from the event detail
-      const { jalali, gregorian, isHoliday, events } = event.detail;
+      const { jalali, gregorian, isHoliday, events, isRange, range } = event.detail;
       
       // Emit the dateChange event
       this.dateChange.emit({
         jalali,
         gregorian,
         isHoliday,
-        events
+        events,
+        isRange,
+        range
       });
       
       // Update form control value
@@ -418,5 +445,28 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
     }
   }
   // #endregion
+
+  // Add range picker methods
+  public setRange(start: DateTuple, end: DateTuple): void {
+    const element = this.elementSignal();
+    if (element) {
+      (element as any).setRange(start, end);
+    }
+  }
+
+  public getRange(): { start: DateTuple | null; end: DateTuple | null } {
+    const element = this.elementSignal();
+    if (element) {
+      return (element as any).getRange() || { start: null, end: null };
+    }
+    return { start: null, end: null };
+  }
+
+  public clear(): void {
+    const element = this.elementSignal();
+    if (element) {
+      (element as any).clear();
+    }
+  }
 }
 

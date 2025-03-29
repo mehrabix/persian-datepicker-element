@@ -45,6 +45,11 @@ export interface PersianDatepickerProps extends Omit<PersianDatePickerElementOpt
   minDate?: DateTuple;
   maxDate?: DateTuple;
   disabledDates?: string;
+
+  // Range picker props
+  rangeMode?: boolean;
+  rangeStart?: DateTuple;
+  rangeEnd?: DateTuple;
 }
 
 // Methods that will be available via ref
@@ -54,6 +59,10 @@ export interface PersianDatepickerMethods {
   open: () => void;
   close: () => void;
   getElement: () => HTMLElement | null;
+  // Range picker methods
+  setRange: (start: DateTuple, end: DateTuple) => void;
+  getRange: () => { start: DateTuple | null; end: DateTuple | null };
+  clear: () => void;
 }
 
 // Define an extended HTMLElement interface with custom methods
@@ -63,6 +72,10 @@ interface PersianDatepickerElement extends HTMLElement {
   open?: () => void;
   close?: () => void;
   setAttribute(name: string, value: string): void;
+  // Range picker methods
+  setRange?: (start: DateTuple, end: DateTuple) => void;
+  getRange?: () => { start: DateTuple | null; end: DateTuple | null };
+  clear?: () => void;
 }
 
 // Helper to convert camelCase to kebab-case for HTML attributes
@@ -98,6 +111,9 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       className,
       style,
       darkMode,
+      rangeMode,
+      rangeStart,
+      rangeEnd,
       ...rest
     } = props;
 
@@ -118,7 +134,17 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       close: () => {
         elementRef.current?.close?.();
       },
-      getElement: () => elementRef.current
+      getElement: () => elementRef.current,
+      // Range picker methods
+      setRange: (start: DateTuple, end: DateTuple) => {
+        elementRef.current?.setRange?.(start, end);
+      },
+      getRange: () => {
+        return elementRef.current?.getRange?.() || { start: null, end: null };
+      },
+      clear: () => {
+        elementRef.current?.clear?.();
+      }
     }));
 
     // Create the event handler
@@ -161,11 +187,17 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
         if (maxDate) elementRef.current.setAttribute('max-date', convertDateTupleToString(maxDate));
         if (disabledDates) elementRef.current.setAttribute('disabled-dates', disabledDates);
         if (disabled !== undefined) elementRef.current.setAttribute('disabled', String(disabled));
+        // Range picker attributes
+        if (rangeMode !== undefined) elementRef.current.setAttribute('range-mode', String(rangeMode));
+        if (rangeStart) elementRef.current.setAttribute('range-start', convertDateTupleToString(rangeStart));
+        if (rangeEnd) elementRef.current.setAttribute('range-end', convertDateTupleToString(rangeEnd));
       }
-    }, [value, placeholder, format, showHolidays, rtl, minDate, maxDate, disabledDates, disabled]);
+    }, [value, placeholder, format, showHolidays, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd]);
 
     const minDateStr = convertDateTupleToString(minDate);
     const maxDateStr = convertDateTupleToString(maxDate);
+    const rangeStartStr = convertDateTupleToString(rangeStart);
+    const rangeEndStr = convertDateTupleToString(rangeEnd);
 
     const elementProps = {
       value,
@@ -177,6 +209,9 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       'max-date': maxDateStr,
       'disabled-dates': disabledDates,
       disabled,
+      'range-mode': rangeMode,
+      'range-start': rangeStartStr,
+      'range-end': rangeEndStr,
       ...rest
     } as React.HTMLAttributes<HTMLElement>;
 
@@ -205,6 +240,9 @@ declare global {
         'max-date'?: string;
         'disabled-dates'?: string;
         disabled?: boolean;
+        'range-mode'?: boolean;
+        'range-start'?: string;
+        'range-end'?: string;
       }, HTMLElement>;
     }
   }

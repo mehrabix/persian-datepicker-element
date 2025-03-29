@@ -19,6 +19,9 @@ var PersianDatepicker = forwardRef(
       className,
       style,
       darkMode,
+      rangeMode,
+      rangeStart,
+      rangeEnd,
       ...rest
     } = props;
     const elementRef = useRef(null);
@@ -37,7 +40,17 @@ var PersianDatepicker = forwardRef(
       close: () => {
         elementRef.current?.close?.();
       },
-      getElement: () => elementRef.current
+      getElement: () => elementRef.current,
+      // Range picker methods
+      setRange: (start, end) => {
+        elementRef.current?.setRange?.(start, end);
+      },
+      getRange: () => {
+        return elementRef.current?.getRange?.() || { start: null, end: null };
+      },
+      clear: () => {
+        elementRef.current?.clear?.();
+      }
     }));
     useEffect(() => {
       if (onChange) {
@@ -72,10 +85,15 @@ var PersianDatepicker = forwardRef(
         if (maxDate) elementRef.current.setAttribute("max-date", convertDateTupleToString(maxDate));
         if (disabledDates) elementRef.current.setAttribute("disabled-dates", disabledDates);
         if (disabled !== void 0) elementRef.current.setAttribute("disabled", String(disabled));
+        if (rangeMode !== void 0) elementRef.current.setAttribute("range-mode", String(rangeMode));
+        if (rangeStart) elementRef.current.setAttribute("range-start", convertDateTupleToString(rangeStart));
+        if (rangeEnd) elementRef.current.setAttribute("range-end", convertDateTupleToString(rangeEnd));
       }
-    }, [value, placeholder, format, showHolidays, rtl, minDate, maxDate, disabledDates, disabled]);
+    }, [value, placeholder, format, showHolidays, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd]);
     const minDateStr = convertDateTupleToString(minDate);
     const maxDateStr = convertDateTupleToString(maxDate);
+    const rangeStartStr = convertDateTupleToString(rangeStart);
+    const rangeEndStr = convertDateTupleToString(rangeEnd);
     const elementProps = {
       value,
       placeholder,
@@ -86,6 +104,9 @@ var PersianDatepicker = forwardRef(
       "max-date": maxDateStr,
       "disabled-dates": disabledDates,
       disabled,
+      "range-mode": rangeMode,
+      "range-start": rangeStartStr,
+      "range-end": rangeEndStr,
       ...rest
     };
     return /* @__PURE__ */ React.createElement("div", { className, style }, /* @__PURE__ */ React.createElement(

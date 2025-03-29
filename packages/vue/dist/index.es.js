@@ -1,5 +1,5 @@
-import { defineComponent as p, ref as n, computed as g, watch as r, nextTick as d, onMounted as b, createElementBlock as A, openBlock as D, normalizeStyle as V, normalizeClass as x, createElementVNode as S } from "vue";
-const k = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled", "min-date", "max-date", "disabled-dates", "holiday-types"], u = /* @__PURE__ */ p({
+import { defineComponent as h, ref as u, computed as b, watch as d, nextTick as i, onMounted as A, createElementBlock as p, openBlock as S, normalizeStyle as D, normalizeClass as V, createElementVNode as x } from "vue";
+const k = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled", "min-date", "max-date", "disabled-dates", "holiday-types", "range-mode", "range-start", "range-end"], f = /* @__PURE__ */ h({
   __name: "PersianDatepicker",
   props: {
     modelValue: {
@@ -49,75 +49,113 @@ const k = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled",
     style: {
       type: Object,
       default: () => ({})
+    },
+    // Range picker props
+    rangeMode: {
+      type: Boolean,
+      default: !1
+    },
+    rangeStart: {
+      type: Array,
+      default: void 0
+    },
+    rangeEnd: {
+      type: Array,
+      default: void 0
     }
   },
   emits: ["update:modelValue", "change"],
-  setup(l, { expose: m, emit: f }) {
-    const a = l, o = f, c = n(null), t = n(null), y = g(() => a.modelValue ? Array.isArray(a.modelValue) ? a.modelValue.join("/") : String(a.modelValue) : ""), v = (e) => {
-      const i = e.detail;
-      o("update:modelValue", i.jalali), o("change", i);
+  setup(l, { expose: m, emit: y }) {
+    const t = l, o = y, c = u(null), a = u(null), g = b(() => t.modelValue ? Array.isArray(t.modelValue) ? t.modelValue.join("/") : String(t.modelValue) : ""), v = (e) => {
+      const r = e.detail;
+      o("update:modelValue", r.jalali), o("change", r);
     };
-    return r(() => a.modelValue, (e) => {
-      d(() => {
-        if (t.value)
+    return d(() => t.modelValue, (e) => {
+      i(() => {
+        if (a.value)
           if (Array.isArray(e) && e.length === 3)
             try {
-              t.value.setValue(e[0], e[1], e[2]);
-            } catch (i) {
-              console.error("Failed to set value:", i);
+              a.value.setValue(e[0], e[1], e[2]);
+            } catch (r) {
+              console.error("Failed to set value:", r);
             }
-          else typeof e == "string" && t.value.setAttribute("value", e);
+          else typeof e == "string" && a.value.setAttribute("value", e);
       });
-    }, { immediate: !1 }), r(() => a.minDate, (e) => {
-      d(() => {
-        t.value && e && t.value.setAttribute("min-date", JSON.stringify(e));
+    }, { immediate: !1 }), d(() => t.minDate, (e) => {
+      i(() => {
+        a.value && e && a.value.setAttribute("min-date", JSON.stringify(e));
       });
-    }), r(() => a.maxDate, (e) => {
-      d(() => {
-        t.value && e && t.value.setAttribute("max-date", JSON.stringify(e));
+    }), d(() => t.maxDate, (e) => {
+      i(() => {
+        a.value && e && a.value.setAttribute("max-date", JSON.stringify(e));
       });
-    }), r(() => a.disabledDates, (e) => {
-      d(() => {
-        t.value && (e ? t.value.setAttribute("disabled-dates", JSON.stringify(e)) : t.value.removeAttribute("disabled-dates"));
+    }), d(() => t.disabledDates, (e) => {
+      i(() => {
+        a.value && (e ? a.value.setAttribute("disabled-dates", JSON.stringify(e)) : a.value.removeAttribute("disabled-dates"));
       });
-    }), b(() => {
-      d(() => {
-        if (a.modelValue && t.value)
-          if (Array.isArray(a.modelValue) && a.modelValue.length === 3)
+    }), d(() => t.rangeMode, (e) => {
+      i(() => {
+        a.value && a.value.setAttribute("range-mode", String(e));
+      });
+    }), d(() => t.rangeStart, (e) => {
+      i(() => {
+        a.value && e && a.value.setAttribute("range-start", JSON.stringify(e));
+      });
+    }), d(() => t.rangeEnd, (e) => {
+      i(() => {
+        a.value && e && a.value.setAttribute("range-end", JSON.stringify(e));
+      });
+    }), A(() => {
+      i(() => {
+        if (t.modelValue && a.value)
+          if (Array.isArray(t.modelValue) && t.modelValue.length === 3)
             try {
-              t.value.setValue(a.modelValue[0], a.modelValue[1], a.modelValue[2]);
+              a.value.setValue(t.modelValue[0], t.modelValue[1], t.modelValue[2]);
             } catch (e) {
               console.error("Failed to set initial value:", e);
             }
-          else typeof a.modelValue == "string" && t.value.setAttribute("value", a.modelValue);
+          else typeof t.modelValue == "string" && a.value.setAttribute("value", t.modelValue);
       });
     }), m({
       getValue: () => {
         var e;
-        return (e = t.value) == null ? void 0 : e.getValue();
+        return (e = a.value) == null ? void 0 : e.getValue();
       },
-      setValue: (e, i, h) => {
+      setValue: (e, r, n) => {
         var s;
-        (s = t.value) == null || s.setValue(e, i, h);
+        (s = a.value) == null || s.setValue(e, r, n);
       },
       open: () => {
         var e;
-        return (e = t.value) == null ? void 0 : e.open();
+        return (e = a.value) == null ? void 0 : e.open();
       },
       close: () => {
         var e;
-        return (e = t.value) == null ? void 0 : e.close();
+        return (e = a.value) == null ? void 0 : e.close();
+      },
+      // Range picker methods
+      setRange: (e, r) => {
+        var n;
+        (n = a.value) == null || n.setRange(e, r);
+      },
+      getRange: () => {
+        var e;
+        return ((e = a.value) == null ? void 0 : e.getRange()) || { start: null, end: null };
+      },
+      clear: () => {
+        var e;
+        (e = a.value) == null || e.clear();
       }
-    }), (e, i) => (D(), A("div", {
+    }), (e, r) => (S(), p("div", {
       ref_key: "container",
       ref: c,
-      class: x(l.className),
-      style: V(l.style)
+      class: V(l.className),
+      style: D(l.style)
     }, [
-      S("persian-datepicker-element", {
+      x("persian-datepicker-element", {
         ref_key: "elementRef",
-        ref: t,
-        value: y.value,
+        ref: a,
+        value: g.value,
         placeholder: l.placeholder,
         format: l.format,
         "show-holidays": l.showHolidays,
@@ -127,17 +165,20 @@ const k = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled",
         "max-date": l.maxDate,
         "disabled-dates": l.disabledDates,
         "holiday-types": l.holidayTypes,
+        "range-mode": l.rangeMode,
+        "range-start": l.rangeStart,
+        "range-end": l.rangeEnd,
         onChange: v
       }, null, 40, k)
     ], 6));
   }
 }), B = {
-  PersianDatepicker: u,
+  PersianDatepicker: f,
   install: (l) => {
-    l.component("PersianDatepicker", u);
+    l.component("PersianDatepicker", f);
   }
 };
 export {
-  u as PersianDatepicker,
+  f as PersianDatepicker,
   B as default
 };

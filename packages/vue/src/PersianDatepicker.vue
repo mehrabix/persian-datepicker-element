@@ -12,6 +12,9 @@
       :max-date="maxDate"
       :disabled-dates="disabledDates"
       :holiday-types="holidayTypes"
+      :range-mode="rangeMode"
+      :range-start="rangeStart"
+      :range-end="rangeEnd"
       @change="handleChange"
     />
   </div>
@@ -70,6 +73,19 @@ const props = defineProps({
   style: {
     type: Object,
     default: () => ({})
+  },
+  // Range picker props
+  rangeMode: {
+    type: Boolean,
+    default: false
+  },
+  rangeStart: {
+    type: Array as () => DateTuple,
+    default: undefined
+  },
+  rangeEnd: {
+    type: Array as () => DateTuple,
+    default: undefined
   }
 });
 
@@ -148,6 +164,37 @@ watch(() => props.disabledDates, (newValue) => {
   });
 });
 
+// Watch for range mode changes
+watch(() => props.rangeMode, (newValue) => {
+  nextTick(() => {
+    if (elementRef.value) {
+      elementRef.value.setAttribute('range-mode', String(newValue));
+    }
+  });
+});
+
+// Watch for range start changes
+watch(() => props.rangeStart, (newValue) => {
+  nextTick(() => {
+    if (elementRef.value) {
+      if (newValue) {
+        elementRef.value.setAttribute('range-start', JSON.stringify(newValue));
+      }
+    }
+  });
+});
+
+// Watch for range end changes
+watch(() => props.rangeEnd, (newValue) => {
+  nextTick(() => {
+    if (elementRef.value) {
+      if (newValue) {
+        elementRef.value.setAttribute('range-end', JSON.stringify(newValue));
+      }
+    }
+  });
+});
+
 onMounted(() => {
   nextTick(() => {
     if (props.modelValue && elementRef.value) {
@@ -171,7 +218,17 @@ defineExpose({
     (elementRef.value as any)?.setValue(year, month, day);
   },
   open: () => (elementRef.value as any)?.open(),
-  close: () => (elementRef.value as any)?.close()
+  close: () => (elementRef.value as any)?.close(),
+  // Range picker methods
+  setRange: (start: DateTuple, end: DateTuple) => {
+    (elementRef.value as any)?.setRange(start, end);
+  },
+  getRange: () => {
+    return (elementRef.value as any)?.getRange() || { start: null, end: null };
+  },
+  clear: () => {
+    (elementRef.value as any)?.clear();
+  }
 });
 </script>
 

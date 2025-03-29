@@ -142,8 +142,8 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       expect(input).toBeTruthy();
       
       // Check format
-      expect(input.value).toMatch(/^\d{4}\/\d{2}\/\d{2}$/);
-      expect(input.value).toBe(`${persianYear}/01/15`);
+      expect(input.value).toMatch(/^[۰-۹]{4}\/[۰-۹]{2}\/[۰-۹]{2}$/);
+      expect(input.value).toBe(`۱۴۰۴/۰۱/۱۵`);
     });
 
     test('should format date according to format attribute', () => {
@@ -157,8 +157,8 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       const input = element.shadowRoot?.querySelector('input') as HTMLInputElement;
       
       // Check format
-      expect(input.value).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-      expect(input.value).toBe(`${persianYear}-01-15`);
+      expect(input.value).toMatch(/^[۰-۹]{4}-[۰-۹]{2}-[۰-۹]{2}$/);
+      expect(input.value).toBe(`۱۴۰۴-۰۱-۱۵`);
     });
 
     test('should support year-month format', () => {
@@ -171,9 +171,8 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       // Get the input element and check its formatted value
       const input = element.shadowRoot?.querySelector('input') as HTMLInputElement;
       
-      // Check format
-      expect(input.value).toMatch(/^\d{4}\/\d{2}$/);
-      expect(input.value).toBe(`${persianYear}/01`);
+      // Check format - should only show year and month in Persian numerals
+      expect(input.value).toBe('۱۴۰۴/۰۱');
     });
 
     test('should support day-month format', () => {
@@ -186,9 +185,8 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       // Get the input element and check its formatted value
       const input = element.shadowRoot?.querySelector('input') as HTMLInputElement;
       
-      // Check format
-      expect(input.value).toMatch(/^\d{2}\/\d{2}$/);
-      expect(input.value).toBe('15/01');
+      // Check format - should only show day and month in Persian numerals
+      expect(input.value).toBe('۱۵/۰۱');
     });
   });
 
@@ -342,8 +340,8 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       // Get the input element and check its formatted value
       const input = element.shadowRoot?.querySelector('input') as HTMLInputElement;
       
-      // Check format
-      expect(input.value).toBe(`15.01.${persianYear}`);
+      // Check format - should show date in Persian numerals with dots
+      expect(input.value).toBe('۱۵.۰۱.۱۴۰۴');
     });
 
     test('should fire an event when a date is selected', () => {

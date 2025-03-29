@@ -6,8 +6,26 @@ export interface DateTuple extends Array<number> {
   length: 3;
 }
 
+export interface PersianEvent {
+  title: string;
+  type: string;
+  holiday: boolean;
+}
+
+export interface PersianDateChangeEvent {
+  jalali: DateTuple;
+  gregorian: DateTuple;
+  isHoliday: boolean;
+  events: PersianEvent[];
+  isRange?: boolean;
+  range?: {
+    start: DateTuple | null;
+    end: DateTuple | null;
+  };
+}
+
 export interface CSSVariableMap {
-  [key: string]: string | number;
+  [key: string]: string;
 }
 
 export interface PersianDatePickerElementOptions {
@@ -18,13 +36,7 @@ export interface PersianDatePickerElementOptions {
   holidayTypes?: string | string[];
   cssVariables?: CSSVariableMap;
   rtl?: boolean;
-}
-
-export interface PersianDateChangeEvent {
-  detail: {
-    jalali: DateTuple;
-    gregorian: DateTuple;
-    isHoliday: boolean;
-    events?: any[];
-  }
+  rangeMode?: boolean;
+  rangeStart?: DateTuple;
+  rangeEnd?: DateTuple;
 } 

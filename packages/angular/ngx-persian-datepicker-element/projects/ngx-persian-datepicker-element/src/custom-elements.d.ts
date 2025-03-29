@@ -21,4 +21,7 @@ interface HTMLPersianDatepickerElement extends HTMLElement {
   getHolidayTypes(): string[];
   isSelectedDateHoliday(): boolean;
   getSelectedDateEvents(): any[];
+  // Range picker methods
+  setRange(start: [number, number, number], end: [number, number, number]): void;
+  getRange(): { start: [number, number, number] | null; end: [number, number, number] | null };
 } 

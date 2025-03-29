@@ -1640,7 +1640,10 @@ class PersianDatePickerElement extends HTMLElement {
             case 'format':
                 if (newValue && this.isValidFormat(newValue)) {
                     this.format = newValue;
-                    this.formatAndSetValue();
+                    // Ensure the format is applied immediately
+                    if (this.selectedDate) {
+                        this.formatAndSetValue();
+                    }
                 }
                 break;
             case 'min-date':
@@ -2448,8 +2451,19 @@ class PersianDatePickerElement extends HTMLElement {
                 return;
             }
             const formatRange = (date) => {
-                let formattedDate = this.format;
                 const [year, month, day] = date;
+                // Handle special formats
+                if (this.format === 'YYYY/MM') {
+                    return `${this.toPersianNum(year.toString())}/${this.toPersianNum(month.toString().padStart(2, '0'))}`;
+                }
+                else if (this.format === 'DD/MM') {
+                    return `${this.toPersianNum(day.toString().padStart(2, '0'))}/${this.toPersianNum(month.toString().padStart(2, '0'))}`;
+                }
+                else if (this.format === 'DD.MM.YYYY') {
+                    return `${this.toPersianNum(day.toString().padStart(2, '0'))}.${this.toPersianNum(month.toString().padStart(2, '0'))}.${this.toPersianNum(year.toString())}`;
+                }
+                // Default format handling
+                let formattedDate = this.format;
                 Object.entries(this.formatPatterns).forEach(([pattern, type]) => {
                     let value = '';
                     switch (type) {
@@ -2487,6 +2501,20 @@ class PersianDatePickerElement extends HTMLElement {
             return;
         }
         const [year, month, day] = this.selectedDate;
+        // Handle special formats
+        if (this.format === 'YYYY/MM') {
+            this.input.value = `${this.toPersianNum(year.toString())}/${this.toPersianNum(month.toString().padStart(2, '0'))}`;
+            return;
+        }
+        else if (this.format === 'DD/MM') {
+            this.input.value = `${this.toPersianNum(day.toString().padStart(2, '0'))}/${this.toPersianNum(month.toString().padStart(2, '0'))}`;
+            return;
+        }
+        else if (this.format === 'DD.MM.YYYY') {
+            this.input.value = `${this.toPersianNum(day.toString().padStart(2, '0'))}.${this.toPersianNum(month.toString().padStart(2, '0'))}.${this.toPersianNum(year.toString())}`;
+            return;
+        }
+        // Default format handling
         let formattedDate = this.format;
         Object.entries(this.formatPatterns).forEach(([pattern, type]) => {
             let value = '';
@@ -2795,14 +2823,20 @@ class PersianDatePickerElement extends HTMLElement {
         return this.disabledDatesFn(year, month, day);
     }
     isValidFormat(format) {
-        // Check if format contains required patterns
+        // Check if format contains at least one of the required patterns
         const hasYear = format.includes('YYYY');
         const hasMonth = format.includes('MM');
         const hasDay = format.includes('DD');
         // Check for invalid patterns
-        const invalidPatterns = /[^YMD\/\- ]/g;
+        const invalidPatterns = /[^YMD\/\-\. ]/g;
         const hasInvalidPatterns = invalidPatterns.test(format);
-        return hasYear && hasMonth && hasDay && !hasInvalidPatterns;
+        // Allow special formats
+        if (format === 'YYYY/MM' || format === 'DD/MM' || format === 'DD.MM.YYYY') {
+            return true;
+        }
+        // For other formats, require at least two components
+        const componentCount = [hasYear, hasMonth, hasDay].filter(Boolean).length;
+        return componentCount >= 2 && !hasInvalidPatterns;
     }
     handleRangeSelection(day) {
         if (!this.isRangeMode) {

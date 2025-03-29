@@ -112,7 +112,7 @@ describe('PersianDatePickerElement', () => {
     // Check if the input displays the formatted date
     const input = element.shadowRoot?.querySelector('input') as HTMLInputElement;
     expect(input.value).toBeTruthy();
-    expect(input.value).toContain('1402'); // Should contain the year
+    expect(input.value).toContain('۱۴۰۲'); // Should contain the year in Persian numerals
   });
 
   it('should emit a change event when a date is selected', () => {
@@ -132,7 +132,7 @@ describe('PersianDatePickerElement', () => {
     // Check if the input displays the formatted date
     const input = element.shadowRoot?.querySelector('input') as HTMLInputElement;
     expect(input.value).toBeTruthy();
-    expect(input.value).toContain('1402');
+    expect(input.value).toContain('۱۴۰۲');
   });
 
   it('should pick up holidays from EventUtils', () => {
