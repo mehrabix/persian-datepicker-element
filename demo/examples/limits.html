@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Persian Date Picker Element - Date Selection Limits</title>
+  <title>Persian Date Picker Element - Date Limits Examples</title>
   <!-- Add Vazir Font from CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
@@ -249,80 +249,19 @@
       font-size: 14px;
       font-weight: 500;
     }
-
-    .form-control {
-      margin-bottom: 15px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .form-control label {
-      font-weight: 500;
-      min-width: 100px;
-    }
-
-    .form-control input {
-      padding: 8px 12px;
-      border: 1px solid #e2e8f0;
-      border-radius: 4px;
-      background-color: #fff;
-      transition: border-color 0.3s, background-color 0.3s;
-    }
-
-    body.dark .form-control input {
-      border-color: #475569;
-      background-color: #1e1e2f;
-      color: #e2e8f0;
-    }
-
-    .btn-apply {
-      background-color: #0891b2;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background-color 0.2s;
-    }
-
-    .btn-apply:hover {
-      background-color: #0e7490;
-    }
-
-    .disabled-day {
-      color: #94a3b8;
-      text-decoration: line-through;
-    }
-
-    .controls {
-      margin-bottom: 20px;
-      padding: 15px;
-      background-color: #f1f5f9;
-      border-radius: 6px;
-      transition: background-color 0.3s;
-    }
-
-    body.dark .controls {
-      background-color: #1e1e2f;
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Persian Date Picker Element - Date Selection Limits</h1>
-    <p>Learn how to set min and max date restrictions for the Persian Date Picker Element.</p>
+    <h1>Persian Date Picker Element - Date Limits Examples</h1>
+    <p>Examples of how to use date range limits and disabled dates in the Persian Date Picker Element component.</p>
     
     <div class="navigation">
       <div class="nav-links">
         <a href="index.html" class="link">نمونه‌های پایه</a>
-        <a href="basic.html" class="link">استفاده پایه</a>
         <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
         <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
         <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-        <a href="formats.html" class="link">فرمت‌های تاریخ</a>
         <a href="../../index.html" class="link">دمو</a>
       </div>
       <div class="toggle-container">
@@ -335,112 +274,65 @@
     </div>
 
     <div class="example">
-      <h2>محدودیت حداقل و حداکثر تاریخ</h2>
-      <p>می‌توانید با استفاده از ویژگی‌های min-date و max-date، محدودیت‌هایی برای انتخاب تاریخ تعیین کنید.</p>
-      
-      <div class="example-label">تاریخ‌های بین امروز و یک ماه بعد:</div>
-      <persian-datepicker-element id="min-max-picker"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="min-max-result">انتخاب نشده</span></div>
+      <h2>Date Range Limits</h2>
+      <div class="example-label">With minimum and maximum date limits:</div>
+      <persian-datepicker-element 
+        id="range-picker"
+        min-date="[1403,1,1]"
+        max-date="[1403,12,29]"
+      ></persian-datepicker-element>
+      <div class="result">Selected date: <span id="range-result">None</span></div>
       
       <pre><code>&lt;persian-datepicker-element 
-  min-date="[1402, 12, 10]" 
-  max-date="[1403, 1, 10]"
+  id="range-picker"
+  min-date="[1403,1,1]"
+  max-date="[1403,12,29]"
 &gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
-    
-    <div class="example">
-      <h2>تنظیم محدودیت‌ها به صورت پویا</h2>
-      <p>در این مثال، می‌توانید به صورت پویا محدودیت‌ها را تغییر دهید:</p>
-      
-      <div class="controls">
-        <div class="form-control">
-          <label for="min-year">سال حداقل:</label>
-          <input type="number" id="min-year" min="1380" max="1420" value="1402">
-          
-          <label for="min-month">ماه حداقل:</label>
-          <input type="number" id="min-month" min="1" max="12" value="1">
-          
-          <label for="min-day">روز حداقل:</label>
-          <input type="number" id="min-day" min="1" max="31" value="1">
-        </div>
-        
-        <div class="form-control">
-          <label for="max-year">سال حداکثر:</label>
-          <input type="number" id="max-year" min="1380" max="1420" value="1403">
-          
-          <label for="max-month">ماه حداکثر:</label>
-          <input type="number" id="max-month" min="1" max="12" value="12">
-          
-          <label for="max-day">روز حداکثر:</label>
-          <input type="number" id="max-day" min="1" max="31" value="29">
-        </div>
-        
-        <button class="btn-apply" id="apply-limits">اعمال محدودیت‌ها</button>
-      </div>
-      
-      <persian-datepicker-element id="dynamic-limits-picker"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="dynamic-limits-result">انتخاب نشده</span></div>
-      
-      <pre><code>// تنظیم محدودیت‌ها به صورت پویا با JavaScript
-const picker = document.getElementById('dynamic-limits-picker');
-picker.setMinDate(1402, 1, 1);
-picker.setMaxDate(1403, 12, 29);</code></pre>
-    </div>
-    
-    <div class="example">
-      <h2>غیرفعال کردن روزهای خاص</h2>
-      <p>می‌توانید تابع disabledDates را برای غیرفعال کردن روزهای خاص استفاده کنید:</p>
-      
-      <div class="example-label">غیرفعال کردن روزهای پنجشنبه و جمعه:</div>
-      <persian-datepicker-element id="disabled-days-picker"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="disabled-days-result">انتخاب نشده</span></div>
-      
-      <pre><code>// غیرفعال کردن روزهای پنجشنبه و جمعه
-const picker = document.getElementById('disabled-days-picker');
-picker.setAttribute('disabled-dates', 'isWeekend');
 
-// تعریف تابع isWeekend در JavaScript
+    <div class="example">
+      <h2>Disabled Dates</h2>
+      <div class="example-label">With disabled dates (weekends):</div>
+      <persian-datepicker-element 
+        id="disabled-picker"
+        disabled-dates="isWeekend"
+      ></persian-datepicker-element>
+      <div class="result">Selected date: <span id="disabled-result">None</span></div>
+      
+      <pre><code>// Define the disabled dates function
 function isWeekend(year, month, day) {
-  const date = new Date(picker.jalaliToGregorian(year, month, day));
+  const date = new Date(year, month - 1, day);
   const dayOfWeek = date.getDay();
-  // 5 = پنجشنبه، 6 = جمعه
-  return dayOfWeek === 5 || dayOfWeek === 6;
-}</code></pre>
+  return dayOfWeek === 0 || dayOfWeek === 6; // Disable weekends
+}
+
+&lt;persian-datepicker-element 
+  id="disabled-picker"
+  disabled-dates="isWeekend"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
-    
+
     <div class="example">
-      <h2>تعیین بازه تاریخی با تاریخ شروع و پایان</h2>
-      <p>مثالی برای انتخاب بازه تاریخی با استفاده از دو تاریخ شروع و پایان:</p>
+      <h2>Combined Limits</h2>
+      <div class="example-label">With both date range and disabled dates:</div>
+      <persian-datepicker-element 
+        id="combined-picker"
+        min-date="[1403,1,1]"
+        max-date="[1403,12,29]"
+        disabled-dates="isWeekend"
+      ></persian-datepicker-element>
+      <div class="result">Selected date: <span id="combined-result">None</span></div>
       
-      <div class="example-label">تاریخ شروع:</div>
-      <persian-datepicker-element id="start-date-picker"></persian-datepicker-element>
-      
-      <div class="example-label">تاریخ پایان:</div>
-      <persian-datepicker-element id="end-date-picker"></persian-datepicker-element>
-      
-      <div class="result">
-        بازه انتخاب شده: <span id="date-range-result">انتخاب نشده</span>
-      </div>
-      
-      <pre><code>// تعیین وابستگی بین تاریخ شروع و پایان
-const startDatePicker = document.getElementById('start-date-picker');
-const endDatePicker = document.getElementById('end-date-picker');
-
-startDatePicker.addEventListener('change', (event) => {
-  // تنظیم حداقل تاریخ برای تاریخ پایان به تاریخ شروع
-  const { jalali } = event.detail;
-  endDatePicker.setMinDate(jalali[0], jalali[1], jalali[2]);
-});
-
-endDatePicker.addEventListener('change', (event) => {
-  // تنظیم حداکثر تاریخ برای تاریخ شروع به تاریخ پایان
-  const { jalali } = event.detail;
-  startDatePicker.setMaxDate(jalali[0], jalali[1], jalali[2]);
-});</code></pre>
+      <pre><code>&lt;persian-datepicker-element 
+  id="combined-picker"
+  min-date="[1403,1,1]"
+  max-date="[1403,12,29]"
+  disabled-dates="isWeekend"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
-    
+
     <div class="link-container">
-      <a href="index.html" class="link">بازگشت به صفحه نمونه‌ها</a>
+      <a href="index.html" class="link">Back to Examples</a>
     </div>
   </div>
 
@@ -509,131 +401,41 @@ endDatePicker.addEventListener('change', (event) => {
       return num.toString().replace(/\d/g, x => persianDigits[x]);
     }
     
-    // Utility to format date arrays
-    function formatDate(dateArray) {
+    // Format date with Persian digits
+    function formatPersianDate(dateArray) {
       return toPersianNum(dateArray.join('/'));
     }
-    
-    // Function to get today's date and next month in Jalali
-    function getTodayAndNextMonth() {
-      const today = new Date();
-      const jalaliToday = PersianDatePickerElement.gregorianToJalali(
-        today.getFullYear(),
-        today.getMonth() + 1,
-        today.getDate()
-      );
-      
-      let nextMonth = [...jalaliToday];
-      nextMonth[1] += 1;
-      
-      // Handle month overflow
-      if (nextMonth[1] > 12) {
-        nextMonth[1] = 1;
-        nextMonth[0] += 1;
-      }
-      
-      return { jalaliToday, nextMonth };
-    }
-    
-    // Min-Max date picker example
-    const minMaxPicker = document.getElementById('min-max-picker');
-    const minMaxResult = document.getElementById('min-max-result');
-    
-    // Set min and max dates to today and one month from today
-    const { jalaliToday, nextMonth } = getTodayAndNextMonth();
-    minMaxPicker.setMinDate(jalaliToday[0], jalaliToday[1], jalaliToday[2]);
-    minMaxPicker.setMaxDate(nextMonth[0], nextMonth[1], nextMonth[2]);
-    
-    minMaxPicker.addEventListener('change', (event) => {
-      const { jalali } = event.detail;
-      minMaxResult.textContent = formatDate(jalali);
-    });
-    
-    // Dynamic limits picker
-    const dynamicLimitsPicker = document.getElementById('dynamic-limits-picker');
-    const dynamicLimitsResult = document.getElementById('dynamic-limits-result');
-    
-    // Set initial limits
-    dynamicLimitsPicker.setMinDate(1402, 1, 1);
-    dynamicLimitsPicker.setMaxDate(1403, 12, 29);
-    
-    // Handle apply button click
-    document.getElementById('apply-limits').addEventListener('click', () => {
-      const minYear = parseInt(document.getElementById('min-year').value);
-      const minMonth = parseInt(document.getElementById('min-month').value);
-      const minDay = parseInt(document.getElementById('min-day').value);
-      
-      const maxYear = parseInt(document.getElementById('max-year').value);
-      const maxMonth = parseInt(document.getElementById('max-month').value);
-      const maxDay = parseInt(document.getElementById('max-day').value);
-      
-      dynamicLimitsPicker.setMinDate(minYear, minMonth, minDay);
-      dynamicLimitsPicker.setMaxDate(maxYear, maxMonth, maxDay);
-    });
-    
-    dynamicLimitsPicker.addEventListener('change', (event) => {
-      const { jalali } = event.detail;
-      dynamicLimitsResult.textContent = formatDate(jalali);
-    });
-    
-    // Disabled days picker
-    const disabledDaysPicker = document.getElementById('disabled-days-picker');
-    const disabledDaysResult = document.getElementById('disabled-days-result');
-    
-    // Disable weekends (Thursday and Friday in Persian calendar)
-    window.isWeekend = function(year, month, day) {
-      // Convert to Gregorian
-      const gregorian = disabledDaysPicker.jalaliToGregorian(year, month, day);
-      const date = new Date(gregorian[0], gregorian[1] - 1, gregorian[2]);
+
+    // Define the disabled dates function for weekends
+    function isWeekend(year, month, day) {
+      const date = new Date(year, month - 1, day);
       const dayOfWeek = date.getDay();
-      // 4 = Thursday, 5 = Friday in JS Date (0-based, 0 = Sunday)
-      return dayOfWeek === 4 || dayOfWeek === 5;
-    };
-    
-    disabledDaysPicker.setAttribute('disabled-dates', 'isWeekend');
-    
-    disabledDaysPicker.addEventListener('change', (event) => {
-      const { jalali } = event.detail;
-      disabledDaysResult.textContent = formatDate(jalali);
-    });
-    
-    // Date range picker example
-    const startDatePicker = document.getElementById('start-date-picker');
-    const endDatePicker = document.getElementById('end-date-picker');
-    const dateRangeResult = document.getElementById('date-range-result');
-    
-    startDatePicker.addEventListener('change', (event) => {
-      const { jalali } = event.detail;
-      // Set min date for end date picker
-      endDatePicker.setMinDate(jalali[0], jalali[1], jalali[2]);
-      
-      // Update display
-      updateDateRange();
-    });
-    
-    endDatePicker.addEventListener('change', (event) => {
-      const { jalali } = event.detail;
-      // Set max date for start date picker
-      startDatePicker.setMaxDate(jalali[0], jalali[1], jalali[2]);
-      
-      // Update display
-      updateDateRange();
-    });
-    
-    function updateDateRange() {
-      const startValue = startDatePicker.getValue();
-      const endValue = endDatePicker.getValue();
-      
-      if (startValue && endValue) {
-        dateRangeResult.textContent = `از ${formatDate(startValue)} تا ${formatDate(endValue)}`;
-      } else if (startValue) {
-        dateRangeResult.textContent = `از ${formatDate(startValue)} تا (انتخاب نشده)`;
-      } else if (endValue) {
-        dateRangeResult.textContent = `از (انتخاب نشده) تا ${formatDate(endValue)}`;
-      } else {
-        dateRangeResult.textContent = 'انتخاب نشده';
-      }
+      return dayOfWeek === 0 || dayOfWeek === 6; // Disable weekends
     }
+    
+    // Range picker
+    const rangePicker = document.getElementById('range-picker');
+    const rangeResult = document.getElementById('range-result');
+    
+    rangePicker.addEventListener('change', (event) => {
+      rangeResult.textContent = formatPersianDate(event.detail.jalali);
+    });
+    
+    // Disabled picker
+    const disabledPicker = document.getElementById('disabled-picker');
+    const disabledResult = document.getElementById('disabled-result');
+    
+    disabledPicker.addEventListener('change', (event) => {
+      disabledResult.textContent = formatPersianDate(event.detail.jalali);
+    });
+    
+    // Combined picker
+    const combinedPicker = document.getElementById('combined-picker');
+    const combinedResult = document.getElementById('combined-result');
+    
+    combinedPicker.addEventListener('change', (event) => {
+      combinedResult.textContent = formatPersianDate(event.detail.jalali);
+    });
   </script>
 </body>
 </html> 
