@@ -2329,29 +2329,16 @@ class PersianDatePickerElement extends HTMLElement {
                         dayElement.classList.add("range-start");
                     }
                 }
-                // Handle disabled dates in range
-                if (dayElement.classList.contains("disabled")) {
-                    dayElement.style.opacity = "0.4";
-                    dayElement.style.cursor = "not-allowed";
-                }
-                // Handle holidays in range
-                if (this.showHolidays) {
-                    const isHoliday = this.addHolidayInfo(dayElement, i);
-                    if (isHoliday) {
-                        // Remove holiday styling for dates in range
-                        if (dayElement.classList.contains("in-range") ||
-                            dayElement.classList.contains("range-start") ||
-                            dayElement.classList.contains("range-end")) {
-                            dayElement.classList.remove("holiday", "friday");
-                        }
-                    }
-                }
             }
             else if (this.selectedDate &&
                 this.jalaliYear === this.selectedDate[0] &&
                 this.jalaliMonth === this.selectedDate[1] &&
                 i === this.selectedDate[2]) {
                 dayElement.classList.add("selected");
+            }
+            // Add holiday information if enabled
+            if (this.showHolidays) {
+                this.addHolidayInfo(dayElement, i);
             }
             this.daysContainer.appendChild(dayElement);
         }
