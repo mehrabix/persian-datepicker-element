@@ -1,5 +1,5 @@
-import { defineComponent as p, ref as n, computed as V, watch as u, nextTick as r, onMounted as g, createElementBlock as A, openBlock as k, normalizeStyle as x, normalizeClass as b, createElementVNode as S } from "vue";
-const D = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled", "min", "max", "holiday-types"], s = /* @__PURE__ */ p({
+import { defineComponent as p, ref as n, computed as g, watch as r, nextTick as d, onMounted as b, createElementBlock as A, openBlock as D, normalizeStyle as V, normalizeClass as x, createElementVNode as S } from "vue";
+const k = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled", "min-date", "max-date", "disabled-dates", "holiday-types"], u = /* @__PURE__ */ p({
   __name: "PersianDatepicker",
   props: {
     modelValue: {
@@ -26,12 +26,16 @@ const D = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled",
       type: Boolean,
       default: !1
     },
-    min: {
+    minDate: {
       type: Array,
       default: void 0
     },
-    max: {
+    maxDate: {
       type: Array,
+      default: void 0
+    },
+    disabledDates: {
+      type: String,
       default: void 0
     },
     holidayTypes: {
@@ -48,83 +52,92 @@ const D = ["value", "placeholder", "format", "show-holidays", "rtl", "disabled",
     }
   },
   emits: ["update:modelValue", "change"],
-  setup(t, { expose: m, emit: c }) {
-    const a = t, i = c, f = n(null), l = n(null), y = V(() => a.modelValue ? Array.isArray(a.modelValue) ? a.modelValue.join("/") : String(a.modelValue) : ""), h = (e) => {
-      const o = e.detail;
-      i("update:modelValue", o.jalali), i("change", o);
+  setup(l, { expose: m, emit: f }) {
+    const a = l, o = f, c = n(null), t = n(null), y = g(() => a.modelValue ? Array.isArray(a.modelValue) ? a.modelValue.join("/") : String(a.modelValue) : ""), v = (e) => {
+      const i = e.detail;
+      o("update:modelValue", i.jalali), o("change", i);
     };
-    return u(() => a.modelValue, (e) => {
-      r(() => {
-        if (l.value)
+    return r(() => a.modelValue, (e) => {
+      d(() => {
+        if (t.value)
           if (Array.isArray(e) && e.length === 3)
             try {
-              l.value.setValue(e[0], e[1], e[2]);
-            } catch (o) {
-              console.error("Failed to set value:", o);
+              t.value.setValue(e[0], e[1], e[2]);
+            } catch (i) {
+              console.error("Failed to set value:", i);
             }
-          else typeof e == "string" && l.value.setAttribute("value", e);
+          else typeof e == "string" && t.value.setAttribute("value", e);
       });
-    }, { immediate: !1 }), u([() => a.min, () => a.max], ([e, o]) => {
-      r(() => {
-        l.value && (e && (l.value.min = e), o && (l.value.max = o));
+    }, { immediate: !1 }), r(() => a.minDate, (e) => {
+      d(() => {
+        t.value && e && t.value.setAttribute("min-date", JSON.stringify(e));
       });
-    }), g(() => {
-      r(() => {
-        if (a.modelValue && l.value)
+    }), r(() => a.maxDate, (e) => {
+      d(() => {
+        t.value && e && t.value.setAttribute("max-date", JSON.stringify(e));
+      });
+    }), r(() => a.disabledDates, (e) => {
+      d(() => {
+        t.value && (e ? t.value.setAttribute("disabled-dates", JSON.stringify(e)) : t.value.removeAttribute("disabled-dates"));
+      });
+    }), b(() => {
+      d(() => {
+        if (a.modelValue && t.value)
           if (Array.isArray(a.modelValue) && a.modelValue.length === 3)
             try {
-              l.value.setValue(a.modelValue[0], a.modelValue[1], a.modelValue[2]);
+              t.value.setValue(a.modelValue[0], a.modelValue[1], a.modelValue[2]);
             } catch (e) {
               console.error("Failed to set initial value:", e);
             }
-          else typeof a.modelValue == "string" && l.value.setAttribute("value", a.modelValue);
+          else typeof a.modelValue == "string" && t.value.setAttribute("value", a.modelValue);
       });
     }), m({
       getValue: () => {
         var e;
-        return (e = l.value) == null ? void 0 : e.getValue();
+        return (e = t.value) == null ? void 0 : e.getValue();
       },
-      setValue: (e, o, v) => {
-        var d;
-        (d = l.value) == null || d.setValue(e, o, v);
+      setValue: (e, i, h) => {
+        var s;
+        (s = t.value) == null || s.setValue(e, i, h);
       },
       open: () => {
         var e;
-        return (e = l.value) == null ? void 0 : e.open();
+        return (e = t.value) == null ? void 0 : e.open();
       },
       close: () => {
         var e;
-        return (e = l.value) == null ? void 0 : e.close();
+        return (e = t.value) == null ? void 0 : e.close();
       }
-    }), (e, o) => (k(), A("div", {
+    }), (e, i) => (D(), A("div", {
       ref_key: "container",
-      ref: f,
-      class: b(t.className),
-      style: x(t.style)
+      ref: c,
+      class: x(l.className),
+      style: V(l.style)
     }, [
       S("persian-datepicker-element", {
         ref_key: "elementRef",
-        ref: l,
+        ref: t,
         value: y.value,
-        placeholder: t.placeholder,
-        format: t.format,
-        "show-holidays": t.showHolidays,
-        rtl: t.rtl,
-        disabled: t.disabled,
-        min: t.min,
-        max: t.max,
-        "holiday-types": t.holidayTypes,
-        onChange: h
-      }, null, 40, D)
+        placeholder: l.placeholder,
+        format: l.format,
+        "show-holidays": l.showHolidays,
+        rtl: l.rtl,
+        disabled: l.disabled,
+        "min-date": l.minDate,
+        "max-date": l.maxDate,
+        "disabled-dates": l.disabledDates,
+        "holiday-types": l.holidayTypes,
+        onChange: v
+      }, null, 40, k)
     ], 6));
   }
-}), C = {
-  PersianDatepicker: s,
-  install: (t) => {
-    t.component("PersianDatepicker", s);
+}), B = {
+  PersianDatepicker: u,
+  install: (l) => {
+    l.component("PersianDatepicker", u);
   }
 };
 export {
-  s as PersianDatepicker,
-  C as default
+  u as PersianDatepicker,
+  B as default
 };
