@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Persian Date Picker Element - Date Formats</title>
+  <title>Persian Date Picker Element - Date Format Examples</title>
   <!-- Add Vazir Font from CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
@@ -74,26 +74,6 @@
       border-radius: 6px;
       font-size: 14px;
       transition: background-color 0.3s, color 0.3s;
-    }
-
-    .format-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-      font-size: 14px;
-    }
-
-    .format-table th, .format-table td {
-      border: 1px solid #e2e8f0;
-      padding: 8px 12px;
-      text-align: right;
-      transition: border-color 0.3s;
-    }
-
-    .format-table th {
-      background-color: #f1f5f9;
-      font-weight: 600;
-      transition: background-color 0.3s;
     }
 
     pre {
@@ -188,14 +168,6 @@
       --jdp-holiday-bg: #3f1e2e;
     }
 
-    body.dark .format-table th, body.dark .format-table td {
-      border-color: #334155;
-    }
-
-    body.dark .format-table th {
-      background-color: #1e1e2f;
-    }
-
     .navigation {
       margin-bottom: 30px;
       padding-bottom: 15px;
@@ -277,21 +249,46 @@
       font-size: 14px;
       font-weight: 500;
     }
+
+    .format-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .format-table th,
+    .format-table td {
+      padding: 12px;
+      text-align: right;
+      border: 1px solid #e2e8f0;
+    }
+
+    .format-table th {
+      background-color: #f1f5f9;
+      font-weight: 500;
+    }
+
+    body.dark .format-table th,
+    body.dark .format-table td {
+      border-color: #334155;
+    }
+
+    body.dark .format-table th {
+      background-color: #1e293b;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Persian Date Picker Element - Date Formats</h1>
-    <p>Here are different formatting options for displaying dates using the Persian Date Picker Element.</p>
+    <h1>Persian Date Picker Element - Date Format Examples</h1>
+    <p>Examples of different date format patterns and their usage in the Persian Date Picker Element component.</p>
     
     <div class="navigation">
       <div class="nav-links">
         <a href="index.html" class="link">نمونه‌های پایه</a>
-        <a href="basic.html" class="link">استفاده پایه</a>
         <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
         <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
         <a href="theme-builder.html" class="link">سازنده کامل تم</a>
-        <a href="limits.html" class="link">محدودیت‌های انتخاب</a>
         <a href="../../index.html" class="link">دمو</a>
       </div>
       <div class="toggle-container">
@@ -304,124 +301,108 @@
     </div>
 
     <div class="example">
-      <h2>راهنمای قالب‌های تاریخ شمسی</h2>
-      <p>هنگام استفاده از ویژگی format، می‌توانید از نشانه‌های زیر برای نمایش اجزای مختلف تاریخ استفاده کنید:</p>
-      
+      <h2>Available Format Patterns</h2>
+      <div class="example-label">The following format patterns are supported:</div>
       <table class="format-table">
         <thead>
           <tr>
-            <th>نشانه</th>
-            <th>توضیحات</th>
-            <th>مثال</th>
+            <th>Pattern</th>
+            <th>Description</th>
+            <th>Example Output</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>YYYY</td>
-            <td>سال کامل (چهار رقمی)</td>
+            <td>Full year</td>
             <td>۱۴۰۳</td>
           </tr>
           <tr>
-            <td>YY</td>
-            <td>سال کوتاه (دو رقمی)</td>
+            <td>MM</td>
+            <td>Month number (01-12)</td>
             <td>۰۳</td>
           </tr>
           <tr>
-            <td>MM</td>
-            <td>ماه با صفر در ابتدا (دو رقمی)</td>
-            <td>۰۲ (برای اردیبهشت)</td>
-          </tr>
-          <tr>
-            <td>M</td>
-            <td>ماه بدون صفر</td>
-            <td>۲ (برای اردیبهشت)</td>
-          </tr>
-          <tr>
-            <td>MMM</td>
-            <td>نام اختصاری ماه</td>
-            <td>ارد</td>
+            <td>DD</td>
+            <td>Day of month (01-31)</td>
+            <td>۱۵</td>
           </tr>
           <tr>
             <td>MMMM</td>
-            <td>نام کامل ماه</td>
-            <td>اردیبهشت</td>
+            <td>Full month name</td>
+            <td>فروردین</td>
           </tr>
           <tr>
-            <td>DD</td>
-            <td>روز با صفر در ابتدا (دو رقمی)</td>
-            <td>۰۹</td>
-          </tr>
-          <tr>
-            <td>D</td>
-            <td>روز بدون صفر</td>
-            <td>۹</td>
-          </tr>
-          <tr>
-            <td>d</td>
-            <td>شمارنده روز هفته (از ۰ تا ۶)</td>
-            <td>۵ (برای پنجشنبه)</td>
-          </tr>
-          <tr>
-            <td>ddd</td>
-            <td>نام اختصاری روز هفته</td>
-            <td>پنج</td>
+            <td>MMM</td>
+            <td>Short month name</td>
+            <td>فروردین</td>
           </tr>
           <tr>
             <td>dddd</td>
-            <td>نام کامل روز هفته</td>
-            <td>پنجشنبه</td>
+            <td>Full weekday name</td>
+            <td>جمعه</td>
+          </tr>
+          <tr>
+            <td>dd</td>
+            <td>Short weekday name</td>
+            <td>جمعه</td>
           </tr>
         </tbody>
       </table>
     </div>
-    
+
     <div class="example">
-      <h2>فرمت‌های مختلف تاریخ</h2>
+      <h2>Basic Format</h2>
+      <div class="example-label">Default format (YYYY/MM/DD):</div>
+      <persian-datepicker-element id="basic-format-picker"></persian-datepicker-element>
+      <div class="result">Selected date: <span id="basic-format-result">None</span></div>
       
-      <div class="example-label">فرمت پیش‌فرض (YYYY/MM/DD):</div>
-      <persian-datepicker-element id="default-format"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="default-format-result">انتخاب نشده</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-      
-      <div class="example-label">فرمت DD/MM/YYYY:</div>
-      <persian-datepicker-element id="day-month-year" format="DD/MM/YYYY"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="day-month-year-result">انتخاب نشده</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element format="DD/MM/YYYY"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-      
-      <div class="example-label">نمایش روز هفته با نام کامل (dddd DD MMMM YYYY):</div>
-      <persian-datepicker-element id="weekday-format" format="dddd DD MMMM YYYY"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="weekday-format-result">انتخاب نشده</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element format="dddd DD MMMM YYYY"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-      
-      <div class="example-label">فرمت بدون جداکننده (YYYYMMDD):</div>
-      <persian-datepicker-element id="no-separator" format="YYYYMMDD"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="no-separator-result">انتخاب نشده</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element format="YYYYMMDD"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-      
-      <div class="example-label">فرمت با جداکننده نقطه (YY.MM.DD):</div>
-      <persian-datepicker-element id="dot-separator" format="YY.MM.DD"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="dot-separator-result">انتخاب نشده</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element format="YY.MM.DD"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
-      
-      <div class="example-label">فرمت کامل با نمایش ماه به صورت متنی (D MMMM YYYY):</div>
-      <persian-datepicker-element id="text-month" format="D MMMM YYYY"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="text-month-result">انتخاب نشده</span></div>
-      
-      <pre><code>&lt;persian-datepicker-element format="D MMMM YYYY"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+      <pre><code>&lt;persian-datepicker-element id="basic-format-picker"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
-    
+
+    <div class="example">
+      <h2>Custom Format with Month Name</h2>
+      <div class="example-label">Using month name in the format:</div>
+      <persian-datepicker-element id="month-name-picker" format="DD MMMM YYYY"></persian-datepicker-element>
+      <div class="result">Selected date: <span id="month-name-result">None</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  id="month-name-picker" 
+  format="DD MMMM YYYY"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>Format with Weekday</h2>
+      <div class="example-label">Including weekday in the format:</div>
+      <persian-datepicker-element id="weekday-picker" format="dddd DD MMMM YYYY"></persian-datepicker-element>
+      <div class="result">Selected date: <span id="weekday-result">None</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  id="weekday-picker" 
+  format="dddd DD MMMM YYYY"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>Short Format</h2>
+      <div class="example-label">Using short month and weekday names:</div>
+      <persian-datepicker-element id="short-format-picker" format="dd DD MMM YYYY"></persian-datepicker-element>
+      <div class="result">Selected date: <span id="short-format-result">None</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  id="short-format-picker" 
+  format="dd DD MMM YYYY"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
     <div class="link-container">
-      <a href="index.html" class="link">بازگشت به صفحه نمونه‌ها</a>
+      <a href="index.html" class="link">Back to Examples</a>
     </div>
   </div>
 
-    <script src="../../dist/persian-datepicker-element.min.js"></script>
-    <script>
+  <script src="../../dist/persian-datepicker-element.min.js"></script>
+  <script>
     // Dark mode toggle
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     
@@ -485,60 +466,41 @@
       return num.toString().replace(/\d/g, x => persianDigits[x]);
     }
     
-    // Event handlers for format examples
+    // Format date with Persian digits
+    function formatPersianDate(dateArray) {
+      return toPersianNum(dateArray.join('/'));
+    }
     
-    // Default format
-    const defaultFormat = document.getElementById('default-format');
-    const defaultFormatResult = document.getElementById('default-format-result');
+    // Basic format picker
+    const basicFormatPicker = document.getElementById('basic-format-picker');
+    const basicFormatResult = document.getElementById('basic-format-result');
     
-    defaultFormat.addEventListener('change', (event) => {
-      const { formatted } = event.detail;
-      defaultFormatResult.textContent = formatted;
+    basicFormatPicker.addEventListener('change', (event) => {
+      basicFormatResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
-    // Day/Month/Year format
-    const dayMonthYear = document.getElementById('day-month-year');
-    const dayMonthYearResult = document.getElementById('day-month-year-result');
+    // Month name picker
+    const monthNamePicker = document.getElementById('month-name-picker');
+    const monthNameResult = document.getElementById('month-name-result');
     
-    dayMonthYear.addEventListener('change', (event) => {
-      const { formatted } = event.detail;
-      dayMonthYearResult.textContent = formatted;
+    monthNamePicker.addEventListener('change', (event) => {
+      monthNameResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
-    // Weekday format
-    const weekdayFormat = document.getElementById('weekday-format');
-    const weekdayFormatResult = document.getElementById('weekday-format-result');
+    // Weekday picker
+    const weekdayPicker = document.getElementById('weekday-picker');
+    const weekdayResult = document.getElementById('weekday-result');
     
-    weekdayFormat.addEventListener('change', (event) => {
-      const { formatted } = event.detail;
-      weekdayFormatResult.textContent = formatted;
+    weekdayPicker.addEventListener('change', (event) => {
+      weekdayResult.textContent = formatPersianDate(event.detail.jalali);
     });
     
-    // No separator format
-    const noSeparator = document.getElementById('no-separator');
-    const noSeparatorResult = document.getElementById('no-separator-result');
+    // Short format picker
+    const shortFormatPicker = document.getElementById('short-format-picker');
+    const shortFormatResult = document.getElementById('short-format-result');
     
-    noSeparator.addEventListener('change', (event) => {
-      const { formatted } = event.detail;
-      noSeparatorResult.textContent = formatted;
-    });
-    
-    // Dot separator format
-    const dotSeparator = document.getElementById('dot-separator');
-    const dotSeparatorResult = document.getElementById('dot-separator-result');
-    
-    dotSeparator.addEventListener('change', (event) => {
-      const { formatted } = event.detail;
-      dotSeparatorResult.textContent = formatted;
-    });
-    
-    // Text month format
-    const textMonth = document.getElementById('text-month');
-    const textMonthResult = document.getElementById('text-month-result');
-    
-    textMonth.addEventListener('change', (event) => {
-      const { formatted } = event.detail;
-      textMonthResult.textContent = formatted;
+    shortFormatPicker.addEventListener('change', (event) => {
+      shortFormatResult.textContent = formatPersianDate(event.detail.jalali);
     });
   </script>
 </body>
