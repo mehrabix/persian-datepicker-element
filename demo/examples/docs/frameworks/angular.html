@@ -229,7 +229,7 @@
 
       .navigation {
         flex-direction: column;
-        align-items: center;
+      align-items: center;
       }
 
       .link {
@@ -309,7 +309,7 @@
     }
 
     .toggle-container {
-      display: flex;
+        display: flex;
       align-items: center;
     }
 
@@ -317,18 +317,18 @@
       margin-right: 8px;
       font-size: 14px;
       font-weight: 500;
-    }
+      }
 
-    .props-table {
+      .props-table {
       width: 100%;
       border-collapse: collapse;
       margin: 2rem 0;
-      overflow-x: auto;
+        overflow-x: auto;
       display: block;
-    }
-
-    .props-table th,
-    .props-table td {
+      }
+      
+      .props-table th,
+      .props-table td {
       padding: 0.75rem;
       border: 1px solid var(--border);
       text-align: right;
@@ -369,9 +369,9 @@
       </div>
     </div>
 
-    <h2>نصب و راه‌اندازی</h2>
-    <p>برای نصب کامپوننت تاریخ شمسی در پروژه Angular خود:</p>
-    <pre><code>// Using npm
+      <h2>نصب و راه‌اندازی</h2>
+      <p>برای نصب کامپوننت تاریخ شمسی در پروژه Angular خود:</p>
+      <pre><code>// Using npm
 npm install angular-persian-datepicker-element persian-datepicker-element
 
 // Using Yarn
@@ -380,9 +380,9 @@ yarn add angular-persian-datepicker-element persian-datepicker-element
 // Using pnpm
 pnpm add angular-persian-datepicker-element persian-datepicker-element</code></pre>
 
-    <h2>تنظیمات اولیه</h2>
-    <p>در فایل Module خود کتابخانه را Import کنید:</p>
-    <pre><code>// app.module.ts
+      <h2>تنظیمات اولیه</h2>
+      <p>در فایل Module خود کتابخانه را Import کنید:</p>
+      <pre><code>// app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { PersianDatepickerModule } from 'angular-persian-datepicker-element';
@@ -402,8 +402,8 @@ import { AppComponent } from './app.component';
 })
 export class AppModule { }</code></pre>
 
-    <h2>استفاده پایه</h2>
-    <pre><code>// app.component.html
+      <h2>استفاده پایه</h2>
+      <pre><code>// app.component.html
 &lt;persian-datepicker 
   placeholder="تاریخ را انتخاب کنید"
   format="YYYY/MM/DD"
@@ -411,7 +411,7 @@ export class AppModule { }</code></pre>
   (dateChange)="onDateChange($event)"&gt;
 &lt;/persian-datepicker&gt;</code></pre>
 
-    <pre><code>// app.component.ts
+      <pre><code>// app.component.ts
 import { Component } from '@angular/core';
 import { PersianDateChangeEvent } from 'angular-persian-datepicker-element';
 
@@ -430,17 +430,17 @@ export class AppComponent {
   }
 }</code></pre>
 
-    <h2>مثال‌های کاربردی</h2>
-    <div class="examples">
-      <div class="example">
-        <h3>شخصی‌سازی ظاهر</h3>
-        <pre><code>// app.component.html
+      <h2>مثال‌های کاربردی</h2>
+      <div class="examples">
+        <div class="example">
+          <h3>شخصی‌سازی ظاهر</h3>
+          <pre><code>// app.component.html
 &lt;persian-datepicker 
   placeholder="انتخاب تاریخ با تم آبی"
   [cssVariables]="blueTheme"&gt;
 &lt;/persian-datepicker&gt;</code></pre>
 
-        <pre><code>// app.component.ts
+          <pre><code>// app.component.ts
 export class AppComponent {
   blueTheme = {
     '--jdp-primary': '#3b82f6',
@@ -449,11 +449,11 @@ export class AppComponent {
     '--jdp-border-radius': '0.5rem'
   };
 }</code></pre>
-      </div>
+        </div>
 
-      <div class="example">
-        <h3>پشتیبانی از حالت تاریک</h3>
-        <pre><code>// app.component.html
+        <div class="example">
+          <h3>پشتیبانی از حالت تاریک</h3>
+          <pre><code>// app.component.html
 &lt;div&gt;
   &lt;button (click)="toggleDarkMode()"&gt;
     تغییر به حالت {{ isDarkMode ? 'روشن' : 'تاریک' }}
@@ -465,7 +465,7 @@ export class AppComponent {
   &lt;/persian-datepicker&gt;
 &lt;/div&gt;</code></pre>
 
-        <pre><code>// app.component.ts
+          <pre><code>// app.component.ts
 export class AppComponent {
   isDarkMode = false;
   
@@ -500,11 +500,11 @@ export class AppComponent {
     this.isDarkMode = !this.isDarkMode;
   }
 }</code></pre>
-      </div>
+        </div>
 
-      <div class="example">
-        <h3>View Child و متدهای دستوری</h3>
-        <pre><code>// app.component.html
+        <div class="example">
+          <h3>View Child و متدهای دستوری</h3>
+          <pre><code>// app.component.html
 &lt;div&gt;
   &lt;persian-datepicker #datepicker
     placeholder="از دکمه‌ها استفاده کنید"&gt;
@@ -518,7 +518,7 @@ export class AppComponent {
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 
-        <pre><code>// app.component.ts
+          <pre><code>// app.component.ts
 import { Component, ViewChild } from '@angular/core';
 import { PersianDatepickerComponent } from 'angular-persian-datepicker-element';
 
@@ -547,11 +547,11 @@ export class AppComponent {
     this.datepicker.close();
   }
 }</code></pre>
-      </div>
+        </div>
 
-      <div class="example">
-        <h3>انواع تعطیلات</h3>
-        <pre><code>// app.component.html
+        <div class="example">
+          <h3>انواع تعطیلات</h3>
+          <pre><code>// app.component.html
 &lt;div&gt;
   &lt;persian-datepicker
     holidayTypes="Iran,Afghanistan,AncientIran,International"
@@ -568,206 +568,206 @@ export class AppComponent {
     placeholder="نمایش همه انواع تعطیلات"&gt;
   &lt;/persian-datepicker&gt;
 &lt;/div&gt;</code></pre>
+        </div>
       </div>
-    </div>
 
-    <h2>ویژگی‌ها (Inputs)</h2>
-    <table class="props-table">
-      <thead>
-        <tr>
-          <th>نام ویژگی</th>
-          <th>نوع</th>
-          <th>توضیحات</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>placeholder</td>
-          <td>string</td>
-          <td>متن پیش‌فرض نمایشی در فیلد ورودی</td>
-        </tr>
-        <tr>
-          <td>format</td>
-          <td>string</td>
-          <td>فرمت نمایش تاریخ (مثال: "YYYY/MM/DD")</td>
-        </tr>
-        <tr>
-          <td>showHolidays</td>
-          <td>boolean</td>
-          <td>نمایش نشانگر تعطیلات</td>
-        </tr>
-        <tr>
-          <td>holidayTypes</td>
-          <td>string</td>
+      <h2>ویژگی‌ها (Inputs)</h2>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>نام ویژگی</th>
+            <th>نوع</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>placeholder</td>
+            <td>string</td>
+            <td>متن پیش‌فرض نمایشی در فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>format</td>
+            <td>string</td>
+            <td>فرمت نمایش تاریخ (مثال: "YYYY/MM/DD")</td>
+          </tr>
+          <tr>
+            <td>showHolidays</td>
+            <td>boolean</td>
+            <td>نمایش نشانگر تعطیلات</td>
+          </tr>
+          <tr>
+            <td>holidayTypes</td>
+            <td>string</td>
           <td>انواع تعطیلات برای نمایش (با کاما جدا شده: "Iran", "Afghanistan", "AncientIran", "International" یا "all" برای نمایش همه انواع)</td>
-        </tr>
-        <tr>
-          <td>rtl</td>
-          <td>boolean</td>
-          <td>چیدمان راست به چپ</td>
-        </tr>
-        <tr>
-          <td>value</td>
-          <td>[number, number, number]</td>
-          <td>مقدار اولیه تاریخ به صورت [سال، ماه، روز]</td>
-        </tr>
-        <tr>
-          <td>disabled</td>
-          <td>boolean</td>
-          <td>غیرفعال کردن انتخابگر تاریخ</td>
-        </tr>
-        <tr>
-          <td>min</td>
-          <td>[number, number, number]</td>
-          <td>حداقل تاریخ قابل انتخاب به صورت [سال، ماه، روز]</td>
-        </tr>
-        <tr>
-          <td>max</td>
-          <td>[number, number, number]</td>
-          <td>حداکثر تاریخ قابل انتخاب به صورت [سال، ماه، روز]</td>
-        </tr>
-        <tr>
-          <td>cssVariables</td>
-          <td>object</td>
-          <td>متغیرهای CSS برای سفارشی‌سازی ظاهر</td>
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+          <tr>
+            <td>rtl</td>
+            <td>boolean</td>
+            <td>چیدمان راست به چپ</td>
+          </tr>
+          <tr>
+            <td>value</td>
+            <td>[number, number, number]</td>
+            <td>مقدار اولیه تاریخ به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>disabled</td>
+            <td>boolean</td>
+            <td>غیرفعال کردن انتخابگر تاریخ</td>
+          </tr>
+          <tr>
+            <td>min</td>
+            <td>[number, number, number]</td>
+            <td>حداقل تاریخ قابل انتخاب به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>max</td>
+            <td>[number, number, number]</td>
+            <td>حداکثر تاریخ قابل انتخاب به صورت [سال، ماه، روز]</td>
+          </tr>
+          <tr>
+            <td>cssVariables</td>
+            <td>object</td>
+            <td>متغیرهای CSS برای سفارشی‌سازی ظاهر</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <h2>رویدادها (Outputs)</h2>
-    <table class="props-table">
-      <thead>
-        <tr>
-          <th>نام رویداد</th>
-          <th>داده‌ی ارسالی</th>
-          <th>توضیحات</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>dateChange</td>
-          <td>{ jalali, gregorian, isHoliday, events }</td>
-          <td>هنگام تغییر تاریخ ارسال می‌شود</td>
-        </tr>
-        <tr>
-          <td>calendarOpen</td>
-          <td>-</td>
-          <td>هنگام باز شدن تقویم ارسال می‌شود</td>
-        </tr>
-        <tr>
-          <td>calendarClose</td>
-          <td>-</td>
-          <td>هنگام بسته شدن تقویم ارسال می‌شود</td>
-        </tr>
-      </tbody>
-    </table>
+      <h2>رویدادها (Outputs)</h2>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>نام رویداد</th>
+            <th>داده‌ی ارسالی</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>dateChange</td>
+            <td>{ jalali, gregorian, isHoliday, events }</td>
+            <td>هنگام تغییر تاریخ ارسال می‌شود</td>
+          </tr>
+          <tr>
+            <td>calendarOpen</td>
+            <td>-</td>
+            <td>هنگام باز شدن تقویم ارسال می‌شود</td>
+          </tr>
+          <tr>
+            <td>calendarClose</td>
+            <td>-</td>
+            <td>هنگام بسته شدن تقویم ارسال می‌شود</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <h2>متغیرهای CSS برای سفارشی‌سازی</h2>
-    <p>تمام متغیرهای CSS از پیشوند <code>--jdp-</code> (مخفف Jalali DatePicker) استفاده می‌کنند:</p>
-    <table class="props-table">
-      <thead>
-        <tr>
-          <th>متغیر CSS</th>
-          <th>توضیحات</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>--jdp-primary</td>
-          <td>رنگ اصلی برای تاریخ‌های انتخاب شده</td>
-        </tr>
-        <tr>
-          <td>--jdp-primary-hover</td>
-          <td>رنگ هاور</td>
-        </tr>
-        <tr>
-          <td>--jdp-primary-foreground</td>
-          <td>رنگ متن روی پس‌زمینه اصلی</td>
-        </tr>
-        <tr>
-          <td>--jdp-background</td>
-          <td>رنگ پس‌زمینه اصلی</td>
-        </tr>
-        <tr>
-          <td>--jdp-foreground</td>
-          <td>رنگ متن اصلی</td>
-        </tr>
-        <tr>
-          <td>--jdp-muted</td>
-          <td>رنگ پس‌زمینه عناصر کم‌رنگ</td>
-        </tr>
-        <tr>
-          <td>--jdp-muted-foreground</td>
-          <td>رنگ متن عناصر کم‌رنگ</td>
-        </tr>
-        <tr>
-          <td>--jdp-border</td>
-          <td>رنگ خط حاشیه</td>
-        </tr>
-        <tr>
-          <td>--jdp-input-border-color</td>
-          <td>رنگ خط حاشیه فیلد ورودی</td>
-        </tr>
-        <tr>
-          <td>--jdp-input-bg</td>
-          <td>رنگ پس‌زمینه فیلد ورودی</td>
-        </tr>
-        <tr>
-          <td>--jdp-input-text</td>
-          <td>رنگ متن فیلد ورودی</td>
-        </tr>
-        <tr>
-          <td>--jdp-input-placeholder</td>
-          <td>رنگ متن پیش‌فرض فیلد ورودی</td>
-        </tr>
-        <tr>
-          <td>--jdp-calendar-bg</td>
-          <td>رنگ پس‌زمینه تقویم</td>
-        </tr>
-        <tr>
-          <td>--jdp-day-hover-bg</td>
-          <td>رنگ پس‌زمینه روز هنگام هاور</td>
-        </tr>
-        <tr>
-          <td>--jdp-holiday-color</td>
-          <td>رنگ متن تعطیلات</td>
-        </tr>
-        <tr>
-          <td>--jdp-holiday-bg</td>
-          <td>رنگ پس‌زمینه تعطیلات</td>
-        </tr>
-        <tr>
-          <td>--jdp-font-size</td>
-          <td>اندازه فونت پایه</td>
-        </tr>
-        <tr>
-          <td>--jdp-font-family</td>
-          <td>فونت خانواده</td>
-        </tr>
-        <tr>
-          <td>--jdp-border-radius</td>
-          <td>شعاع گرد شدن حاشیه پایه</td>
-        </tr>
-        <tr>
-          <td>--jdp-input-border-radius</td>
-          <td>شعاع گرد شدن حاشیه فیلد ورودی</td>
-        </tr>
-        <tr>
-          <td>--jdp-calendar-border-radius</td>
-          <td>شعاع گرد شدن حاشیه تقویم</td>
-        </tr>
-        <tr>
-          <td>--jdp-day-cell-border-radius</td>
-          <td>شعاع گرد شدن حاشیه سلول روز</td>
-        </tr>
-      </tbody>
-    </table>
+      <h2>متغیرهای CSS برای سفارشی‌سازی</h2>
+      <p>تمام متغیرهای CSS از پیشوند <code>--jdp-</code> (مخفف Jalali DatePicker) استفاده می‌کنند:</p>
+      <table class="props-table">
+        <thead>
+          <tr>
+            <th>متغیر CSS</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>--jdp-primary</td>
+            <td>رنگ اصلی برای تاریخ‌های انتخاب شده</td>
+          </tr>
+          <tr>
+            <td>--jdp-primary-hover</td>
+            <td>رنگ هاور</td>
+          </tr>
+          <tr>
+            <td>--jdp-primary-foreground</td>
+            <td>رنگ متن روی پس‌زمینه اصلی</td>
+          </tr>
+          <tr>
+            <td>--jdp-background</td>
+            <td>رنگ پس‌زمینه اصلی</td>
+          </tr>
+          <tr>
+            <td>--jdp-foreground</td>
+            <td>رنگ متن اصلی</td>
+          </tr>
+          <tr>
+            <td>--jdp-muted</td>
+            <td>رنگ پس‌زمینه عناصر کم‌رنگ</td>
+          </tr>
+          <tr>
+            <td>--jdp-muted-foreground</td>
+            <td>رنگ متن عناصر کم‌رنگ</td>
+          </tr>
+          <tr>
+            <td>--jdp-border</td>
+            <td>رنگ خط حاشیه</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-border-color</td>
+            <td>رنگ خط حاشیه فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-bg</td>
+            <td>رنگ پس‌زمینه فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-text</td>
+            <td>رنگ متن فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-placeholder</td>
+            <td>رنگ متن پیش‌فرض فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-calendar-bg</td>
+            <td>رنگ پس‌زمینه تقویم</td>
+          </tr>
+          <tr>
+            <td>--jdp-day-hover-bg</td>
+            <td>رنگ پس‌زمینه روز هنگام هاور</td>
+          </tr>
+          <tr>
+            <td>--jdp-holiday-color</td>
+            <td>رنگ متن تعطیلات</td>
+          </tr>
+          <tr>
+            <td>--jdp-holiday-bg</td>
+            <td>رنگ پس‌زمینه تعطیلات</td>
+          </tr>
+          <tr>
+            <td>--jdp-font-size</td>
+            <td>اندازه فونت پایه</td>
+          </tr>
+          <tr>
+            <td>--jdp-font-family</td>
+            <td>فونت خانواده</td>
+          </tr>
+          <tr>
+            <td>--jdp-border-radius</td>
+            <td>شعاع گرد شدن حاشیه پایه</td>
+          </tr>
+          <tr>
+            <td>--jdp-input-border-radius</td>
+            <td>شعاع گرد شدن حاشیه فیلد ورودی</td>
+          </tr>
+          <tr>
+            <td>--jdp-calendar-border-radius</td>
+            <td>شعاع گرد شدن حاشیه تقویم</td>
+          </tr>
+          <tr>
+            <td>--jdp-day-cell-border-radius</td>
+            <td>شعاع گرد شدن حاشیه سلول روز</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <h2>پشتیبانی از TypeScript</h2>
-    <p>
-      این کتابخانه شامل تعاریف TypeScript برای تمام ویژگی‌ها است:
-    </p>
-    <pre><code>import { Component } from '@angular/core';
+      <h2>پشتیبانی از TypeScript</h2>
+      <p>
+        این کتابخانه شامل تعاریف TypeScript برای تمام ویژگی‌ها است:
+      </p>
+      <pre><code>import { Component } from '@angular/core';
 import { 
   PersianDatepickerComponent,
   PersianDateChangeEvent,
@@ -792,13 +792,13 @@ export class AppComponent {
   }
 }</code></pre>
 
-    <h2>پشتیبانی از مرورگرها</h2>
-    <p>
-      این کامپوننت از Web Components استفاده می‌کند و با تمام مرورگرهای مدرن سازگار است.
-    </p>
+      <h2>پشتیبانی از مرورگرها</h2>
+      <p>
+        این کامپوننت از Web Components استفاده می‌کند و با تمام مرورگرهای مدرن سازگار است.
+      </p>
 
-    <h2>مجوز</h2>
-    <p>MIT</p>
+      <h2>مجوز</h2>
+      <p>MIT</p>
   </div>
 
   <script src="../../dist/persian-datepicker-element.min.js"></script>
