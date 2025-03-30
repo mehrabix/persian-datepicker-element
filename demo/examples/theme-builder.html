@@ -3,535 +3,2226 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="احمد مهرابی | Ahmad Mehrabi">
-  <meta name="description" content="سازنده تم برای کامپوننت انتخاب تاریخ - ایجاد و سفارشی‌سازی تم‌های سفارشی">
-  <meta name="keywords" content="jalali, shamsi, persian, date, datepicker, calendar, webcomponent, custom-element, rtl, persian-calendar, theme builder">
-  <meta name="robots" content="index, follow">
-  <meta property="og:title" content="سازنده تم برای کامپوننت انتخاب تاریخ">
-  <meta property="og:description" content="سازنده تم برای کامپوننت انتخاب تاریخ - ایجاد و سفارشی‌سازی تم‌های سفارشی">
-  <meta property="og:type" content="website">
-  <meta property="og:author" content="احمد مهرابی | Ahmad Mehrabi">
-  <title>سازنده تم برای کامپوننت انتخاب تاریخ</title>
+  <title>Persian Date Picker Element - سازنده تم</title>
   <!-- Add Vazir Font from CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
-    body {
+    :root {
+      --border-radius: 8px;
+      --border-color: #e2e8f0;
+      --primary: #0891b2;
+      --primary-hover: #0e7490;
+      --primary-foreground: #ffffff;
+      --foreground: #1e293b;
+      --muted: #f1f5f9;
+      --muted-foreground: #64748b;
+      --background: #ffffff;
+      --font-size: 14px;
+      --spacing: 16px;
+    }
+    
+    html, body {
       font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       background-color: #f8fafc;
-      color: #1e293b;
+      color: var(--foreground);
+      font-size: var(--font-size);
       line-height: 1.5;
-      direction: rtl;
-      font-weight: 400;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    /* Apply Persian numbers to all elements */
-    * {
       -moz-font-feature-settings: "ss02";
       -webkit-font-feature-settings: "ss02";
       font-feature-settings: "ss02";
     }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 24px;
-      color: #0f172a;
-      font-weight: 700;
-      transition: color 0.3s;
-    }
-
-    h2 {
-      font-size: 20px;
-      margin: 32px 0 16px;
-      color: #334155;
-      font-weight: 700;
-      transition: color 0.3s;
-    }
-
-    p {
-      margin-bottom: 16px;
-      transition: color 0.3s;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .example {
-      margin-bottom: 40px;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      transition: background-color 0.3s, box-shadow 0.3s;
-    }
-
-    .example-label {
-      font-weight: 500;
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
-
-    .result {
-      margin-top: 16px;
-      padding: 12px;
-      background-color: #f1f5f9;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    pre {
-      background-color: #f1f5f9;
-      padding: 16px;
-      border-radius: 6px;
-      overflow-x: auto;
-      font-size: 14px;
-      margin: 20px 0;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    code {
-      font-family: 'Fira Code', monospace;
-      transition: color 0.3s;
-    }
-
-    .link {
-      display: inline-block;
-      margin-top: 20px;
-      background-color: #0891b2;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: background-color 0.2s;
-      margin-right: 8px;
-      margin-bottom: 8px;
-    }
-
-    .link:hover {
-      background-color: #0e7490;
-    }
-
-    /* Custom element styling */
-    persian-datepicker-element {
-      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      --jdp-font-feature-settings: "ss02";
-      --jdp-font-weight: 400;
-      transition: all 0.3s ease;
-    }
-
-    /* Make sure all inputs and form elements also use Persian numbers */
-    input, button, select, textarea {
-      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      -moz-font-feature-settings: "ss02";
-      -webkit-font-feature-settings: "ss02";
-      font-feature-settings: "ss02";
-      font-weight: 400;
-    }
-
-    /* Dark mode styles */
+    
     body.dark {
       background-color: #0f172a;
       color: #e2e8f0;
     }
-
-    body.dark h1 {
-      color: #f8fafc;
-    }
-
-    body.dark h2 {
-      color: #cbd5e1;
-    }
-
-    body.dark .example {
+    
+    .dark .theme-builder,
+    .dark .controls,
+    .dark .preview {
       background-color: #1e293b;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
-
-    body.dark .result,
-    body.dark pre {
-      background-color: #1e1e2f;
-      color: #e2e8f0;
+    
+    .dark .preview-container {
+      background-color: #0f172a;
     }
-
-    body.dark code {
-      color: #f8fafc;
+    
+    * {
+      box-sizing: border-box;
     }
-
-    body.dark persian-datepicker-element {
-      --jdp-background: #1e1e2f;
-      --jdp-foreground: #e2e8f0;
-      --jdp-muted: #334155;
-      --jdp-muted-foreground: #94a3b8;
-      --jdp-border: #475569;
-      --jdp-day-hover-bg: #334155;
-      --jdp-input-border-color: #475569;
-      --jdp-input-bg: #1e1e2f;
-      --jdp-calendar-bg: #1e1e2f;
-      --jdp-holiday-bg: #3f1e2e;
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
     }
-
-    .navigation {
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      transition: border-color 0.3s;
-    }
-
-    .navigation h2 {
+    
+    h1, h2, h3 {
+      font-weight: 600;
+      line-height: 1.25;
       margin-top: 0;
+      margin-bottom: 1rem;
     }
-
-    .nav-links {
+    
+    h1 {
+      font-size: 1.875rem;
+      color: var(--foreground);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    h2 {
+      font-size: 1.25rem;
+      color: var(--foreground);
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    /* Tabs Navigation for Mobile */
+    .tabs {
+      display: none;
+      overflow-x: auto;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+    
+    .tab {
+      display: inline-block;
+      padding: 10px 15px;
+      cursor: pointer;
+      background-color: transparent;
+      color: var(--muted-foreground);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+    
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    
+    /* Theme Builder Layout */
+    .theme-builder {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 20px;
+      background-color: var(--background);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Controls Section */
+    .controls {
+      padding: var(--spacing);
+      background-color: var(--background);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+    
+    .control-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .control-row {
+      margin-bottom: 1rem;
+    }
+    
+    .control-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--foreground);
+      font-weight: 500;
+    }
+    
+    /* Tab Content for Mobile */
+    .tab-content {
+      display: block;
+    }
+    
+    /* Preview Section */
+    .preview {
+      padding: var(--spacing);
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 20px;
+      background-color: var(--background);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
     }
-
-    body.dark .navigation {
-      border-bottom-color: #334155;
+    
+    .preview-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background-color: var(--muted);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      min-height: 310px;
+      overflow: auto;
     }
-
-    /* Dark mode toggle */
-    .theme-switch {
+    
+    /* Code Output */
+    .code-output {
+      position: relative;
+      margin-top: 1rem;
+    }
+    
+    pre {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      padding: 15px;
+      border-radius: var(--border-radius);
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-all;
+      direction: ltr;
+      text-align: left;
+    }
+    
+    /* Color Inputs */
+    .color-input-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    input[type="color"] {
+      -webkit-appearance: none;
+      width: 50px;
+      height: 35px;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 0;
+      cursor: pointer;
+    }
+    
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+    
+    input[type="color"]::-webkit-color-swatch {
+      border: none;
+      border-radius: var(--border-radius);
+    }
+    
+    .color-text {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
+      font-family: 'Courier New', monospace;
+      direction: ltr;
+    }
+    
+    /* Range Slider */
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 5px;
+      background-color: var(--muted);
+      border-radius: 5px;
+      outline: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      background-color: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 15px;
+      height: 15px;
+      background-color: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+    
+    .slider-value {
+      min-width: 60px;
+      padding: 4px 8px;
+      background-color: var(--muted);
+      color: var(--muted-foreground);
+      border-radius: var(--border-radius);
+      text-align: center;
+      font-size: 0.875rem;
+    }
+    
+    /* Switch Toggle */
+    .switch-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .switch {
       position: relative;
       display: inline-block;
       width: 50px;
-      height: 24px;
-      margin-left: 15px;
+      height: 26px;
+      flex-shrink: 0;
     }
-
-    .theme-switch input {
+    
+    .switch input { 
       opacity: 0;
       width: 0;
       height: 0;
     }
-
-    .slider {
+    
+    .switch-slider {
       position: absolute;
       cursor: pointer;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #cbd5e1;
+      background-color: var(--muted);
       transition: .4s;
-      border-radius: 24px;
+      border-radius: 34px;
     }
-
-    .slider:before {
+    
+    .switch-slider:before {
       position: absolute;
       content: "";
       height: 18px;
       width: 18px;
-      left: 3px;
-      bottom: 3px;
+      left: 4px;
+      bottom: 4px;
       background-color: white;
       transition: .4s;
       border-radius: 50%;
     }
-
-    input:checked + .slider {
-      background-color: #0891b2;
+    
+    input:checked + .switch-slider {
+      background-color: var(--primary);
     }
-
-    input:checked + .slider:before {
-      transform: translateX(26px);
+    
+    input:checked + .switch-slider:before {
+      transform: translateX(24px);
     }
-
-    .toggle-container {
+    
+    /* Preset Theme Buttons */
+    .preset-buttons {
       display: flex;
-      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
     }
-
-    .toggle-label {
-      margin-right: 8px;
-      font-size: 14px;
-      font-weight: 500;
+    
+    .preset-btn {
+      padding: 8px 16px;
+      background-color: var(--background);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      color: var(--foreground);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
-
-    /* Theme builder specific styles */
-    .theme-controls {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 20px;
+    
+    .preset-btn:hover {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-
-    .theme-control {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    
+    .preset-btn.blue {
+      border-color: #0891b2;
+      color: #0891b2;
     }
-
-    .theme-control label {
-      font-weight: 500;
-      font-size: 14px;
+    
+    .preset-btn.green {
+      border-color: #10b981;
+      color: #10b981;
     }
-
-    .theme-control input[type="color"] {
+    
+    .preset-btn.purple {
+      border-color: #8b5cf6;
+      color: #8b5cf6;
+    }
+    
+    .preset-btn.orange {
+      border-color: #f59e0b;
+      color: #f59e0b;
+    }
+    
+    .preset-btn.red {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+    
+    /* Dropdown Select */
+    .input-select {
       width: 100%;
-      height: 40px;
-      padding: 0;
+      padding: 8px 12px;
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: 'Vazir', system-ui;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 10px 20px;
+      border-radius: var(--border-radius);
       border: none;
-      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--foreground);
+    }
+    
+    .btn-outline:hover {
+      border-color: var(--muted-foreground);
+    }
+    
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: flex-end;
+    }
+    
+    /* Copy Button */
+    .copy-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      background-color: var(--background);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      font-size: 0.75rem;
       cursor: pointer;
     }
-
-    .theme-control input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #e2e8f0;
-      border-radius: 4px;
-      font-size: 14px;
+    
+    .copy-button:hover {
+      background-color: var(--muted);
     }
-
-    .theme-control select {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #e2e8f0;
-      border-radius: 4px;
-      font-size: 14px;
+    
+    /* Links */
+    .link-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 1rem;
     }
-
-    .theme-preview {
-      margin-top: 20px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    
+    .link {
+      padding: 8px 16px;
+      background-color: var(--muted);
+      color: var(--muted-foreground);
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
     }
-
-    .theme-code {
-      margin-top: 20px;
-      padding: 16px;
-      background-color: #f1f5f9;
-      border-radius: 6px;
-      font-family: 'Fira Code', monospace;
-      font-size: 14px;
-      overflow-x: auto;
+    
+    .link:hover {
+      background-color: var(--border-color);
+      color: var(--foreground);
     }
-
-    body.dark .theme-control input[type="text"],
-    body.dark .theme-control select {
-      background-color: #1e293b;
-      border-color: #475569;
-      color: #e2e8f0;
+    
+    /* Dark Mode */
+    .dark {
+      --background: #0f172a;
+      --foreground: #e2e8f0;
+      --muted: #1e293b;
+      --muted-foreground: #94a3b8;
+      --border-color: #334155;
     }
-
-    body.dark .theme-preview {
-      background-color: #1e293b;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    
+    /* Responsive Styles */
+    @media (max-width: 900px) {
+      .theme-builder {
+        grid-template-columns: 1fr;
+      }
+      
+      .tabs {
+        display: flex;
+      }
+      
+      .tab-content {
+        display: none;
+      }
+      
+      .tab-content[data-tab-content="basic"] {
+        display: block;
+      }
+      
+      .container {
+        padding: 10px;
+      }
+      
+      .controls, .preview {
+        max-height: none;
+        padding: 15px;
+      }
+      
+      .navigation {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .nav-links {
+        justify-content: center;
+        width: 100%;
+      }
     }
-
-    body.dark .theme-code {
+    
+    @media (max-width: 600px) {
+      body {
+        font-size: 14px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .preset-buttons {
+        gap: 5px;
+      }
+      
+      .preset-btn {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+      }
+      
+      .slider-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .slider-value {
+        align-self: flex-end;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+      
+      .navigation .btn {
+        padding: 8px 12px;
+        margin-right: 4px !important;
+        font-size: 0.75rem;
+      }
+      
+      .switch-container {
+        flex-wrap: wrap;
+      }
+      
+      .switch-container .control-label {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+      
+      .color-input-container {
+        flex-wrap: wrap;
+      }
+      
+      input[type="color"] {
+        width: 40px;
+        height: 30px;
+      }
+      
+      .color-text {
+        width: calc(100% - 50px);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 8px;
+      }
+      
+      .controls, .preview {
+        padding: 12px;
+      }
+      
+      .tabs {
+        padding-bottom: 0;
+      }
+      
+      .tab {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+      }
+      
+      .preview-container {
+        padding: 10px;
+      }
+      
+      pre {
+        font-size: 11px;
+        padding: 10px;
+      }
+      
+      .copy-button {
+        top: 5px;
+        right: 5px;
+        padding: 3px 8px;
+        font-size: 0.7rem;
+      }
+      
+      .link {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+      }
+    }
+    
+    /* Ensure the datepicker input styling matches dark mode */
+    .dark persian-datepicker-element::part(input) {
       background-color: #1e1e2f;
       color: #e2e8f0;
+      border-color: #475569;
+    }
+    
+    .dark input[type="text"],
+    .dark input[type="number"],
+    .dark .input-select {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      border-color: #334155;
+    }
+    
+    .dark .preset-btn {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      border-color: #334155;
+    }
+    
+    .dark input[type="range"] {
+      background-color: #334155;
+    }
+    
+    .dark .slider-value {
+      background-color: #334155;
+      color: #94a3b8;
+    }
+    
+    .dark .switch-slider {
+      background-color: #334155;
+    }
+    
+    .dark .color-text {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      border-color: #334155;
+    }
+    
+    .dark h1, 
+    .dark h2, 
+    .dark h3 {
+      color: #e2e8f0;
+    }
+    
+    .dark h2 {
+      border-bottom-color: #334155;
+    }
+    
+    .dark .tab {
+      color: #94a3b8;
+    }
+    
+    .dark .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    
+    .dark .btn-outline {
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    
+    .dark .btn-outline:hover {
+      border-color: #94a3b8;
+    }
+    
+    /* Improve touch areas on mobile */
+    @media (hover: none) and (pointer: coarse) {
+      .btn, 
+      .preset-btn, 
+      .tab, 
+      .switch,
+      .copy-button {
+        min-height: 44px;
+        touch-action: manipulation;
+      }
+      
+      input[type="range"]::-webkit-slider-thumb {
+        width: 22px;
+        height: 22px;
+      }
+      
+      input[type="range"]::-moz-range-thumb {
+        width: 22px;
+        height: 22px;
+      }
+    }
+    
+    /* Better scrolling on iOS devices */
+    .controls, 
+    .tabs,
+    .preview-container {
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+    
+    /* Add better focus states for accessibility */
+    input:focus, 
+    button:focus, 
+    select:focus, 
+    a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Remove outline for mouse users but keep it for keyboard navigation */
+    @media (hover: hover) {
+      input:focus:not(:focus-visible), 
+      button:focus:not(:focus-visible), 
+      select:focus:not(:focus-visible), 
+      a:focus:not(:focus-visible) {
+        outline: none;
+      }
+    }
+    
+    /* Fix some iOS rendering issues */
+    input[type="color"],
+    input[type="range"],
+    button,
+    select {
+      -webkit-appearance: none;
+      border-radius: var(--border-radius);
+    }
+    
+    /* Make sure long previews don't break layout on small screens */
+    .preview pre {
+      max-width: 100%;
+      overflow-wrap: break-word;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>سازنده تم برای کامپوننت انتخاب تاریخ</h1>
-    <p>ابزاری برای ایجاد و سفارشی‌سازی تم‌های سفارشی برای کامپوننت انتخاب تاریخ.</p>
+    <h1>Persian Date Picker Element - Full Feature Theme Builder</h1>
+    <p style="text-align: center; margin-bottom: 30px;">
+      این ابزار به شما امکان می‌دهد تم دلخواه خود را به صورت کامل بسازید و کد CSS مربوطه را دریافت کنید.
+    </p>
     
-    <div class="navigation">
-      <div class="nav-links">
-        <a href="index.html" class="link">نمونه‌های پایه</a>
-        <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
-        <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
-        <a href="../../index.html" class="link">دمو</a>
-      </div>
-      <div class="toggle-container">
-        <span class="toggle-label">حالت تاریک</span>
-        <label class="theme-switch">
-          <input type="checkbox" id="dark-mode-toggle">
-          <span class="slider"></span>
-        </label>
+    <div class="navigation" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color);">
+      <div class="nav-links" style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <a href="index.html" class="btn btn-outline" style="margin-right: 8px;">نمونه‌های پایه</a>
+        <a href="customization.html" class="btn btn-outline" style="margin-right: 8px;">نمونه‌های استایل‌دهی</a>
+        <a href="theme-switcher.html" class="btn btn-outline" style="margin-right: 8px;">تغییردهنده تم</a>
+        <a href="theme-builder.html" class="btn btn-outline" style="margin-right: 8px;">سازنده کامل تم</a>
+        <a href="../../index.html" class="btn btn-outline">دمو</a>
       </div>
     </div>
-
-    <div class="example">
-      <h2>کنترل‌های تم</h2>
-      <div class="theme-controls">
-        <div class="theme-control">
-          <label>رنگ اصلی</label>
-          <input type="color" id="primary-color" value="#0891b2">
+    
+    <!-- Mobile tabs for responsive navigation -->
+    <div class="tabs">
+      <div class="tab active" data-tab="basic">پایه</div>
+      <div class="tab" data-tab="colors">رنگ‌ها</div>
+      <div class="tab" data-tab="typography">تایپوگرافی</div>
+      <div class="tab" data-tab="shapes">شکل‌ها</div>
+      <div class="tab" data-tab="effects">افکت‌ها</div>
+      <div class="tab" data-tab="advanced">پیشرفته</div>
+    </div>
+    
+    <div class="theme-builder">
+      <div class="controls">
+        <div class="control-group tab-content" data-tab-content="basic">
+          <h2>حالت تاریک</h2>
+          <div class="switch-container">
+            <span class="control-label">فعال‌سازی حالت تاریک</span>
+            <label class="switch">
+              <input type="checkbox" id="dark-mode-toggle">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
         </div>
-        <div class="theme-control">
-          <label>رنگ پس‌زمینه</label>
-          <input type="color" id="background-color" value="#ffffff">
+        
+        <div class="control-group tab-content" data-tab-content="basic">
+          <h2>تم‌های آماده</h2>
+          <div class="preset-buttons">
+            <button class="preset-btn blue" data-preset="blue">آبی</button>
+            <button class="preset-btn green" data-preset="green">سبز</button>
+            <button class="preset-btn purple" data-preset="purple">بنفش</button>
+            <button class="preset-btn orange" data-preset="orange">نارنجی</button>
+            <button class="preset-btn red" data-preset="red">قرمز</button>
+            <button class="preset-btn" data-preset="minimal">مینیمال</button>
+            <button class="preset-btn" data-preset="rounded">گرد</button>
+            <button class="preset-btn" data-preset="glassmorphism">شیشه‌ای</button>
+            <button class="preset-btn" data-preset="neomorphism">نئومورفیسم</button>
+            <button class="preset-btn" data-preset="gradient">گرادینت</button>
+          </div>
         </div>
-        <div class="theme-control">
-          <label>رنگ متن</label>
-          <input type="color" id="text-color" value="#1e293b">
+        
+        <!-- Primary Colors -->
+        <div class="control-group tab-content" data-tab-content="colors">
+          <h2>رنگ‌های اصلی</h2>
+          
+          <div class="control-row">
+            <label class="control-label">رنگ اصلی</label>
+            <div class="color-input-container">
+              <input type="color" id="primary-color" value="#0891b2">
+              <input type="text" id="primary-color-text" class="color-text" value="#0891b2">
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">رنگ هاور اصلی</label>
+            <div class="color-input-container">
+              <input type="color" id="primary-hover-color" value="#0e7490">
+              <input type="text" id="primary-hover-color-text" class="color-text" value="#0e7490">
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">رنگ متن روی اصلی</label>
+            <div class="color-input-container">
+              <input type="color" id="primary-foreground-color" value="#ffffff">
+              <input type="text" id="primary-foreground-color-text" class="color-text" value="#ffffff">
+            </div>
+          </div>
         </div>
-        <div class="theme-control">
-          <label>رنگ حاشیه</label>
-          <input type="color" id="border-color" value="#e2e8f0">
+        
+        <!-- Background Colors -->
+        <div class="control-group tab-content" data-tab-content="colors">
+          <h2>رنگ‌های پس‌زمینه</h2>
+          
+          <div class="control-row">
+            <label class="control-label">پس‌زمینه</label>
+            <div class="color-input-container">
+              <input type="color" id="background-color" value="#ffffff">
+              <input type="text" id="background-color-text" class="color-text" value="#ffffff">
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">رنگ متن</label>
+            <div class="color-input-container">
+              <input type="color" id="foreground-color" value="#1e293b">
+              <input type="text" id="foreground-color-text" class="color-text" value="#1e293b">
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">پس‌زمینه کمرنگ</label>
+            <div class="color-input-container">
+              <input type="color" id="muted-color" value="#f1f5f9">
+              <input type="text" id="muted-color-text" class="color-text" value="#f1f5f9">
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">رنگ متن کمرنگ</label>
+            <div class="color-input-container">
+              <input type="color" id="muted-foreground-color" value="#64748b">
+              <input type="text" id="muted-foreground-color-text" class="color-text" value="#64748b">
+            </div>
+          </div>
         </div>
-        <div class="theme-control">
-          <label>اندازه فونت</label>
-          <input type="text" id="font-size" value="14px">
+        
+        <!-- Holiday Colors -->
+        <div class="control-group tab-content" data-tab-content="colors">
+          <h2>رنگ‌های تعطیلات</h2>
+          
+          <div class="control-row">
+            <label class="control-label">رنگ متن تعطیلات</label>
+            <div class="color-input-container">
+              <input type="color" id="holiday-color" value="#ef4444">
+              <input type="text" id="holiday-color-text" class="color-text" value="#ef4444">
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">پس‌زمینه تعطیلات</label>
+            <div class="color-input-container">
+              <input type="color" id="holiday-bg" value="#fee2e2">
+              <input type="text" id="holiday-bg-text" class="color-text" value="#fee2e2">
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">پس‌زمینه هاور</label>
+            <div class="color-input-container">
+              <input type="color" id="holiday-hover-bg" value="#fecaca">
+              <input type="text" id="holiday-hover-bg-text" class="color-text" value="#fecaca">
+            </div>
+          </div>
         </div>
-        <div class="theme-control">
-          <label>شعاع گوشه</label>
-          <input type="text" id="border-radius" value="4px">
+        
+        <!-- Border and Radius -->
+        <div class="control-group tab-content" data-tab-content="shapes">
+          <h2>حاشیه و گوشه‌ها</h2>
+          
+          <div class="control-row">
+            <label class="control-label">رنگ حاشیه</label>
+            <div class="color-input-container">
+              <input type="color" id="border-color" value="#e2e8f0">
+              <input type="text" id="border-color-text" class="color-text" value="#e2e8f0">
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">ضخامت حاشیه</label>
+            <div class="slider-container">
+              <input type="range" id="border-width" min="0" max="5" value="1" step="1">
+              <div class="slider-value"><span id="border-width-value">۱</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">شعاع گوشه‌ها</label>
+            <div class="slider-container">
+              <input type="range" id="border-radius" min="0" max="20" value="8" step="1">
+              <div class="slider-value"><span id="border-radius-value">۸</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">شعاع گوشه ورودی</label>
+            <div class="slider-container">
+              <input type="range" id="input-border-radius" min="0" max="20" value="8" step="1">
+              <div class="slider-value"><span id="input-border-radius-value">۸</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">شعاع گوشه روزها</label>
+            <div class="slider-container">
+              <input type="range" id="day-cell-border-radius" min="0" max="20" value="8" step="1">
+              <div class="slider-value"><span id="day-cell-border-radius-value">۸</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">شعاع گوشه تقویم</label>
+            <div class="slider-container">
+              <input type="range" id="calendar-border-radius" min="0" max="30" value="10" step="1">
+              <div class="slider-value"><span id="calendar-border-radius-value">۱۰</span> پیکسل</div>
+            </div>
+          </div>
         </div>
-        <div class="theme-control">
-          <label>فونت</label>
-          <select id="font-family">
-            <option value="Vazir">Vazir</option>
-            <option value="IRANSans">IRANSans</option>
-            <option value="Yekan">Yekan</option>
-          </select>
+        
+        <!-- Typography -->
+        <div class="control-group tab-content" data-tab-content="typography">
+          <h2>تایپوگرافی</h2>
+          
+          <div class="control-row">
+            <label class="control-label">اندازه فونت</label>
+            <div class="slider-container">
+              <input type="range" id="font-size" min="12" max="20" value="14" step="1">
+              <div class="slider-value"><span id="font-size-value">۱۴</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">اندازه فونت روزها</label>
+            <div class="slider-container">
+              <input type="range" id="day-font-size" min="10" max="18" value="14" step="1">
+              <div class="slider-value"><span id="day-font-size-value">۱۴</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">اندازه فونت ماه/سال</label>
+            <div class="slider-container">
+              <input type="range" id="month-year-font-size" min="12" max="20" value="16" step="1">
+              <div class="slider-value"><span id="month-year-font-size-value">۱۶</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">فاصله خطوط</label>
+            <div class="slider-container">
+              <input type="range" id="line-height" min="1" max="2" value="1.5" step="0.1">
+              <div class="slider-value"><span id="line-height-value">۱.۵</span></div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">وزن فونت (normal)</label>
+            <div class="slider-container">
+              <input type="range" id="font-weight" min="300" max="600" value="400" step="100">
+              <div class="slider-value"><span id="font-weight-value">۴۰۰</span></div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">وزن فونت (متوسط)</label>
+            <div class="slider-container">
+              <input type="range" id="font-weight-medium" min="400" max="700" value="500" step="100">
+              <div class="slider-value"><span id="font-weight-medium-value">۵۰۰</span></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Shadow and Effects -->
+        <div class="control-group tab-content" data-tab-content="effects">
+          <h2>سایه و افکت‌ها</h2>
+          
+          <div class="control-row">
+            <label class="control-label">سایه تقویم</label>
+            <div class="switch-container">
+              <span class="control-label">فعال‌سازی سایه</span>
+              <label class="switch">
+                <input type="checkbox" id="shadow-toggle" checked>
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div id="shadow-options">
+            <div class="control-row">
+              <label class="control-label">شدت سایه</label>
+              <div class="slider-container">
+                <input type="range" id="shadow-size" min="0" max="30" value="10" step="1">
+                <div class="slider-value"><span id="shadow-size-value">۱۰</span> پیکسل</div>
+              </div>
+            </div>
+            
+            <div class="control-row">
+              <label class="control-label">رنگ سایه</label>
+              <div class="color-input-container">
+                <input type="color" id="shadow-color" value="#00000033">
+                <input type="text" id="shadow-color-text" class="color-text" value="#00000033">
+              </div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">افکت شیشه‌ای</label>
+            <div class="switch-container">
+              <span class="control-label">فعال‌سازی شیشه‌ای</span>
+              <label class="switch">
+                <input type="checkbox" id="glass-toggle">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div id="glass-options" style="display: none;">
+            <div class="control-row">
+              <label class="control-label">میزان شفافیت</label>
+              <div class="slider-container">
+                <input type="range" id="glass-opacity" min="0" max="1" value="0.8" step="0.05">
+                <div class="slider-value"><span id="glass-opacity-value">۰.۸</span></div>
+              </div>
+            </div>
+            
+            <div class="control-row">
+              <label class="control-label">میزان blur</label>
+              <div class="slider-container">
+                <input type="range" id="glass-blur" min="0" max="20" value="10" step="1">
+                <div class="slider-value"><span id="glass-blur-value">۱۰</span> پیکسل</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Animation Controls -->
+        <div class="control-group tab-content" data-tab-content="advanced">
+          <h2>انیمیشن‌ها</h2>
+          
+          <div class="control-row">
+            <label class="control-label">مدت انیمیشن</label>
+            <div class="slider-container">
+              <input type="range" id="transition-duration" min="0" max="500" value="200" step="10">
+              <div class="slider-value"><span id="transition-duration-value">۲۰۰</span> میلی‌ثانیه</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">جهت حرکت</label>
+            <div class="slider-container">
+              <input type="range" id="fade-from-y" min="-20" max="20" value="-10" step="1">
+              <div class="slider-value"><span id="fade-from-y-value">-۱۰</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">نوع انیمیشن</label>
+            <select id="animation-type" class="input-select">
+              <option value="ease">Ease</option>
+              <option value="linear">Linear</option>
+              <option value="ease-in">Ease In</option>
+              <option value="ease-out">Ease Out</option>
+              <option value="ease-in-out">Ease In Out</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Behavior Controls -->
+        <div class="control-group tab-content" data-tab-content="advanced">
+          <h2>رفتار تقویم</h2>
+          
+          <div class="control-row">
+            <label class="control-label">اندازه سلول روزها</label>
+            <div class="slider-container">
+              <input type="range" id="day-cell-size" min="30" max="60" value="40" step="1">
+              <div class="slider-value"><span id="day-cell-size-value">۴۰</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">فاصله سلول‌ها</label>
+            <div class="slider-container">
+              <input type="range" id="day-cell-margin" min="1" max="10" value="2" step="1">
+              <div class="slider-value"><span id="day-cell-margin-value">۲</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">عرض تقویم</label>
+            <div class="slider-container">
+              <input type="range" id="calendar-width" min="280" max="400" value="320" step="10">
+              <div class="slider-value"><span id="calendar-width-value">۳۲۰</span> پیکسل</div>
+            </div>
+          </div>
+          
+          <div class="control-row">
+            <label class="control-label">پدینگ تقویم</label>
+            <div class="slider-container">
+              <input type="range" id="calendar-padding" min="5" max="30" value="16" step="1">
+              <div class="slider-value"><span id="calendar-padding-value">۱۶</span> پیکسل</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button id="reset-button" class="btn btn-danger">بازنشانی به حالت پیش‌فرض</button>
+          <button id="copy-css-button" class="btn btn-primary">کپی CSS</button>
+          <button id="export-theme" class="btn btn-outline">ذخیره تم</button>
         </div>
       </div>
-
-      <div class="theme-preview">
-        <h3>پیش‌نمایش</h3>
-        <persian-datepicker-element id="theme-preview-picker"></persian-datepicker-element>
-      </div>
-
-      <div class="theme-code">
-        <h3>کد CSS</h3>
-        <pre><code id="theme-code-output">persian-datepicker-element {
+      
+      <div class="preview">
+        <div class="preview-container">
+          <persian-datepicker-element id="theme-preview"></persian-datepicker-element>
+        </div>
+        
+        <div class="code-output">
+          <h3>کد CSS</h3>
+          <pre id="css-output">
+persian-datepicker-element {
   --jdp-primary: #0891b2;
+  --jdp-primary-hover: #0e7490;
+  --jdp-primary-foreground: #ffffff;
+  
   --jdp-background: #ffffff;
   --jdp-foreground: #1e293b;
+  --jdp-muted: #f1f5f9;
+  --jdp-muted-foreground: #64748b;
   --jdp-border: #e2e8f0;
+  
+  --jdp-border-radius: 0.5rem;
+  --jdp-input-border-radius: 0.5rem;
+  --jdp-day-cell-border-radius: 0.5rem;
+  
   --jdp-font-size: 14px;
-  --jdp-border-radius: 4px;
+  --jdp-day-font-size: 14px;
+  --jdp-month-year-font-size: 16px;
+  
+  --jdp-holiday-color: #ef4444;
+  --jdp-holiday-bg: #fee2e2;
+  
   --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}</code></pre>
+  --jdp-font-feature-settings: "ss02";
+}
+          </pre>
+          <button id="copy-button" class="copy-button">کپی</button>
+        </div>
+        
+        <div class="link-container">
+          <a href="index.html" class="link">بازگشت به نمونه‌های اصلی</a>
+          <a href="customization.html" class="link">مشاهده نمونه‌های استایل‌دهی</a>
+          <a href="theme-switcher.html" class="link">استفاده از تغییردهنده تم</a>
+          <a href="../../index.html" class="link">دمو اصلی</a>
+        </div>
       </div>
-    </div>
-
-    <div class="link-container">
-      <a href="index.html" class="link">بازگشت به مثال ها</a>
     </div>
   </div>
 
   <script src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
-    // Dark mode toggle functionality
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    // Fix for missing DOM elements to avoid JS errors
+    (() => {
+      // Create a dummy navDarkModeToggle element since it's referenced in the code but doesn't exist
+      if (!document.getElementById('nav-dark-mode-toggle')) {
+        const dummyElement = document.createElement('input');
+        dummyElement.type = 'checkbox';
+        dummyElement.id = 'nav-dark-mode-toggle';
+        dummyElement.style.display = 'none';
+        document.body.appendChild(dummyElement);
+        console.log('Added missing nav-dark-mode-toggle element to prevent JS errors');
+      }
+    })();
     
-    function applyDarkModeToPickers(isDark) {
-      const allPickers = document.querySelectorAll('persian-datepicker-element');
-      allPickers.forEach(picker => {
-        if (isDark) {
-          picker.setAttribute('darkmode', 'true');
-          picker.style.setProperty('--jdp-background', '#1e1e2f');
-          picker.style.setProperty('--jdp-foreground', '#e2e8f0');
-          picker.style.setProperty('--jdp-muted', '#334155');
-          picker.style.setProperty('--jdp-muted-foreground', '#94a3b8');
-          picker.style.setProperty('--jdp-border', '#475569');
-          picker.style.setProperty('--jdp-day-hover-bg', '#334155');
-          picker.style.setProperty('--jdp-input-border-color', '#475569');
-          picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
-          picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
-          picker.style.setProperty('--jdp-holiday-bg', '#3f1e2e');
-        } else {
-          picker.removeAttribute('darkmode');
-          picker.style.removeProperty('--jdp-background');
-          picker.style.removeProperty('--jdp-foreground');
-          picker.style.removeProperty('--jdp-muted');
-          picker.style.removeProperty('--jdp-muted-foreground');
-          picker.style.removeProperty('--jdp-border');
-          picker.style.removeProperty('--jdp-day-hover-bg');
-          picker.style.removeProperty('--jdp-input-border-color');
-          picker.style.removeProperty('--jdp-input-bg');
-          picker.style.removeProperty('--jdp-calendar-bg');
-          picker.style.removeProperty('--jdp-holiday-bg');
+    // Detect if the device is a touch device
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Add touch class to body for any specific touch-based styling
+    if (isTouchDevice) {
+      document.body.classList.add('touch-device');
+    }
+    
+    // Performance improvements for mobile
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      // Use passive event listeners for better scrolling performance
+      document.addEventListener('touchstart', function() {}, { passive: true });
+      document.addEventListener('touchmove', function() {}, { passive: true });
+      
+      // Optimize any heavy animations
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @media (max-width: 900px) {
+          * {
+            transition-duration: 0.15s !important;
+            animation-duration: 0.15s !important;
+          }
         }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Initialize tabs for mobile view on document ready
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make sure mobile tabs work properly
+      const tabs = document.querySelectorAll('.tab');
+      
+      // Initial handling based on viewport
+      handleWindowResize();
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabName = this.getAttribute('data-tab');
+          
+          // Remove active class from all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Hide all tab content
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.style.display = 'none';
+          });
+          
+          // Show corresponding tab content
+          document.querySelectorAll(`.tab-content[data-tab-content="${tabName}"]`).forEach(content => {
+            content.style.display = 'block';
+          });
+          
+          // Smooth scroll to the top of content on tab change (mobile only)
+          if (window.innerWidth <= 900) {
+            document.querySelector('.controls').scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    });
+    
+    // Convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+    
+    // Theme presets
+    const themePresets = {
+      default: {
+        '--jdp-primary': '#0891b2',
+        '--jdp-primary-hover': '#0e7490',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-background': '#ffffff',
+        '--jdp-foreground': '#1e293b',
+        '--jdp-muted': '#f1f5f9',
+        '--jdp-muted-foreground': '#64748b',
+        '--jdp-border': '#e2e8f0',
+        '--jdp-border-radius': '8px',
+        '--jdp-input-border-radius': '8px',
+        '--jdp-day-cell-border-radius': '8px',
+        '--jdp-font-size': '14px',
+        '--jdp-day-font-size': '14px',
+        '--jdp-month-year-font-size': '16px',
+        '--jdp-holiday-color': '#ef4444',
+        '--jdp-holiday-bg': '#fee2e2'
+      },
+      blue: {
+        '--jdp-primary': '#3b82f6',
+        '--jdp-primary-hover': '#2563eb',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-ring': '#60a5fa',
+        '--jdp-border-radius': '8px',
+      },
+      green: {
+        '--jdp-primary': '#10b981',
+        '--jdp-primary-hover': '#059669',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-ring': '#34d399',
+        '--jdp-border-radius': '8px',
+      },
+      purple: {
+        '--jdp-primary': '#8b5cf6',
+        '--jdp-primary-hover': '#7c3aed',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-ring': '#a78bfa',
+        '--jdp-border-radius': '8px',
+      },
+      orange: {
+        '--jdp-primary': '#f97316',
+        '--jdp-primary-hover': '#ea580c',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-ring': '#fb923c',
+        '--jdp-border-radius': '8px',
+      },
+      red: {
+        '--jdp-primary': '#ef4444',
+        '--jdp-primary-hover': '#dc2626',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-ring': '#fca5a5',
+        '--jdp-border-radius': '8px',
+      },
+      minimal: {
+        '--jdp-primary': '#000000',
+        '--jdp-primary-hover': '#333333',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-border': '#e2e8f0',
+        '--jdp-ring': '#000000',
+        '--jdp-border-radius': '2px',
+        '--jdp-input-border-radius': '2px',
+        '--jdp-day-cell-border-radius': '0px',
+        '--jdp-input-border-width': '1px',
+      },
+      rounded: {
+        '--jdp-primary': '#0891b2',
+        '--jdp-primary-hover': '#0e7490',
+        '--jdp-primary-foreground': '#ffffff',
+        '--jdp-border-radius': '16px',
+        '--jdp-input-border-radius': '16px',
+        '--jdp-day-cell-border-radius': '16px',
+        '--jdp-calendar-border-radius': '24px',
+      }
+    };
+    
+    // Dark themes
+    const darkTheme = {
+      '--jdp-background': '#1e1e2f',
+      '--jdp-foreground': '#e2e8f0',
+      '--jdp-muted': '#334155',
+      '--jdp-muted-foreground': '#94a3b8',
+      '--jdp-border': '#475569',
+      '--jdp-calendar-shadow': '0px 10px 30px -5px rgba(2, 6, 23, 0.5)',
+      '--jdp-day-hover-bg': '#334155',
+      '--jdp-input-border-color': '#475569',
+      '--jdp-input-bg': '#1e1e2f',
+      '--jdp-calendar-bg': '#1e1e2f',
+      '--jdp-holiday-bg': '#3f1e2e'
+    };
+    
+    // Elements
+    const picker = document.getElementById('theme-preview');
+    const cssOutput = document.getElementById('css-output');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const presetButtons = document.querySelectorAll('.preset-btn');
+    const resetButton = document.getElementById('reset-button');
+    const copyButton = document.getElementById('copy-button');
+    const copyCssButton = document.getElementById('copy-css-button');
+    
+    // Color inputs
+    const colorInputs = {
+      primary: document.getElementById('primary-color'),
+      primaryHover: document.getElementById('primary-hover-color'),
+      primaryForeground: document.getElementById('primary-foreground-color'),
+      background: document.getElementById('background-color'),
+      foreground: document.getElementById('foreground-color'),
+      muted: document.getElementById('muted-color'),
+      mutedForeground: document.getElementById('muted-foreground-color'),
+      border: document.getElementById('border-color'),
+      holidayColor: document.getElementById('holiday-color'),
+      holidayBg: document.getElementById('holiday-bg')
+    };
+    
+    // Color text inputs
+    const colorTextInputs = {
+      primary: document.getElementById('primary-color-text'),
+      primaryHover: document.getElementById('primary-hover-color-text'),
+      primaryForeground: document.getElementById('primary-foreground-color-text'),
+      background: document.getElementById('background-color-text'),
+      foreground: document.getElementById('foreground-color-text'),
+      muted: document.getElementById('muted-color-text'),
+      mutedForeground: document.getElementById('muted-foreground-color-text'),
+      border: document.getElementById('border-color-text'),
+      holidayColor: document.getElementById('holiday-color-text'),
+      holidayBg: document.getElementById('holiday-bg-text')
+    };
+    
+    // Range inputs
+    const rangeInputs = {
+      borderRadius: document.getElementById('border-radius'),
+      inputBorderRadius: document.getElementById('input-border-radius'),
+      dayCellBorderRadius: document.getElementById('day-cell-border-radius'),
+      fontSize: document.getElementById('font-size'),
+      dayFontSize: document.getElementById('day-font-size'),
+      monthYearFontSize: document.getElementById('month-year-font-size')
+    };
+    
+    // Range value elements
+    const rangeValues = {
+      borderRadius: document.getElementById('border-radius-value'),
+      inputBorderRadius: document.getElementById('input-border-radius-value'),
+      dayCellBorderRadius: document.getElementById('day-cell-border-radius-value'),
+      fontSize: document.getElementById('font-size-value'),
+      dayFontSize: document.getElementById('day-font-size-value'),
+      monthYearFontSize: document.getElementById('month-year-font-size-value')
+    };
+    
+    // Current theme
+    let currentTheme = {...themePresets.default};
+    
+    // Apply theme to the picker
+    function applyTheme(theme) {
+      currentTheme = {...currentTheme, ...theme};
+      
+      for (const [prop, value] of Object.entries(currentTheme)) {
+        picker.style.setProperty(prop, value);
+      }
+      
+      // Always ensure these settings are applied
+      picker.style.setProperty('--jdp-font-family', "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif");
+      picker.style.setProperty('--jdp-font-feature-settings', '"ss02"');
+      
+      updateCssOutput();
+      updateControls();
+    }
+    
+    // Update CSS output in the preview
+    function updateCssOutput() {
+      const cssProps = [
+        '--jdp-primary',
+        '--jdp-primary-hover',
+        '--jdp-primary-foreground',
+        '--jdp-background',
+        '--jdp-foreground',
+        '--jdp-muted',
+        '--jdp-muted-foreground',
+        '--jdp-border',
+        '--jdp-border-radius',
+        '--jdp-input-border-radius',
+        '--jdp-day-cell-border-radius',
+        '--jdp-font-size',
+        '--jdp-day-font-size',
+        '--jdp-month-year-font-size',
+        '--jdp-holiday-color',
+        '--jdp-holiday-bg',
+        '--jdp-holiday-hover-bg',
+        '--jdp-calendar-shadow',
+        '--jdp-calendar-border-radius',
+        '--jdp-input-bg',
+        '--jdp-calendar-bg',
+        '--jdp-day-cell-size',
+        '--jdp-day-cell-margin',
+        '--jdp-calendar-width',
+        '--jdp-calendar-padding',
+        '--jdp-line-height',
+        '--jdp-font-weight',
+        '--jdp-font-weight-medium',
+        '--jdp-border-width',
+        '--jdp-transition-duration',
+        '--jdp-transition-timing',
+        '--jdp-fade-from-y',
+        '--jdp-backdrop-filter',
+        '--jdp-font-family',
+        '--jdp-font-feature-settings'
+      ];
+      
+      let css = 'persian-datepicker-element {\n';
+      
+      // Add all properties
+      cssProps.forEach(prop => {
+        let value = picker.style.getPropertyValue(prop);
+        
+        // Add default values for font-family and font-feature-settings
+        if (prop === '--jdp-font-family' && !value) {
+          value = "'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+        }
+        
+        if (prop === '--jdp-font-feature-settings' && !value) {
+          value = '"ss02"';
+        }
+        
+        if (value) {
+          css += `  ${prop}: ${value};\n`;
+        }
+      });
+      
+      css += '}';
+      cssOutput.textContent = css;
+    }
+    
+    // Update control values based on current theme
+    function updateControls() {
+      // Update color inputs
+      updateColorControl('primary', '--jdp-primary');
+      updateColorControl('primaryHover', '--jdp-primary-hover');
+      updateColorControl('primaryForeground', '--jdp-primary-foreground');
+      updateColorControl('background', '--jdp-background');
+      updateColorControl('foreground', '--jdp-foreground');
+      updateColorControl('muted', '--jdp-muted');
+      updateColorControl('mutedForeground', '--jdp-muted-foreground');
+      updateColorControl('border', '--jdp-border');
+      updateColorControl('holidayColor', '--jdp-holiday-color');
+      updateColorControl('holidayBg', '--jdp-holiday-bg');
+      
+      // Update range inputs
+      updateRangeControl('borderRadius', '--jdp-border-radius');
+      updateRangeControl('inputBorderRadius', '--jdp-input-border-radius');
+      updateRangeControl('dayCellBorderRadius', '--jdp-day-cell-border-radius');
+      updateRangeControl('fontSize', '--jdp-font-size');
+      updateRangeControl('dayFontSize', '--jdp-day-font-size');
+      updateRangeControl('monthYearFontSize', '--jdp-month-year-font-size');
+    }
+    
+    // Helper for updating color controls
+    function updateColorControl(control, cssVar) {
+      const value = picker.style.getPropertyValue(cssVar);
+      if (value) {
+        colorInputs[control].value = value;
+        colorTextInputs[control].value = value;
+      }
+    }
+    
+    // Helper for updating range controls
+    function updateRangeControl(control, cssVar) {
+      const value = picker.style.getPropertyValue(cssVar);
+      if (value) {
+        const numValue = parseInt(value);
+        if (!isNaN(numValue)) {
+          rangeInputs[control].value = numValue;
+          rangeValues[control].textContent = toPersianNum(numValue);
+        }
+      }
+    }
+    
+    // Dark mode toggle
+    darkModeToggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark', darkModeToggle.checked);
+      
+      if (darkModeToggle.checked) {
+        // Apply dark theme but keep primary colors
+        const primaryColors = {
+          '--jdp-primary': currentTheme['--jdp-primary'],
+          '--jdp-primary-hover': currentTheme['--jdp-primary-hover'],
+          '--jdp-primary-foreground': currentTheme['--jdp-primary-foreground'],
+        };
+        
+        // Apply all dark theme properties
+        applyTheme({...darkTheme, ...primaryColors});
+        
+        // Make sure input and calendar background are set
+        picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
+        picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
+        
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        // Keep existing colors but revert dark specific ones
+        const lightTheme = {
+          '--jdp-background': '#ffffff',
+          '--jdp-foreground': '#1e293b',
+          '--jdp-muted': '#f1f5f9',
+          '--jdp-muted-foreground': '#64748b',
+          '--jdp-border': '#e2e8f0',
+          '--jdp-calendar-shadow': '0 1px 3px rgba(0, 0, 0, 0.1)',
+          '--jdp-day-hover-bg': '#f1f5f9',
+          '--jdp-input-border-color': '#e2e8f0',
+          '--jdp-input-bg': '#ffffff',
+          '--jdp-calendar-bg': '#ffffff',
+          '--jdp-holiday-bg': '#fee2e2',
+        };
+        applyTheme(lightTheme);
+        localStorage.setItem('darkMode', 'false');
+      }
+    });
+    
+    // Initialize
+    function init() {
+      // Apply default theme
+      applyTheme(themePresets.default);
+      
+      // Set initial date
+      picker.setValue(1403, 3, 15);
+      
+      // Setup event listeners
+      setupEventListeners();
+      
+      // Setup advanced controls
+      setupAdvancedControls();
+      
+      // Setup tabs for mobile navigation
+      setupTabs();
+      
+      // Handle window resize for proper tab display
+      window.addEventListener('resize', handleWindowResize);
+    }
+    
+    // Handle window resize for tab display
+    function handleWindowResize() {
+      const isMobile = window.innerWidth <= 900;
+      const tabs = document.querySelectorAll('.tab');
+      const activeTab = document.querySelector('.tab.active');
+      
+      if (isMobile) {
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        
+        // Show active tab content
+        if (activeTab) {
+          const activeTabName = activeTab.getAttribute('data-tab');
+          document.querySelectorAll(`.tab-content[data-tab-content="${activeTabName}"]`).forEach(content => {
+            content.style.display = 'block';
+          });
+        } else {
+          // If no active tab, default to basic
+          document.querySelectorAll('.tab-content[data-tab-content="basic"]').forEach(content => {
+            content.style.display = 'block';
+          });
+          
+          if (tabs.length) {
+            tabs[0].classList.add('active');
+          }
+        }
+      } else {
+        // Show all tab content for desktop view
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.style.display = 'block';
+        });
+      }
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+      // Preset buttons
+      presetButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const presetName = btn.getAttribute('data-preset');
+          const preset = themePresets[presetName];
+          
+          if (preset) {
+            if (darkModeToggle.checked) {
+              // Apply preset with dark theme
+              const mergedTheme = {...preset};
+              // Keep dark theme background colors
+              Object.entries(darkTheme).forEach(([key, value]) => {
+                if (!key.includes('primary')) {
+                  mergedTheme[key] = value;
+                }
+              });
+              applyTheme(mergedTheme);
+            } else {
+              applyTheme(preset);
+            }
+          }
+        });
+      });
+      
+      // Color inputs
+      Object.entries(colorInputs).forEach(([key, input]) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          colorTextInputs[key].value = value;
+          
+          // Map control name to CSS variable
+          const cssVarMap = {
+            primary: '--jdp-primary',
+            primaryHover: '--jdp-primary-hover',
+            primaryForeground: '--jdp-primary-foreground',
+            background: '--jdp-background',
+            foreground: '--jdp-foreground',
+            muted: '--jdp-muted',
+            mutedForeground: '--jdp-muted-foreground',
+            border: '--jdp-border',
+            holidayColor: '--jdp-holiday-color',
+            holidayBg: '--jdp-holiday-bg'
+          };
+          
+          const cssVar = cssVarMap[key];
+          currentTheme[cssVar] = value;
+          picker.style.setProperty(cssVar, value);
+          updateCssOutput();
+        });
+      });
+      
+      // Color text inputs
+      Object.entries(colorTextInputs).forEach(([key, input]) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          
+          // Validate hex color
+          if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)) {
+            colorInputs[key].value = value;
+            
+            // Map control name to CSS variable
+            const cssVarMap = {
+              primary: '--jdp-primary',
+              primaryHover: '--jdp-primary-hover',
+              primaryForeground: '--jdp-primary-foreground',
+              background: '--jdp-background',
+              foreground: '--jdp-foreground',
+              muted: '--jdp-muted',
+              mutedForeground: '--jdp-muted-foreground',
+              border: '--jdp-border',
+              holidayColor: '--jdp-holiday-color',
+              holidayBg: '--jdp-holiday-bg'
+            };
+            
+            const cssVar = cssVarMap[key];
+            currentTheme[cssVar] = value;
+            picker.style.setProperty(cssVar, value);
+            updateCssOutput();
+          }
+        });
+      });
+      
+      // Range inputs
+      Object.entries(rangeInputs).forEach(([key, input]) => {
+        input.addEventListener('input', () => {
+          const value = input.value;
+          rangeValues[key].textContent = toPersianNum(value);
+          
+          // Map control name to CSS variable
+          const cssVarMap = {
+            borderRadius: '--jdp-border-radius',
+            inputBorderRadius: '--jdp-input-border-radius',
+            dayCellBorderRadius: '--jdp-day-cell-border-radius',
+            fontSize: '--jdp-font-size',
+            dayFontSize: '--jdp-day-font-size',
+            monthYearFontSize: '--jdp-month-year-font-size'
+          };
+          
+          const cssVar = cssVarMap[key];
+          const cssValue = `${value}px`;
+          currentTheme[cssVar] = cssValue;
+          picker.style.setProperty(cssVar, cssValue);
+          updateCssOutput();
+        });
+      });
+      
+      // Reset button
+      resetButton.addEventListener('click', () => {
+        applyTheme(themePresets.default);
+        if (darkModeToggle.checked) {
+          darkModeToggle.checked = false;
+          document.body.classList.remove('dark');
+        }
+      });
+      
+      // Copy buttons
+      copyButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(cssOutput.textContent)
+          .then(() => {
+            copyButton.textContent = 'کپی شد!';
+            setTimeout(() => { copyButton.textContent = 'کپی'; }, 2000);
+          })
+          .catch(err => {
+            console.error('Failed to copy: ', err);
+          });
+      });
+      
+      copyCssButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(cssOutput.textContent)
+          .then(() => {
+            copyCssButton.textContent = 'کپی شد!';
+            setTimeout(() => { copyCssButton.textContent = 'کپی CSS'; }, 2000);
+          })
+          .catch(err => {
+            console.error('Failed to copy: ', err);
+          });
       });
     }
     
-    if (localStorage.getItem('darkMode') === 'true') {
-      document.body.classList.add('dark');
-      darkModeToggle.checked = true;
-      applyDarkModeToPickers(true);
+    // Setup tab navigation for mobile
+    function setupTabs() {
+      const tabs = document.querySelectorAll('.tab');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          tab.classList.add('active');
+          
+          // Hide all tab content
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.style.display = 'none';
+          });
+          
+          // Show corresponding tab content
+          const tabName = tab.getAttribute('data-tab');
+          document.querySelectorAll(`.tab-content[data-tab-content="${tabName}"]`).forEach(content => {
+            content.style.display = 'block';
+          });
+        });
+      });
     }
     
-    darkModeToggle.addEventListener('change', () => {
-      const isDarkMode = darkModeToggle.checked;
-      if (isDarkMode) {
-        document.body.classList.add('dark');
-        localStorage.setItem('darkMode', 'true');
-      } else {
-        document.body.classList.remove('dark');
-        localStorage.setItem('darkMode', 'false');
+    // Setup advanced controls event handlers
+    function setupAdvancedControls() {
+      // Shadow toggle
+      const shadowToggle = document.getElementById('shadow-toggle');
+      const shadowOptions = document.getElementById('shadow-options');
+      const shadowSize = document.getElementById('shadow-size');
+      const shadowSizeValue = document.getElementById('shadow-size-value');
+      const shadowColor = document.getElementById('shadow-color');
+      const shadowColorText = document.getElementById('shadow-color-text');
+      
+      // Glass toggle 
+      const glassToggle = document.getElementById('glass-toggle');
+      const glassOptions = document.getElementById('glass-options');
+      const glassOpacity = document.getElementById('glass-opacity');
+      const glassOpacityValue = document.getElementById('glass-opacity-value');
+      const glassBlur = document.getElementById('glass-blur');
+      const glassBlurValue = document.getElementById('glass-blur-value');
+      
+      // Animation controls
+      const transitionDuration = document.getElementById('transition-duration');
+      const transitionDurationValue = document.getElementById('transition-duration-value');
+      const fadeFromY = document.getElementById('fade-from-y');
+      const fadeFromYValue = document.getElementById('fade-from-y-value');
+      const animationType = document.getElementById('animation-type');
+      
+      // Calendar behavior controls
+      const dayCellSize = document.getElementById('day-cell-size');
+      const dayCellSizeValue = document.getElementById('day-cell-size-value');
+      const dayCellMargin = document.getElementById('day-cell-margin');
+      const dayCellMarginValue = document.getElementById('day-cell-margin-value');
+      const calendarWidth = document.getElementById('calendar-width');
+      const calendarWidthValue = document.getElementById('calendar-width-value');
+      const calendarPadding = document.getElementById('calendar-padding');
+      const calendarPaddingValue = document.getElementById('calendar-padding-value');
+      const calendarBorderRadius = document.getElementById('calendar-border-radius');
+      const calendarBorderRadiusValue = document.getElementById('calendar-border-radius-value');
+      
+      // Typography controls
+      const lineHeight = document.getElementById('line-height');
+      const lineHeightValue = document.getElementById('line-height-value');
+      const fontWeight = document.getElementById('font-weight');
+      const fontWeightValue = document.getElementById('font-weight-value');
+      const fontWeightMedium = document.getElementById('font-weight-medium');
+      const fontWeightMediumValue = document.getElementById('font-weight-medium-value');
+      
+      // Border width control
+      const borderWidth = document.getElementById('border-width');
+      const borderWidthValue = document.getElementById('border-width-value');
+      
+      // Holiday hover background
+      const holidayHoverBg = document.getElementById('holiday-hover-bg');
+      const holidayHoverBgText = document.getElementById('holiday-hover-bg-text');
+      
+      // Export theme button
+      const exportThemeBtn = document.getElementById('export-theme');
+      
+      // Shadow toggle handler
+      if (shadowToggle) {
+        shadowToggle.addEventListener('change', () => {
+          if (shadowToggle.checked) {
+            shadowOptions.style.display = 'block';
+            const shadowSizeVal = shadowSize.value;
+            const shadowColorVal = shadowColor.value;
+            picker.style.setProperty('--jdp-calendar-shadow', `0 ${shadowSizeVal}px ${shadowSizeVal * 2}px ${shadowColorVal}`);
+            currentTheme['--jdp-calendar-shadow'] = `0 ${shadowSizeVal}px ${shadowSizeVal * 2}px ${shadowColorVal}`;
+          } else {
+            shadowOptions.style.display = 'none';
+            picker.style.setProperty('--jdp-calendar-shadow', 'none');
+            currentTheme['--jdp-calendar-shadow'] = 'none';
+          }
+          updateCssOutput();
+        });
       }
-      applyDarkModeToPickers(isDarkMode);
-    });
-
-    // Theme builder functionality
-    const themePreviewPicker = document.getElementById('theme-preview-picker');
-    const themeCodeOutput = document.getElementById('theme-code-output');
-
-    // Theme control elements
-    const primaryColor = document.getElementById('primary-color');
-    const backgroundColor = document.getElementById('background-color');
-    const textColor = document.getElementById('text-color');
-    const borderColor = document.getElementById('border-color');
-    const fontSize = document.getElementById('font-size');
-    const borderRadius = document.getElementById('border-radius');
-    const fontFamily = document.getElementById('font-family');
-
-    // Helper function to update theme
-    function updateTheme() {
-      const theme = {
-        primary: primaryColor.value,
-        background: backgroundColor.value,
-        foreground: textColor.value,
-        border: borderColor.value,
-        fontSize: fontSize.value,
-        borderRadius: borderRadius.value,
-        fontFamily: fontFamily.value
-      };
-
-      // Apply theme to preview picker
-      themePreviewPicker.style.setProperty('--jdp-primary', theme.primary);
-      themePreviewPicker.style.setProperty('--jdp-background', theme.background);
-      themePreviewPicker.style.setProperty('--jdp-foreground', theme.foreground);
-      themePreviewPicker.style.setProperty('--jdp-border', theme.border);
-      themePreviewPicker.style.setProperty('--jdp-font-size', theme.fontSize);
-      themePreviewPicker.style.setProperty('--jdp-border-radius', theme.borderRadius);
-      themePreviewPicker.style.setProperty('--jdp-font-family', theme.fontFamily);
-
-      // Update CSS code
-      const cssCode = `persian-datepicker-element {
-  --jdp-primary: ${theme.primary};
-  --jdp-background: ${theme.background};
-  --jdp-foreground: ${theme.foreground};
-  --jdp-border: ${theme.border};
-  --jdp-font-size: ${theme.fontSize};
-  --jdp-border-radius: ${theme.borderRadius};
-  --jdp-font-family: '${theme.fontFamily}', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}`;
-      themeCodeOutput.textContent = cssCode;
+      
+      // Shadow size handler
+      if (shadowSize) {
+        shadowSize.addEventListener('input', () => {
+          const value = shadowSize.value;
+          shadowSizeValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-calendar-shadow', `0 ${value}px ${value * 2}px ${shadowColor.value}`);
+          currentTheme['--jdp-calendar-shadow'] = `0 ${value}px ${value * 2}px ${shadowColor.value}`;
+          updateCssOutput();
+        });
+      }
+      
+      // Shadow color handler
+      if (shadowColor) {
+        shadowColor.addEventListener('input', () => {
+          const value = shadowColor.value;
+          shadowColorText.value = value;
+          picker.style.setProperty('--jdp-calendar-shadow', `0 ${shadowSize.value}px ${shadowSize.value * 2}px ${value}`);
+          currentTheme['--jdp-calendar-shadow'] = `0 ${shadowSize.value}px ${shadowSize.value * 2}px ${value}`;
+          updateCssOutput();
+        });
+      }
+      
+      // Glass toggle handler
+      if (glassToggle) {
+        glassToggle.addEventListener('change', () => {
+          if (glassToggle.checked) {
+            glassOptions.style.display = 'block';
+            const opacityVal = glassOpacity.value;
+            const blurVal = glassBlur.value;
+            picker.style.setProperty('--jdp-background-opacity', opacityVal);
+            picker.style.setProperty('--jdp-backdrop-blur', `${blurVal}px`);
+            currentTheme['--jdp-background-opacity'] = opacityVal;
+            currentTheme['--jdp-backdrop-blur'] = `${blurVal}px`;
+            picker.style.setProperty('--jdp-calendar-bg', `rgba(${document.body.classList.contains('dark') ? '30, 30, 47' : '255, 255, 255'}, ${opacityVal})`);
+            picker.style.setProperty('--jdp-backdrop-filter', `blur(${blurVal}px)`);
+            currentTheme['--jdp-calendar-bg'] = `rgba(${document.body.classList.contains('dark') ? '30, 30, 47' : '255, 255, 255'}, ${opacityVal})`;
+            currentTheme['--jdp-backdrop-filter'] = `blur(${blurVal}px)`;
+          } else {
+            glassOptions.style.display = 'none';
+            picker.style.removeProperty('--jdp-backdrop-filter');
+            delete currentTheme['--jdp-background-opacity'];
+            delete currentTheme['--jdp-backdrop-blur'];
+            delete currentTheme['--jdp-backdrop-filter'];
+            picker.style.setProperty('--jdp-calendar-bg', document.body.classList.contains('dark') ? '#1e1e2f' : '#ffffff');
+            currentTheme['--jdp-calendar-bg'] = document.body.classList.contains('dark') ? '#1e1e2f' : '#ffffff';
+          }
+          updateCssOutput();
+        });
+      }
+      
+      // Glass opacity handler
+      if (glassOpacity) {
+        glassOpacity.addEventListener('input', () => {
+          const value = glassOpacity.value;
+          glassOpacityValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-background-opacity', value);
+          currentTheme['--jdp-background-opacity'] = value;
+          picker.style.setProperty('--jdp-calendar-bg', `rgba(${document.body.classList.contains('dark') ? '30, 30, 47' : '255, 255, 255'}, ${value})`);
+          currentTheme['--jdp-calendar-bg'] = `rgba(${document.body.classList.contains('dark') ? '30, 30, 47' : '255, 255, 255'}, ${value})`;
+          updateCssOutput();
+        });
+      }
+      
+      // Glass blur handler
+      if (glassBlur) {
+        glassBlur.addEventListener('input', () => {
+          const value = glassBlur.value;
+          glassBlurValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-backdrop-blur', `${value}px`);
+          picker.style.setProperty('--jdp-backdrop-filter', `blur(${value}px)`);
+          currentTheme['--jdp-backdrop-blur'] = `${value}px`;
+          currentTheme['--jdp-backdrop-filter'] = `blur(${value}px)`;
+          updateCssOutput();
+        });
+      }
+      
+      // Animation controls
+      if (transitionDuration) {
+        transitionDuration.addEventListener('input', () => {
+          const value = transitionDuration.value;
+          transitionDurationValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-transition-duration', `${value}ms`);
+          currentTheme['--jdp-transition-duration'] = `${value}ms`;
+          updateCssOutput();
+        });
+      }
+      
+      if (fadeFromY) {
+        fadeFromY.addEventListener('input', () => {
+          const value = fadeFromY.value;
+          fadeFromYValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-fade-from-y', `${value}px`);
+          currentTheme['--jdp-fade-from-y'] = `${value}px`;
+          updateCssOutput();
+        });
+      }
+      
+      if (animationType) {
+        animationType.addEventListener('change', () => {
+          const value = animationType.value;
+          picker.style.setProperty('--jdp-transition-timing', value);
+          currentTheme['--jdp-transition-timing'] = value;
+          updateCssOutput();
+        });
+      }
+      
+      // Calendar behavior controls
+      if (dayCellSize) {
+        dayCellSize.addEventListener('input', () => {
+          const value = dayCellSize.value;
+          dayCellSizeValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-day-cell-size', `${value}px`);
+          currentTheme['--jdp-day-cell-size'] = `${value}px`;
+          updateCssOutput();
+        });
+      }
+      
+      if (dayCellMargin) {
+        dayCellMargin.addEventListener('input', () => {
+          const value = dayCellMargin.value;
+          dayCellMarginValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-day-cell-margin', `${value}px`);
+          currentTheme['--jdp-day-cell-margin'] = `${value}px`;
+          updateCssOutput();
+        });
+      }
+      
+      if (calendarWidth) {
+        calendarWidth.addEventListener('input', () => {
+          const value = calendarWidth.value;
+          calendarWidthValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-calendar-width', `${value}px`);
+          currentTheme['--jdp-calendar-width'] = `${value}px`;
+          updateCssOutput();
+        });
+      }
+      
+      if (calendarPadding) {
+        calendarPadding.addEventListener('input', () => {
+          const value = calendarPadding.value;
+          calendarPaddingValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-calendar-padding', `${value}px`);
+          currentTheme['--jdp-calendar-padding'] = `${value}px`;
+          updateCssOutput();
+        });
+      }
+      
+      if (calendarBorderRadius) {
+        calendarBorderRadius.addEventListener('input', () => {
+          const value = calendarBorderRadius.value;
+          calendarBorderRadiusValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-calendar-border-radius', `${value}px`);
+          currentTheme['--jdp-calendar-border-radius'] = `${value}px`;
+          updateCssOutput();
+        });
+      }
+      
+      // Typography controls
+      if (lineHeight) {
+        lineHeight.addEventListener('input', () => {
+          const value = lineHeight.value;
+          lineHeightValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-line-height', value);
+          currentTheme['--jdp-line-height'] = value;
+          updateCssOutput();
+        });
+      }
+      
+      if (fontWeight) {
+        fontWeight.addEventListener('input', () => {
+          const value = fontWeight.value;
+          fontWeightValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-font-weight', value);
+          currentTheme['--jdp-font-weight'] = value;
+          updateCssOutput();
+        });
+      }
+      
+      if (fontWeightMedium) {
+        fontWeightMedium.addEventListener('input', () => {
+          const value = fontWeightMedium.value;
+          fontWeightMediumValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-font-weight-medium', value);
+          currentTheme['--jdp-font-weight-medium'] = value;
+          updateCssOutput();
+        });
+      }
+      
+      // Border width control
+      if (borderWidth) {
+        borderWidth.addEventListener('input', () => {
+          const value = borderWidth.value;
+          borderWidthValue.textContent = toPersianNum(value);
+          picker.style.setProperty('--jdp-border-width', `${value}px`);
+          currentTheme['--jdp-border-width'] = `${value}px`;
+          updateCssOutput();
+        });
+      }
+      
+      // Holiday hover background
+      if (holidayHoverBg) {
+        holidayHoverBg.addEventListener('input', () => {
+          const value = holidayHoverBg.value;
+          holidayHoverBgText.value = value;
+          picker.style.setProperty('--jdp-holiday-hover-bg', value);
+          currentTheme['--jdp-holiday-hover-bg'] = value;
+          updateCssOutput();
+        });
+      }
+      
+      // Preset buttons for the new themes
+      const glassPresetBtn = document.querySelector('.preset-btn[data-preset="glassmorphism"]');
+      const neoPresetBtn = document.querySelector('.preset-btn[data-preset="neomorphism"]');
+      const gradientPresetBtn = document.querySelector('.preset-btn[data-preset="gradient"]');
+      
+      // Add special presets
+      if (glassPresetBtn) {
+        glassPresetBtn.addEventListener('click', () => {
+          const isDark = document.body.classList.contains('dark');
+          const glassTheme = {
+            '--jdp-primary': '#0891b2',
+            '--jdp-primary-hover': '#0e7490',
+            '--jdp-calendar-border-radius': '16px',
+            '--jdp-border-radius': '12px',
+            '--jdp-background-opacity': '0.7',
+            '--jdp-backdrop-blur': '10px',
+            '--jdp-backdrop-filter': 'blur(10px)',
+            '--jdp-calendar-bg': `rgba(${isDark ? '30, 30, 47' : '255, 255, 255'}, 0.7)`,
+            '--jdp-border': isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.3)',
+            '--jdp-border-width': '1px',
+            '--jdp-calendar-shadow': isDark ? '0 10px 30px rgba(0, 0, 0, 0.3)' : '0 10px 30px rgba(0, 0, 0, 0.1)'
+          };
+          
+          applyTheme(glassTheme);
+          
+          // Enable glass toggle
+          if (glassToggle) {
+            glassToggle.checked = true;
+            glassOptions.style.display = 'block';
+          }
+          
+          updateControls();
+        });
+      }
+      
+      // Neomorphism preset
+      if (neoPresetBtn) {
+        neoPresetBtn.addEventListener('click', () => {
+          const isDark = document.body.classList.contains('dark');
+          const neoTheme = {
+            '--jdp-calendar-border-radius': '24px',
+            '--jdp-calendar-bg': isDark ? '#2a2a3c' : '#f0f4f8',
+            '--jdp-calendar-shadow': isDark 
+              ? '10px 10px 20px #1a1a27, -10px -10px 20px #3a3a4f' 
+              : '10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff',
+            '--jdp-border': 'transparent',
+            '--jdp-border-width': '0px',
+            '--jdp-day-cell-border-radius': '12px',
+            '--jdp-input-border-radius': '12px',
+            '--jdp-primary': '#4a6cf7',
+            '--jdp-primary-hover': '#3a56d4',
+            '--jdp-day-cell-size': '42px'
+          };
+          
+          applyTheme(neoTheme);
+          
+          // Enable shadow toggle
+          if (shadowToggle) {
+            shadowToggle.checked = true;
+            shadowOptions.style.display = 'block';
+          }
+          
+          updateControls();
+        });
+      }
+      
+      // Gradient preset
+      if (gradientPresetBtn) {
+        gradientPresetBtn.addEventListener('click', () => {
+          const isDark = document.body.classList.contains('dark');
+          const gradientTheme = {
+            '--jdp-calendar-border-radius': '12px',
+            '--jdp-primary': '#8b5cf6',
+            '--jdp-primary-hover': '#7c3aed',
+            '--jdp-primary-gradient': 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+            '--jdp-calendar-shadow': isDark ? '0 12px 24px rgba(0, 0, 0, 0.3)' : '0 12px 24px rgba(0, 0, 0, 0.15)',
+            '--jdp-day-cell-border-radius': '8px',
+            '--jdp-input-border-radius': '8px',
+            '--jdp-calendar-bg': isDark ? '#1e1e2f' : '#ffffff'
+          };
+          
+          applyTheme(gradientTheme);
+          updateControls();
+        });
+      }
+      
+      // Export theme button
+      if (exportThemeBtn) {
+        exportThemeBtn.addEventListener('click', () => {
+          const themeJSON = JSON.stringify(currentTheme, null, 2);
+          const blob = new Blob([themeJSON], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'persian-datepicker-theme.json';
+          document.body.appendChild(a);
+          a.click();
+          
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }, 100);
+        });
+      }
     }
-
-    // Add event listeners to theme controls
-    primaryColor.addEventListener('input', updateTheme);
-    backgroundColor.addEventListener('input', updateTheme);
-    textColor.addEventListener('input', updateTheme);
-    borderColor.addEventListener('input', updateTheme);
-    fontSize.addEventListener('input', updateTheme);
-    borderRadius.addEventListener('input', updateTheme);
-    fontFamily.addEventListener('change', updateTheme);
-
-    // Initial theme update
-    updateTheme();
+    
+    // Initialize the app
+    init();
   </script>
 </body>
 </html> 
