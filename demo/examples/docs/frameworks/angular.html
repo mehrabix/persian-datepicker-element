@@ -658,10 +658,20 @@ export class AppComponent {
         <div class="example">
           <h3>انواع تعطیلات</h3>
           <pre><code>// app.component.html
+&lt;div&gt;
+  &lt;persian-datepicker
+    holidayTypes="Iran,Afghanistan,AncientIran,International"
+    placeholder="نمایش همه تعطیلات"&gt;
+  &lt;/persian-datepicker&gt;
 
   &lt;persian-datepicker
     holidayTypes="Afghanistan"
     placeholder="تعطیلات افغانستان"&gt;
+  &lt;/persian-datepicker&gt;
+
+  &lt;persian-datepicker
+    holidayTypes="all"
+    placeholder="نمایش همه انواع تعطیلات"&gt;
   &lt;/persian-datepicker&gt;
 &lt;/div&gt;</code></pre>
         </div>
@@ -705,7 +715,7 @@ export class AppComponent {
           <tr>
             <td>holidayTypes</td>
             <td>string</td>
-            <td>انواع تعطیلات برای نمایش (با کاما جدا شده: "Iran", "Religious", "Afghanistan")</td>
+            <td>انواع تعطیلات برای نمایش (با کاما جدا شده: "Iran", "Afghanistan", "AncientIran", "International" یا "all" برای نمایش همه انواع)</td>
           </tr>
           <tr>
             <td>rtl</td>
