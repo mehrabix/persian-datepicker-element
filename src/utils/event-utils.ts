@@ -20,6 +20,11 @@ let persianCalendarData: any = {
   "Source": { "name": "Fallback Data", "url": "" }
 };
 
+// Add cache and loading state
+let isLoading = false;
+let lastFetchYear: number | null = null;
+let fetchPromise: Promise<void> | null = null;
+
 /**
  * Maps events from the Persian Calendar repo format to our PersianEvent format
  */
@@ -78,6 +83,27 @@ function mapPersianCalendarEvents(): PersianEvent[] {
  * Loads events data from the external JSON file
  */
 async function loadEventsData(): Promise<void> {
+  // If already loading, return the existing promise
+  if (isLoading) {
+    return fetchPromise!;
+  }
+
+  // Get current year
+  const today = new Date();
+  const jalaliToday = PersianDate.gregorianToJalali(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    today.getDate()
+  );
+  const currentYear = jalaliToday[0];
+
+  // If we already have data for this year, don't fetch again
+  if (lastFetchYear === currentYear) {
+    return;
+  }
+
+  isLoading = true;
+  
   try {
     // Try to load the events.json file
     const response = await fetch('/data/events.json');
@@ -89,10 +115,16 @@ async function loadEventsData(): Promise<void> {
     // Update mapped events with the new data
     const newEvents = mapPersianCalendarEvents();
     mappedEvents = [...newEvents];
+    
+    // Update last fetch year
+    lastFetchYear = currentYear;
   } catch (error) {
     console.error('Error loading events data:', error);
     // Keep using fallback events
     mappedEvents = [...fallbackEvents];
+  } finally {
+    isLoading = false;
+    fetchPromise = null;
   }
 }
 
@@ -223,8 +255,19 @@ export const EventUtils = {
    * This should be called when the component is initialized or the year changes
    */
   async refreshEvents(): Promise<PersianEvent[]> {
-    // Reload events data
-    await loadEventsData();
+    // Only refresh if we don't have data for the current year
+    const today = new Date();
+    const jalaliToday = PersianDate.gregorianToJalali(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      today.getDate()
+    );
+    const currentYear = jalaliToday[0];
+
+    if (lastFetchYear !== currentYear) {
+      await loadEventsData();
+    }
+    
     return [...mappedEvents];
   }
 };
