@@ -438,7 +438,7 @@ async function loadEventsData() {
     isLoading = true;
     try {
         // Try to load the events.json file
-        const response = await fetch('/data/events.json');
+        const response = await fetch('data/events.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
