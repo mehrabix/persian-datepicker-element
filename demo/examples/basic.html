@@ -261,8 +261,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>Persian Date Picker Element - Basic Usage</h1>
-    <p>Simple examples of how to use the Persian Date Picker Element component with different configurations.</p>
+    <h1>نمونه‌های پایه</h1>
+    <p>نمونه‌های ساده از نحوه استفاده از کامپوننت انتخاب تاریخ با تنظیمات مختلف.</p>
     
     <div class="navigation">
       <div class="nav-links">
@@ -282,50 +282,50 @@
     </div>
 
     <div class="example">
-      <h2>Basic Usage</h2>
-      <div class="example-label">Default configuration:</div>
+      <h2>استفاده پایه</h2>
+      <div class="example-label">تنظیمات پیش‌فرض:</div>
       <persian-datepicker-element id="basic-picker"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="basic-result">None</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="basic-result">هیچ</span></div>
       
       <pre><code>&lt;persian-datepicker-element id="basic-picker"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
     
     <div class="example">
-      <h2>Custom Placeholder</h2>
-      <div class="example-label">With a custom placeholder:</div>
+      <h2>متن راهنما</h2>
+      <div class="example-label">با متن راهنمای سفارشی:</div>
       <persian-datepicker-element id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="placeholder-result">None</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="placeholder-result">هیچ</span></div>
       
       <pre><code>&lt;persian-datepicker-element id="placeholder-picker" placeholder="تاریخ تولد خود را وارد کنید"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
 
     <div class="example">
-      <h2>Custom Format</h2>
-      <div class="example-label">With a custom date format:</div>
+      <h2>فرمت سفارشی</h2>
+      <div class="example-label">با فرمت تاریخ سفارشی:</div>
       <persian-datepicker-element id="format-picker" format="YYYY-MM-DD"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="format-result">None</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="format-result">هیچ</span></div>
       
       <pre><code>&lt;persian-datepicker-element id="format-picker" format="YYYY-MM-DD"&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
     
     <div class="example">
-      <h2>Initial Value</h2>
-      <div class="example-label">With a programmatically set initial value:</div>
+      <h2>مقدار اولیه</h2>
+      <div class="example-label">با مقدار اولیه تنظیم شده به صورت برنامه‌نویسی:</div>
       <persian-datepicker-element id="initial-picker"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="initial-result">None</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="initial-result">هیچ</span></div>
       
-      <pre><code>// Set initial value programmatically 
+      <pre><code>// تنظیم مقدار اولیه به صورت برنامه‌نویسی
 const initialPicker = document.getElementById('initial-picker');
 initialPicker.setValue(1403, 3, 15);</code></pre>
     </div>
     
     <div class="example">
-      <h2>Listen For Changes</h2>
-      <div class="example-label">With event listener for changes:</div>
+      <h2>گوش دادن به تغییرات</h2>
+      <div class="example-label">با گوش دادن به رویداد تغییرات:</div>
       <persian-datepicker-element id="event-picker"></persian-datepicker-element>
       <div class="result">
-        Jalali Date: <span id="jalali-result">None</span><br>
-        Gregorian Date: <span id="gregorian-result">None</span>
+        تاریخ شمسی: <span id="jalali-result">هیچ</span><br>
+        تاریخ میلادی: <span id="gregorian-result">هیچ</span>
       </div>
 
       <pre><code>document.getElementById('event-picker').addEventListener('change', (event) => {
@@ -336,8 +336,8 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     </div>
     
     <div class="example">
-      <h2>Custom Styling</h2>
-      <div class="example-label">With custom styling:</div>
+      <h2>استایل‌دهی سفارشی</h2>
+      <div class="example-label">با استایل‌دهی سفارشی:</div>
       <persian-datepicker-element 
         id="styled-picker" 
         style="
@@ -349,7 +349,7 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
           --jdp-font-feature-settings: 'ss02';
         "
       ></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="styled-result">None</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="styled-result">هیچ</span></div>
       
       <pre><code>&lt;persian-datepicker-element 
   id="styled-picker" 
@@ -365,8 +365,8 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
     </div>
 
     <div class="example">
-      <h2>Persian Numbers</h2>
-      <div class="example-label">With Persian number formatting:</div>
+      <h2>اعداد فارسی</h2>
+      <div class="example-label">با فرمت اعداد فارسی:</div>
       <persian-datepicker-element 
         id="persian-number-picker"
         style="
@@ -374,7 +374,7 @@ initialPicker.setValue(1403, 3, 15);</code></pre>
           --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         "
       ></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="persian-number-result">None</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="persian-number-result">هیچ</span></div>
 
       <pre><code>&lt;persian-datepicker-element 
   id="persian-number-picker"

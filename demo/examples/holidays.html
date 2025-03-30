@@ -4,443 +4,452 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="احمد مهرابی | Ahmad Mehrabi">
-  <meta name="description" content="Holidays and events examples of Persian Date Picker Element - Learn how to display and handle Persian holidays and events">
-  <meta name="keywords" content="jalali, shamsi, persian, date, datepicker, calendar, webcomponent, custom-element, rtl, persian-calendar, holidays, events, دیت پیکر, دیت پیکر شمسی, دیت پیکر جلالی, دیت پیکر ری اکت, دیت پیکر ویو, دیت پیکر انگولار, دیت پیکر وب کامپوننت">
+  <meta name="description" content="Events and holidays examples of Persian Date Picker Element - Learn how to work with Persian calendar events and holidays">
+  <meta name="keywords" content="jalali, shamsi, persian, date, datepicker, calendar, webcomponent, custom-element, rtl, persian-calendar, events, holidays, دیت پیکر, دیت پیکر شمسی, دیت پیکر جلالی, دیت پیکر ری اکت, دیت پیکر ویو, دیت پیکر انگولار, دیت پیکر وب کامپوننت">
   <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Persian Date Picker Element - Holidays and Events">
-  <meta property="og:description" content="Holidays and events examples of Persian Date Picker Element - Learn how to display and handle Persian holidays and events">
+  <meta property="og:title" content="Persian Date Picker Element - Events and Holidays">
+  <meta property="og:description" content="Events and holidays examples of Persian Date Picker Element - Learn how to work with Persian calendar events and holidays">
   <meta property="og:type" content="website">
   <meta property="og:author" content="احمد مهرابی | Ahmad Mehrabi">
-  <title>Persian Date Picker Element - Holidays and Events</title>
+  <title>Persian Date Picker Element - Events and Holidays Examples</title>
+  <!-- Add Vazir Font from CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
-    :root {
-      --primary: #0891b2;
-      --primary-hover: #0e7490;
-      --background: #ffffff;
-      --foreground: #1e293b;
-      --muted: #f1f5f9;
-      --border: #e2e8f0;
-      --radius: 0.5rem;
-      --font-size: 16px;
-    }
-    
     body {
-      font-family: 'Vazir', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f9fafb;
-      color: #374151;
-      padding: 1rem;
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
+      padding: 20px;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
       direction: rtl;
+      font-weight: 400;
       transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Apply Persian numbers to all elements */
+    * {
       -moz-font-feature-settings: "ss02";
       -webkit-font-feature-settings: "ss02";
       font-feature-settings: "ss02";
     }
 
-    body.dark {
-      background-color: #1e293b;
-      color: #e2e8f0;
-    }
-
-    .container {
-      display: flex;
-      gap: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    body.dark .container {
-      background-color: #0f172a;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 2rem;
-      height: fit-content;
-      padding: 1.5rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-    }
-
-    body.dark .sidebar {
-      background: #1e293b;
-      border-color: #334155;
-    }
-
-    .sidebar-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--foreground);
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .nav-item {
-      margin-bottom: 0.5rem;
-    }
-
-    .nav-link {
-      display: block;
-      padding: 0.5rem 0.75rem;
-      color: var(--foreground);
-      text-decoration: none;
-      border-radius: var(--radius);
-      transition: all 0.2s;
-      font-size: 0.9rem;
-    }
-
-    .nav-link:hover {
-      background: var(--border);
-      color: var(--primary);
-    }
-
-    body.dark .nav-link:hover {
-      background: #334155;
-    }
-
-    .nav-link.active {
-      background: var(--primary);
-      color: white;
-    }
-
-    .main-content {
-      flex: 1;
-      min-width: 0;
-    }
-
     h1 {
-      color: var(--foreground);
-      margin-bottom: 1.5rem;
-      font-size: 2rem;
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: #0f172a;
+      font-weight: 700;
+      transition: color 0.3s;
     }
 
     h2 {
-      color: var(--foreground);
-      margin: 2rem 0 1rem;
-      font-size: 1.5rem;
+      font-size: 20px;
+      margin: 32px 0 16px;
+      color: #334155;
+      font-weight: 700;
+      transition: color 0.3s;
     }
 
     p {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      line-height: 1.6;
+      margin-bottom: 16px;
+      transition: color 0.3s;
     }
 
-    .holiday-section {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--background);
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
     }
 
-    body.dark .holiday-section {
-      background: #1e293b;
-      border-color: #334155;
+    .example {
+      margin-bottom: 40px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s, box-shadow 0.3s;
     }
 
-    .holiday-title {
-      font-size: 1.1rem;
-      color: var(--foreground);
-      margin-bottom: 1rem;
+    .example-label {
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #f1f5f9;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    pre {
+      background-color: #f1f5f9;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 14px;
+      margin: 20px 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      transition: color 0.3s;
+    }
+
+    .link {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #0891b2;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .link:hover {
+      background-color: #0e7490;
+    }
+
+    /* Custom element styling */
+    persian-datepicker-element {
+      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
+      --jdp-font-weight: 400;
+      transition: all 0.3s ease;
+    }
+
+    /* Make sure all inputs and form elements also use Persian numbers */
+    input, button, select, textarea {
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
+    }
+
+    /* Dark mode styles */
+    body.dark {
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+
+    body.dark h1 {
+      color: #f8fafc;
+    }
+
+    body.dark h2 {
+      color: #cbd5e1;
+    }
+
+    body.dark .example {
+      background-color: #1e293b;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    body.dark .result,
+    body.dark pre {
+      background-color: #1e1e2f;
+      color: #e2e8f0;
+    }
+
+    body.dark code {
+      color: #f8fafc;
+    }
+
+    body.dark persian-datepicker-element {
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-day-hover-bg: #334155;
+      --jdp-input-border-color: #475569;
+      --jdp-input-bg: #1e1e2f;
+      --jdp-calendar-bg: #1e1e2f;
+      --jdp-holiday-bg: #3f1e2e;
+    }
+
+    .navigation {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
       display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
+      transition: border-color 0.3s;
     }
 
-    .holiday-description {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
+    .navigation h2 {
+      margin-top: 0;
     }
 
-    .holiday-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1rem;
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
     }
 
-    .holiday-item {
-      padding: 1rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
+    body.dark .navigation {
+      border-bottom-color: #334155;
     }
 
-    body.dark .holiday-item {
-      background: #334155;
-      border-color: #475569;
-    }
-
-    .holiday-name {
-      font-weight: 600;
-      color: var(--foreground);
-      margin-bottom: 0.5rem;
-    }
-
-    .holiday-date {
-      color: var(--foreground);
-      opacity: 0.8;
-      font-size: 0.9rem;
-    }
-
-    .demo-section {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background: var(--muted);
-      border-radius: var(--radius);
-    }
-
-    body.dark .demo-section {
-      background: #1e293b;
-    }
-
-    .demo-title {
-      font-size: 1.1rem;
-      color: var(--foreground);
-      margin-bottom: 1rem;
-    }
-
-    .demo-description {
-      color: var(--foreground);
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
+    /* Dark mode toggle */
     .theme-switch {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      z-index: 100;
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-left: 15px;
     }
 
     .theme-switch input {
-      display: none;
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
 
-    .theme-switch label {
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #0891b2;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .toggle-container {
       display: flex;
       align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: white;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: all 0.2s;
     }
 
-    body.dark .theme-switch label {
-      background: #1e293b;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .theme-switch label:hover {
-      transform: scale(1.1);
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        padding: 1rem;
-      }
-
-      .sidebar {
-        width: 100%;
-        position: static;
-        margin-bottom: 1rem;
-      }
-
-      h1 {
-        font-size: 1.75rem;
-      }
-
-      h2 {
-        font-size: 1.25rem;
-      }
-
-      .holiday-section {
-        padding: 1rem;
-      }
-
-      .holiday-list {
-        grid-template-columns: 1fr;
-      }
+    .toggle-label {
+      margin-right: 8px;
+      font-size: 14px;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
-  <div class="theme-switch">
-    <input type="checkbox" id="theme-toggle">
-    <label for="theme-toggle">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path class="sun" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        <path class="moon" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-      </svg>
-    </label>
-  </div>
-
   <div class="container">
-    <nav class="sidebar">
-      <h2 class="sidebar-title">مستندات</h2>
-      <ul class="nav-list">
-        <li class="nav-item">
-          <a href="basic.html" class="nav-link">مقدمه</a>
-        </li>
-        <li class="nav-item">
-          <a href="customization.html" class="nav-link">شخصی‌سازی</a>
-        </li>
-        <li class="nav-item">
-          <a href="formats.html" class="nav-link">فرمت‌ها</a>
-        </li>
-        <li class="nav-item">
-          <a href="limits.html" class="nav-link">محدودیت‌ها</a>
-        </li>
-        <li class="nav-item">
-          <a href="holidays.html" class="nav-link active">تعطیلات</a>
-        </li>
-        <li class="nav-item">
-          <a href="css-variables.html" class="nav-link">متغیرهای CSS</a>
-        </li>
-        <li class="nav-item">
-          <a href="theme-builder.html" class="nav-link">سازنده تم</a>
-        </li>
-        <li class="nav-item">
-          <a href="theme-switcher.html" class="nav-link">تغییر تم</a>
-        </li>
-        <li class="nav-item">
-          <a href="accessibility.html" class="nav-link">دسترسی‌پذیری</a>
-        </li>
-      </ul>
-    </nav>
-
-    <main class="main-content">
-      <h1>تعطیلات</h1>
-      <p>کامپوننت Persian Date Picker از نمایش تعطیلات و رویدادهای مهم تقویم شمسی پشتیبانی می‌کند.</p>
-
-      <div class="holiday-section">
-        <h2 class="holiday-title">تعطیلات رسمی</h2>
-        <p class="holiday-description">تعطیلات رسمی تقویم شمسی شامل مناسبت‌های مذهبی و ملی است.</p>
-        <ul class="holiday-list">
-          <li class="holiday-item">
-            <div class="holiday-name">نوروز</div>
-            <div class="holiday-date">۱ تا ۴ فروردین</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">تاسوعا و عاشورا</div>
-            <div class="holiday-date">۹ و ۱۰ محرم</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">ولادت پیامبر</div>
-            <div class="holiday-date">۱۷ ربیع‌الاول</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">ولادت امام علی</div>
-            <div class="holiday-date">۱۳ رجب</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">ولادت امام مهدی</div>
-            <div class="holiday-date">۱۵ شعبان</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">عید فطر</div>
-            <div class="holiday-date">۱ و ۲ شوال</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">عید قربان</div>
-            <div class="holiday-date">۱۰ ذی‌الحجه</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">عید غدیر</div>
-            <div class="holiday-date">۱۸ ذی‌الحجه</div>
-          </li>
-        </ul>
+    <h1>نمونه‌های رویدادها و تعطیلات</h1>
+    <p>نمونه‌هایی از نحوه کار با رویدادها و تعطیلات تقویم شمسی در کامپوننت انتخاب تاریخ.</p>
+    
+    <div class="navigation">
+      <div class="nav-links">
+        <a href="index.html" class="link">نمونه‌های پایه</a>
+        <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+        <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+        <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+        <a href="../../index.html" class="link">دمو</a>
       </div>
-
-      <div class="holiday-section">
-        <h2 class="holiday-title">رویدادهای مهم</h2>
-        <p class="holiday-description">رویدادهای مهم تاریخی و فرهنگی که در تقویم ثبت شده‌اند.</p>
-        <ul class="holiday-list">
-          <li class="holiday-item">
-            <div class="holiday-name">روز معلم</div>
-            <div class="holiday-date">۱۲ اردیبهشت</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">روز مادر</div>
-            <div class="holiday-date">۲۰ جمادی‌الثانی</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">روز پدر</div>
-            <div class="holiday-date">۱۳ رجب</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">روز دانشجو</div>
-            <div class="holiday-date">۱۶ آذر</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">روز کارگر</div>
-            <div class="holiday-date">۱۱ اردیبهشت</div>
-          </li>
-          <li class="holiday-item">
-            <div class="holiday-name">روز پزشک</div>
-            <div class="holiday-date">۱ شهریور</div>
-          </li>
-        </ul>
+      <div class="toggle-container">
+        <span class="toggle-label">حالت تاریک</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="slider"></span>
+        </label>
       </div>
+    </div>
 
-      <div class="demo-section">
-        <h2 class="demo-title">نمونه استفاده</h2>
-        <p class="demo-description">در این مثال، نحوه نمایش تعطیلات در تقویم نشان داده شده است.</p>
-        
-        <persian-datepicker-element
-          placeholder="انتخاب تاریخ"
-          show-holidays>
-        </persian-datepicker-element>
-      </div>
-    </main>
+    <div class="example">
+      <h2>رویدادهای پیش‌فرض</h2>
+      <div class="example-label">نمایش رویدادهای پیش‌فرض تقویم شمسی:</div>
+      <persian-datepicker-element 
+        id="default-events-picker"
+        show-events="true"
+      ></persian-datepicker-element>
+      <div class="result">تاریخ انتخاب شده: <span id="default-events-result">هیچ</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  id="default-events-picker"
+  show-events="true"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>رویدادهای سفارشی</h2>
+      <div class="example-label">استفاده از رویدادهای سفارشی از فایل events.json:</div>
+      <p>فایل <code>events.json</code> به صورت پیش‌فرض در مسیر <code>/src/data/persian-calendar-repo/PersianCalendar/data/event.json</code> قرار دارد و شامل تمام رویدادهای به‌روز تقویم شمسی است. می‌توانید از این فایل به عنوان نمونه استفاده کنید یا فایل خود را با ساختار مشابه ایجاد کنید:</p>
+      <persian-datepicker-element 
+        id="custom-events-picker"
+        show-events="true"
+      ></persian-datepicker-element>
+      <div class="result">تاریخ انتخاب شده: <span id="custom-events-result">هیچ</span></div>
+      
+      <pre><code>// ساختار فایل events.json
+{
+  "Persian Calendar": [
+    {
+      "title": "عید نوروز",
+      "month": 1,
+      "day": 1,
+      "type": "Iran",
+      "holiday": true
+    }
+  ],
+  "Hijri Calendar": [
+    {
+      "title": "عید فطر",
+      "year": 1445,
+      "month": 10,
+      "day": 1,
+      "type": "Religious",
+      "holiday": true
+    }
+  ]
+}
+
+&lt;persian-datepicker-element 
+  id="custom-events-picker"
+  show-events="true"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>فیلتر کردن رویدادها</h2>
+      <div class="example-label">فیلتر کردن رویدادها بر اساس نوع:</div>
+      <p>می‌توانید با استفاده از ویژگی <code>event-types</code> رویدادها را بر اساس نوع آنها فیلتر کنید:</p>
+      <persian-datepicker-element 
+        id="event-types-picker"
+        show-events="true"
+        event-types='["Iran", "Religious"]'
+      ></persian-datepicker-element>
+      <div class="result">تاریخ انتخاب شده: <span id="event-types-result">هیچ</span></div>
+      
+      <pre><code>&lt;persian-datepicker-element 
+  id="event-types-picker"
+  show-events="true"
+  event-types='["Iran", "Religious"]'
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="link-container">
+      <a href="index.html" class="link">بازگشت به مثال ها</a>
+    </div>
   </div>
 
-  <script type="module" src="../../dist/persian-datepicker-element.min.js"></script>
+  <script src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
-    // Theme toggle functionality
-    const themeToggle = document.getElementById('theme-toggle');
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
     
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      document.body.classList.toggle('dark', savedTheme === 'dark');
-      themeToggle.checked = savedTheme === 'dark';
-    } else {
-      document.body.classList.toggle('dark', prefersDarkScheme.matches);
-      themeToggle.checked = prefersDarkScheme.matches;
+    // Function to apply dark mode to all date picker elements
+    function applyDarkModeToPickers(isDark) {
+      const allPickers = document.querySelectorAll('persian-datepicker-element');
+      allPickers.forEach(picker => {
+        if (isDark) {
+          picker.setAttribute('darkmode', 'true');
+          picker.style.setProperty('--jdp-background', '#1e1e2f');
+          picker.style.setProperty('--jdp-foreground', '#e2e8f0');
+          picker.style.setProperty('--jdp-muted', '#334155');
+          picker.style.setProperty('--jdp-muted-foreground', '#94a3b8');
+          picker.style.setProperty('--jdp-border', '#475569');
+          picker.style.setProperty('--jdp-day-hover-bg', '#334155');
+          picker.style.setProperty('--jdp-input-border-color', '#475569');
+          picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-holiday-bg', '#3f1e2e');
+        } else {
+          picker.removeAttribute('darkmode');
+          picker.style.removeProperty('--jdp-background');
+          picker.style.removeProperty('--jdp-foreground');
+          picker.style.removeProperty('--jdp-muted');
+          picker.style.removeProperty('--jdp-muted-foreground');
+          picker.style.removeProperty('--jdp-border');
+          picker.style.removeProperty('--jdp-day-hover-bg');
+          picker.style.removeProperty('--jdp-input-border-color');
+          picker.style.removeProperty('--jdp-input-bg');
+          picker.style.removeProperty('--jdp-calendar-bg');
+          picker.style.removeProperty('--jdp-holiday-bg');
+        }
+      });
     }
-
-    themeToggle.addEventListener('change', () => {
-      document.body.classList.toggle('dark');
-      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+      darkModeToggle.checked = true;
+      applyDarkModeToPickers(true);
+    }
+    
+    // Toggle dark mode
+    darkModeToggle.addEventListener('change', () => {
+      const isDarkMode = darkModeToggle.checked;
+      if (isDarkMode) {
+        document.body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+      }
+      
+      // Apply dark mode to date pickers
+      applyDarkModeToPickers(isDarkMode);
+    });
+  
+    // Convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+    
+    // Format date with Persian digits
+    function formatPersianDate(dateArray) {
+      return toPersianNum(dateArray.join('/'));
+    }
+    
+    // Default events picker
+    const defaultEventsPicker = document.getElementById('default-events-picker');
+    const defaultEventsResult = document.getElementById('default-events-result');
+    
+    defaultEventsPicker.addEventListener('change', (event) => {
+      defaultEventsResult.textContent = formatPersianDate(event.detail.jalali);
+    });
+    
+    // Custom events picker
+    const customEventsPicker = document.getElementById('custom-events-picker');
+    const customEventsResult = document.getElementById('custom-events-result');
+    
+    customEventsPicker.addEventListener('change', (event) => {
+      customEventsResult.textContent = formatPersianDate(event.detail.jalali);
+    });
+    
+    // Event types picker
+    const eventTypesPicker = document.getElementById('event-types-picker');
+    const eventTypesResult = document.getElementById('event-types-result');
+    
+    eventTypesPicker.addEventListener('change', (event) => {
+      eventTypesResult.textContent = formatPersianDate(event.detail.jalali);
     });
   </script>
 </body>
