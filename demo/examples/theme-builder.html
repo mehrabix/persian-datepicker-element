@@ -745,10 +745,9 @@
         <persian-datepicker-element id="theme-datepicker" placeholder="تاریخ را انتخاب کنید"></persian-datepicker-element>
             </div>
 
-      <div class="result">
-        <p><strong>تاریخ انتخاب شده:</strong> <span id="selected-date">-</span></p>
-        </div>
-        
+            <div class="result">
+              <p><strong>تاریخ انتخاب شده:</strong> <span id="selected-date">-</span></p>
+            </div>
       <div class="advanced-controls">
         <h3>تنظیمات پیشرفته</h3>
         
@@ -1350,6 +1349,17 @@
       }, 2000);
     });
 
+    // Helper function to convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+
+    // Format date with Persian digits
+    function formatPersianDate(dateArray) {
+      return toPersianNum(dateArray.join('/'));
+    }
+
     // Initialize theme
     updateThemeCSS();
 
@@ -1361,10 +1371,8 @@
     }
 
     // Handle date selection
-    datepicker.addEventListener('jdp-selected', (e) => {
-      if (e.detail) {
-        selectedDateSpan.textContent = e.detail.formatted;
-      }
+    datepicker.addEventListener('change', event => {
+      document.getElementById('selected-date').textContent = formatPersianDate(event.detail.jalali);
     });
 
     // Theme buttons
