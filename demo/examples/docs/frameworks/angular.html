@@ -3,135 +3,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Persian Datepicker Element for Angular</title>
-  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <meta name="author" content="احمد مهرابی | Ahmad Mehrabi">
+  <meta name="description" content="نمونه‌های استفاده از کامپوننت انتخاب تاریخ در Angular - یادگیری نحوه پیاده‌سازی و سفارشی‌سازی">
+  <meta name="keywords" content="jalali, shamsi, persian, date, datepicker, calendar, webcomponent, custom-element, rtl, persian-calendar, angular">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="نمونه‌های Angular">
+  <meta property="og:description" content="نمونه‌های استفاده از کامپوننت انتخاب تاریخ در Angular - یادگیری نحوه پیاده‌سازی و سفارشی‌سازی">
+  <meta property="og:type" content="website">
+  <meta property="og:author" content="احمد مهرابی | Ahmad Mehrabi">
+  <title>نمونه‌های Angular</title>
+  <!-- Add Vazir Font from CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
   <style>
-    :root {
-      --primary: #0891b2;
-      --primary-hover: #0e7490;
-      --primary-foreground: #f8fafc;
-      --muted: #f1f5f9;
-      --muted-foreground: #64748b;
-      --background: #ffffff;
-      --foreground: #0f172a;
-      --border: #e2e8f0;
-      --accent: #f1f5f9;
-      --radius: 0.5rem;
-    }
-
-    .dark {
-      --primary: #0891b2;
-      --primary-hover: #22d3ee;
-      --primary-foreground: #f8fafc;
-      --muted: #1e293b;
-      --muted-foreground: #94a3b8;
-      --background: #0f172a;
-      --foreground: #e2e8f0;
-      --border: #1e293b;
-      --accent: #1e293b;
-    }
-
     body {
-      font-family: 'Vazirmatn', system-ui, sans-serif;
-      background-color: var(--background);
-      color: var(--foreground);
-      line-height: 1.6;
-      padding: 0;
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
+      padding: 20px;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
+      direction: rtl;
       transition: background-color 0.3s, color 0.3s;
+      /* Apply Persian numbers to all elements */
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
+    }
+
+    /* Apply Persian numbers to all elements */
+    * {
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+
+    body.dark {
+      background-color: #0f172a;
+      color: #e2e8f0;
     }
 
     .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    header {
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    header p {
-      font-size: 1.25rem;
-      color: var(--muted-foreground);
       max-width: 800px;
       margin: 0 auto;
+      padding: 0 15px;
+      box-sizing: border-box;
     }
 
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: #0f172a;
+      text-align: center;
+      transition: color 0.3s;
+      font-weight: 700;
     }
 
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .nav-links a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-      position: relative;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .nav-links a:hover, .nav-links a.active {
-      color: var(--primary-hover);
-      text-decoration: underline;
-    }
-    
-    .nav-links a.active::after {
-      content: "";
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: var(--primary);
-    }
-
-    h1, h2, h3, h4 {
-      color: var(--foreground);
-      margin-top: 2rem;
-      margin-bottom: 1rem;
+    body.dark h1 {
+      color: #f8fafc;
     }
 
     h2 {
-      font-size: 1.8rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+      margin: 24px 0 16px;
+      color: #334155;
+      transition: color 0.3s;
+      font-weight: 700;
+    }
+
+    body.dark h2 {
+      color: #cbd5e1;
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: #4b5563;
+      transition: color 0.3s;
+    }
+
+    body.dark p {
+      color: #94a3b8;
+    }
+
+    .example {
+      margin-bottom: 40px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, box-shadow 0.3s;
+      overflow-x: auto;
+    }
+
+    body.dark .example {
+      background-color: #1e293b;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .example-label {
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background-color: #f1f5f9;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      overflow-x: auto;
+    }
+
+    body.dark .result {
+      background-color: #1e1e2f;
     }
 
     pre {
-      background-color: var(--muted);
-      padding: 1rem;
-      border-radius: var(--radius);
+      background-color: #f1f5f9;
+      padding: 16px;
+      border-radius: 6px;
       overflow-x: auto;
-      margin-bottom: 1.5rem;
-      position: relative;
+      font-size: 14px;
+      margin: 20px 0;
+      transition: background-color 0.3s, color 0.3s;
+      white-space: pre-wrap;
+      word-wrap: break-word;
       direction: ltr;
       text-align: left;
       unicode-bidi: embed;
     }
 
     code {
-      font-family: monospace;
-      color: var(--primary);
+      font-family: 'Fira Code', monospace;
+      transition: color 0.3s;
       direction: ltr;
       text-align: left;
       unicode-bidi: embed;
@@ -144,80 +149,186 @@
       unicode-bidi: embed !important;
     }
 
-    .dark-mode-toggle {
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: background-color 0.2s, transform 0.2s;
+    body.dark pre {
+      background-color: #1e1e2f;
+      color: #e2e8f0;
+    }
+
+    body.dark code {
+      color: #f8fafc;
+    }
+
+    .navigation {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .link {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #0891b2;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
       font-weight: 500;
-      -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      white-space: nowrap;
     }
 
-    .dark-mode-toggle:hover {
-      background-color: var(--primary-hover);
-    }
-    
-    .dark-mode-toggle:active {
-      transform: scale(0.96);
+    .link:hover {
+      background-color: #0e7490;
     }
 
-    .examples {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
+    body.dark .link {
+      background-color: #0e7490;
     }
 
-    .example {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-      background-color: var(--background);
+    body.dark .link:hover {
+      background-color: #0891b2;
     }
 
-    .example:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    /* Make sure form elements also use Persian numbers */
+    input, button, select, textarea {
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
     }
 
-    .example h3 {
-      margin-top: 0;
-      margin-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 10px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      .example {
+        padding: 15px;
+      }
+
+      pre {
+        font-size: 13px;
+        padding: 12px;
+      }
+
+      .navigation {
+        flex-direction: column;
+      align-items: center;
+      }
+
+      .link {
+        width: 100%;
+        text-align: center;
+        margin: 5px 0;
+      }
     }
 
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
+    /* Custom element styling */
+    persian-datepicker-element {
+      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
+      --jdp-font-weight: 400;
+      transition: all 0.3s ease;
     }
 
-    .feature {
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      background-color: var(--accent);
-      border: 1px solid var(--border);
-      transition: transform 0.2s;
+    /* Dark mode styles for the datepicker */
+    body.dark persian-datepicker-element {
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-day-hover-bg: #334155;
+      --jdp-input-border-color: #475569;
+      --jdp-input-bg: #1e1e2f;
+      --jdp-calendar-bg: #1e1e2f;
+      --jdp-holiday-bg: #3f1e2e;
     }
 
-    .feature:hover {
-      transform: translateY(-3px);
+    /* Toggle switch styles */
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-left: 15px;
     }
 
-    .props-table {
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #0891b2;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .toggle-container {
+        display: flex;
+      align-items: center;
+    }
+
+    .toggle-label {
+      margin-right: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      }
+
+      .props-table {
       width: 100%;
       border-collapse: collapse;
       margin: 2rem 0;
-    }
-
-    .props-table th,
-    .props-table td {
+        overflow-x: auto;
+      display: block;
+      }
+      
+      .props-table th,
+      .props-table td {
       padding: 0.75rem;
       border: 1px solid var(--border);
       text-align: right;
@@ -227,254 +338,37 @@
       background-color: var(--muted);
     }
 
-    .back-to-top {
-      position: fixed;
-      bottom: 2rem;
-      left: 2rem;
-      background-color: var(--primary);
-      color: var(--primary-foreground);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 0.875rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .back-to-top:hover {
-      background-color: var(--primary-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    .back-to-top:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Additional improvements for mobile interaction */
-    @media (hover: none) {
-      .back-to-top:hover,
-      .dark-mode-toggle:hover,
-      .example:hover,
-      .feature:hover,
-      .nav-links a:hover {
-        /* Disable hover effects on touch devices */
-        transform: none;
-        background-color: var(--primary);
-      }
-      
-      .example:active,
-      .feature:active {
-        transform: translateY(-2px);
-      }
-      
-      /* Make sure active/touch states are responsive */
-      .back-to-top:active,
-      .dark-mode-toggle:active {
-        opacity: 0.8;
-      }
-    }
-
-    .content {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    /* Responsive styles */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1.5rem;
-      }
-      
-      header h1 {
-        font-size: 2rem;
-      }
-      
-      header p {
-        font-size: 1.125rem;
-      }
-      
-      nav {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      
-      .nav-links {
-        width: 100%;
-        overflow-x: auto;
-        display: flex;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 1rem;
-      }
-      
-      .examples {
-        grid-template-columns: 1fr;
-      }
-      
-      .features {
-        grid-template-columns: 1fr;
-      }
-
-      pre {
-        font-size: 0.9rem;
-        padding: 0.75rem;
-        max-width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .props-table {
-        display: block;
-        max-width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      
+    @media (max-width: 480px) {
       .props-table th,
       .props-table td {
-        padding: 0.6rem;
+        padding: 0.5rem;
         font-size: 0.9rem;
       }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 1rem;
-      }
-      
-      header h1 {
-        font-size: 1.75rem;
-      }
-      
-      header p {
-        font-size: 1rem;
-      }
-      
-      pre {
-        font-size: 0.8rem;
-        padding: 0.6rem;
-        border-radius: calc(var(--radius) * 0.75);
-      }
-      
-      .back-to-top {
-        left: 1rem;
-        bottom: 1rem;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-      }
-      
-      h2 {
-        font-size: 1.5rem;
-      }
-      
-      .example {
-        padding: 1rem;
-      }
-      
-      .feature {
-        padding: 1rem;
-      }
-      
-      .dark-mode-toggle {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-      }
-      
-      .angular-icon {
-        width: 60px;
-        height: 60px;
-      }
-      
-      .angular-icon svg {
-        width: 40px;
-        height: 40px;
-      }
-    }
-
-    /* Add icon styles */
-    .angular-icon {
-      display: inline-block;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin: 0 auto 1rem;
-      background-color: #1976d2;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      position: relative;
-      overflow: hidden;
-      margin-top: 1rem;
-    }
-    
-    .angular-icon svg {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 56px;
-      height: 56px;
-      z-index: 2;
-    }
-    
-    .angular-icon::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(255, 255, 255, 0.25);
-      z-index: 1;
-    }
-    
-    .dark .angular-icon {
-      background-color: #3f51b5;
-    }
-    
-    .dark .angular-icon svg {
-      filter: brightness(1.2);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <div class="angular-icon">
-        <!-- Simplified Angular logo -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="50" height="50">
-          <path d="M50 10L10 30l6 50 34 20 34-20 6-50z" fill="#DD0031" />
-          <path d="M50 10v90l34-20 6-50z" fill="#C3002F" />
-          <path d="M50 25L30 75h8l4-10h16l4 10h8L50 25zm0 25l6 15H44l6-15z" fill="#FFFFFF" />
-        </svg>
-      </div>
-      <h1>Persian Datepicker Element برای Angular</h1>
-      <p>
-        یک مؤلفه تاریخ شمسی (جلالی) زیبا و کاملاً قابل سفارشی‌سازی برای Angular
-      </p>
-    </header>
+    <h1>نمونه‌های Angular</h1>
+    <p>نمونه‌هایی از نحوه استفاده از کامپوننت انتخاب تاریخ در پروژه‌های Angular.</p>
 
-    <nav>
+    <div class="navigation">
       <div class="nav-links">
-        <a href="../../index.html">صفحه اصلی</a>
-        <a href="../index.html">مستندات</a>
-        <a href="./react.html">نسخه React</a>
-        <a href="./vue.html">نسخه Vue</a>
-        <a href="./angular.html" class="active">نسخه Angular</a>
+        <a href="../../basic.html" class="link">نمونه‌های پایه</a>
+        <a href="../../customization.html" class="link">نمونه‌های استایل‌دهی</a>
+        <a href="../../theme-switcher.html" class="link">تغییردهنده تم</a>
+        <a href="../../theme-builder.html" class="link">سازنده کامل تم</a>
+        <a href="../../index.html" class="link">دمو</a>
       </div>
-      <button class="dark-mode-toggle" id="darkModeToggle">تغییر حالت تاریک/روشن</button>
-    </nav>
+      <div class="toggle-container">
+        <span class="toggle-label">حالت تاریک</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
 
-    <div class="content">
       <h2>نصب و راه‌اندازی</h2>
       <p>برای نصب کامپوننت تاریخ شمسی در پروژه Angular خود:</p>
       <pre><code>// Using npm
@@ -677,16 +571,6 @@ export class AppComponent {
         </div>
       </div>
 
-      <div class="navigation">
-        <div class="nav-links">
-          <a href="../../basic.html" class="link">نمونه‌های پایه</a>
-          <a href="../../customization.html" class="link">نمونه‌های استایل‌دهی</a>
-          <a href="../../theme-switcher.html" class="link">تغییردهنده تم</a>
-          <a href="../../theme-builder.html" class="link">سازنده کامل تم</a>
-          <a href="../../index.html" class="link">دمو</a>
-        </div>
-      </div>
-
       <h2>ویژگی‌ها (Inputs)</h2>
       <table class="props-table">
         <thead>
@@ -715,7 +599,7 @@ export class AppComponent {
           <tr>
             <td>holidayTypes</td>
             <td>string</td>
-            <td>انواع تعطیلات برای نمایش (با کاما جدا شده: "Iran", "Afghanistan", "AncientIran", "International" یا "all" برای نمایش همه انواع)</td>
+          <td>انواع تعطیلات برای نمایش (با کاما جدا شده: "Iran", "Afghanistan", "AncientIran", "International" یا "all" برای نمایش همه انواع)</td>
           </tr>
           <tr>
             <td>rtl</td>
@@ -915,39 +799,61 @@ export class AppComponent {
 
       <h2>مجوز</h2>
       <p>MIT</p>
-    </div>
   </div>
 
-  <a href="#" class="back-to-top">بازگشت به بالا</a>
-
+  <script src="../../dist/persian-datepicker-element.min.js"></script>
   <script>
-    // Toggle dark mode
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const body = document.body;
+    // Dark mode toggle functionality
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
     
-    // Check for saved dark mode preference or prefer-color-scheme
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const storedDarkMode = localStorage.getItem('darkMode');
-    
-    if (storedDarkMode === 'true' || (storedDarkMode === null && prefersDarkMode)) {
-      body.classList.add('dark');
-    }
-    
-    darkModeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      localStorage.setItem('darkMode', body.classList.contains('dark') ? 'true' : 'false');
-    });
-
-    // Back to top functionality
-    const backToTop = document.querySelector('.back-to-top');
-    if (backToTop) {
-      backToTop.addEventListener('click', () => {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
+    function applyDarkModeToPickers(isDark) {
+      const allPickers = document.querySelectorAll('persian-datepicker-element');
+      allPickers.forEach(picker => {
+        if (isDark) {
+          picker.setAttribute('darkmode', 'true');
+          picker.style.setProperty('--jdp-background', '#1e1e2f');
+          picker.style.setProperty('--jdp-foreground', '#e2e8f0');
+          picker.style.setProperty('--jdp-muted', '#334155');
+          picker.style.setProperty('--jdp-muted-foreground', '#94a3b8');
+          picker.style.setProperty('--jdp-border', '#475569');
+          picker.style.setProperty('--jdp-day-hover-bg', '#334155');
+          picker.style.setProperty('--jdp-input-border-color', '#475569');
+          picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-holiday-bg', '#3f1e2e');
+        } else {
+          picker.removeAttribute('darkmode');
+          picker.style.removeProperty('--jdp-background');
+          picker.style.removeProperty('--jdp-foreground');
+          picker.style.removeProperty('--jdp-muted');
+          picker.style.removeProperty('--jdp-muted-foreground');
+          picker.style.removeProperty('--jdp-border');
+          picker.style.removeProperty('--jdp-day-hover-bg');
+          picker.style.removeProperty('--jdp-input-border-color');
+          picker.style.removeProperty('--jdp-input-bg');
+          picker.style.removeProperty('--jdp-calendar-bg');
+          picker.style.removeProperty('--jdp-holiday-bg');
+        }
       });
     }
+    
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+      darkModeToggle.checked = true;
+      applyDarkModeToPickers(true);
+    }
+    
+    darkModeToggle.addEventListener('change', () => {
+      const isDarkMode = darkModeToggle.checked;
+      if (isDarkMode) {
+        document.body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+      }
+      applyDarkModeToPickers(isDarkMode);
+    });
   </script>
 </body>
 </html> 
