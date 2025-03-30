@@ -99,7 +99,7 @@ async function loadEventsData(): Promise<void> {
   
   try {
     // Try to load the events.json file
-    const response = await fetch('persian-datepicker-element/data/events.json');
+    const response = await fetch('src/data/persian-calenda-repo/PersianCalendar/data/events.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
