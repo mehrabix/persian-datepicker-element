@@ -124,11 +124,24 @@
       overflow-x: auto;
       margin-bottom: 1.5rem;
       position: relative;
+      direction: ltr;
+      text-align: left;
+      unicode-bidi: embed;
     }
 
     code {
       font-family: monospace;
       color: var(--primary);
+      direction: ltr;
+      text-align: left;
+      unicode-bidi: embed;
+    }
+
+    /* Ensure code blocks don't inherit RTL */
+    pre, code {
+      direction: ltr !important;
+      text-align: left !important;
+      unicode-bidi: embed !important;
     }
 
     .dark-mode-toggle {
@@ -645,17 +658,22 @@ export class AppComponent {
         <div class="example">
           <h3>انواع تعطیلات</h3>
           <pre><code>// app.component.html
-&lt;div&gt;
-  &lt;persian-datepicker
-    holidayTypes="Iran,Religious"
-    placeholder="تعطیلات ایران و مذهبی"&gt;
-  &lt;/persian-datepicker&gt;
 
   &lt;persian-datepicker
     holidayTypes="Afghanistan"
     placeholder="تعطیلات افغانستان"&gt;
   &lt;/persian-datepicker&gt;
 &lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="navigation">
+        <div class="nav-links">
+          <a href="../../basic.html" class="link">نمونه‌های پایه</a>
+          <a href="../../customization.html" class="link">نمونه‌های استایل‌دهی</a>
+          <a href="../../theme-switcher.html" class="link">تغییردهنده تم</a>
+          <a href="../../theme-builder.html" class="link">سازنده کامل تم</a>
+          <a href="../../index.html" class="link">دمو</a>
         </div>
       </div>
 

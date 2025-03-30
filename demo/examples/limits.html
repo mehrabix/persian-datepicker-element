@@ -261,8 +261,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>Persian Date Picker Element - Date Limits Examples</h1>
-    <p>Examples of how to use date range limits and disabled dates in the Persian Date Picker Element component.</p>
+    <h1>نمونه‌های محدودیت‌های تاریخ</h1>
+    <p>نمونه‌هایی از نحوه استفاده از محدودیت‌های بازه زمانی و غیرفعال کردن تاریخ‌ها در کامپوننت انتخاب تاریخ.</p>
     
     <div class="navigation">
       <div class="nav-links">
@@ -282,14 +282,14 @@
     </div>
 
     <div class="example">
-      <h2>Date Range Limits</h2>
-      <div class="example-label">With minimum and maximum date limits:</div>
+      <h2>محدودیت‌های بازه زمانی</h2>
+      <div class="example-label">با حداقل و حداکثر تاریخ:</div>
       <persian-datepicker-element 
         id="range-picker"
         min-date="[1403,1,1]"
         max-date="[1403,12,29]"
       ></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="range-result">None</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="range-result">هیچ</span></div>
       
       <pre><code>&lt;persian-datepicker-element 
   id="range-picker"
@@ -299,19 +299,19 @@
     </div>
 
     <div class="example">
-      <h2>Disabled Dates</h2>
-      <div class="example-label">With disabled dates (weekends):</div>
+      <h2>تاریخ‌های غیرفعال</h2>
+      <div class="example-label">با تاریخ‌های غیرفعال (تعطیلات آخر هفته):</div>
       <persian-datepicker-element 
         id="disabled-picker"
         disabled-dates="isWeekend"
       ></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="disabled-result">None</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="disabled-result">هیچ</span></div>
       
-      <pre><code>// Define the disabled dates function
+      <pre><code>// تعریف تابع تاریخ‌های غیرفعال
 function isWeekend(year, month, day) {
   const date = new Date(year, month - 1, day);
   const dayOfWeek = date.getDay();
-  return dayOfWeek === 0 || dayOfWeek === 6; // Disable weekends
+  return dayOfWeek === 0 || dayOfWeek === 6; // غیرفعال کردن تعطیلات آخر هفته
 }
 
 &lt;persian-datepicker-element 
@@ -321,15 +321,15 @@ function isWeekend(year, month, day) {
     </div>
 
     <div class="example">
-      <h2>Combined Limits</h2>
-      <div class="example-label">With both date range and disabled dates:</div>
+      <h2>محدودیت‌های ترکیبی</h2>
+      <div class="example-label">با ترکیب محدودیت بازه زمانی و تاریخ‌های غیرفعال:</div>
       <persian-datepicker-element 
         id="combined-picker"
         min-date="[1403,1,1]"
         max-date="[1403,12,29]"
         disabled-dates="isWeekend"
       ></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="combined-result">None</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="combined-result">هیچ</span></div>
       
       <pre><code>&lt;persian-datepicker-element 
   id="combined-picker"

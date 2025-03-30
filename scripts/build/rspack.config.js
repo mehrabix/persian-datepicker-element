@@ -59,11 +59,7 @@ const config = {
           const filesToCopy = [
             {
               source: path.resolve(rootDir, 'src/data/persian-calendar-repo/PersianCalendar/data/events.json'),
-              target: path.resolve(rootDir, 'dist/data/persian-calendar-repo/PersianCalendar/data/events.json')
-            },
-            {
-              source: path.resolve(rootDir, 'src/data/events-fallback.json'),
-              target: path.resolve(rootDir, 'dist/data/events-fallback.json')
+              target: path.resolve(rootDir, 'dist/data/events.json')
             }
           ];
           

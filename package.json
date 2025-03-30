@@ -1,16 +1,24 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.38",
+  "version": "1.0.40",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.js",
   "module": "dist/persian-datepicker-element.esm.js",
   "unpkg": "dist/persian-datepicker-element.min.js",
   "types": "dist/types/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "dist/data/events.json"
   ],
   "sideEffects": false,
   "changelog": {
+    "1.0.39": [
+      "Updated holiday event types to include Iran, Afghanistan, Ancient Iran, and International",
+      "Added support for 'all' option in holiday-types to display all available holiday types",
+      "Updated documentation to reflect new event types",
+      "Added Persian labels for all event types",
+      "Updated default holiday types configuration"
+    ],
     "1.0.29": [
       "Enhanced dropdown usability by automatically scrolling to selected item when reopened",
       "Added customizable scrollbar styling with support for light and dark themes",

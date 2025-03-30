@@ -8,7 +8,7 @@ A modern, customizable Persian (Jalali) date picker web component with framework
 - 🌙 Dark mode support
 - 📱 Mobile-friendly
 - 🎯 Framework integrations (React, Vue, Angular)
-- 📅 Holiday support
+- 📅 Holiday support with multiple event types (Iran, Afghanistan, Ancient Iran, International)
 - 🔄 RTL support
 - 🎨 Multiple theme options
 - 📦 Zero dependencies
@@ -158,6 +158,7 @@ export class AppComponent {
 | placeholder | string | - | Placeholder text |
 | format | string | "YYYY/MM/DD" | Date format string |
 | show-holidays | boolean | false | Show holiday indicators |
+| holiday-types | string | "Iran,Afghanistan,AncientIran,International" | Comma-separated list of holiday types to display. Use "all" to show all available holiday types |
 | rtl | boolean | false | Right-to-left layout |
 | min-date | [number, number, number] | - | Minimum selectable date |
 | max-date | [number, number, number] | - | Maximum selectable date |
