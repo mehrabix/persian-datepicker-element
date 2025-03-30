@@ -3,14 +3,7 @@ import HijriUtils from './hijri-utils';
 import { PersianDate } from '../persian-date';
 
 // Fallback events in case JSON loading fails
-const fallbackEvents: PersianEvent[] = [
-  { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
-  { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true },
-  { title: 'عید فطر', month: 4, day: 5, type: 'Religious', holiday: true },
-  { title: 'عید قربان', month: 6, day: 10, type: 'Religious', holiday: true },
-  { title: 'تاسوعا', month: 7, day: 9, type: 'Religious', holiday: true },
-  { title: 'عاشورا', month: 7, day: 10, type: 'Religious', holiday: true },
-];
+const fallbackEvents: PersianEvent[] = [];
 
 // Initialize empty events array
 let mappedEvents: PersianEvent[] = [...fallbackEvents];
