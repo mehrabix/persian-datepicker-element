@@ -1564,15 +1564,6 @@ class PersianDatePickerElement extends HTMLElement {
         };
         // Add format and limits properties
         this.format = 'YYYY/MM/DD';
-        this.formatPatterns = {
-            'YYYY': 'year',
-            'MM': 'month',
-            'DD': 'day',
-            'MMMM': 'monthName',
-            'MMM': 'shortMonthName',
-            'dddd': 'weekday',
-            'dd': 'shortWeekday'
-        };
         this.minDate = null;
         this.maxDate = null;
         this.disabledDatesFn = null;
@@ -2551,16 +2542,29 @@ class PersianDatePickerElement extends HTMLElement {
         if (!date)
             return '';
         const [year, month, day] = date;
-        // Handle special formats
-        if (format === 'YYYY/MM/DD') {
-            return `${this.toPersianNum(year)}/${this.toPersianNum(month.toString().padStart(2, '0'))}/${this.toPersianNum(day.toString().padStart(2, '0'))}`;
+        // Handle special formats first
+        const specialFormat = this.handleSpecialFormat(format, year, month, day);
+        if (specialFormat !== null) {
+            return specialFormat;
         }
-        if (format === 'YYYY-MM-DD') {
-            return `${this.toPersianNum(year)}-${this.toPersianNum(month.toString().padStart(2, '0'))}-${this.toPersianNum(day.toString().padStart(2, '0'))}`;
-        }
-        if (format === 'YYYY/MM/DDth') {
-            return `${this.toPersianNum(year)}/${this.toPersianNum(month.toString().padStart(2, '0'))}/${this.toPersianNum(day)}ام`;
-        }
+        // Handle general format
+        return this.handleGeneralFormat(format, year, month, day);
+    }
+    /**
+     * Handle special predefined formats
+     */
+    handleSpecialFormat(format, year, month, day) {
+        const specialFormats = {
+            'YYYY/MM/DD': () => `${this.toPersianNum(year)}/${this.toPersianNum(month.toString().padStart(2, '0'))}/${this.toPersianNum(day.toString().padStart(2, '0'))}`,
+            'YYYY-MM-DD': () => `${this.toPersianNum(year)}-${this.toPersianNum(month.toString().padStart(2, '0'))}-${this.toPersianNum(day.toString().padStart(2, '0'))}`,
+            'YYYY/MM/DDth': () => `${this.toPersianNum(year)}/${this.toPersianNum(month.toString().padStart(2, '0'))}/${this.toPersianNum(day)}ام`
+        };
+        return (specialFormats[format]?.() || null);
+    }
+    /**
+     * Handle general format with tokens
+     */
+    handleGeneralFormat(format, year, month, day) {
         // Split format into components while preserving spaces
         const components = format.split(/(\s+)/);
         const parts = [];
@@ -2570,28 +2574,35 @@ class PersianDatePickerElement extends HTMLElement {
                 parts.push(component);
                 continue;
             }
-            let processedComponent = component;
-            // Replace format tokens in the correct order
-            if (processedComponent.includes('MMMM')) {
-                processedComponent = processedComponent.replace('MMMM', this.persianMonths[month - 1]);
-            }
-            else if (processedComponent.includes('MMM')) {
-                processedComponent = processedComponent.replace('MMM', this.persianMonths[month - 1].substring(0, 3));
-            }
-            processedComponent = processedComponent.replace('YYYY', this.toPersianNum(year));
-            processedComponent = processedComponent.replace('MM', this.toPersianNum(month.toString().padStart(2, '0')));
-            processedComponent = processedComponent.replace('DD', this.toPersianNum(day.toString().padStart(2, '0')));
-            processedComponent = processedComponent.replace('dddd', this.getWeekdayName(year, month, day));
-            // Handle ordinal suffix
-            if (processedComponent.includes('th')) {
-                processedComponent = processedComponent.replace('th', 'ام');
-            }
+            let processedComponent = this.replaceFormatTokens(component, year, month, day);
             parts.push(processedComponent);
             if (i < components.length - 1 && components[i + 1].trim()) {
                 parts.push(' ');
             }
         }
         return parts.join('');
+    }
+    /**
+     * Replace format tokens in a component
+     */
+    replaceFormatTokens(component, year, month, day) {
+        let processed = component;
+        // Replace format tokens in the correct order
+        if (processed.includes('MMMM')) {
+            processed = processed.replace('MMMM', this.persianMonths[month - 1]);
+        }
+        else if (processed.includes('MMM')) {
+            processed = processed.replace('MMM', this.persianMonths[month - 1].substring(0, 3));
+        }
+        processed = processed.replace('YYYY', this.toPersianNum(year));
+        processed = processed.replace('MM', this.toPersianNum(month.toString().padStart(2, '0')));
+        processed = processed.replace('DD', this.toPersianNum(day.toString().padStart(2, '0')));
+        processed = processed.replace('dddd', this.getWeekdayName(year, month, day));
+        // Handle ordinal suffix
+        if (processed.includes('th')) {
+            processed = processed.replace('th', 'ام');
+        }
+        return processed;
     }
     isValidFormat(format) {
         // Check if format contains at least one of the required patterns
