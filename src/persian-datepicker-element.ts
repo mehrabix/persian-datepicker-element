@@ -809,7 +809,7 @@ input:focus {
 `;
 
 // Default holiday types
-const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
+const DEFAULT_HOLIDAY_TYPES = ['Iran','AncientIran', 'International'];
 
 /**
  * Jalali Date Picker Web Component
@@ -834,7 +834,7 @@ const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
  * <persian-datepicker-element placeholder="انتخاب تاریخ" format="YYYY/MM/DD"></persian-datepicker-element>
  * 
  * <!-- With holiday types -->
- * <persian-datepicker-element holiday-types="Iran,Religious"></persian-datepicker-element>
+ * <persian-datepicker-element holiday-types="Iran,Afghanistan,AncientIran,International"></persian-datepicker-element>
  * 
  * <!-- With all holiday types -->
  * <persian-datepicker-element holiday-types="all"></persian-datepicker-element>
@@ -865,7 +865,7 @@ const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
  * @attr {string} format - Date format (e.g., "YYYY/MM/DD")
  * @attr {boolean} rtl - Whether to use RTL direction
  * @attr {boolean} show-holidays - Whether to highlight holidays
- * @attr {string} holiday-types - Comma-separated list of holiday types to display
+ * @attr {string} holiday-types - Comma-separated list of holiday types to display (e.g., "Iran,Afghanistan,AncientIran,International" or "all" to show all available types)
  * @attr {string} today-button-text - Custom text for the Today button (default: "امروز")
  * @attr {string} today-button-class - Additional CSS classes for the Today button
  * @attr {string} tomorrow-button-text - Custom text for the Tomorrow button (default: "فردا")
@@ -923,7 +923,8 @@ export class PersianDatePickerElement extends HTMLElement {
   private readonly holidayTypeLabels: { [key: string]: string } = {
     'Iran': 'ایران',
     'Afghanistan': 'افغانستان',
-    'Religious': 'مذهبی'
+    'AncientIran': 'ایران باستان',
+    'International': 'بین‌المللی'
   };
 
   // Add format and limits properties
@@ -1463,6 +1464,7 @@ export class PersianDatePickerElement extends HTMLElement {
 
   /**
    * Sets the holiday types to be displayed
+   * @param types - Comma-separated string or array of holiday types (e.g., "Iran,Afghanistan,AncientIran,International")
    */
   setHolidayTypes(types: string | string[]): void {
     if (typeof types === 'string') {

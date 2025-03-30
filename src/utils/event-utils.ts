@@ -127,7 +127,7 @@ async function loadEventsData(): Promise<void> {
 export const EventUtils = {
   /**
    * Returns all Persian calendar events mapped from the original JSON data
-   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getAllEvents(eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
@@ -145,7 +145,7 @@ export const EventUtils = {
    * Returns all events for a given month and day
    * @param month The month number (1-12)
    * @param day The day number (1-31)
-   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getEvents(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
@@ -160,7 +160,7 @@ export const EventUtils = {
    * Checks if the specified date is a holiday
    * @param month The month number (1-12)
    * @param day The day number (1-31)
-   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   isHoliday(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): boolean {
@@ -172,7 +172,7 @@ export const EventUtils = {
    * Gets holiday event titles for a specific date
    * @param month The month number (1-12)
    * @param day The day number (1-31)
-   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getHolidayTitles(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): string[] {
@@ -186,7 +186,7 @@ export const EventUtils = {
    * Gets all event titles for a specific date
    * @param month The month number (1-12)
    * @param day The day number (1-31)
-   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getAllEventTitles(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): string[] {
@@ -196,7 +196,7 @@ export const EventUtils = {
   
   /**
    * Gets events of a specific type
-   * @param type The event type (e.g., 'Iran', 'Religious')
+   * @param type The event type (e.g., 'Iran', 'Afghanistan', 'AncientIran', 'International')
    * @param includeAllTypes If true, includes all event types
    * @param holidaysOnly If true, only returns holiday events
    */
@@ -212,7 +212,7 @@ export const EventUtils = {
   
   /**
    * Get all holidays
-   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+   * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
    * @param includeAllTypes If true, includes all event types regardless of filtering
    */
   getAllHolidays(eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {

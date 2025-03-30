@@ -275,17 +275,6 @@ function App() {
             </div>
             
             <div className="form-group">
-              <label htmlFor="religious-holidays">فقط تعطیلات مذهبی:</label>
-              <PersianDatepicker 
-                id="religious-holidays" 
-                holidayTypes="Religious" 
-                placeholder="فقط تعطیلات مذهبی"
-                onChange={handleDateChange}
-                cssVariables={getThemeStyles()}
-              />
-            </div>
-            
-            <div className="form-group">
               <label htmlFor="afghanistan-holidays">تعطیلات افغانستان:</label>
               <PersianDatepicker 
                 id="afghanistan-holidays" 
@@ -300,7 +289,7 @@ function App() {
               <label htmlFor="all-holidays">همه تعطیلات:</label>
               <PersianDatepicker 
                 id="all-holidays" 
-                holidayTypes="Iran,Religious,Afghanistan" 
+                holidayTypes="all" 
                 placeholder="همه تعطیلات"
                 onChange={handleDateChange}
                 cssVariables={getThemeStyles()}

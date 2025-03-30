@@ -363,14 +363,7 @@ function getCurrentHijriDate() {
 
 
 // Fallback events in case JSON loading fails
-const fallbackEvents = [
-    { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
-    { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true },
-    { title: 'عید فطر', month: 4, day: 5, type: 'Religious', holiday: true },
-    { title: 'عید قربان', month: 6, day: 10, type: 'Religious', holiday: true },
-    { title: 'تاسوعا', month: 7, day: 9, type: 'Religious', holiday: true },
-    { title: 'عاشورا', month: 7, day: 10, type: 'Religious', holiday: true },
-];
+const fallbackEvents = [];
 // Initialize empty events array
 let mappedEvents = [...fallbackEvents];
 let persianCalendarData = {
@@ -472,7 +465,7 @@ async function loadEventsData() {
 const EventUtils = {
     /**
      * Returns all Persian calendar events mapped from the original JSON data
-     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
      * @param includeAllTypes If true, includes all event types regardless of filtering
      */
     getAllEvents(eventTypes, includeAllTypes = false) {
@@ -487,7 +480,7 @@ const EventUtils = {
      * Returns all events for a given month and day
      * @param month The month number (1-12)
      * @param day The day number (1-31)
-     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
      * @param includeAllTypes If true, includes all event types regardless of filtering
      */
     getEvents(month, day, eventTypes, includeAllTypes = false) {
@@ -499,7 +492,7 @@ const EventUtils = {
      * Checks if the specified date is a holiday
      * @param month The month number (1-12)
      * @param day The day number (1-31)
-     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
      * @param includeAllTypes If true, includes all event types regardless of filtering
      */
     isHoliday(month, day, eventTypes, includeAllTypes = false) {
@@ -510,7 +503,7 @@ const EventUtils = {
      * Gets holiday event titles for a specific date
      * @param month The month number (1-12)
      * @param day The day number (1-31)
-     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
      * @param includeAllTypes If true, includes all event types regardless of filtering
      */
     getHolidayTitles(month, day, eventTypes, includeAllTypes = false) {
@@ -523,7 +516,7 @@ const EventUtils = {
      * Gets all event titles for a specific date
      * @param month The month number (1-12)
      * @param day The day number (1-31)
-     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
      * @param includeAllTypes If true, includes all event types regardless of filtering
      */
     getAllEventTitles(month, day, eventTypes, includeAllTypes = false) {
@@ -532,7 +525,7 @@ const EventUtils = {
     },
     /**
      * Gets events of a specific type
-     * @param type The event type (e.g., 'Iran', 'Religious')
+     * @param type The event type (e.g., 'Iran', 'Afghanistan', 'AncientIran', 'International')
      * @param includeAllTypes If true, includes all event types
      * @param holidaysOnly If true, only returns holiday events
      */
@@ -546,7 +539,7 @@ const EventUtils = {
     },
     /**
      * Get all holidays
-     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Religious'])
+     * @param eventTypes Optional array of event types to filter by (e.g., ['Iran', 'Afghanistan', 'AncientIran', 'International'])
      * @param includeAllTypes If true, includes all event types regardless of filtering
      */
     getAllHolidays(eventTypes, includeAllTypes = false) {
@@ -1395,7 +1388,7 @@ input:focus {
 }
 `;
 // Default holiday types
-const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
+const DEFAULT_HOLIDAY_TYPES = ['Iran', 'AncientIran', 'International'];
 /**
  * Jalali Date Picker Web Component
  *
@@ -1419,7 +1412,7 @@ const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
  * <persian-datepicker-element placeholder="انتخاب تاریخ" format="YYYY/MM/DD"></persian-datepicker-element>
  *
  * <!-- With holiday types -->
- * <persian-datepicker-element holiday-types="Iran,Religious"></persian-datepicker-element>
+ * <persian-datepicker-element holiday-types="Iran,Afghanistan,AncientIran,International"></persian-datepicker-element>
  *
  * <!-- With all holiday types -->
  * <persian-datepicker-element holiday-types="all"></persian-datepicker-element>
@@ -1450,7 +1443,7 @@ const DEFAULT_HOLIDAY_TYPES = ['Iran', 'Religious'];
  * @attr {string} format - Date format (e.g., "YYYY/MM/DD")
  * @attr {boolean} rtl - Whether to use RTL direction
  * @attr {boolean} show-holidays - Whether to highlight holidays
- * @attr {string} holiday-types - Comma-separated list of holiday types to display
+ * @attr {string} holiday-types - Comma-separated list of holiday types to display (e.g., "Iran,Afghanistan,AncientIran,International" or "all" to show all available types)
  * @attr {string} today-button-text - Custom text for the Today button (default: "امروز")
  * @attr {string} today-button-class - Additional CSS classes for the Today button
  * @attr {string} tomorrow-button-text - Custom text for the Tomorrow button (default: "فردا")
@@ -1524,7 +1517,8 @@ class PersianDatePickerElement extends HTMLElement {
         this.holidayTypeLabels = {
             'Iran': 'ایران',
             'Afghanistan': 'افغانستان',
-            'Religious': 'مذهبی'
+            'AncientIran': 'ایران باستان',
+            'International': 'بین‌المللی'
         };
         // Add format and limits properties
         this.format = 'YYYY/MM/DD';
@@ -1960,6 +1954,7 @@ class PersianDatePickerElement extends HTMLElement {
     }
     /**
      * Sets the holiday types to be displayed
+     * @param types - Comma-separated string or array of holiday types (e.g., "Iran,Afghanistan,AncientIran,International")
      */
     setHolidayTypes(types) {
         if (typeof types === 'string') {

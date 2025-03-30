@@ -54,16 +54,8 @@
             />
           </div>
           
-          <div class="form-group">
-            <label>فقط تعطیلات مذهبی:</label>
-            <PersianDatepicker 
-              id="religious-holidays" 
-              holidayTypes="Religious" 
-              placeholder="فقط تعطیلات مذهبی"
-              @change="handleDateChange"
-              v-model="religiousHolidays"
-            />
-          </div>
+
+
           
           <div class="form-group">
             <label>تعطیلات افغانستان:</label>
@@ -80,7 +72,7 @@
             <label>همه تعطیلات:</label>
             <PersianDatepicker 
               id="all-holidays" 
-              holidayTypes="Iran,Religious,Afghanistan" 
+              holidayTypes="all" 
               placeholder="همه تعطیلات"
               @change="handleDateChange"
               v-model="allHolidays"
