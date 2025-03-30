@@ -5,6 +5,14 @@ import HijriUtils from '../utils/hijri-utils';
 // Mocks
 jest.mock('../utils/hijri-utils');
 
+// Mock fetch
+window.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve([])
+  })
+) as jest.Mock;
+
 describe('EventUtils', () => {
   const mockEvents: PersianEvent[] = [
     { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
@@ -87,19 +95,19 @@ describe('EventUtils', () => {
 
     test('should load religious events', () => {
       const events = EventUtils.getAllEvents();
-      const religiousEvents = events.filter(e => e.type === 'Religious');
+      const ancientIranEvents = events.filter(e => e.type === 'AncientIran');
       
-      // It's possible our tests are running in an environment where religious events
+      // It's possible our tests are running in an environment where ancient Iran events
       // aren't loaded yet or aren't present for the current year
       // So we'll just check that the events array exists
-      expect(Array.isArray(religiousEvents)).toBe(true);
+      expect(Array.isArray(ancientIranEvents)).toBe(true);
       
-      // If there are religious events, let's verify one
-      if (religiousEvents.length > 0) {
-        const sampleReligiousEvent = religiousEvents[0];
-        expect(sampleReligiousEvent).toHaveProperty('type', 'Religious');
+      // If there are ancient Iran events, let's verify one
+      if (ancientIranEvents.length > 0) {
+        const sampleAncientIranEvent = ancientIranEvents[0];
+        expect(sampleAncientIranEvent).toHaveProperty('type', 'AncientIran');
       } else {
-        console.warn('No religious events found in the current dataset - this is not necessarily an error');
+        console.warn('No ancient Iran events found in the current dataset - this is not necessarily an error');
       }
     });
   });
@@ -136,6 +144,12 @@ describe('EventUtils', () => {
           expect(event.type).toBe('AncientIran');
         });
       }
+    });
+
+    test('filters events by type', () => {
+      const events = EventUtils.getEvents(7, 16, ['AncientIran']);
+      expect(events).toHaveLength(1);
+      expect(events[0].title).toBe('جشن مهرگان');
     });
   });
 
@@ -223,9 +237,9 @@ describe('EventUtils', () => {
     });
     
     test('filters events by type', () => {
-      const events = EventUtils.getEvents(7, 10, ['Religious']);
+      const events = EventUtils.getEvents(7, 16, ['AncientIran']);
       expect(events).toHaveLength(1);
-      expect(events[0].title).toBe('عاشورا');
+      expect(events[0].title).toBe('جشن مهرگان');
     });
     
     test('returns all events for a date when includeAllTypes is true', () => {
@@ -244,7 +258,7 @@ describe('EventUtils', () => {
     
     test('returns true for a holiday date', () => {
       expect(EventUtils.isHoliday(1, 1)).toBe(true);
-      expect(EventUtils.isHoliday(7, 10)).toBe(true);
+      expect(EventUtils.isHoliday(7, 16)).toBe(true);
     });
     
     test('returns false for a non-holiday date', () => {
@@ -252,8 +266,8 @@ describe('EventUtils', () => {
     });
     
     test('respects type filters', () => {
-      expect(EventUtils.isHoliday(1, 1, ['Religious'])).toBe(false);
-      expect(EventUtils.isHoliday(7, 10, ['Religious'])).toBe(true);
+      expect(EventUtils.isHoliday(1, 1, ['AncientIran'])).toBe(false);
+      expect(EventUtils.isHoliday(7, 16, ['AncientIran'])).toBe(true);
     });
   });
   
