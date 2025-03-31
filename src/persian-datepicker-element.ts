@@ -1491,14 +1491,14 @@ export class PersianDatePickerElement extends HTMLElement {
       this.renderCalendar();
     }
   }
-  
+
   /**
    * Gets the current holiday types being displayed
    */
   getHolidayTypes(): string[] {
     return [...this.holidayTypes];
   }
-  
+
   /**
    * Checks if all types are being shown
    */
@@ -1734,17 +1734,17 @@ export class PersianDatePickerElement extends HTMLElement {
    */
   renderCalendar() {
     if (!this.shadowRoot || !this.daysContainer) return;
-    
-    // Update month and year selectors
+      
+      // Update month and year selectors
     this.updateMonthYearSelectors();
 
     // Clear previous days
-    this.daysContainer.innerHTML = "";
-
-    // Render the calendar content
-    this.renderCalendarContent();
+      this.daysContainer.innerHTML = "";
+      
+      // Render the calendar content
+      this.renderCalendarContent();
   }
-  
+
   /**
    * Renders the calendar content for the current month
    */
@@ -1756,12 +1756,12 @@ export class PersianDatePickerElement extends HTMLElement {
     const daysInMonth = PersianDate.getDaysInMonth(this.jalaliYear, this.jalaliMonth);
     
     // Get today's date for highlighting
-    const today = new Date();
+      const today = new Date();
     const jalaliToday = PersianDate.gregorianToJalali(
-      today.getFullYear(), 
-      today.getMonth() + 1, 
-      today.getDate()
-    );
+        today.getFullYear(), 
+        today.getMonth() + 1, 
+        today.getDate()
+      );
     
     // Adjust first day of month for Persian calendar (Saturday is first day of week)
     const adjustedFirstDay = (firstDayOfMonth + 1) % 7;
@@ -1778,33 +1778,33 @@ export class PersianDatePickerElement extends HTMLElement {
 
     // Generate days of month
     for (let i = 1; i <= daysInMonth; i++) {
-      const dayElement = document.createElement("div");
-      dayElement.classList.add("day");
+        const dayElement = document.createElement("div");
+        dayElement.classList.add("day");
       dayElement.textContent = this.toPersianNum(i);
-      
-      // Check if date is in range and not disabled
+            
+            // Check if date is in range and not disabled
       const isInRange = this.isDateInRange(this.jalaliYear, this.jalaliMonth, i);
       const isDisabled = this.isDateDisabled(this.jalaliYear, this.jalaliMonth, i);
-      
-      if (!isInRange || isDisabled) {
-        dayElement.classList.add("disabled");
-        dayElement.style.opacity = "0.4";
-        dayElement.style.cursor = "not-allowed";
-      } else {
-        // Add hover handler for tooltips
-        this.setupDayTooltips(dayElement);
-        
-        // Add click handler
+            
+            if (!isInRange || isDisabled) {
+              dayElement.classList.add("disabled");
+              dayElement.style.opacity = "0.4";
+              dayElement.style.cursor = "not-allowed";
+            } else {
+              // Add hover handler for tooltips
+              this.setupDayTooltips(dayElement);
+              
+              // Add click handler
         this.setupDayClickHandler(dayElement, i);
-      }
-      
-      // Highlight today
+            }
+            
+            // Highlight today
       if (this.jalaliYear === jalaliToday[0] && this.jalaliMonth === jalaliToday[1] && i === jalaliToday[2]) {
-        dayElement.classList.add("today");
-      }
-      
-      // Handle range selection highlighting
-      if (this.isRangeMode) {
+              dayElement.classList.add("today");
+            }
+            
+            // Handle range selection highlighting
+            if (this.isRangeMode) {
         const currentDate: DateTuple = [this.jalaliYear, this.jalaliMonth, i];
         
         // First remove any existing range classes
@@ -1837,15 +1837,15 @@ export class PersianDatePickerElement extends HTMLElement {
             dayElement.classList.add("range-start");
           }
         }
-      } else if (this.selectedDate && 
-          this.jalaliYear === this.selectedDate[0] && 
-          this.jalaliMonth === this.selectedDate[1] && 
+            } else if (this.selectedDate && 
+                this.jalaliYear === this.selectedDate[0] && 
+                this.jalaliMonth === this.selectedDate[1] && 
           i === this.selectedDate[2]) {
-        dayElement.classList.add("selected");
-      }
-      
-      // Add holiday information if enabled
-      if (this.showHolidays) {
+              dayElement.classList.add("selected");
+            }
+            
+            // Add holiday information if enabled
+            if (this.showHolidays) {
         this.addHolidayInfo(dayElement, i);
       }
       
@@ -1902,29 +1902,29 @@ export class PersianDatePickerElement extends HTMLElement {
       e.preventDefault();
       e.stopPropagation();
       
-      const currentTime = new Date().getTime();
-      const tapLength = currentTime - lastTapTime;
-      
-      // Handle touch events differently
-      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-        if (tapLength < 500 && tapLength > 0) {
-          // Double tap detected - show tooltip
-          const tooltip = dayElement.querySelector('.event-tooltip');
-          if (tooltip) {
-            const tooltips = this.shadowRoot?.querySelectorAll('.event-tooltip.tooltip-visible');
-            tooltips?.forEach(t => t.classList.remove("tooltip-visible"));
-            tooltip.classList.add("tooltip-visible");
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        
+        // Handle touch events differently
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+          if (tapLength < 500 && tapLength > 0) {
+            // Double tap detected - show tooltip
+            const tooltip = dayElement.querySelector('.event-tooltip');
+            if (tooltip) {
+              const tooltips = this.shadowRoot?.querySelectorAll('.event-tooltip.tooltip-visible');
+              tooltips?.forEach(t => t.classList.remove("tooltip-visible"));
+              tooltip.classList.add("tooltip-visible");
+            }
+          } else {
+            // Single tap - handle range or single selection
+            this.handleRangeSelection(day);
           }
         } else {
-          // Single tap - handle range or single selection
+          // For non-mobile, handle range or single selection
           this.handleRangeSelection(day);
         }
-      } else {
-        // For non-mobile, handle range or single selection
-        this.handleRangeSelection(day);
-      }
-      
-      lastTapTime = currentTime;
+        
+        lastTapTime = currentTime;
     });
   }
 
@@ -2138,6 +2138,7 @@ export class PersianDatePickerElement extends HTMLElement {
     const components = format.split(/(\s+)/);
     const parts: string[] = [];
     
+    // Process each component in order
     for (let i = 0; i < components.length; i++) {
       const component = components[i];
       
@@ -2149,6 +2150,7 @@ export class PersianDatePickerElement extends HTMLElement {
       let processedComponent = this.replaceFormatTokens(component, year, month, day);
       parts.push(processedComponent);
       
+      // Add space between components if needed
       if (i < components.length - 1 && components[i + 1].trim()) {
         parts.push(' ');
       }
@@ -2163,7 +2165,11 @@ export class PersianDatePickerElement extends HTMLElement {
   private replaceFormatTokens(component: string, year: number, month: number, day: number): string {
     let processed = component;
     
-    // Replace format tokens in the correct order
+    // Replace format tokens in the correct order for RTL
+    if (processed.includes('dddd')) {
+      processed = processed.replace('dddd', this.getWeekdayName(year, month, day));
+    }
+    
     if (processed.includes('MMMM')) {
       processed = processed.replace('MMMM', this.persianMonths[month - 1]);
     } else if (processed.includes('MMM')) {
@@ -2173,7 +2179,6 @@ export class PersianDatePickerElement extends HTMLElement {
     processed = processed.replace('YYYY', this.toPersianNum(year));
     processed = processed.replace('MM', this.toPersianNum(month.toString().padStart(2, '0')));
     processed = processed.replace('DD', this.toPersianNum(day.toString().padStart(2, '0')));
-    processed = processed.replace('dddd', this.getWeekdayName(year, month, day));
     
     // Handle ordinal suffix
     if (processed.includes('th')) {
@@ -2350,9 +2355,9 @@ export class PersianDatePickerElement extends HTMLElement {
       
       // Detect horizontal swipe
       if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
-        e.preventDefault();
-        isDragging = true;
-        isSwiping = true;
+          e.preventDefault();
+          isDragging = true;
+          isSwiping = true;
       }
     };
     
@@ -2380,11 +2385,11 @@ export class PersianDatePickerElement extends HTMLElement {
           const isRTL = getComputedStyle(this).getPropertyValue('--jdp-direction').trim() === 'rtl';
           
           if ((isRTL && diffX < 0) || (!isRTL && diffX > 0)) {
-            e.preventDefault();
+              e.preventDefault();
             e.stopPropagation();
             this.changeMonth(1); // Next month
           } else if ((isRTL && diffX > 0) || (!isRTL && diffX < 0)) {
-            e.preventDefault();
+              e.preventDefault();
             e.stopPropagation();
             this.changeMonth(-1); // Previous month
           }

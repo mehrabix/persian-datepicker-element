@@ -92,11 +92,24 @@
       font-size: 14px;
       margin: 20px 0;
       transition: background-color 0.3s, color 0.3s;
+      direction: ltr;
+      text-align: left;
+    }
+
+    pre code {
+      direction: ltr;
+      text-align: left;
+      white-space: pre;
+      display: block;
     }
 
     code {
       font-family: 'Fira Code', monospace;
       transition: color 0.3s;
+      direction: ltr;
+      display: block;
+      text-align: left;
+      unicode-bidi: embed;
     }
 
     .link {
@@ -286,26 +299,92 @@
       <div class="example-label">فرمت: YYYY/MM/DD</div>
       <persian-datepicker-element id="format1" format="YYYY/MM/DD"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result1">۱۴۰۴/۰۱/۱۸</span></div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format1" 
+  format="YYYY/MM/DD"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// JavaScript
+const format1 = document.getElementById('format1');
+format1.setValue(1404, 1, 18);
+format1.addEventListener('change', (event) => {
+  document.getElementById('result1').textContent = event.detail.formattedDate;
+});</code></pre>
       
       <div class="example-label">فرمت: YYYY MMMM DD</div>
       <persian-datepicker-element id="format2" format="YYYY MMMM DD"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result2">۱۴۰۴ فروردین ۲۷</span></div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format2" 
+  format="YYYY MMMM DD"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// JavaScript
+const format2 = document.getElementById('format2');
+format2.setValue(1404, 1, 27);
+format2.addEventListener('change', (event) => {
+  document.getElementById('result2').textContent = event.detail.formattedDate;
+});</code></pre>
       
       <div class="example-label">فرمت: dddd YYYY/MM/DD</div>
       <persian-datepicker-element id="format3" format="dddd YYYY/MM/DD"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result3">چهارشنبه ۱۴۰۴/۰۱/۰۵</span></div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format3" 
+  format="dddd YYYY/MM/DD"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// JavaScript
+const format3 = document.getElementById('format3');
+format3.setValue(1404, 1, 5);
+format3.addEventListener('change', (event) => {
+  document.getElementById('result3').textContent = event.detail.formattedDate;
+});</code></pre>
       
       <div class="example-label">فرمت: YYYY/MM/DDth</div>
       <persian-datepicker-element id="format4" format="YYYY/MM/DDth"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="result4">۱۷ام</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="result4">۱۴۰۴/۰۱/۱۷ام</span></div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format4" 
+  format="YYYY/MM/DDth"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// JavaScript
+const format4 = document.getElementById('format4');
+format4.setValue(1404, 1, 17);
+format4.addEventListener('change', (event) => {
+  document.getElementById('result4').textContent = event.detail.formattedDate;
+});</code></pre>
       
       <div class="example-label">فرمت: YYYY-MM-DD</div>
       <persian-datepicker-element id="format5" format="YYYY-MM-DD"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result5">۱۴۰۴-۰۱-۱۱</span></div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format5" 
+  format="YYYY-MM-DD"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// JavaScript
+const format5 = document.getElementById('format5');
+format5.setValue(1404, 1, 11);
+format5.addEventListener('change', (event) => {
+  document.getElementById('result5').textContent = event.detail.formattedDate;
+});</code></pre>
       
       <div class="example-label">فرمت: dddd YYYY MMMM DDth</div>
       <persian-datepicker-element id="format6" format="dddd YYYY MMMM DDth"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result6">دوشنبه ۱۴۰۴ فروردین ۱۷ام</span></div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format6" 
+  format="dddd YYYY MMMM DDth"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// JavaScript
+const format6 = document.getElementById('format6');
+format6.setValue(1404, 1, 17);
+format6.addEventListener('change', (event) => {
+  document.getElementById('result6').textContent = event.detail.formattedDate;
+});</code></pre>
       
       <pre><code>الگوهای فرمت موجود:
 YYYY - سال (مثال: ۱۴۰۴)
@@ -320,7 +399,7 @@ th - پسوند ترتیبی (مثال: ۱۷ام)
 YYYY/MM/DD → ۱۴۰۴/۰۱/۱۸
 YYYY MMMM DD → ۱۴۰۴ فروردین ۲۷
 dddd YYYY/MM/DD → چهارشنبه ۱۴۰۴/۰۱/۰۵
-YYYY/MM/DDth → ۱۷ام
+YYYY/MM/DDth → ۱۴۰۴/۰۱/۱۷ام
 YYYY-MM-DD → ۱۴۰۴-۰۱-۱۱
 dddd YYYY MMMM DDth → دوشنبه ۱۴۰۴ فروردین ۱۷ام</code></pre>
     </div>

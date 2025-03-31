@@ -116,6 +116,8 @@
       font-size: 14px;
       margin: 20px 0;
       transition: background-color 0.3s, color 0.3s;
+      direction: ltr;
+      text-align: left;
     }
     
     body.dark pre {
@@ -123,8 +125,20 @@
       color: #f8fafc;
     }
 
+    pre code {
+      direction: ltr;
+      text-align: left;
+      white-space: pre;
+      display: block;
+    }
+
     code {
       font-family: 'Fira Code', monospace;
+      transition: color 0.3s;
+      direction: ltr;
+      display: block;
+      text-align: left;
+      unicode-bidi: embed;
     }
 
     body.dark code {
