@@ -10,7 +10,7 @@ const rootDir = path.resolve(__dirname, '../..');
 console.log('Cleaning dist directory...');
 const distPath = path.resolve(rootDir, 'dist');
 if (fs.existsSync(distPath)) {
-  fs.rmdirSync(distPath, { recursive: true, force: true });
+  fs.rmSync(distPath, { recursive: true, force: true });
 }
 
 // Build minified ESM version
