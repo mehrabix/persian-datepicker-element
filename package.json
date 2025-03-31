@@ -105,7 +105,6 @@
     "minify": "node scripts/optimize/minify.js persian-datepicker-element.min.js && node scripts/optimize/esm-optimize.js",
     "cleanup": "node scripts/utils/cleanup-dist.js",
     "dev": "set NODE_ENV=development && npx rspack serve --config scripts/build/rspack.config.js",
-    "analyze": "set NODE_ENV=production && set BUNDLE_ANALYZE=true && npx rspack --config scripts/build/rspack.config.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
