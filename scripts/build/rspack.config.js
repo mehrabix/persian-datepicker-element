@@ -124,8 +124,8 @@ const config = {
   mode: isProduction ? 'production' : 'development',
   devtool: isProduction && shouldMinify ? false : 'source-map',
   optimization: {
-    // Disable rspack's built-in minimizer, we'll use terser separately
-    minimize: false,
+    // Enable aggressive optimization
+    minimize: true,
     usedExports: true,
     sideEffects: true,
     providedExports: true,
@@ -133,7 +133,7 @@ const config = {
     // Add advanced tree shaking
     innerGraph: true,
     mangleExports: isProduction ? 'size' : false,
-    // Improve bundle splitting for larger apps (not as helpful for a single component)
+    // Improve bundle splitting for larger apps
     splitChunks: isProduction ? {
       chunks: 'all',
       minSize: 0,
@@ -148,6 +148,11 @@ const config = {
         }
       }
     } : false,
+    // Add runtime chunk optimization
+    runtimeChunk: isProduction ? 'single' : false,
+    // Add module concatenation
+    moduleIds: isProduction ? 'deterministic' : 'named',
+    chunkIds: isProduction ? 'deterministic' : 'named'
   },
   devServer: {
     static: {
