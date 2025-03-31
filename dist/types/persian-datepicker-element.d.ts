@@ -90,6 +90,11 @@ export declare class PersianDatePickerElement extends HTMLElement {
     private includeAllTypes;
     private isTransitioning;
     private _documentClickHandler;
+    private readonly memoizedResults;
+    private readonly fragment;
+    private debouncedRender;
+    private throttledEventHandler;
+    private readonly performanceMetrics;
     private static openCalendarInstance;
     private readonly persianMonths;
     private readonly holidayTypeLabels;
@@ -188,6 +193,7 @@ export declare class PersianDatePickerElement extends HTMLElement {
      * Renders the calendar content for the current month
      */
     private renderCalendarContent;
+    private getMemoizedResult;
     /**
      * Compare two dates in [year, month, day] format
      * Returns -1 if date1 < date2, 0 if date1 = date2, 1 if date1 > date2
@@ -319,4 +325,5 @@ export declare class PersianDatePickerElement extends HTMLElement {
         start: DateTuple | null;
         end: DateTuple | null;
     };
+    private handleRangeHighlighting;
 }

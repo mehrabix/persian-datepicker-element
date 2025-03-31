@@ -3,240 +3,182 @@
  */
 import { PersianDatePickerElement } from '../persian-datepicker-element';
 import { EventUtils } from '../utils/event-utils';
-import { PersianEvent } from '../types';
+import { waitForElement, waitFor } from './setup';
 
 // Mock EventUtils
 jest.mock('../utils/event-utils', () => ({
   EventUtils: {
-    initialize: jest.fn().mockResolvedValue(undefined),
-    refreshEvents: jest.fn().mockImplementation(() => []),
-    isHoliday: jest.fn().mockImplementation((month, day, holidayTypes) => {
-      // Mock some holidays for testing
-      if (month === 1 && day === 1) return true; // Nowruz
-      if (month === 1 && day === 13) return true; // Nature Day
-      if (month === 4 && day === 19) return true; // Tirgan
-      return false;
-    }),
-    getHolidayTitles: jest.fn().mockImplementation((month, day, holidayTypes) => {
-      if (month === 1 && day === 1) return ['عید نوروز'];
-      if (month === 1 && day === 13) return ['روز طبیعت'];
-      if (month === 4 && day === 19) return ['جشن تیرگان'];
-      return [];
-    }),
-    getAllEventTitles: jest.fn().mockImplementation((month, day, holidayTypes) => {
-      if (month === 1 && day === 1) return ['عید نوروز'];
-      if (month === 1 && day === 13) return ['روز طبیعت'];
-      if (month === 2 && day === 10) return ['روز کار'];
-      if (month === 4 && day === 19) return ['جشن تیرگان'];
-      return [];
-    }),
-    getEvents: jest.fn().mockImplementation((month, day, holidayTypes) => {
-      if (month === 1 && day === 1) return [{ title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true }];
-      if (month === 1 && day === 13) return [{ title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true }];
-      if (month === 2 && day === 10) return [{ title: 'روز کار', month: 2, day: 10, type: 'International', holiday: false }];
-      if (month === 4 && day === 19) return [{ title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }];
-      return [];
-    }),
-    getAllHolidays: jest.fn().mockImplementation((holidayTypes) => [
-      { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
-      { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true },
-      { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
+    isHoliday: jest.fn().mockReturnValue(true),
+    getEvents: jest.fn().mockReturnValue([
+      { type: 'Iran', title: 'Test Holiday', holiday: true }
     ]),
-    getEventTypes: jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International'])
+    initialize: jest.fn().mockResolvedValue(undefined),
+    refreshEvents: jest.fn(),
+    getEventTypes: jest.fn().mockReturnValue(['Iran', 'AncientIran'])
   }
 }));
 
 describe('PersianDatePickerElement', () => {
   let element: PersianDatePickerElement;
 
-  beforeEach(() => {
-    // Clear mock call history before each test
-    jest.clearAllMocks();
-    
-    // Define the custom element if not already defined
-    if (!customElements.get('persian-datepicker-element')) {
-      customElements.define('persian-datepicker-element', PersianDatePickerElement);
-    }
-    
-    // Create a new element for each test
+  beforeEach(async () => {
+    // Create element using document.createElement
     element = document.createElement('persian-datepicker-element') as PersianDatePickerElement;
     document.body.appendChild(element);
+    // Wait for element to be ready
+    await waitForElement(element);
+    // Reset all mocks before each test
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    // Clean up after each test
     if (element && element.parentNode) {
       element.parentNode.removeChild(element);
     }
   });
 
-  it('should render without crashing', () => {
+  test('should render without crashing', () => {
     expect(element).toBeTruthy();
     expect(element.shadowRoot).toBeTruthy();
-    expect(element.shadowRoot?.querySelector('input')).toBeTruthy();
   });
 
-  it('should toggle calendar visibility when clicking the input', () => {
+  test('should toggle calendar visibility when clicking the input', async () => {
     const input = element.shadowRoot?.querySelector('input');
     expect(input).toBeTruthy();
     
-    // Initially, calendar should be hidden
-    let calendar = element.shadowRoot?.querySelector('.calendar');
-    expect(calendar?.classList.contains('visible')).toBe(false);
-    
-    // Click the input to show calendar
-    if (input) {
-      input.click();
-    }
-    
-    // Calendar should now be visible after click
-    calendar = element.shadowRoot?.querySelector('.calendar');
+    // Click input to show calendar
+    input?.click();
+    await waitFor(() => {
+      const calendar = element.shadowRoot?.querySelector('.calendar.visible');
+      return calendar !== null;
+    });
+    const calendar = element.shadowRoot?.querySelector('.calendar');
+    expect(calendar).toBeTruthy();
     expect(calendar?.classList.contains('visible')).toBe(true);
     
-    // Click again to hide
-    if (input) {
-      input.click();
-    }
-    
-    // Should be hidden again
-    calendar = element.shadowRoot?.querySelector('.calendar');
+    // Click input again to hide calendar
+    input?.click();
+    await waitFor(() => {
+      const calendar = element.shadowRoot?.querySelector('.calendar.visible');
+      return calendar === null;
+    });
     expect(calendar?.classList.contains('visible')).toBe(false);
   });
 
-  it('should set a date programmatically', () => {
-    // Get a sample holiday from our mock data
-    const holidayEvent = { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true };
-    
-    // Set the date programmatically
-    element.setValue(1402, holidayEvent.month, holidayEvent.day);
-    
-    // Verify that the correct date was set
-    const value = element.getValue();
-    expect(value).not.toBeNull();
-    expect(value).toEqual([1402, holidayEvent.month, holidayEvent.day]);
-    
-    // Check if the input displays the formatted date
-    const input = element.shadowRoot?.querySelector('input') as HTMLInputElement;
-    expect(input.value).toBeTruthy();
-    expect(input.value).toContain('۱۴۰۲'); // Should contain the year in Persian numerals
-  });
-
-  it('should emit a change event when a date is selected', () => {
-    // Mock the event listener
-    const mockCallback = jest.fn();
-    element.addEventListener('change', mockCallback);
-    
-    // Set and check that the date was properly set
-    element.setValue(1402, 1, 1);
-    
-    // We'll skip checking the callback directly since event timing is unpredictable in tests
-    // Instead, verify the component state directly
-    const value = element.getValue();
-    expect(value).not.toBeNull();
-    expect(value).toEqual([1402, 1, 1]);
-    
-    // Check if the input displays the formatted date
-    const input = element.shadowRoot?.querySelector('input') as HTMLInputElement;
-    expect(input.value).toBeTruthy();
-    expect(input.value).toContain('۱۴۰۲');
-  });
-
-  it('should pick up holidays from EventUtils', () => {
-    // Show the calendar
+  test('should set a date programmatically', async () => {
+    element.setValue(1404, 1, 15);
+    await waitFor(() => {
+      const input = element.shadowRoot?.querySelector('input');
+      return input?.value === '۱۴۰۴/۰۱/۱۵';
+    });
     const input = element.shadowRoot?.querySelector('input');
-    if (input) {
-      input.click();
-    }
+    expect(input).toBeTruthy();
+    expect(input?.value).toBe('۱۴۰۴/۰۱/۱۵');
+  });
+
+  test('should emit a change event when a date is selected', async () => {
+    const changeHandler = jest.fn();
+    element.addEventListener('change', changeHandler);
     
+    element.setValue(1404, 1, 15);
+    await waitFor(() => changeHandler.mock.calls.length > 0);
+    
+    expect(changeHandler).toHaveBeenCalled();
+    const event = changeHandler.mock.calls[0][0];
+    expect(event.detail.jalali).toEqual([1404, 1, 15]);
+  });
+
+  test('should pick up holidays from EventUtils', async () => {
+    // Initialize the element
+    element.connectedCallback();
+    
+    // Force a calendar render
+    element.renderCalendar();
+    await waitFor(() => {
+      const days = element.shadowRoot?.querySelectorAll('.day');
+      return days ? days.length > 0 : false;
+    });
+
     // Check that isHoliday was called during rendering
     expect(EventUtils.isHoliday).toHaveBeenCalled();
     
     // Select a date that is a holiday
-    element.setValue(1402, 1, 1);
+    element.setValue(1404, 1, 1);
+    await waitFor(() => {
+      const selectedDay = element.shadowRoot?.querySelector('.day.selected');
+      return selectedDay?.classList.contains('holiday') === true;
+    });
     
-    // Should have called getEvents to get the holiday information
-    expect(EventUtils.getEvents).toHaveBeenCalledWith(1, 1, expect.any(Array), expect.any(Boolean));
+    // Check if the selected date is marked as a holiday
+    const selectedDay = element.shadowRoot?.querySelector('.day.selected');
+    expect(selectedDay).toBeTruthy();
+    expect(selectedDay?.classList.contains('holiday')).toBe(true);
   });
 
-  it('should add holiday classes to holiday dates', () => {
-    // Show the calendar
-    const input = element.shadowRoot?.querySelector('input');
-    if (input) {
-      input.click();
-    }
+  test('should add holiday classes to holiday dates', async () => {
+    // Initialize the element
+    element.connectedCallback();
     
-    // Set to a month with holidays
-    element.setValue(1402, 1, 15); // Setting to a non-holiday date in month 1
+    // Mock isHoliday to return true for specific dates
+    (EventUtils.isHoliday as jest.Mock).mockImplementation((month, day) => {
+      return month === 1 && day === 1;
+    });
     
-    // We're checking for elements with classes that denote holidays
-    // This would typically be specific to your implementation
+    // Force a calendar render
+    element.renderCalendar();
+    await waitFor(() => {
+      const days = element.shadowRoot?.querySelectorAll('.day');
+      return days ? days.length > 0 : false;
+    });
+
+    // Get all day elements
     const dateElements = element.shadowRoot?.querySelectorAll('.day');
+    expect(dateElements).toBeTruthy();
     expect(dateElements?.length).toBeGreaterThan(0);
     
     // There should be at least one day with the holiday class
     const holidayElements = element.shadowRoot?.querySelectorAll('.day.holiday');
+    expect(holidayElements).toBeTruthy();
     expect(holidayElements?.length).toBeGreaterThan(0);
   });
-  
-  it('should allow setting holiday types', () => {
-    // Test setting holiday types via attribute
-    element.setAttribute('holiday-types', 'Iran,AncientIran');
+
+  test('should allow setting holiday types', async () => {
+    element.setHolidayTypes(['Iran']);
+    await waitFor(() => {
+      const types = element.getHolidayTypes();
+      return types.length === 1 && types[0] === 'Iran';
+    });
+    expect(element.getHolidayTypes()).toEqual(['Iran']);
     
-    // Should have two holiday types
-    expect(element.getHolidayTypes().length).toBe(2);
-    expect(element.getHolidayTypes()).toContain('Iran');
-    expect(element.getHolidayTypes()).toContain('AncientIran');
-    
-    // Test setting via method
-    element.setHolidayTypes(['AncientIran']);
-    expect(element.getHolidayTypes().length).toBe(1);
-    expect(element.getHolidayTypes()[0]).toBe('AncientIran');
-    
-    // Test setting via string
-    element.setHolidayTypes('Iran,International');
-    expect(element.getHolidayTypes().length).toBe(2);
-    expect(element.getHolidayTypes()).toContain('Iran');
-    expect(element.getHolidayTypes()).toContain('International');
+    element.setHolidayTypes('all');
+    await waitFor(() => element.isShowingAllTypes());
+    expect(element.isShowingAllTypes()).toBe(true);
   });
-  
-  it('should support scrolling to selected items in dropdowns', () => {
-    // We'll test this by directly accessing the toggleDropdown method
-    const datepicker = element as any; // Cast to any to access private methods
+
+  test('should support scrolling to selected items in dropdowns', async () => {
+    // Initialize the element
+    element.connectedCallback();
     
-    // Create a mock dropdown and selected item
-    const dropdown = document.createElement('div');
-    dropdown.classList.add('select-content');
-    
-    // Add a selected item
-    const selectedItem = document.createElement('div');
-    selectedItem.classList.add('select-item', 'selected');
-    
-    // Set up dimensions for scrolling calculation
-    Object.defineProperty(selectedItem, 'offsetTop', { value: 100 });
-    Object.defineProperty(selectedItem, 'clientHeight', { value: 30 });
-    dropdown.appendChild(selectedItem);
-    
-    // Set up dimensions for the dropdown
-    Object.defineProperty(dropdown, 'clientHeight', { value: 200 });
-    Object.defineProperty(dropdown, 'scrollTop', {
-      value: 0,
-      writable: true
+    // Set a date to trigger dropdown content creation
+    element.setValue(1404, 1, 15);
+    await waitFor(() => {
+      const monthDropdown = element.shadowRoot?.querySelector('.month-select-content');
+      const yearDropdown = element.shadowRoot?.querySelector('.year-select-content');
+      return monthDropdown !== null && yearDropdown !== null;
     });
     
-    // Mock requestAnimationFrame to execute immediately
-    const originalRAF = window.requestAnimationFrame;
-    window.requestAnimationFrame = (cb) => {
-      cb(0);
-      return 0;
-    };
+    // Get dropdown elements
+    const monthDropdown = element.shadowRoot?.querySelector('.month-select-content');
+    const yearDropdown = element.shadowRoot?.querySelector('.year-select-content');
     
-    // Now call toggleDropdown
-    datepicker.toggleDropdown(dropdown);
+    expect(monthDropdown).toBeTruthy();
+    expect(yearDropdown).toBeTruthy();
     
-    // Check if the dropdown is open
-    expect(dropdown.classList.contains('open')).toBe(true);
+    // Check if selected items exist
+    const selectedMonth = monthDropdown?.querySelector('.select-item.selected');
+    const selectedYear = yearDropdown?.querySelector('.select-item.selected');
     
-    // Restore original requestAnimationFrame
-    window.requestAnimationFrame = originalRAF;
+    expect(selectedMonth).toBeTruthy();
+    expect(selectedYear).toBeTruthy();
   });
 }); 

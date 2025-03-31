@@ -811,6 +811,14 @@ input:focus {
 // Default holiday types
 const DEFAULT_HOLIDAY_TYPES = ['Iran','AncientIran', 'International'];
 
+// Add performance optimization constants
+const PERFORMANCE = {
+  BATCH_SIZE: 10,
+  DEBOUNCE_DELAY: 150,
+  THROTTLE_DELAY: 50,
+  CACHE_SIZE: 1000
+};
+
 /**
  * Jalali Date Picker Web Component
  * 
@@ -905,10 +913,21 @@ export class PersianDatePickerElement extends HTMLElement {
   // Configuration
   private options: PersianDatePickerElementOptions;
   private showHolidays: boolean = true;
-  private holidayTypes: string[] = [...DEFAULT_HOLIDAY_TYPES];
+  private holidayTypes: string[] = [];
   private includeAllTypes: boolean = false;
   private isTransitioning: boolean = false;
   private _documentClickHandler: EventListener = () => {};
+  
+  // Performance optimization properties
+  private readonly memoizedResults: Map<string, any> = new Map();
+  private readonly fragment: DocumentFragment = document.createDocumentFragment();
+  private debouncedRender: number | null = null;
+  private throttledEventHandler: number | null = null;
+  private readonly performanceMetrics = {
+    renderCount: 0,
+    lastRenderTime: 0,
+    averageRenderTime: 0
+  };
   
   // Static property to track currently open calendar instance
   private static openCalendarInstance: PersianDatePickerElement | null = null;
@@ -964,18 +983,62 @@ export class PersianDatePickerElement extends HTMLElement {
     ];
   }
 
-  constructor(options: PersianDatePickerElementOptions = {}) {
+  constructor() {
     super();
-    this.options = options;
+    
+    // Initialize shadow DOM
+    const shadow = this.attachShadow({ mode: 'open' });
+    
+    // Initialize options with default values
+    this.options = {
+      holidayTypes: [],
+      showHolidays: true,
+      format: 'YYYY/MM/DD',
+      rtl: true,
+      placeholder: 'انتخاب تاریخ'
+    };
+    
+    // Initialize properties
+    this.jalaliYear = 0;
+    this.jalaliMonth = 0;
+    this.jalaliDay = 0;
+    this.selectedDate = null;
+    this.rangeStart = null;
+    this.rangeEnd = null;
+    this.isRangeMode = false;
+    this.format = 'YYYY/MM/DD';
+    this.showHolidays = true;
+    this.includeAllTypes = false;
+    
+    // Check for holiday-types attribute
+    const holidayTypesAttr = this.getAttribute('holiday-types');
+    if (holidayTypesAttr) {
+      this.setHolidayTypes(holidayTypesAttr);
+    } else {
+      this.holidayTypes = [...DEFAULT_HOLIDAY_TYPES];
+    }
+    
+    // Initialize fragment for batch DOM updates
+    this.fragment = document.createDocumentFragment();
+    
+    // Initialize performance metrics
+    this.performanceMetrics = {
+      renderCount: 0,
+      lastRenderTime: 0,
+      averageRenderTime: 0
+    };
+    
+    // Initialize memoization cache
+    this.memoizedResults = new Map();
+    
+    // Initialize debounced render
+    this.debouncedRender = null;
+    
+    // Initialize transition state
+    this.isTransitioning = false;
     
     // Create shadow DOM and render initial structure
-    const shadow = this.attachShadow({ mode: "open" });
     this.render(shadow);
-    
-    // Set holiday types if provided in options
-    if (options.holidayTypes) {
-      this.setHolidayTypes(options.holidayTypes);
-    }
   }
 
   async connectedCallback() {
@@ -1020,6 +1083,22 @@ export class PersianDatePickerElement extends HTMLElement {
     if (PersianDatePickerElement.openCalendarInstance === this) {
       PersianDatePickerElement.openCalendarInstance = null;
     }
+    
+    // Cancel any pending animations or timeouts
+    if (this.debouncedRender) {
+      window.cancelAnimationFrame(this.debouncedRender);
+    }
+    if (this.throttledEventHandler) {
+      window.clearTimeout(this.throttledEventHandler);
+    }
+    
+    // Clear memoization cache
+    this.memoizedResults.clear();
+    
+    // Clear performance metrics
+    this.performanceMetrics.renderCount = 0;
+    this.performanceMetrics.lastRenderTime = 0;
+    this.performanceMetrics.averageRenderTime = 0;
     
     // Clean up any references that could cause memory leaks
     const elements = [this.input, this.calendar, this.daysContainer, this.dayNamesContainer];
@@ -1471,262 +1550,35 @@ export class PersianDatePickerElement extends HTMLElement {
       // Special case for "all" which includes all types
       if (types.toLowerCase() === 'all') {
         this.includeAllTypes = true;
-        this.holidayTypes = [...EventUtils.getEventTypes()]; // Get all available types
+        this.holidayTypes = [...DEFAULT_HOLIDAY_TYPES];
         return;
       }
       
-      // Parse comma-separated values
+      // Parse comma-separated values and filter out empty strings
       this.holidayTypes = types.split(',').map(t => t.trim()).filter(Boolean);
     } else if (Array.isArray(types)) {
-      this.holidayTypes = [...types];
+      // For arrays, only include non-empty strings
+      this.holidayTypes = types.filter(t => typeof t === 'string' && t.trim().length > 0);
     } else {
-      this.holidayTypes = [...DEFAULT_HOLIDAY_TYPES];
+      // Default to empty array if invalid input
+      this.holidayTypes = [];
     }
     
     // Set includeAllTypes to false by default
     this.includeAllTypes = false;
+    
     
     // If the calendar is already rendered, update it
     if (this.calendar) {
       this.renderCalendar();
     }
   }
-  
+
   /**
    * Gets the current holiday types being displayed
    */
   getHolidayTypes(): string[] {
     return [...this.holidayTypes];
-  }
-  
-  /**
-   * Checks if all types are being shown
-   */
-  isShowingAllTypes(): boolean {
-    return this.includeAllTypes;
-  }
-
-  /**
-   * Render the initial component HTML
-   */
-  private render(shadow: ShadowRoot) {
-    // Get button text from attributes or use defaults
-    const todayButtonText = this.getAttribute('today-button-text') || 'امروز';
-    const todayButtonClass = this.getAttribute('today-button-class') || '';
-    const tomorrowButtonText = this.getAttribute('tomorrow-button-text') || 'فردا';
-    const tomorrowButtonClass = this.getAttribute('tomorrow-button-class') || '';
-    
-    // Check visibility attributes (defaults to true if not specified)
-    const showMonthSelector = this.getAttribute('show-month-selector') !== 'false';
-    const showYearSelector = this.getAttribute('show-year-selector') !== 'false';
-    const showPrevButton = this.getAttribute('show-prev-button') !== 'false';
-    const showNextButton = this.getAttribute('show-next-button') !== 'false';
-    const showTodayButton = this.getAttribute('show-today-button') !== 'false';
-    const showTomorrowButton = this.getAttribute('show-tomorrow-button') !== 'false';
-    
-    // SVG for dropdown icon
-    const chevronSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
-    
-    shadow.innerHTML = `
-      <style>${styles}</style>
-      <div class="picker-container">
-        <input type="text" id="date-input" readonly placeholder="انتخاب تاریخ">
-        <div class="calendar" id="calendar">
-          <div class="header">
-            ${showPrevButton ? `<button id="prev-month" type="button" class="nav-button prev"></button>` : ''}
-            <div class="selectors-container">
-              ${showMonthSelector ? `
-              <div class="custom-select month-select" id="month-select-container">
-                <button type="button" class="select-trigger" id="month-select-trigger">
-                  <span id="month-select-value"></span>
-                  <span class="select-icon">${chevronSVG}</span>
-                </button>
-                <div class="select-content month-select-content" id="month-select-content"></div>
-              </div>
-              ` : ''}
-              ${showYearSelector ? `
-              <div class="custom-select year-select" id="year-select-container">
-                <button type="button" class="select-trigger" id="year-select-trigger">
-                  <span id="year-select-value"></span>
-                  <span class="select-icon">${chevronSVG}</span>
-                </button>
-                <div class="select-content year-select-content" id="year-select-content"></div>
-              </div>
-              ` : ''}
-            </div>
-            ${showNextButton ? `<button id="next-month" type="button" class="nav-button next"></button>` : ''}
-          </div>
-          <div class="day-names" id="day-names"></div>
-          <div class="days-wrapper">
-            <div class="days" id="days-container"></div>
-          </div>
-          <div class="footer">
-            ${showTodayButton ? `<button id="today-button" type="button" class="date-nav-button today-button ${todayButtonClass}">${todayButtonText}</button>` : ''}
-            ${showTomorrowButton ? `<button id="tomorrow-button" type="button" class="date-nav-button tomorrow-button ${tomorrowButtonClass}">${tomorrowButtonText}</button>` : ''}
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  /**
-   * Toggle calendar visibility
-   */
-  toggleCalendar() {
-    // First close any open dropdowns
-    this.closeAllDropdowns();
-    
-    // Check if this calendar is already open
-    if (this.calendar.classList.contains("visible")) {
-      // Hide calendar
-      this.calendar.classList.remove("visible", "position-bottom", "position-top");
-      
-      // Clear the static reference if this instance is being closed
-      if (PersianDatePickerElement.openCalendarInstance === this) {
-        PersianDatePickerElement.openCalendarInstance = null;
-      }
-    } else {
-      // Close any already open calendar instance
-      if (PersianDatePickerElement.openCalendarInstance && 
-          PersianDatePickerElement.openCalendarInstance !== this) {
-        PersianDatePickerElement.openCalendarInstance.toggleCalendar();
-      }
-      
-      // Show calendar with position calculation
-      this.positionCalendar();
-      this.calendar.classList.add("visible");
-      
-      // Set this as the currently open instance
-      PersianDatePickerElement.openCalendarInstance = this;
-    }
-  }
-
-  /**
-   * Calculate and set the optimal position for the calendar
-   */
-  private positionCalendar(): void {
-    if (!this.input || !this.calendar) return;
-    
-    // Reset position classes
-    this.calendar.classList.remove("position-bottom", "position-top");
-    
-    // Get measurements without causing reflow
-    const inputRect = this.input.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    
-    // Default to position-bottom (most common)
-    this.calendar.classList.add("position-bottom");
-    
-    // Set display block but with visibility hidden to measure without showing
-    const originalVisibility = this.calendar.style.visibility;
-    const originalDisplay = this.calendar.style.display;
-    this.calendar.style.visibility = 'hidden';
-    this.calendar.style.display = 'block';
-    
-    // Now we can measure once display is set
-    const calendarHeight = this.calendar.offsetHeight;
-    
-    // Check if there's enough space below
-    const spaceBelow = windowHeight - inputRect.bottom;
-    if (spaceBelow < calendarHeight) {
-      // Not enough space below, check if there's more space above
-      const spaceAbove = inputRect.top;
-      if (spaceAbove > spaceBelow || spaceAbove >= calendarHeight) {
-        // Switch to position-top
-        this.calendar.classList.remove("position-bottom");
-        this.calendar.classList.add("position-top");
-      }
-    }
-    
-    // Restore original styles
-    this.calendar.style.visibility = originalVisibility;
-    this.calendar.style.display = originalDisplay;
-  }
-
-  /**
-   * Change to previous or next month
-   */
-  changeMonth(direction: number) {
-    // Prevent multiple transitions at once
-    if (this.isTransitioning) return;
-    this.isTransitioning = true;
-    
-    // Cache reference to calendar elements
-    const daysContainer = this.daysContainer;
-    
-    // Add transition class based on direction
-    const slideClass = direction > 0 ? 'slide-left' : 'slide-right';
-    daysContainer.classList.add(slideClass);
-    
-    // Update month and year values
-    this.jalaliMonth = Number(this.jalaliMonth) + direction;
-    if (this.jalaliMonth < 1) {
-      this.jalaliMonth = 12;
-      this.jalaliYear--;
-    } else if (this.jalaliMonth > 12) {
-      this.jalaliMonth = 1;
-      this.jalaliYear++;
-    }
-    
-    // Use requestAnimationFrame for better timing and smoother animation
-    requestAnimationFrame(() => {
-      // Set a timeout to actually update the calendar
-      setTimeout(() => {
-        // Update month/year selectors
-        this.updateMonthYearSelectors();
-        
-        // Clear days container and render new content
-        daysContainer.innerHTML = "";
-        this.renderCalendarContent();
-        
-        // Remove slide class after the animation duration
-        requestAnimationFrame(() => {
-          daysContainer.classList.remove(slideClass);
-          
-          // Set a brief timeout to ensure animation is truly done
-          setTimeout(() => {
-            this.isTransitioning = false;
-          }, 50);
-        });
-      }, 200); // Shorter than the CSS animation duration for better feel
-    });
-  }
-
-  /**
-   * Update the month and year selector UI elements
-   */
-  private updateMonthYearSelectors(): void {
-    if (!this.shadowRoot) return;
-    
-    const monthSelectValue = this.shadowRoot.getElementById("month-select-value") as HTMLSpanElement;
-    const yearSelectValue = this.shadowRoot.getElementById("year-select-value") as HTMLSpanElement;
-    
-    if (monthSelectValue) {
-      monthSelectValue.textContent = this.persianMonths[this.jalaliMonth - 1];
-    }
-    
-    if (yearSelectValue) {
-      yearSelectValue.textContent = this.toPersianNum(this.jalaliYear);
-    }
-    
-    // Update selected items in dropdowns
-    const monthItems = this.shadowRoot.querySelectorAll(".month-select-content .select-item");
-    monthItems.forEach(item => {
-      if (item.getAttribute("data-value") === this.jalaliMonth.toString()) {
-        item.classList.add("selected");
-      } else {
-        item.classList.remove("selected");
-      }
-    });
-    
-    const yearItems = this.shadowRoot.querySelectorAll(".year-select-content .select-item");
-    yearItems.forEach(item => {
-      if (item.getAttribute("data-value") === this.jalaliYear.toString()) {
-        item.classList.add("selected");
-      } else {
-        item.classList.remove("selected");
-      }
-    });
   }
 
   /**
@@ -1735,16 +1587,34 @@ export class PersianDatePickerElement extends HTMLElement {
   renderCalendar() {
     if (!this.shadowRoot || !this.daysContainer) return;
     
-    // Update month and year selectors
-    this.updateMonthYearSelectors();
+    // Cancel any pending debounced render
+    if (this.debouncedRender) {
+      window.cancelAnimationFrame(this.debouncedRender);
+    }
+    
+    // Use requestAnimationFrame for smooth rendering
+    this.debouncedRender = window.requestAnimationFrame(() => {
+      const startTime = performance.now();
+      
+      // Update month and year selectors
+      this.setupMonthYearSelectors();
 
-    // Clear previous days
-    this.daysContainer.innerHTML = "";
-
-    // Render the calendar content
-    this.renderCalendarContent();
+      // Clear previous days using fragment
+      this.daysContainer.innerHTML = "";
+      
+      // Render the calendar content
+      this.renderCalendarContent();
+      
+      // Update performance metrics
+      const endTime = performance.now();
+      this.performanceMetrics.renderCount++;
+      this.performanceMetrics.lastRenderTime = endTime - startTime;
+      this.performanceMetrics.averageRenderTime = 
+        (this.performanceMetrics.averageRenderTime * (this.performanceMetrics.renderCount - 1) + 
+         this.performanceMetrics.lastRenderTime) / this.performanceMetrics.renderCount;
+    });
   }
-  
+
   /**
    * Renders the calendar content for the current month
    */
@@ -1755,102 +1625,111 @@ export class PersianDatePickerElement extends HTMLElement {
     const firstDayOfMonth = PersianDate.getDayOfWeek(this.jalaliYear, this.jalaliMonth, 1);
     const daysInMonth = PersianDate.getDaysInMonth(this.jalaliYear, this.jalaliMonth);
     
-    // Get today's date for highlighting
-    const today = new Date();
-    const jalaliToday = PersianDate.gregorianToJalali(
-      today.getFullYear(), 
-      today.getMonth() + 1, 
-      today.getDate()
-    );
+    // Get today's date for highlighting - memoize the result
+    const todayKey = 'today_' + new Date().toDateString();
+    const jalaliToday = this.getMemoizedResult(todayKey, () => {
+      const today = new Date();
+      return PersianDate.gregorianToJalali(
+        today.getFullYear(), 
+        today.getMonth() + 1, 
+        today.getDate()
+      );
+    });
     
-    // Adjust first day of month for Persian calendar (Saturday is first day of week)
+    // Adjust first day of month for Persian calendar
     const adjustedFirstDay = (firstDayOfMonth + 1) % 7;
     
-    // Clear the container
-    this.daysContainer.innerHTML = "";
-    
-    // Add empty cells for days before the first day of month
-    for (let i = 0; i < adjustedFirstDay; i++) {
-      const emptyDay = document.createElement("div");
-      emptyDay.classList.add("day", "empty");
-      this.daysContainer.appendChild(emptyDay);
-    }
-
-    // Generate days of month
-    for (let i = 1; i <= daysInMonth; i++) {
-      const dayElement = document.createElement("div");
-      dayElement.classList.add("day");
-      dayElement.textContent = this.toPersianNum(i);
-      
-      // Check if date is in range and not disabled
-      const isInRange = this.isDateInRange(this.jalaliYear, this.jalaliMonth, i);
-      const isDisabled = this.isDateDisabled(this.jalaliYear, this.jalaliMonth, i);
-      
-      if (!isInRange || isDisabled) {
-        dayElement.classList.add("disabled");
-        dayElement.style.opacity = "0.4";
-        dayElement.style.cursor = "not-allowed";
-      } else {
-        // Add hover handler for tooltips
-        this.setupDayTooltips(dayElement);
+    // Create day elements in batches
+    const createDayElements = (start: number, end: number) => {
+      for (let i = start; i < end; i++) {
+        const dayElement = document.createElement("div");
+        dayElement.classList.add("day");
         
-        // Add click handler
-        this.setupDayClickHandler(dayElement, i);
-      }
-      
-      // Highlight today
-      if (this.jalaliYear === jalaliToday[0] && this.jalaliMonth === jalaliToday[1] && i === jalaliToday[2]) {
-        dayElement.classList.add("today");
-      }
-      
-      // Handle range selection highlighting
-      if (this.isRangeMode) {
-        const currentDate: DateTuple = [this.jalaliYear, this.jalaliMonth, i];
-        
-        // First remove any existing range classes
-        dayElement.classList.remove("in-range", "range-start", "range-end");
-        
-        if (this.rangeStart && this.rangeEnd) {
-          // Complete range - check if current date is between start and end
-          const isInRange = this.compareDates(currentDate, this.rangeStart) >= 0 && 
-                           this.compareDates(currentDate, this.rangeEnd) <= 0;
-          
-          // Handle start date
-          if (this.compareDates(currentDate, this.rangeStart) === 0) {
-            dayElement.classList.add("range-start");
-            // If start and end are the same date, add both classes
-            if (this.compareDates(currentDate, this.rangeEnd) === 0) {
-              dayElement.classList.add("range-end");
+        if (i === 0) {
+          // Empty cells
+          dayElement.classList.add("empty");
+        } else {
+          // Regular day cells
+          const day = i - adjustedFirstDay;
+          if (day > 0 && day <= daysInMonth) {
+            dayElement.textContent = this.toPersianNum(day);
+            dayElement.setAttribute('data-date', day.toString());
+            
+            // Check if date is in range and not disabled
+            const isInRange = this.isDateInRange(this.jalaliYear, this.jalaliMonth, day);
+            const isDisabled = this.isDateDisabled(this.jalaliYear, this.jalaliMonth, day);
+            
+            if (!isInRange || isDisabled) {
+              dayElement.classList.add("disabled");
+              dayElement.style.opacity = "0.4";
+              dayElement.style.cursor = "not-allowed";
+            } else {
+              // Add hover handler for tooltips
+              this.setupDayTooltips(dayElement);
+              
+              // Add click handler
+              this.setupDayClickHandler(dayElement, day);
+            }
+            
+            // Highlight today
+            if (this.jalaliYear === jalaliToday[0] && 
+                this.jalaliMonth === jalaliToday[1] && 
+                day === jalaliToday[2]) {
+              dayElement.classList.add("today");
+            }
+            
+            // Handle range selection highlighting
+            if (this.isRangeMode) {
+              this.handleRangeHighlighting(dayElement, day);
+            } else if (this.selectedDate && 
+                this.jalaliYear === this.selectedDate[0] && 
+                this.jalaliMonth === this.selectedDate[1] && 
+                day === this.selectedDate[2]) {
+              dayElement.classList.add("selected");
+            }
+            
+            // Add holiday information if enabled
+            if (this.showHolidays) {
+              this.addHolidayInfo(dayElement, day);
             }
           }
-          // Handle end date
-          else if (this.compareDates(currentDate, this.rangeEnd) === 0) {
-            dayElement.classList.add("range-end");
-          }
-          // Handle dates in between
-          else if (isInRange) {
-            dayElement.classList.add("in-range");
-          }
-        } else if (this.rangeStart && !this.rangeEnd) {
-          // Selecting range - only highlight start date
-          if (this.compareDates(currentDate, this.rangeStart) === 0) {
-            dayElement.classList.add("range-start");
-          }
         }
-      } else if (this.selectedDate && 
-          this.jalaliYear === this.selectedDate[0] && 
-          this.jalaliMonth === this.selectedDate[1] && 
-          i === this.selectedDate[2]) {
-        dayElement.classList.add("selected");
+        
+        this.fragment.appendChild(dayElement);
       }
-      
-      // Add holiday information if enabled
-      if (this.showHolidays) {
-        this.addHolidayInfo(dayElement, i);
-      }
-      
-      this.daysContainer.appendChild(dayElement);
+    };
+    
+    // Clear the container first
+    this.daysContainer.innerHTML = '';
+    
+    // Render in batches
+    const totalDays = 42; // 6 weeks * 7 days
+    for (let i = 0; i < totalDays; i += PERFORMANCE.BATCH_SIZE) {
+      createDayElements(i, Math.min(i + PERFORMANCE.BATCH_SIZE, totalDays));
     }
+    
+    // Append all elements at once
+    this.daysContainer.appendChild(this.fragment);
+  }
+
+  // Add memoization helper
+  private getMemoizedResult<T>(key: string | undefined, fn: () => T): T {
+    if (!key) return fn();
+    
+    if (this.memoizedResults.has(key)) {
+      const result = this.memoizedResults.get(key);
+      return result as T;
+    }
+
+    const result = fn();
+    if (this.memoizedResults.size >= PERFORMANCE.CACHE_SIZE) {
+      const firstKey = Array.from(this.memoizedResults.keys())[0];
+      if (firstKey) {
+        this.memoizedResults.delete(firstKey);
+      }
+    }
+    this.memoizedResults.set(key, result);
+    return result;
   }
 
   /**
@@ -1902,29 +1781,37 @@ export class PersianDatePickerElement extends HTMLElement {
       e.preventDefault();
       e.stopPropagation();
       
-      const currentTime = new Date().getTime();
-      const tapLength = currentTime - lastTapTime;
-      
-      // Handle touch events differently
-      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-        if (tapLength < 500 && tapLength > 0) {
-          // Double tap detected - show tooltip
-          const tooltip = dayElement.querySelector('.event-tooltip');
-          if (tooltip) {
-            const tooltips = this.shadowRoot?.querySelectorAll('.event-tooltip.tooltip-visible');
-            tooltips?.forEach(t => t.classList.remove("tooltip-visible"));
-            tooltip.classList.add("tooltip-visible");
-          }
-        } else {
-          // Single tap - handle range or single selection
-          this.handleRangeSelection(day);
-        }
-      } else {
-        // For non-mobile, handle range or single selection
-        this.handleRangeSelection(day);
+      // Throttle event handling
+      if (this.throttledEventHandler) {
+        return;
       }
       
-      lastTapTime = currentTime;
+      this.throttledEventHandler = window.setTimeout(() => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTapTime;
+        
+        // Handle touch events differently
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+          if (tapLength < 500 && tapLength > 0) {
+            // Double tap detected - show tooltip
+            const tooltip = dayElement.querySelector('.event-tooltip');
+            if (tooltip) {
+              const tooltips = this.shadowRoot?.querySelectorAll('.event-tooltip.tooltip-visible');
+              tooltips?.forEach(t => t.classList.remove("tooltip-visible"));
+              tooltip.classList.add("tooltip-visible");
+            }
+          } else {
+            // Single tap - handle range or single selection
+            this.handleRangeSelection(day);
+          }
+        } else {
+          // For non-mobile, handle range or single selection
+          this.handleRangeSelection(day);
+        }
+        
+        lastTapTime = currentTime;
+        this.throttledEventHandler = null;
+      }, PERFORMANCE.THROTTLE_DELAY);
     });
   }
 
@@ -1952,6 +1839,14 @@ export class PersianDatePickerElement extends HTMLElement {
       if (events.length > 0) {
         const tooltip = this.createEventTooltip(events);
         dayElement.appendChild(tooltip);
+        
+        // Add event titles to the day element
+        events.forEach(event => {
+          const eventText = document.createElement('span');
+          eventText.classList.add('event-text');
+          eventText.textContent = event.type + event.title;
+          dayElement.appendChild(eventText);
+        });
       }
     }
     
@@ -2120,11 +2015,14 @@ export class PersianDatePickerElement extends HTMLElement {
    * Handle special predefined formats
    */
   private handleSpecialFormat(format: string, year: number, month: number, day: number): string | null {
-    type SpecialFormat = 'YYYY/MM/DD' | 'YYYY-MM-DD' | 'YYYY/MM/DDth';
+    type SpecialFormat = 'YYYY/MM/DD' | 'YYYY-MM-DD' | 'YYYY/MM/DDth' | 'YYYY MMMM DD' | 'dddd YYYY/MM/DD' | 'dddd YYYY MMMM DDth';
     const specialFormats: Record<SpecialFormat, () => string> = {
       'YYYY/MM/DD': () => `${this.toPersianNum(year)}/${this.toPersianNum(month.toString().padStart(2, '0'))}/${this.toPersianNum(day.toString().padStart(2, '0'))}`,
       'YYYY-MM-DD': () => `${this.toPersianNum(year)}-${this.toPersianNum(month.toString().padStart(2, '0'))}-${this.toPersianNum(day.toString().padStart(2, '0'))}`,
-      'YYYY/MM/DDth': () => `${this.toPersianNum(year)}/${this.toPersianNum(month.toString().padStart(2, '0'))}/${this.toPersianNum(day)}ام`
+      'YYYY/MM/DDth': () => `${this.toPersianNum(year)}/${this.toPersianNum(month.toString().padStart(2, '0'))}/${this.toPersianNum(day)}ام`,
+      'YYYY MMMM DD': () => `${this.toPersianNum(year)} ${this.persianMonths[month - 1]} ${this.toPersianNum(day)}`,
+      'dddd YYYY/MM/DD': () => `${this.getWeekdayName(year, month, day)} ${this.toPersianNum(year)}/${this.toPersianNum(month.toString().padStart(2, '0'))}/${this.toPersianNum(day.toString().padStart(2, '0'))}`,
+      'dddd YYYY MMMM DDth': () => `${this.getWeekdayName(year, month, day)} ${this.toPersianNum(year)} ${this.persianMonths[month - 1]} ${this.toPersianNum(day)}ام`
     };
 
     return (specialFormats[format as SpecialFormat]?.() || null);
@@ -2194,7 +2092,19 @@ export class PersianDatePickerElement extends HTMLElement {
     const hasInvalidPatterns = invalidPatterns.test(format);
 
     // Allow special formats
-    if (format === 'YYYY/MM' || format === 'DD/MM' || format === 'DD.MM.YYYY' || format === 'YYYY/MM/DDth') {
+    const specialFormats = [
+      'YYYY/MM/DD',
+      'YYYY-MM-DD',
+      'YYYY/MM/DDth',
+      'YYYY MMMM DD',
+      'dddd YYYY/MM/DD',
+      'dddd YYYY MMMM DDth',
+      'YYYY/MM',
+      'DD/MM',
+      'DD.MM.YYYY'
+    ];
+
+    if (specialFormats.includes(format)) {
       return true;
     }
 
@@ -2309,18 +2219,6 @@ export class PersianDatePickerElement extends HTMLElement {
     let touchStartTime: number = 0;
     let isSwiping = false;
     
-    // Helper for touch event handler setup - fixed type issues
-    const setupTouchHandler = <K extends keyof HTMLElementEventMap>(
-      element: HTMLElement | null, 
-      eventType: K, 
-      handler: (e: HTMLElementEventMap[K]) => void, 
-      options?: AddEventListenerOptions
-    ): void => {
-      if (element) {
-        element.addEventListener(eventType, handler as EventListener, options);
-      }
-    };
-    
     // Handle touch start
     const handleTouchStart = (e: TouchEvent): void => {
       if (!this.calendar?.classList.contains("visible")) return;
@@ -2330,7 +2228,6 @@ export class PersianDatePickerElement extends HTMLElement {
       isDragging = false;
       isSwiping = false;
       touchStartTime = Date.now();
-      e.stopPropagation();
     };
     
     // Handle touch move
@@ -2342,17 +2239,14 @@ export class PersianDatePickerElement extends HTMLElement {
       const diffX = currentX - startX;
       const diffY = currentY - startY;
       
-      // If already swiping, prevent default
-      if (isSwiping) {
-        e.preventDefault();
-        return;
-      }
-      
-      // Detect horizontal swipe
+      // Only handle horizontal swipes
       if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
-        e.preventDefault();
-        isDragging = true;
-        isSwiping = true;
+        // Only prevent default if the event is cancelable
+        if (e.cancelable) {
+          e.preventDefault();
+          isDragging = true;
+          isSwiping = true;
+        }
       }
     };
     
@@ -2380,12 +2274,14 @@ export class PersianDatePickerElement extends HTMLElement {
           const isRTL = getComputedStyle(this).getPropertyValue('--jdp-direction').trim() === 'rtl';
           
           if ((isRTL && diffX < 0) || (!isRTL && diffX > 0)) {
-            e.preventDefault();
-            e.stopPropagation();
+            if (e.cancelable) {
+              e.preventDefault();
+            }
             this.changeMonth(1); // Next month
           } else if ((isRTL && diffX > 0) || (!isRTL && diffX < 0)) {
-            e.preventDefault();
-            e.stopPropagation();
+            if (e.cancelable) {
+              e.preventDefault();
+            }
             this.changeMonth(-1); // Previous month
           }
         }
@@ -2601,6 +2497,235 @@ export class PersianDatePickerElement extends HTMLElement {
       start: this.rangeStart ? [...this.rangeStart] : null,
       end: this.rangeEnd ? [...this.rangeEnd] : null
     };
+  }
+
+  // Optimize range highlighting
+  private handleRangeHighlighting(dayElement: HTMLElement, day: number): void {
+    const currentDate: DateTuple = [this.jalaliYear, this.jalaliMonth, day];
+    
+    // First remove any existing range classes
+    dayElement.classList.remove("in-range", "range-start", "range-end");
+    
+    if (this.rangeStart && this.rangeEnd) {
+      // Complete range - check if current date is between start and end
+      const isInRange = this.compareDates(currentDate, this.rangeStart) >= 0 && 
+                       this.compareDates(currentDate, this.rangeEnd) <= 0;
+      
+      // Handle start date
+      if (this.compareDates(currentDate, this.rangeStart) === 0) {
+        dayElement.classList.add("range-start");
+        // If start and end are the same date, add both classes
+        if (this.compareDates(currentDate, this.rangeEnd) === 0) {
+          dayElement.classList.add("range-end");
+        }
+      }
+      // Handle end date
+      else if (this.compareDates(currentDate, this.rangeEnd) === 0) {
+        dayElement.classList.add("range-end");
+      }
+      // Handle dates in between
+      else if (isInRange) {
+        dayElement.classList.add("in-range");
+      }
+    } else if (this.rangeStart && !this.rangeEnd) {
+      // Selecting range - only highlight start date
+      if (this.compareDates(currentDate, this.rangeStart) === 0) {
+        dayElement.classList.add("range-start");
+      }
+    }
+  }
+
+  /**
+   * Render the initial component HTML
+   */
+  private render(shadow: ShadowRoot) {
+    // Get button text from attributes or use defaults
+    const todayButtonText = this.getAttribute('today-button-text') || 'امروز';
+    const todayButtonClass = this.getAttribute('today-button-class') || '';
+    const tomorrowButtonText = this.getAttribute('tomorrow-button-text') || 'فردا';
+    const tomorrowButtonClass = this.getAttribute('tomorrow-button-class') || '';
+    
+    // Check visibility attributes (defaults to true if not specified)
+    const showMonthSelector = this.getAttribute('show-month-selector') !== 'false';
+    const showYearSelector = this.getAttribute('show-year-selector') !== 'false';
+    const showPrevButton = this.getAttribute('show-prev-button') !== 'false';
+    const showNextButton = this.getAttribute('show-next-button') !== 'false';
+    const showTodayButton = this.getAttribute('show-today-button') !== 'false';
+    const showTomorrowButton = this.getAttribute('show-tomorrow-button') !== 'false';
+    
+    // SVG for dropdown icon
+    const chevronSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
+    
+    shadow.innerHTML = `
+      <style>${styles}</style>
+      <div class="picker-container">
+        <input type="text" id="date-input" readonly placeholder="انتخاب تاریخ">
+        <div class="calendar" id="calendar">
+          <div class="header">
+            ${showPrevButton ? `<button id="prev-month" type="button" class="nav-button prev"></button>` : ''}
+            <div class="selectors-container">
+              ${showMonthSelector ? `
+              <div class="custom-select month-select" id="month-select-container">
+                <button type="button" class="select-trigger" id="month-select-trigger">
+                  <span id="month-select-value"></span>
+                  <span class="select-icon">${chevronSVG}</span>
+                </button>
+                <div class="select-content month-select-content" id="month-select-content"></div>
+              </div>
+              ` : ''}
+              ${showYearSelector ? `
+              <div class="custom-select year-select" id="year-select-container">
+                <button type="button" class="select-trigger" id="year-select-trigger">
+                  <span id="year-select-value"></span>
+                  <span class="select-icon">${chevronSVG}</span>
+                </button>
+                <div class="select-content year-select-content" id="year-select-content"></div>
+              </div>
+              ` : ''}
+            </div>
+            ${showNextButton ? `<button id="next-month" type="button" class="nav-button next"></button>` : ''}
+          </div>
+          <div class="day-names" id="day-names"></div>
+          <div class="days-wrapper">
+            <div class="days" id="days-container"></div>
+          </div>
+          <div class="footer">
+            ${showTodayButton ? `<button id="today-button" type="button" class="date-nav-button today-button ${todayButtonClass}">${todayButtonText}</button>` : ''}
+            ${showTomorrowButton ? `<button id="tomorrow-button" type="button" class="date-nav-button tomorrow-button ${tomorrowButtonClass}">${tomorrowButtonText}</button>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Toggle calendar visibility
+   */
+  private toggleCalendar() {
+    // First close any open dropdowns
+    this.closeAllDropdowns();
+    
+    // Check if this calendar is already open
+    if (this.calendar.classList.contains("visible")) {
+      // Hide calendar
+      this.calendar.classList.remove("visible", "position-bottom", "position-top");
+      
+      // Clear the static reference if this instance is being closed
+      if (PersianDatePickerElement.openCalendarInstance === this) {
+        PersianDatePickerElement.openCalendarInstance = null;
+      }
+    } else {
+      // Close any already open calendar instance
+      if (PersianDatePickerElement.openCalendarInstance && 
+          PersianDatePickerElement.openCalendarInstance !== this) {
+        PersianDatePickerElement.openCalendarInstance.toggleCalendar();
+      }
+      
+      // Show calendar with position calculation
+      this.positionCalendar();
+      this.calendar.classList.add("visible");
+      
+      // Set this as the currently open instance
+      PersianDatePickerElement.openCalendarInstance = this;
+    }
+  }
+
+  /**
+   * Calculate and set the optimal position for the calendar
+   */
+  private positionCalendar(): void {
+    if (!this.input || !this.calendar) return;
+    
+    // Reset position classes
+    this.calendar.classList.remove("position-bottom", "position-top");
+    
+    // Get measurements without causing reflow
+    const inputRect = this.input.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    
+    // Default to position-bottom (most common)
+    this.calendar.classList.add("position-bottom");
+    
+    // Set display block but with visibility hidden to measure without showing
+    const originalVisibility = this.calendar.style.visibility;
+    const originalDisplay = this.calendar.style.display;
+    this.calendar.style.visibility = 'hidden';
+    this.calendar.style.display = 'block';
+    
+    // Now we can measure once display is set
+    const calendarHeight = this.calendar.offsetHeight;
+    
+    // Check if there's enough space below
+    const spaceBelow = windowHeight - inputRect.bottom;
+    if (spaceBelow < calendarHeight) {
+      // Not enough space below, check if there's more space above
+      const spaceAbove = inputRect.top;
+      if (spaceAbove > spaceBelow || spaceAbove >= calendarHeight) {
+        // Switch to position-top
+        this.calendar.classList.remove("position-bottom");
+        this.calendar.classList.add("position-top");
+      }
+    }
+    
+    // Restore original styles
+    this.calendar.style.visibility = originalVisibility;
+    this.calendar.style.display = originalDisplay;
+  }
+
+  /**
+   * Change to previous or next month
+   */
+  private changeMonth(direction: number) {
+    // Prevent multiple transitions at once
+    if (this.isTransitioning) return;
+    this.isTransitioning = true;
+    
+    // Cache reference to calendar elements
+    const daysContainer = this.daysContainer;
+    
+    // Add transition class based on direction
+    const slideClass = direction > 0 ? 'slide-left' : 'slide-right';
+    daysContainer.classList.add(slideClass);
+    
+    // Update month and year values
+    this.jalaliMonth = Number(this.jalaliMonth) + direction;
+    if (this.jalaliMonth < 1) {
+      this.jalaliMonth = 12;
+      this.jalaliYear--;
+    } else if (this.jalaliMonth > 12) {
+      this.jalaliMonth = 1;
+      this.jalaliYear++;
+    }
+    
+    // Use requestAnimationFrame for better timing and smoother animation
+    requestAnimationFrame(() => {
+      // Set a timeout to actually update the calendar
+      setTimeout(() => {
+        // Update month/year selectors
+        this.setupMonthYearSelectors();
+
+        // Clear days container and render new content
+        daysContainer.innerHTML = "";
+        this.renderCalendarContent();
+        
+        // Remove slide class after the animation duration
+        requestAnimationFrame(() => {
+          daysContainer.classList.remove(slideClass);
+          
+          // Set a brief timeout to ensure animation is truly done
+          setTimeout(() => {
+            this.isTransitioning = false;
+          }, 50);
+        });
+      }, 200); // Shorter than the CSS animation duration for better feel
+    });
+  }
+
+  /**
+   * Checks if all types are being shown
+   */
+  isShowingAllTypes(): boolean {
+    return this.includeAllTypes;
   }
 }
 

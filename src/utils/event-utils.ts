@@ -169,8 +169,11 @@ class EventUtils {
     if (includeAllTypes) {
       return [...mappedEvents];
     }
+    if (!eventTypes || eventTypes.length === 0) {
+      return [];
+    }
     return mappedEvents.filter(event => 
-      eventTypes?.includes(event.type) ?? true
+      eventTypes.includes(event.type)
     );
   }
 

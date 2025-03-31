@@ -283,31 +283,69 @@
 
     <div class="example">
       <h2>نمونه‌های فرمت تاریخ</h2>
+      
       <div class="example-label">فرمت: YYYY/MM/DD</div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format1" 
+  format="YYYY/MM/DD"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// خروجی: ۱۴۰۴/۰۱/۱۸</code></pre>
       <persian-datepicker-element id="format1" format="YYYY/MM/DD"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result1">۱۴۰۴/۰۱/۱۸</span></div>
       
       <div class="example-label">فرمت: YYYY MMMM DD</div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format2" 
+  format="YYYY MMMM DD"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// خروجی: ۱۴۰۴ فروردین ۲۷</code></pre>
       <persian-datepicker-element id="format2" format="YYYY MMMM DD"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result2">۱۴۰۴ فروردین ۲۷</span></div>
       
       <div class="example-label">فرمت: dddd YYYY/MM/DD</div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format3" 
+  format="dddd YYYY/MM/DD"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// خروجی: چهارشنبه ۱۴۰۴/۰۱/۰۵</code></pre>
       <persian-datepicker-element id="format3" format="dddd YYYY/MM/DD"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result3">چهارشنبه ۱۴۰۴/۰۱/۰۵</span></div>
       
       <div class="example-label">فرمت: YYYY/MM/DDth</div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format4" 
+  format="YYYY/MM/DDth"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// خروجی: ۱۴۰۴/۰۱/۱۷ام</code></pre>
       <persian-datepicker-element id="format4" format="YYYY/MM/DDth"></persian-datepicker-element>
-      <div class="result">تاریخ انتخاب شده: <span id="result4">۱۷ام</span></div>
+      <div class="result">تاریخ انتخاب شده: <span id="result4">۱۴۰۴/۰۱/۱۷ام</span></div>
       
       <div class="example-label">فرمت: YYYY-MM-DD</div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format5" 
+  format="YYYY-MM-DD"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// خروجی: ۱۴۰۴-۰۱-۱۱</code></pre>
       <persian-datepicker-element id="format5" format="YYYY-MM-DD"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result5">۱۴۰۴-۰۱-۱۱</span></div>
       
       <div class="example-label">فرمت: dddd YYYY MMMM DDth</div>
+      <pre><code>&lt;persian-datepicker-element 
+  id="format6" 
+  format="dddd YYYY MMMM DDth"
+&gt;&lt;/persian-datepicker-element&gt;
+
+// خروجی: دوشنبه ۱۴۰۴ فروردین ۱۷ام</code></pre>
       <persian-datepicker-element id="format6" format="dddd YYYY MMMM DDth"></persian-datepicker-element>
       <div class="result">تاریخ انتخاب شده: <span id="result6">دوشنبه ۱۴۰۴ فروردین ۱۷ام</span></div>
       
-      <pre><code>الگوهای فرمت موجود:
+      <div class="example-label">الگوهای فرمت موجود</div>
+      <pre><code>// الگوهای اصلی
 YYYY - سال (مثال: ۱۴۰۴)
 MM - شماره ماه (مثال: ۰۱)
 DD - شماره روز (مثال: ۱۸)
@@ -316,13 +354,20 @@ MMM - نام کوتاه ماه (مثال: فرورد)
 dddd - نام کامل روز هفته (مثال: چهارشنبه)
 th - پسوند ترتیبی (مثال: ۱۷ام)
 
-نمونه فرمت‌ها:
+// نمونه‌های کامل فرمت
 YYYY/MM/DD → ۱۴۰۴/۰۱/۱۸
 YYYY MMMM DD → ۱۴۰۴ فروردین ۲۷
 dddd YYYY/MM/DD → چهارشنبه ۱۴۰۴/۰۱/۰۵
-YYYY/MM/DDth → ۱۷ام
+YYYY/MM/DDth → ۱۴۰۴/۰۱/۱۷ام
 YYYY-MM-DD → ۱۴۰۴-۰۱-۱۱
-dddd YYYY MMMM DDth → دوشنبه ۱۴۰۴ فروردین ۱۷ام</code></pre>
+dddd YYYY MMMM DDth → دوشنبه ۱۴۰۴ فروردین ۱۷ام
+
+// نحوه استفاده در کد
+const picker = document.querySelector('persian-datepicker-element');
+picker.setValue(1404, 1, 18); // تنظیم تاریخ
+picker.addEventListener('change', (event) => {
+  console.log(event.detail.formattedDate); // دریافت تاریخ فرمت شده
+});</code></pre>
     </div>
     
     <div class="link-container">

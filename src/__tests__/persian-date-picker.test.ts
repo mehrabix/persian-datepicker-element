@@ -1,6 +1,7 @@
 import { PersianDate } from '../persian-date';
 import { PersianDatePickerElement } from '../persian-datepicker-element';
 import { dispatchEvent, wait } from './test-utils';
+import { waitForElement, waitFor } from './setup';
 
 // Define the custom element before running tests
 if (!customElements.get('persian-datepicker-element')) {
@@ -10,15 +11,18 @@ if (!customElements.get('persian-datepicker-element')) {
 describe('PersianDatePickerElement', () => {
   let picker: PersianDatePickerElement;
   
-  beforeEach(() => {
-    // Create a new instance for each test
-    document.body.innerHTML = '';
+  beforeEach(async () => {
+    // Create element using document.createElement
     picker = document.createElement('persian-datepicker-element') as PersianDatePickerElement;
     document.body.appendChild(picker);
+    // Wait for element to be ready
+    await waitForElement(picker);
   });
   
   afterEach(() => {
-    document.body.removeChild(picker);
+    if (picker && picker.parentNode) {
+      picker.parentNode.removeChild(picker);
+    }
   });
 
   test('component should be defined', () => {
@@ -66,80 +70,112 @@ describe('PersianDatePickerElement', () => {
   });
   
   test('should render correct number of days for current month', async () => {
-    const input = picker.shadowRoot?.querySelector('input') as HTMLInputElement;
-    
-    // Show the calendar
-    await dispatchEvent(input, 'click');
+    // Set to Farvardin 1404 which has 31 days
+    picker.setValue(1404, 1, 1);
     
     // Wait for calendar to render
-    await wait(50);
+    await waitFor(() => {
+      const days = picker.shadowRoot?.querySelectorAll('.day');
+      return days ? days.length > 0 : false;
+    });
+
+    // Get all day elements
+    const allDays = Array.from(picker.shadowRoot?.querySelectorAll('.day') || []);
     
-    // Get the current month view
-    const today = new Date();
-    const jalaliToday = PersianDate.gregorianToJalali(
-      today.getFullYear(),
-      today.getMonth() + 1,
-      today.getDate()
-    );
-    
-    const daysInMonth = PersianDate.getDaysInMonth(jalaliToday[0], jalaliToday[1]);
-    const daysElements = picker.shadowRoot?.querySelectorAll('.day:not(.empty)');
-    
-    expect(daysElements?.length).toBe(daysInMonth);
+    // Log day elements for debugging
+    console.log('All day elements:', allDays.map(day => ({
+      text: day.textContent,
+      empty: day.classList.contains('empty'),
+      date: day.getAttribute('data-date')
+    })));
+
+    // Get the actual day elements (excluding empty days)
+    const daysElements = allDays.filter(day => {
+      const date = day.getAttribute('data-date');
+      return date && !day.classList.contains('empty');
+    });
+    const daysInMonth = 31; // Farvardin always has 31 days
+
+    // The number of actual day elements should match the days in the month
+    expect(daysElements.length).toBe(daysInMonth);
   });
   
   test('should update input value when a date is selected', async () => {
-    const input = picker.shadowRoot?.querySelector('input') as HTMLInputElement;
-    
-    // Show the calendar
-    await dispatchEvent(input, 'click');
+    // Set initial date
+    picker.setValue(1404, 1, 15);
     
     // Wait for calendar to render
-    await wait(50);
+    await waitFor(() => {
+      const days = picker.shadowRoot?.querySelectorAll('.day');
+      return days ? days.length > 0 : false;
+    });
+
+    // Get all day elements
+    const allDays = Array.from(picker.shadowRoot?.querySelectorAll('.day') || []);
     
-    // Select the 15th day
-    const dayElements = picker.shadowRoot?.querySelectorAll('.day:not(.empty)') as NodeListOf<HTMLElement>;
-    if (dayElements.length >= 15) {
-      const day15 = Array.from(dayElements).find(el => el.textContent?.trim() === '15');
-      if (day15) {
-        await dispatchEvent(day15, 'click');
-        
-        // Wait for selection to be processed
-        await wait(50);
-        
-        // Check if the input has a value
-        expect(input.value).not.toBe('');
-        
-        // The expected format is YYYY/MM/DD
-        expect(input.value).toMatch(/\d{4}\/\d{1,2}\/\d{1,2}/);
-      }
+    // Log day elements for debugging
+    console.log('All day elements:', allDays.map(day => ({
+      text: day.textContent,
+      empty: day.classList.contains('empty'),
+      date: day.getAttribute('data-date')
+    })));
+
+    // Find the day element for the 20th
+    const dayElement = allDays.find(day => {
+      const date = day.getAttribute('data-date');
+      return date === '20' && !day.classList.contains('empty');
+    });
+    
+    if (!dayElement) {
+      throw new Error('Day element not found');
     }
+    
+    // Click the day element
+    dayElement.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    // Wait for the input value to update
+    await waitFor(() => {
+      const input = picker.shadowRoot?.querySelector('input');
+      return input?.value === '1404/01/20' || false;
+    }, 2000); // Increase timeout to 2 seconds
+
+    // Verify the input value
+    const input = picker.shadowRoot?.querySelector('input');
+    expect(input?.value).toBe('1404/01/20');
   });
   
-  test.skip('should emit change event when date is selected', async () => {
+  test('should emit change event when date is selected', async () => {
     let eventTriggered = false;
     let eventDetail: any = null;
     
-    picker.addEventListener('datechange', (e: Event) => {
+    picker.addEventListener('change', (e: Event) => {
       eventTriggered = true;
       eventDetail = (e as CustomEvent).detail;
     });
     
-    const input = picker.shadowRoot?.querySelector('input') as HTMLInputElement;
-    await dispatchEvent(input, 'click');
+    // Set initial date
+    picker.setValue(1404, 1, 15);
+    
+    // Force calendar render
+    picker.renderCalendar();
     
     // Wait for calendar to render
-    await wait(50);
+    await waitFor(() => {
+      const days = picker.shadowRoot?.querySelectorAll('.day');
+      return days ? days.length > 0 : false;
+    });
     
     // Select the 10th day
     const dayElements = picker.shadowRoot?.querySelectorAll('.day:not(.empty)') as NodeListOf<HTMLElement>;
     if (dayElements.length >= 10) {
-      const day10 = Array.from(dayElements).find(el => el.textContent?.trim() === '10');
+      const day10 = Array.from(dayElements).find(el => el.getAttribute('data-date') === '10');
       if (day10) {
-        await dispatchEvent(day10, 'click');
+        day10.dispatchEvent(new MouseEvent('click', { bubbles: true }));
         
         // Wait for event to be processed
-        await wait(50);
+        await waitFor(() => {
+          return eventTriggered;
+        }, 2000); // Increase timeout to 2 seconds
         
         expect(eventTriggered).toBe(true);
         
@@ -150,6 +186,7 @@ describe('PersianDatePickerElement', () => {
           expect(eventDetail.jalali.length).toBe(3);
           expect(eventDetail.gregorian).toBeDefined();
           expect(eventDetail.gregorian.length).toBe(3);
+          expect(eventDetail.formattedDate).toBe('1404/01/10');
         }
       }
     }
