@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.41",
+  "version": "1.0.42",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.js",
   "module": "dist/persian-datepicker-element.esm.js",
@@ -89,9 +89,9 @@
     ]
   },
   "scripts": {
-    "build": "pnpm run build:clean && pnpm run build:prod && pnpm run build:dev && pnpm run build:esm && pnpm run minify && pnpm run cleanup",
+    "build": "pnpm run build:prod && pnpm run build:compress && node scripts/optimize/brotli-compress.js",
     "build:clean": "set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && npx rspack --config scripts/build/rspack.config.js",
-    "build:prod": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.min.js && set MINIFY=true && npx rspack --config scripts/build/rspack.config.js",
+    "build:prod": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.min.js && set MODULE_TYPE=commonjs && set MINIFY=true && npx rspack --config scripts/build/rspack.config.js",
     "build:dev": "set NODE_ENV=development && set OUTPUT_FILE=persian-datepicker-element.js && set MINIFY=false && npx rspack --config scripts/build/rspack.config.js",
     "build:esm": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.esm.js && set MODULE_TYPE=module && set MINIFY=true && npx rspack --config scripts/build/rspack.config.js",
     "build:max-compress": "node scripts/optimize/max-compress.js",
@@ -110,7 +110,10 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "serve": "pnpm exec serve",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "build:compress": "pnpm run build:prod && node scripts/optimize/compress.js",
+    "build:compress:extreme": "pnpm run build:prod && node scripts/optimize/compress-extreme.js",
+    "build:compress:safe": "pnpm run build:prod && node scripts/optimize/compress-safe.js"
   },
   "keywords": [
     "jalali",
