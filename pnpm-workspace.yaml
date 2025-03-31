@@ -1,0 +1,3 @@
+packages:
+  - 'packages/*'
+  - 'packages/angular/ngx-persian-datepicker-element/projects/ngx-persian-datepicker-element' 
