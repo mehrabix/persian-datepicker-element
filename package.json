@@ -2,7 +2,7 @@
   "name": "persian-datepicker-element",
   "version": "1.0.44",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
-  "main": "dist/persian-datepicker-element.js",
+  "main": "dist/persian-datepicker-element.min.js",
   "module": "dist/persian-datepicker-element.esm.js",
   "unpkg": "dist/persian-datepicker-element.min.js",
   "types": "dist/types/index.d.ts",
