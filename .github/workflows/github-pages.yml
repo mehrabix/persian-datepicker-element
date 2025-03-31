@@ -45,7 +45,7 @@ jobs:
           echo "Copied JSON data files to dist directory"
         
       - name: Build component
-        run: pnpm build
+        run: pnpm build:core
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
       
