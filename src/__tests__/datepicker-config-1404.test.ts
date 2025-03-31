@@ -7,13 +7,14 @@ import { EventUtils } from '../utils/event-utils';
 // Mock the EventUtils functions
 jest.mock('../utils/event-utils', () => ({
   EventUtils: {
+    initialize: jest.fn().mockResolvedValue(undefined),
     refreshEvents: jest.fn().mockImplementation(() => []),
-    isHoliday: jest.fn().mockImplementation((month, day, types = ['Iran', 'Religious'], includeAll = true) => {
+    isHoliday: jest.fn().mockImplementation((month, day, types = ['Iran', 'AncientIran'], includeAll = true) => {
       if (types.includes('Iran') || includeAll) {
         if (month === 1 && day === 1) return true; // Nowruz
       }
-      if (types.includes('Religious') || includeAll) {
-        if (month === 4 && day === 19) return true; // Ashura
+      if (types.includes('AncientIran') || includeAll) {
+        if (month === 4 && day === 19) return true; // Tirgan
       }
       return false;
     }),
@@ -22,15 +23,15 @@ jest.mock('../utils/event-utils', () => ({
       if ((types?.includes('Iran') || includeAll) && month === 1 && day === 1) {
         events.push({ title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true });
       }
-      if ((types?.includes('Religious') || includeAll) && month === 4 && day === 19) {
-        events.push({ title: 'عاشورا', month: 4, day: 19, type: 'Religious', holiday: true });
+      if ((types?.includes('AncientIran') || includeAll) && month === 4 && day === 19) {
+        events.push({ title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true });
       }
       return events;
     }),
-    getEventTypes: jest.fn().mockReturnValue(['Iran', 'Religious', 'International', 'Afghanistan']),
+    getEventTypes: jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International']),
     getAllEvents: jest.fn().mockReturnValue([
       { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
-      { title: 'عاشورا', month: 4, day: 19, type: 'Religious', holiday: true }
+      { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
     ])
   }
 }));
@@ -85,40 +86,40 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       // Instead of checking the property directly, we can check what EventUtils receives
       // When show-holidays is false, isHoliday will be modified to return false
       const iranHoliday = EventUtils.isHoliday(1, 1, ['Iran'], false);
-      const religiousHoliday = EventUtils.isHoliday(4, 19, ['Religious'], false);
+      const ancientIranHoliday = EventUtils.isHoliday(4, 19, ['AncientIran'], false);
       
       // We're testing the attribute behavior, not the implementation details
       expect(element.getAttribute('show-holidays')).toBe('false');
     });
 
     test('should filter holidays by type when holiday-types is set', () => {
-      // Set to only show Religious holidays
-      element.setAttribute('holiday-types', 'Religious');
+      // Set to only show AncientIran holidays
+      element.setAttribute('holiday-types', 'AncientIran');
       
       // Check if the updated attribute is reflected in the property
-      expect(element.getAttribute('holiday-types')).toBe('Religious');
+      expect(element.getAttribute('holiday-types')).toBe('AncientIran');
       
-      // Religious holidays should be visible
-      const religiousResult = EventUtils.isHoliday(4, 19, ['Religious'], false);
-      expect(religiousResult).toBe(true);
+      // AncientIran holidays should be visible
+      const ancientIranResult = EventUtils.isHoliday(4, 19, ['AncientIran'], false);
+      expect(ancientIranResult).toBe(true);
       
       // Iran holidays should not be visible
-      const iranResult = EventUtils.isHoliday(1, 1, ['Religious'], false);
+      const iranResult = EventUtils.isHoliday(1, 1, ['AncientIran'], false);
       expect(iranResult).toBe(false);
     });
 
     test('should handle multiple holiday types', () => {
-      // Set to show both Iran and Religious holidays
-      element.setAttribute('holiday-types', 'Iran,Religious');
+      // Set to show both Iran and AncientIran holidays
+      element.setAttribute('holiday-types', 'Iran,AncientIran');
       
       // Check if the updated attribute is reflected
-      expect(element.getAttribute('holiday-types')).toBe('Iran,Religious');
+      expect(element.getAttribute('holiday-types')).toBe('Iran,AncientIran');
       
-      // Both Iran and Religious holidays should be visible
-      const religiousResult = EventUtils.isHoliday(4, 19, ['Iran', 'Religious'], false);
-      expect(religiousResult).toBe(true);
+      // Both Iran and AncientIran holidays should be visible
+      const ancientIranResult = EventUtils.isHoliday(4, 19, ['Iran', 'AncientIran'], false);
+      expect(ancientIranResult).toBe(true);
       
-      const iranResult = EventUtils.isHoliday(1, 1, ['Iran', 'Religious'], false);
+      const iranResult = EventUtils.isHoliday(1, 1, ['Iran', 'AncientIran'], false);
       expect(iranResult).toBe(true);
     });
   });

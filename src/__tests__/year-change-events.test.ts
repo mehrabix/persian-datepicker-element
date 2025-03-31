@@ -2,15 +2,18 @@
  * @jest-environment jsdom
  */
 import { PersianDatePickerElement } from '../persian-datepicker-element';
-import EventUtils from '../utils/event-utils';
+import { EventUtils } from '../utils/event-utils';
 import { waitFor } from '@testing-library/dom';
 import HijriUtils from '../utils/hijri-utils';
 
 // Mock EventUtils module
 jest.mock('../utils/event-utils', () => ({
-  refreshEvents: jest.fn(() => []),
-  isHoliday: jest.fn(() => false),
-  getEvents: jest.fn(() => [])
+  EventUtils: {
+    initialize: jest.fn(() => Promise.resolve()),
+    refreshEvents: jest.fn(() => Promise.resolve([])),
+    isHoliday: jest.fn(() => false),
+    getEvents: jest.fn(() => [])
+  }
 }));
 
 // Define the custom element
@@ -21,20 +24,12 @@ try {
 }
 
 describe('Year Change Event Refresh Tests', () => {
-  // Original refresh function
-  const originalRefreshEvents = EventUtils.refreshEvents;
-  
   beforeEach(() => {
     // Reset the document body before each test
     document.body.innerHTML = '';
     
     // Reset all mock implementations
     jest.clearAllMocks();
-  });
-  
-  afterAll(() => {
-    // Restore original functions after all tests
-    (EventUtils.refreshEvents as jest.Mock).mockImplementation(originalRefreshEvents);
   });
   
   // Skip all tests temporarily until we can fix the custom element registration issues

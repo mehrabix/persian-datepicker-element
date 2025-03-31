@@ -6,11 +6,12 @@ import { EventUtils } from '../utils/event-utils';
 // Mock the EventUtils to avoid real API calls
 jest.mock('../utils/event-utils', () => ({
   EventUtils: {
+    initialize: jest.fn().mockResolvedValue(undefined),
     refreshEvents: jest.fn().mockImplementation(() => []),
     isHoliday: jest.fn().mockReturnValue(false),
     getEvents: jest.fn().mockReturnValue([]),
     getAllEvents: jest.fn().mockReturnValue([]),
-    getEventTypes: jest.fn().mockReturnValue(['Iran', 'Religious', 'International'])
+    getEventTypes: jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International'])
   }
 }));
 

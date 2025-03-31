@@ -8,6 +8,7 @@ import { PersianEvent } from '../types';
 // Mock the EventUtils functions
 jest.mock('../utils/event-utils', () => ({
   EventUtils: {
+    initialize: jest.fn().mockResolvedValue(undefined),
     refreshEvents: jest.fn().mockImplementation(() => []),
     isHoliday: jest.fn().mockImplementation((month, day) => {
       // Mock some holidays for testing
@@ -67,20 +68,20 @@ jest.mock('../utils/event-utils', () => ({
         events.push({ title: 'ملی شدن صنعت نفت', month: 12, day: 29, type: 'Iran', holiday: true });
       }
       
-      // Add a mock Ashura event in Tir (month 4)
+      // Add a mock AncientIran event
       if (month === 4 && day === 19) {
-        events.push({ title: 'عاشورا', month: 4, day: 19, type: 'Religious', holiday: true });
+        events.push({ title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true });
       }
       
       return events;
     }),
-    getEventTypes: jest.fn().mockReturnValue(['Iran', 'Religious', 'International', 'Afghanistan']),
+    getEventTypes: jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International']),
     getAllEvents: jest.fn().mockReturnValue([
       { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
       { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true },
       { title: 'روز جهانی کارگر', month: 2, day: 11, type: 'International', holiday: false },
       { title: 'روز معلم', month: 2, day: 12, type: 'Iran', holiday: false },
-      { title: 'عاشورا', month: 4, day: 19, type: 'Religious', holiday: true }
+      { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
     ])
   }
 }));
@@ -207,8 +208,8 @@ describe('Persian Datepicker 1404 Events Tests', () => {
     test('Ashura should be marked as a religious holiday', () => {
       const events = EventUtils.getEvents(4, 19, undefined, false);
       expect(events.length).toBeGreaterThan(0);
-      expect(events[0].title).toContain('عاشورا');
-      expect(events[0].type).toBe('Religious');
+      expect(events[0].title).toContain('جشن تیرگان');
+      expect(events[0].type).toBe('AncientIran');
       expect(events[0].holiday).toBe(true);
     });
   });
@@ -337,8 +338,8 @@ describe('Persian Datepicker 1404 Events Tests', () => {
       
       expect(EventUtils.getEvents).toHaveBeenCalled();
       
-      // Set to show only Religious holidays
-      element.setAttribute('holiday-types', 'Religious');
+      // Set to show only AncientIran holidays
+      element.setAttribute('holiday-types', 'AncientIran');
       element.setValue(persianYear, 1, 15);
       
       expect(EventUtils.getEvents).toHaveBeenCalled();
