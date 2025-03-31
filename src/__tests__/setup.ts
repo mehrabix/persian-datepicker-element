@@ -1,24 +1,4 @@
-// Import jest-dom for extended DOM matchers
-require('@testing-library/jest-dom');
-
-// Mock for custom elements to work in the test environment
-if (!window.customElements) {
-  window.customElements = {
-    define: jest.fn(),
-    get: jest.fn(),
-    upgrade: jest.fn(),
-    whenDefined: jest.fn(() => Promise.resolve()),
-  };
-}
-
-// Mock for Shadow DOM
-Element.prototype.attachShadow = Element.prototype.attachShadow || 
-  function() { 
-    const shadow = document.createElement('div');
-    shadow.innerHTML = '';
-    this.shadowRoot = shadow;
-    return shadow;
-  }; 
+import { PersianEvent } from '../types';
 
 // Mock fetch function
 window.fetch = jest.fn(() =>
@@ -30,7 +10,7 @@ window.fetch = jest.fn(() =>
       "Source": { "name": "Test Data", "url": "" }
     })
   })
-);
+) as jest.Mock;
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -48,7 +28,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock ResizeObserver
-class MockResizeObserver {
+class MockResizeObserver implements ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
@@ -56,21 +36,31 @@ class MockResizeObserver {
 window.ResizeObserver = MockResizeObserver;
 
 // Mock IntersectionObserver
-class MockIntersectionObserver {
-  constructor() {
-    this.root = null;
-    this.rootMargin = '';
-    this.thresholds = [];
-  }
+class MockIntersectionObserver implements IntersectionObserver {
+  readonly root: Element | null = null;
+  readonly rootMargin: string = '';
+  readonly thresholds: ReadonlyArray<number> = [];
   
+  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
-  takeRecords() { return []; }
+  takeRecords(): IntersectionObserverEntry[] { return []; }
 }
 window.IntersectionObserver = MockIntersectionObserver;
 
 // Mock getComputedStyle
 window.getComputedStyle = jest.fn().mockImplementation(() => ({
   getPropertyValue: jest.fn(),
-})); 
+}));
+
+/**
+ * @jest-environment jsdom
+ */
+
+describe('Test Setup', () => {
+  test('should have a valid test environment', () => {
+    expect(document).toBeDefined();
+    expect(window).toBeDefined();
+  });
+}); 

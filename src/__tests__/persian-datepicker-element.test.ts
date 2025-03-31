@@ -8,35 +8,41 @@ import { PersianEvent } from '../types';
 // Mock EventUtils
 jest.mock('../utils/event-utils', () => ({
   EventUtils: {
+    initialize: jest.fn().mockResolvedValue(undefined),
     refreshEvents: jest.fn().mockImplementation(() => []),
     isHoliday: jest.fn().mockImplementation((month, day, holidayTypes) => {
       // Mock some holidays for testing
       if (month === 1 && day === 1) return true; // Nowruz
       if (month === 1 && day === 13) return true; // Nature Day
+      if (month === 4 && day === 19) return true; // Tirgan
       return false;
     }),
     getHolidayTitles: jest.fn().mockImplementation((month, day, holidayTypes) => {
       if (month === 1 && day === 1) return ['عید نوروز'];
       if (month === 1 && day === 13) return ['روز طبیعت'];
+      if (month === 4 && day === 19) return ['جشن تیرگان'];
       return [];
     }),
     getAllEventTitles: jest.fn().mockImplementation((month, day, holidayTypes) => {
       if (month === 1 && day === 1) return ['عید نوروز'];
       if (month === 1 && day === 13) return ['روز طبیعت'];
       if (month === 2 && day === 10) return ['روز کار'];
+      if (month === 4 && day === 19) return ['جشن تیرگان'];
       return [];
     }),
     getEvents: jest.fn().mockImplementation((month, day, holidayTypes) => {
       if (month === 1 && day === 1) return [{ title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true }];
       if (month === 1 && day === 13) return [{ title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true }];
       if (month === 2 && day === 10) return [{ title: 'روز کار', month: 2, day: 10, type: 'International', holiday: false }];
+      if (month === 4 && day === 19) return [{ title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }];
       return [];
     }),
     getAllHolidays: jest.fn().mockImplementation((holidayTypes) => [
       { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
-      { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true }
+      { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true },
+      { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
     ]),
-    getEventTypes: jest.fn().mockReturnValue(['Iran', 'Religious', 'International'])
+    getEventTypes: jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International'])
   }
 }));
 
@@ -174,23 +180,23 @@ describe('PersianDatePickerElement', () => {
   
   it('should allow setting holiday types', () => {
     // Test setting holiday types via attribute
-    element.setAttribute('holiday-types', 'Iran,Religious');
+    element.setAttribute('holiday-types', 'Iran,AncientIran');
     
     // Should have two holiday types
     expect(element.getHolidayTypes().length).toBe(2);
     expect(element.getHolidayTypes()).toContain('Iran');
-    expect(element.getHolidayTypes()).toContain('Religious');
+    expect(element.getHolidayTypes()).toContain('AncientIran');
     
     // Test setting via method
-    element.setHolidayTypes(['Religious']);
+    element.setHolidayTypes(['AncientIran']);
     expect(element.getHolidayTypes().length).toBe(1);
-    expect(element.getHolidayTypes()[0]).toBe('Religious');
+    expect(element.getHolidayTypes()[0]).toBe('AncientIran');
     
     // Test setting via string
-    element.setHolidayTypes('Iran,Afghanistan');
+    element.setHolidayTypes('Iran,International');
     expect(element.getHolidayTypes().length).toBe(2);
     expect(element.getHolidayTypes()).toContain('Iran');
-    expect(element.getHolidayTypes()).toContain('Afghanistan');
+    expect(element.getHolidayTypes()).toContain('International');
   });
   
   it('should support scrolling to selected items in dropdowns', () => {

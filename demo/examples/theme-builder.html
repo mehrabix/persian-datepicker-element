@@ -756,7 +756,7 @@
           <div class="color-input">
             <label for="primary-color">رنگ اصلی:</label>
             <input type="color" id="primary-color" value="#0891b2">
-            </div>
+          </div>
           <div class="color-input">
             <label for="primary-hover">رنگ هاور اصلی:</label>
             <input type="color" id="primary-hover" value="#0e7490">
@@ -764,15 +764,19 @@
           <div class="color-input">
             <label for="primary-foreground">رنگ متن اصلی:</label>
             <input type="color" id="primary-foreground" value="#ffffff">
-            </div>
           </div>
-          
+          <div class="color-input">
+            <label for="ring-color">رنگ حلقه:</label>
+            <input type="color" id="ring-color" value="#0284c7">
+          </div>
+        </div>
+        
         <div class="control-group">
           <h4>رنگ‌های پس‌زمینه و متن</h4>
           <div class="color-input">
             <label for="background">رنگ پس‌زمینه:</label>
             <input type="color" id="background" value="#ffffff">
-            </div>
+          </div>
           <div class="color-input">
             <label for="foreground">رنگ متن:</label>
             <input type="color" id="foreground" value="#1e293b">
@@ -780,10 +784,14 @@
           <div class="color-input">
             <label for="muted-color">رنگ پس‌زمینه کم‌رنگ:</label>
             <input type="color" id="muted-color" value="#f1f5f9">
-            </div>
+          </div>
           <div class="color-input">
             <label for="muted-foreground">رنگ متن کم‌رنگ:</label>
             <input type="color" id="muted-foreground" value="#64748b">
+          </div>
+          <div class="color-input">
+            <label for="border-color">رنگ حاشیه:</label>
+            <input type="color" id="border-color" value="#e2e8f0">
           </div>
         </div>
         
@@ -791,15 +799,15 @@
           <h4>رنگ‌های تعطیلات</h4>
           <div class="color-input">
             <label for="holiday-color">رنگ متن تعطیلات:</label>
-              <input type="color" id="holiday-color" value="#ef4444">
-            </div>
+            <input type="color" id="holiday-color" value="#ef4444">
+          </div>
           <div class="color-input">
             <label for="holiday-bg">رنگ پس‌زمینه تعطیلات:</label>
-              <input type="color" id="holiday-bg" value="#fee2e2">
-            </div>
+            <input type="color" id="holiday-bg" value="#fee2e2">
+          </div>
           <div class="color-input">
             <label for="holiday-hover-bg">رنگ پس‌زمینه هاور تعطیلات:</label>
-              <input type="color" id="holiday-hover-bg" value="#fecaca">
+            <input type="color" id="holiday-hover-bg" value="#fecaca">
           </div>
         </div>
         
@@ -808,15 +816,19 @@
           <div class="color-input">
             <label for="input-bg">رنگ پس‌زمینه ورودی:</label>
             <input type="color" id="input-bg" value="#ffffff">
-            </div>
+          </div>
           <div class="color-input">
             <label for="input-text">رنگ متن ورودی:</label>
             <input type="color" id="input-text" value="#1e293b">
           </div>
           <div class="color-input">
+            <label for="input-border-color">رنگ حاشیه ورودی:</label>
+            <input type="color" id="input-border-color" value="#e2e8f0">
+          </div>
+          <div class="color-input">
             <label for="calendar-bg">رنگ پس‌زمینه تقویم:</label>
             <input type="color" id="calendar-bg" value="#ffffff">
-            </div>
+          </div>
           <div class="color-input">
             <label for="day-hover-bg">رنگ پس‌زمینه هاور روز:</label>
             <input type="color" id="day-hover-bg" value="#f1f5f9">
@@ -824,7 +836,7 @@
           <div class="color-input">
             <label for="nav-button-bg">رنگ پس‌زمینه دکمه‌های ناوبری:</label>
             <input type="color" id="nav-button-bg" value="#f1f5f9">
-            </div>
+          </div>
           <div class="color-input">
             <label for="nav-button-bg-hover">رنگ پس‌زمینه هاور دکمه‌های ناوبری:</label>
             <input type="color" id="nav-button-bg-hover" value="#e2e8f0">
@@ -832,16 +844,32 @@
           <div class="color-input">
             <label for="nav-arrow-color">رنگ فلش‌های ناوبری:</label>
             <input type="color" id="nav-arrow-color" value="#1e293b">
-            </div>
           </div>
-          
+        </div>
+        
+        <div class="control-group">
+          <h4>رنگ‌های روزها</h4>
+          <div class="color-input">
+            <label for="day-selected-bg">رنگ پس‌زمینه روز انتخاب شده:</label>
+            <input type="color" id="day-selected-bg" value="#0891b2">
+          </div>
+          <div class="color-input">
+            <label for="day-selected-color">رنگ متن روز انتخاب شده:</label>
+            <input type="color" id="day-selected-color" value="#ffffff">
+          </div>
+          <div class="color-input">
+            <label for="day-today-border-color">رنگ حاشیه روز جاری:</label>
+            <input type="color" id="day-today-border-color" value="#0891b2">
+          </div>
+        </div>
+        
         <div class="size-controls">
           <h4>اندازه‌ها و فواصل</h4>
           <div class="range-control">
             <label for="input-height">ارتفاع ورودی:</label>
             <input type="range" id="input-height" min="30" max="60" value="40">
             <span id="input-height-value">40px</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="input-font-size">اندازه فونت ورودی:</label>
             <input type="range" id="input-font-size" min="12" max="24" value="14">
@@ -851,36 +879,41 @@
             <label for="calendar-width">عرض تقویم:</label>
             <input type="range" id="calendar-width" min="250" max="400" value="280">
             <span id="calendar-width-value">280px</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="day-cell-size">اندازه سلول روز:</label>
             <input type="range" id="day-cell-size" min="30" max="50" value="32">
             <span id="day-cell-size-value">32px</span>
           </div>
           <div class="range-control">
+            <label for="day-cell-margin">فاصله سلول‌های روز:</label>
+            <input type="range" id="day-cell-margin" min="0" max="4" value="1">
+            <span id="day-cell-margin-value">1px</span>
+          </div>
+          <div class="range-control">
             <label for="nav-button-size">اندازه دکمه‌های ناوبری:</label>
             <input type="range" id="nav-button-size" min="24" max="40" value="30">
             <span id="nav-button-size-value">30px</span>
-        </div>
+          </div>
           <div class="range-control">
             <label for="nav-arrow-size">اندازه فلش‌های ناوبری:</label>
             <input type="range" id="nav-arrow-size" min="6" max="12" value="8">
             <span id="nav-arrow-size-value">8px</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="nav-arrow-thickness">ضخامت فلش‌های ناوبری:</label>
             <input type="range" id="nav-arrow-thickness" min="1" max="4" value="2">
             <span id="nav-arrow-thickness-value">2px</span>
-            </div>
           </div>
-          
+        </div>
+        
         <div class="spacing-controls">
           <h4>فاصله‌گذاری</h4>
           <div class="range-control">
             <label for="spacing-xs">فاصله خیلی کوچک:</label>
             <input type="range" id="spacing-xs" min="2" max="8" value="4">
             <span id="spacing-xs-value">4px</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="spacing-sm">فاصله کوچک:</label>
             <input type="range" id="spacing-sm" min="4" max="12" value="8">
@@ -890,21 +923,21 @@
             <label for="spacing-md">فاصله متوسط:</label>
             <input type="range" id="spacing-md" min="8" max="24" value="16">
             <span id="spacing-md-value">16px</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="spacing-lg">فاصله بزرگ:</label>
             <input type="range" id="spacing-lg" min="16" max="32" value="24">
             <span id="spacing-lg-value">24px</span>
-            </div>
           </div>
-          
+        </div>
+        
         <div class="padding-controls">
           <h4>پدینگ ورودی</h4>
           <div class="range-control">
             <label for="input-padding-x">پدینگ افقی ورودی:</label>
             <input type="range" id="input-padding-x" min="8" max="20" value="14">
             <span id="input-padding-x-value">14px</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="input-padding-y">پدینگ عمودی ورودی:</label>
             <input type="range" id="input-padding-y" min="6" max="16" value="10">
@@ -918,7 +951,7 @@
             <label for="input-border-width">ضخامت حاشیه ورودی:</label>
             <input type="range" id="input-border-width" min="0" max="4" value="1">
             <span id="input-border-width-value">1px</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="calendar-border-width">ضخامت حاشیه تقویم:</label>
             <input type="range" id="calendar-border-width" min="0" max="4" value="1">
@@ -928,26 +961,34 @@
             <label for="day-cell-border-radius">شعاع گوشه سلول روز:</label>
             <input type="range" id="day-cell-border-radius" min="0" max="20" value="4">
             <span id="day-cell-border-radius-value">4px</span>
-              </div>
+          </div>
           <div class="range-control">
             <label for="nav-button-border-radius">شعاع گوشه دکمه‌های ناوبری:</label>
             <input type="range" id="nav-button-border-radius" min="0" max="20" value="4">
             <span id="nav-button-border-radius-value">4px</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="day-today-border-width">ضخامت حاشیه روز جاری:</label>
             <input type="range" id="day-today-border-width" min="0" max="4" value="1">
             <span id="day-today-border-width-value">1px</span>
-            </div>
           </div>
-          
+        </div>
+        
         <div class="font-controls">
           <h4>فونت‌ها</h4>
+          <div class="select-control">
+            <label for="font-family">فونت عمومی:</label>
+            <select id="font-family">
+              <option value="'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">Vazir</option>
+              <option value="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">System</option>
+              <option value="'Tahoma', Arial, sans-serif">Tahoma</option>
+            </select>
+          </div>
           <div class="range-control">
             <label for="day-name-font-size">اندازه فونت نام روزها:</label>
             <input type="range" id="day-name-font-size" min="10" max="16" value="12">
             <span id="day-name-font-size-value">12px</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="day-font-size">اندازه فونت روزها:</label>
             <input type="range" id="day-font-size" min="10" max="16" value="13">
@@ -957,7 +998,7 @@
             <label for="month-year-font-size">اندازه فونت ماه و سال:</label>
             <input type="range" id="month-year-font-size" min="12" max="18" value="14">
             <span id="month-year-font-size-value">14px</span>
-              </div>
+          </div>
           <div class="select-control">
             <label for="font-weight">وزن فونت عمومی:</label>
             <select id="font-weight">
@@ -967,7 +1008,7 @@
               <option value="600">نیمه‌ضخیم</option>
               <option value="700">ضخیم</option>
             </select>
-            </div>
+          </div>
           <div class="select-control">
             <label for="day-name-font-weight">وزن فونت نام روزها:</label>
             <select id="day-name-font-weight">
@@ -977,7 +1018,7 @@
               <option value="600">نیمه‌ضخیم</option>
               <option value="700">ضخیم</option>
             </select>
-              </div>
+          </div>
           <div class="select-control">
             <label for="day-font-weight">وزن فونت روزها:</label>
             <select id="day-font-weight">
@@ -987,7 +1028,7 @@
               <option value="600">نیمه‌ضخیم</option>
               <option value="700">ضخیم</option>
             </select>
-            </div>
+          </div>
           <div class="select-control">
             <label for="month-year-font-weight">وزن فونت ماه و سال:</label>
             <select id="month-year-font-weight">
@@ -1006,7 +1047,7 @@
             <label for="transition-duration">مدت زمان انیمیشن عمومی:</label>
             <input type="range" id="transition-duration" min="0" max="500" value="200" step="50">
             <span id="transition-duration-value">200ms</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="month-transition-duration">مدت زمان انیمیشن تغییر ماه:</label>
             <input type="range" id="month-transition-duration" min="0" max="500" value="300" step="50">
@@ -1016,9 +1057,9 @@
             <label for="fade-from-y">مقدار حرکت عمودی فید:</label>
             <input type="range" id="fade-from-y" min="-20" max="20" value="-4">
             <span id="fade-from-y-value">-4px</span>
-            </div>
           </div>
-          
+        </div>
+        
         <div class="focus-controls">
           <h4>حالت فوکوس</h4>
           <div class="range-control">
@@ -1029,29 +1070,29 @@
           <div class="color-input">
             <label for="input-focus-ring-color">رنگ حلقه فوکوس:</label>
             <input type="color" id="input-focus-ring-color" value="#0284c7">
-            </div>
           </div>
-          
+        </div>
+        
         <div class="other-controls">
           <h4>سایر تنظیمات</h4>
           <div class="range-control">
             <label for="day-disabled-opacity">شفافیت روزهای غیرفعال:</label>
             <input type="range" id="day-disabled-opacity" min="0" max="1" value="0.4" step="0.1">
             <span id="day-disabled-opacity-value">0.4</span>
-            </div>
+          </div>
           <div class="range-control">
             <label for="calendar-z-index">شاخص z تقویم:</label>
             <input type="range" id="calendar-z-index" min="0" max="100" value="10">
             <span id="calendar-z-index-value">10</span>
-            </div>
           </div>
-          
+        </div>
+        
         <div class="shadow-controls">
           <h4>سایه‌ها</h4>
           <div class="checkbox-control">
             <input type="checkbox" id="use-shadow" checked>
             <label for="use-shadow">استفاده از سایه برای تقویم</label>
-            </div>
+          </div>
           <div class="range-control shadow-option">
             <label for="shadow-blur">شدت تاری سایه:</label>
             <input type="range" id="shadow-blur" min="0" max="50" value="20">
@@ -1061,7 +1102,7 @@
             <label for="shadow-spread">گسترش سایه:</label>
             <input type="range" id="shadow-spread" min="-10" max="10" value="0">
             <span id="shadow-spread-value">0px</span>
-        </div>
+          </div>
         </div>
       </div>
       
@@ -1085,26 +1126,34 @@
     const primaryColor = document.getElementById('primary-color');
     const primaryHover = document.getElementById('primary-hover');
     const primaryForeground = document.getElementById('primary-foreground');
+    const ringColor = document.getElementById('ring-color');
     const backgroundColor = document.getElementById('background');
     const foregroundColor = document.getElementById('foreground');
     const mutedColor = document.getElementById('muted-color');
     const mutedForeground = document.getElementById('muted-foreground');
+    const borderColor = document.getElementById('border-color');
     const holidayColor = document.getElementById('holiday-color');
     const holidayBg = document.getElementById('holiday-bg');
     const holidayHoverBg = document.getElementById('holiday-hover-bg');
     const inputBg = document.getElementById('input-bg');
     const inputText = document.getElementById('input-text');
+    const inputBorderColor = document.getElementById('input-border-color');
     const calendarBg = document.getElementById('calendar-bg');
     const dayHoverBg = document.getElementById('day-hover-bg');
     const navButtonBg = document.getElementById('nav-button-bg');
     const navButtonBgHover = document.getElementById('nav-button-bg-hover');
     const navArrowColor = document.getElementById('nav-arrow-color');
+    const daySelectedBg = document.getElementById('day-selected-bg');
+    const daySelectedColor = document.getElementById('day-selected-color');
+    const dayTodayBorderColor = document.getElementById('day-today-border-color');
+    const fontFamily = document.getElementById('font-family');
 
     // Size controls
     const inputHeight = document.getElementById('input-height');
     const inputFontSize = document.getElementById('input-font-size');
     const calendarWidth = document.getElementById('calendar-width');
     const dayCellSize = document.getElementById('day-cell-size');
+    const dayCellMargin = document.getElementById('day-cell-margin');
     const navButtonSize = document.getElementById('nav-button-size');
     const navArrowSize = document.getElementById('nav-arrow-size');
     const navArrowThickness = document.getElementById('nav-arrow-thickness');
@@ -1122,6 +1171,7 @@
     // Border controls
     const inputBorderWidth = document.getElementById('input-border-width');
     const calendarBorderWidth = document.getElementById('calendar-border-width');
+    const borderRadius = document.getElementById('border-radius');
     const dayCellBorderRadius = document.getElementById('day-cell-border-radius');
     const navButtonBorderRadius = document.getElementById('nav-button-border-radius');
     const dayTodayBorderWidth = document.getElementById('day-today-border-width');
@@ -1169,19 +1219,6 @@
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    // Helper function to adjust color brightness
-    function adjustBrightness(hex, factor) {
-      const r = parseInt(hex.slice(1, 3), 16);
-      const g = parseInt(hex.slice(3, 5), 16);
-      const b = parseInt(hex.slice(5, 7), 16);
-      
-      const newR = Math.min(255, Math.max(0, Math.round(r * factor)));
-      const newG = Math.min(255, Math.max(0, Math.round(g * factor)));
-      const newB = Math.min(255, Math.max(0, Math.round(b * factor)));
-      
-      return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
-    }
-
     // Function to update theme CSS
     function updateThemeCSS() {
       const isDark = darkModeToggle.checked;
@@ -1195,7 +1232,7 @@
       const adjustedForeground = isDark ? '#e2e8f0' : foregroundColor.value;
       const adjustedMuted = isDark ? '#334155' : mutedColor.value;
       const adjustedMutedForeground = isDark ? '#94a3b8' : mutedForeground.value;
-      const adjustedBorder = isDark ? '#475569' : mutedColor.value;
+      const adjustedBorder = isDark ? '#475569' : borderColor.value;
       const adjustedDayHoverBg = isDark ? '#334155' : dayHoverBg.value;
       const adjustedHolidayBg = isDark ? '#3f1e2e' : holidayBg.value;
       
@@ -1205,12 +1242,14 @@
           --jdp-primary: ${primaryColor.value};
           --jdp-primary-hover: ${primaryHover.value};
           --jdp-primary-foreground: ${primaryForeground.value};
+          --jdp-ring: ${ringColor.value};
           
           /* Background and text colors */
           --jdp-background: ${adjustedBackground};
           --jdp-foreground: ${adjustedForeground};
           --jdp-muted: ${adjustedMuted};
           --jdp-muted-foreground: ${adjustedMutedForeground};
+          --jdp-border: ${adjustedBorder};
           
           /* Holiday colors */
           --jdp-holiday-color: ${holidayColor.value};
@@ -1220,17 +1259,24 @@
           /* Input and calendar colors */
           --jdp-input-bg: ${adjustedInputBg};
           --jdp-input-text: ${adjustedForeground};
+          --jdp-input-border-color: ${inputBorderColor.value};
           --jdp-calendar-bg: ${adjustedCalendarBg};
           --jdp-day-hover-bg: ${adjustedDayHoverBg};
           --jdp-nav-button-bg: ${adjustedMuted};
           --jdp-nav-button-bg-hover: ${isDark ? '#475569' : navButtonBgHover.value};
           --jdp-nav-arrow-color: ${adjustedForeground};
 
+          /* Day colors */
+          --jdp-day-selected-bg: ${daySelectedBg.value};
+          --jdp-day-selected-color: ${daySelectedColor.value};
+          --jdp-day-today-border-color: ${dayTodayBorderColor.value};
+
           /* Sizes */
           --jdp-input-height: ${inputHeight.value}px;
           --jdp-input-font-size: ${inputFontSize.value}px;
           --jdp-calendar-width: ${calendarWidth.value}px;
           --jdp-day-cell-size: ${dayCellSize.value}px;
+          --jdp-day-cell-margin: ${dayCellMargin.value}px;
           --jdp-nav-button-size: ${navButtonSize.value}px;
           --jdp-nav-arrow-size: ${navArrowSize.value}px;
           --jdp-nav-arrow-thickness: ${navArrowThickness.value}px;
@@ -1248,9 +1294,14 @@
           /* Borders */
           --jdp-input-border-width: ${inputBorderWidth.value}px;
           --jdp-calendar-border-width: ${calendarBorderWidth.value}px;
+          --jdp-day-today-border-width: ${dayTodayBorderWidth.value}px;
+
+          /* Border Radius */
+          --jdp-border-radius: ${borderRadius.value}px;
+          --jdp-input-border-radius: ${borderRadius.value}px;
+          --jdp-calendar-border-radius: ${borderRadius.value}px;
           --jdp-day-cell-border-radius: ${dayCellBorderRadius.value}px;
           --jdp-nav-button-border-radius: ${navButtonBorderRadius.value}px;
-          --jdp-day-today-border-width: ${dayTodayBorderWidth.value}px;
 
           /* Font sizes */
           --jdp-day-name-font-size: ${dayNameFontSize.value}px;
@@ -1262,6 +1313,9 @@
           --jdp-day-name-font-weight: ${dayNameFontWeight.value};
           --jdp-day-font-weight: ${dayFontWeight.value};
           --jdp-month-year-font-weight: ${monthYearFontWeight.value};
+
+          /* Font family */
+          --jdp-font-family: ${fontFamily.value};
 
           /* Animations */
           --jdp-transition-duration: ${transitionDuration.value}ms;
@@ -1283,15 +1337,8 @@
           ` : '--jdp-calendar-shadow: none;'}
 
           /* Additional variables */
-          --jdp-border: ${adjustedBorder};
-          --jdp-input-border-color: ${adjustedBorder};
-          --jdp-ring: ${primaryColor.value};
-          --jdp-day-selected-bg: var(--jdp-primary);
-          --jdp-day-selected-color: var(--jdp-primary-foreground);
-          --jdp-day-today-border-color: var(--jdp-primary);
           --jdp-calendar-padding: var(--jdp-spacing-md);
           --jdp-calendar-border-color: var(--jdp-border);
-          --jdp-border-radius: 0.5rem;
           --jdp-direction: rtl;
         }
       `;
@@ -1349,6 +1396,17 @@
       }, 2000);
     });
 
+    // Add event listener for the main border radius control
+    borderRadius.addEventListener('input', () => {
+      updateRangeValue(borderRadius);
+      // Update other border radius controls to match
+      dayCellBorderRadius.value = borderRadius.value;
+      navButtonBorderRadius.value = borderRadius.value;
+      updateRangeValue(dayCellBorderRadius);
+      updateRangeValue(navButtonBorderRadius);
+      updateThemeCSS();
+    });
+
     // Helper function to convert numbers to Persian digits
     function toPersianNum(num) {
       const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -1382,78 +1440,156 @@
         primary: '#0891b2',
         primaryHover: '#0e7490',
         primaryForeground: '#ffffff',
+        ring: '#0284c7',
         background: '#ffffff',
         foreground: '#1e293b',
         muted: '#f1f5f9',
         mutedForeground: '#64748b',
+        border: '#e2e8f0',
         holidayColor: '#ef4444',
         holidayBg: '#fee2e2',
         holidayHoverBg: '#fecaca',
+        inputBg: '#ffffff',
+        inputText: '#1e293b',
+        inputBorderColor: '#e2e8f0',
+        calendarBg: '#ffffff',
+        dayHoverBg: '#f1f5f9',
+        navButtonBg: '#f1f5f9',
+        navButtonBgHover: '#e2e8f0',
+        navArrowColor: '#1e293b',
+        daySelectedBg: '#0891b2',
+        daySelectedColor: '#ffffff',
+        dayTodayBorderColor: '#0891b2',
         borderRadius: '8'
       },
       blue: {
         primary: '#2563eb',
         primaryHover: '#1d4ed8',
         primaryForeground: '#ffffff',
+        ring: '#3b82f6',
         background: '#ffffff',
         foreground: '#1e293b',
         muted: '#f1f5f9',
         mutedForeground: '#64748b',
+        border: '#e2e8f0',
         holidayColor: '#ef4444',
         holidayBg: '#fee2e2',
         holidayHoverBg: '#fecaca',
+        inputBg: '#ffffff',
+        inputText: '#1e293b',
+        inputBorderColor: '#e2e8f0',
+        calendarBg: '#ffffff',
+        dayHoverBg: '#f1f5f9',
+        navButtonBg: '#f1f5f9',
+        navButtonBgHover: '#e2e8f0',
+        navArrowColor: '#1e293b',
+        daySelectedBg: '#2563eb',
+        daySelectedColor: '#ffffff',
+        dayTodayBorderColor: '#2563eb',
         borderRadius: '4'
       },
       green: {
         primary: '#16a34a',
         primaryHover: '#15803d',
         primaryForeground: '#ffffff',
+        ring: '#22c55e',
         background: '#ffffff',
         foreground: '#1e293b',
         muted: '#f1f5f9',
         mutedForeground: '#64748b',
+        border: '#e2e8f0',
         holidayColor: '#ef4444',
         holidayBg: '#fee2e2',
         holidayHoverBg: '#fecaca',
+        inputBg: '#ffffff',
+        inputText: '#1e293b',
+        inputBorderColor: '#e2e8f0',
+        calendarBg: '#ffffff',
+        dayHoverBg: '#f1f5f9',
+        navButtonBg: '#f1f5f9',
+        navButtonBgHover: '#e2e8f0',
+        navArrowColor: '#1e293b',
+        daySelectedBg: '#16a34a',
+        daySelectedColor: '#ffffff',
+        dayTodayBorderColor: '#16a34a',
         borderRadius: '6'
       },
       purple: {
         primary: '#9333ea',
         primaryHover: '#7e22ce',
         primaryForeground: '#ffffff',
+        ring: '#a855f7',
         background: '#ffffff',
         foreground: '#1e293b',
         muted: '#f1f5f9',
         mutedForeground: '#64748b',
+        border: '#e2e8f0',
         holidayColor: '#ef4444',
         holidayBg: '#fee2e2',
         holidayHoverBg: '#fecaca',
+        inputBg: '#ffffff',
+        inputText: '#1e293b',
+        inputBorderColor: '#e2e8f0',
+        calendarBg: '#ffffff',
+        dayHoverBg: '#f1f5f9',
+        navButtonBg: '#f1f5f9',
+        navButtonBgHover: '#e2e8f0',
+        navArrowColor: '#1e293b',
+        daySelectedBg: '#9333ea',
+        daySelectedColor: '#ffffff',
+        dayTodayBorderColor: '#9333ea',
         borderRadius: '12'
       },
       orange: {
         primary: '#ea580c',
         primaryHover: '#c2410c',
         primaryForeground: '#ffffff',
+        ring: '#f97316',
         background: '#ffffff',
         foreground: '#1e293b',
         muted: '#f1f5f9',
         mutedForeground: '#64748b',
+        border: '#e2e8f0',
         holidayColor: '#ef4444',
         holidayBg: '#fee2e2',
         holidayHoverBg: '#fecaca',
+        inputBg: '#ffffff',
+        inputText: '#1e293b',
+        inputBorderColor: '#e2e8f0',
+        calendarBg: '#ffffff',
+        dayHoverBg: '#f1f5f9',
+        navButtonBg: '#f1f5f9',
+        navButtonBgHover: '#e2e8f0',
+        navArrowColor: '#1e293b',
+        daySelectedBg: '#ea580c',
+        daySelectedColor: '#ffffff',
+        dayTodayBorderColor: '#ea580c',
         borderRadius: '16'
       },
       minimal: {
         primary: '#18181b',
         primaryHover: '#27272a',
         primaryForeground: '#ffffff',
+        ring: '#27272a',
         background: '#ffffff',
         foreground: '#18181b',
         muted: '#fafafa',
         mutedForeground: '#71717a',
+        border: '#e4e4e7',
         holidayColor: '#ef4444',
         holidayBg: '#fee2e2',
         holidayHoverBg: '#fecaca',
+        inputBg: '#ffffff',
+        inputText: '#18181b',
+        inputBorderColor: '#e4e4e7',
+        calendarBg: '#ffffff',
+        dayHoverBg: '#fafafa',
+        navButtonBg: '#fafafa',
+        navButtonBgHover: '#e4e4e7',
+        navArrowColor: '#18181b',
+        daySelectedBg: '#18181b',
+        daySelectedColor: '#ffffff',
+        dayTodayBorderColor: '#18181b',
         borderRadius: '2'
       }
     };
@@ -1471,13 +1607,26 @@
         if (primaryColor) primaryColor.value = theme.primary;
         if (primaryHover) primaryHover.value = theme.primaryHover;
         if (primaryForeground) primaryForeground.value = theme.primaryForeground;
+        if (ringColor) ringColor.value = theme.ring;
         if (backgroundColor) backgroundColor.value = theme.background;
         if (foregroundColor) foregroundColor.value = theme.foreground;
         if (mutedColor) mutedColor.value = theme.muted;
         if (mutedForeground) mutedForeground.value = theme.mutedForeground;
+        if (borderColor) borderColor.value = theme.border;
         if (holidayColor) holidayColor.value = theme.holidayColor;
         if (holidayBg) holidayBg.value = theme.holidayBg;
         if (holidayHoverBg) holidayHoverBg.value = theme.holidayHoverBg;
+        if (inputBg) inputBg.value = theme.inputBg;
+        if (inputText) inputText.value = theme.inputText;
+        if (inputBorderColor) inputBorderColor.value = theme.inputBorderColor;
+        if (calendarBg) calendarBg.value = theme.calendarBg;
+        if (dayHoverBg) dayHoverBg.value = theme.dayHoverBg;
+        if (navButtonBg) navButtonBg.value = theme.navButtonBg;
+        if (navButtonBgHover) navButtonBgHover.value = theme.navButtonBgHover;
+        if (navArrowColor) navArrowColor.value = theme.navArrowColor;
+        if (daySelectedBg) daySelectedBg.value = theme.daySelectedBg;
+        if (daySelectedColor) daySelectedColor.value = theme.daySelectedColor;
+        if (dayTodayBorderColor) dayTodayBorderColor.value = theme.dayTodayBorderColor;
         
         // Update border radius
         const radiusInputs = document.querySelectorAll('input[id$="border-radius"]');
@@ -1489,6 +1638,53 @@
         updateThemeCSS();
       });
     });
+
+    // Add test function for color controls
+    function testColorControls() {
+      const testColors = {
+        primary: '#ff0000',
+        primaryHover: '#cc0000',
+        primaryForeground: '#ffffff',
+        ring: '#ff3333',
+        background: '#f0f0f0',
+        foreground: '#000000',
+        muted: '#e0e0e0',
+        mutedForeground: '#666666',
+        border: '#cccccc',
+        holidayColor: '#ff0000',
+        holidayBg: '#ffe6e6',
+        holidayHoverBg: '#ffcccc',
+        inputBg: '#ffffff',
+        inputText: '#000000',
+        inputBorderColor: '#cccccc',
+        calendarBg: '#ffffff',
+        dayHoverBg: '#f0f0f0',
+        navButtonBg: '#e0e0e0',
+        navButtonBgHover: '#d0d0d0',
+        navArrowColor: '#000000',
+        daySelectedBg: '#ff0000',
+        daySelectedColor: '#ffffff',
+        dayTodayBorderColor: '#ff0000'
+      };
+
+      // Set all colors to test values
+      Object.entries(testColors).forEach(([key, value]) => {
+        const input = document.getElementById(key);
+        if (input) {
+          input.value = value;
+        }
+      });
+
+      updateThemeCSS();
+    }
+
+    // Add test button
+    const testButton = document.createElement('button');
+    testButton.textContent = 'تست رنگ‌ها';
+    testButton.className = 'copy-btn';
+    testButton.style.marginTop = '10px';
+    testButton.onclick = testColorControls;
+    document.querySelector('.theme-export').appendChild(testButton);
   </script>
 </body>
 </html> 
