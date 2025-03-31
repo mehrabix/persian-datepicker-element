@@ -1,6 +1,7 @@
 {
   "name": "persian-datepicker-element",
   "version": "1.0.45",
+  "private": true,
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.min.js",
   "module": "dist/persian-datepicker-element.esm.js",
@@ -89,30 +90,36 @@
     ]
   },
   "scripts": {
-    "build": "node scripts/build/minimal-build.js",
-    "build:clean": "set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && npx rspack --config scripts/build/rspack.config.js",
-    "build:prod": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.min.js && set MODULE_TYPE=commonjs && set MINIFY=true && npx rspack --config scripts/build/rspack.config.js",
-    "build:dev": "set NODE_ENV=development && set OUTPUT_FILE=persian-datepicker-element.js && set MINIFY=false && npx rspack --config scripts/build/rspack.config.js",
-    "build:esm": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.esm.js && set MODULE_TYPE=module && set MINIFY=true && npx rspack --config scripts/build/rspack.config.js",
-    "build:max-compress": "node scripts/optimize/max-compress.js",
-    "build:super-optimize": "node scripts/optimize/super-optimize.js",
-    "build:optimal": "pnpm run build:max-compress && pnpm run build:super-optimize",
-    "build:terser": "node scripts/optimize/terser-optimize.js",
-    "build:terser-safe": "node scripts/optimize/terser-safe.js",
-    "build:esm-optimize": "node scripts/optimize/esm-optimize.js",
-    "build:extreme": "node scripts/build/extreme-build.js",
-    "build:production": "node scripts/build/production-build.js",
-    "minify": "node scripts/optimize/minify.js persian-datepicker-element.min.js && node scripts/optimize/esm-optimize.js",
-    "cleanup": "node scripts/utils/cleanup-dist.js",
-    "dev": "set NODE_ENV=development && npx rspack serve --config scripts/build/rspack.config.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "serve": "pnpm exec serve",
-    "prepublishOnly": "pnpm run build",
-    "build:compress": "pnpm run build:prod && node scripts/optimize/compress.js",
-    "build:compress:extreme": "pnpm run build:prod && node scripts/optimize/compress-extreme.js",
-    "build:compress:safe": "pnpm run build:prod && node scripts/optimize/compress-safe.js"
+    "build": "pnpm build:core && pnpm build:angular && pnpm build:react && pnpm build:vue",
+    "build:core": "node scripts/build/minimal-build.js",
+    "build:angular": "cd packages/angular/ngx-persian-datepicker-element && ng build ngx-persian-datepicker-element",
+    "build:react": "cd packages/react && pnpm build",
+    "build:vue": "cd packages/vue && pnpm build",
+    "build:angular:watch": "cd packages/angular/ngx-persian-datepicker-element && ng build ngx-persian-datepicker-element --watch",
+    "build:angular:test": "cd packages/angular/ngx-persian-datepicker-element && ng test",
+    "build:clean": "pnpm -r build:clean",
+    "build:prod": "pnpm -r build:prod",
+    "build:dev": "pnpm -r build:dev",
+    "build:esm": "pnpm -r build:esm",
+    "build:max-compress": "pnpm -r build:max-compress",
+    "build:super-optimize": "pnpm -r build:super-optimize",
+    "build:optimal": "pnpm -r build:optimal",
+    "build:terser": "pnpm -r build:terser",
+    "build:terser-safe": "pnpm -r build:terser-safe",
+    "build:esm-optimize": "pnpm -r build:esm-optimize",
+    "build:extreme": "pnpm -r build:extreme",
+    "build:production": "pnpm -r build:production",
+    "minify": "pnpm -r minify",
+    "cleanup": "pnpm -r cleanup",
+    "dev": "pnpm -r dev",
+    "test": "pnpm -r test",
+    "test:watch": "pnpm -r test:watch",
+    "test:coverage": "pnpm -r test:coverage",
+    "serve": "pnpm -r serve",
+    "prepublishOnly": "pnpm -r build",
+    "build:compress": "pnpm -r build:compress",
+    "build:compress:extreme": "pnpm -r build:compress:extreme",
+    "build:compress:safe": "pnpm -r build:compress:safe"
   },
   "keywords": [
     "jalali",
@@ -153,5 +160,8 @@
     "ts-jest": "^29.2.6",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.2"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
