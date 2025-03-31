@@ -20,12 +20,6 @@
     "dark-mode",
     "rtl"
   ],
-  "scripts": {
-    "build": "ng-packagr -p ng-package.json",
-    "watch": "ng-packagr -p ng-package.json --watch",
-    "test": "ng test",
-    "clean": "rimraf dist"
-  },
   "dependencies": {
     "tslib": "^2.3.0",
     "persian-datepicker-element": "^1.0.29"
@@ -37,9 +31,5 @@
   "sideEffects": false,
   "engines": {
     "node": "^16.14.0 || >=18.10.0"
-  },
-  "devDependencies": {
-    "ng-packagr": "^19.2.0",
-    "rimraf": "^5.0.5"
   }
 }
