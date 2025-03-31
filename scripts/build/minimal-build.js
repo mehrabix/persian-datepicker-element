@@ -29,6 +29,36 @@ process.env.MODULE_TYPE = 'umd';
 process.env.MINIFY = 'true';
 execSync('npx rspack --config scripts/build/rspack.config.js', { stdio: 'inherit' });
 
+// Generate TypeScript declaration files
+console.log('Generating TypeScript declaration files...');
+execSync('npx tsc --emitDeclarationOnly --declaration --outDir dist/types --excludeDirectories "**/__tests__"', { stdio: 'inherit' });
+
+// Clean up unnecessary declaration files
+console.log('Cleaning up unnecessary declaration files...');
+const typesDir = path.resolve(rootDir, 'dist/types');
+const filesToKeep = ['index.d.ts', 'persian-datepicker-element.d.ts', 'persian-date.d.ts'];
+
+// Function to recursively remove files and directories
+function cleanupDirectory(dir) {
+  const items = fs.readdirSync(dir);
+  for (const item of items) {
+    const fullPath = path.join(dir, item);
+    const stat = fs.statSync(fullPath);
+    
+    if (stat.isDirectory()) {
+      if (item === '__tests__') {
+        fs.rmSync(fullPath, { recursive: true, force: true });
+      } else {
+        cleanupDirectory(fullPath);
+      }
+    } else if (!filesToKeep.includes(item) && item.endsWith('.d.ts')) {
+      fs.unlinkSync(fullPath);
+    }
+  }
+}
+
+cleanupDirectory(typesDir);
+
 // Create compressed versions
 console.log('Creating compressed versions...');
 
