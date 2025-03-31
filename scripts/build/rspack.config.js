@@ -11,11 +11,6 @@ const shouldMinify = process.env.MINIFY !== 'false';
 const moduleType = process.env.MODULE_TYPE || 'umd';
 const shouldAnalyze = process.env.BUNDLE_ANALYZE === 'true';
 
-// Clean the dist directory if this is the first build step
-if (process.env.CLEAN_DIST === 'true') {
-  fs.rmdirSync(path.resolve(rootDir, 'dist'), { recursive: true, force: true });
-}
-
 // Create a clean version of the output filename without any spaces
 const cleanOutputFileName = outputFileName.trim();
 
@@ -38,8 +33,8 @@ const config = {
         },
     // Use a safer globalObject expression that handles different environments properly
     globalObject: 'typeof self !== \'undefined\' ? self : typeof window !== \'undefined\' ? window : typeof global !== \'undefined\' ? global : this',
-    clean: process.env.CLEAN_DIST === 'true', // Only clean on the first build
-    assetModuleFilename: '[name][ext]', // Ensure no spaces in asset filenames
+    clean: false, // Don't clean on each build
+    assetModuleFilename: 'assets/[name][ext]', // Move assets to a separate directory
     environment: {
       // Optimize for modern browsers
       arrowFunction: true,
@@ -133,23 +128,10 @@ const config = {
     // Add advanced tree shaking
     innerGraph: true,
     mangleExports: isProduction ? 'size' : false,
-    // Improve bundle splitting for larger apps
-    splitChunks: isProduction ? {
-      chunks: 'all',
-      minSize: 0,
-      cacheGroups: {
-        default: false,
-        defaultVendors: false,
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-          priority: -10
-        }
-      }
-    } : false,
-    // Add runtime chunk optimization
-    runtimeChunk: isProduction ? 'single' : false,
+    // Disable chunk splitting for ESM builds
+    splitChunks: false,
+    // Disable runtime chunk for ESM builds
+    runtimeChunk: false,
     // Add module concatenation
     moduleIds: isProduction ? 'deterministic' : 'named',
     chunkIds: isProduction ? 'deterministic' : 'named'

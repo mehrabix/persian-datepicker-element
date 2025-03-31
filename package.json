@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.42",
+  "version": "1.0.43",
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.js",
   "module": "dist/persian-datepicker-element.esm.js",
@@ -89,7 +89,7 @@
     ]
   },
   "scripts": {
-    "build": "pnpm run build:prod && pnpm run build:compress && node scripts/optimize/brotli-compress.js",
+    "build": "node scripts/build/minimal-build.js",
     "build:clean": "set CLEAN_DIST=true && set NODE_ENV=development && set OUTPUT_FILE=placeholder.js && npx rspack --config scripts/build/rspack.config.js",
     "build:prod": "set NODE_ENV=production && set OUTPUT_FILE=persian-datepicker-element.min.js && set MODULE_TYPE=commonjs && set MINIFY=true && npx rspack --config scripts/build/rspack.config.js",
     "build:dev": "set NODE_ENV=development && set OUTPUT_FILE=persian-datepicker-element.js && set MINIFY=false && npx rspack --config scripts/build/rspack.config.js",
