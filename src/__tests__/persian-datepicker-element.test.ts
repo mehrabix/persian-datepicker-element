@@ -7,6 +7,8 @@ import { PersianEvent } from '../types';
 
 // Create a mock implementation of EventUtils
 class MockEventUtils {
+  private static instance: MockEventUtils | null = null;
+  
   initialize = jest.fn().mockResolvedValue(undefined);
   refreshEvents = jest.fn().mockImplementation(() => []);
   isHoliday = jest.fn().mockImplementation((month, day, holidayTypes) => {
@@ -42,13 +44,27 @@ class MockEventUtils {
     { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
   ]);
   getEventTypes = jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International']);
+
+  private constructor() {}
+
+  public static getInstance(): MockEventUtils {
+    if (!MockEventUtils.instance) {
+      MockEventUtils.instance = new MockEventUtils();
+    }
+    return MockEventUtils.instance;
+  }
+
+  public static initialize(): Promise<void> {
+    return MockEventUtils.getInstance().initialize();
+  }
 }
 
-// Mock the EventUtils class constructor
+// Mock the EventUtils class
 jest.mock('../utils/event-utils', () => {
-  return jest.fn().mockImplementation(() => {
-    return new MockEventUtils();
-  });
+  return {
+    getInstance: jest.fn().mockImplementation(() => MockEventUtils.getInstance()),
+    initialize: jest.fn().mockImplementation(() => MockEventUtils.initialize())
+  };
 });
 
 describe('PersianDatePickerElement', () => {
@@ -59,11 +75,8 @@ describe('PersianDatePickerElement', () => {
     // Clear mock call history before each test
     jest.clearAllMocks();
     
-    // Reset the mock implementation
-    const mockedEventUtils = EventUtils as jest.MockedFunction<any>;
-    mockedEventUtils.mockClear();
-    mockEventUtils = new MockEventUtils();
-    mockedEventUtils.mockImplementation(() => mockEventUtils);
+    // Get the mock instance
+    mockEventUtils = MockEventUtils.getInstance();
     
     // Define the custom element if not already defined
     if (!customElements.get('persian-datepicker-element')) {

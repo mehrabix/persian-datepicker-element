@@ -6,16 +6,35 @@ import EventUtils from '../utils/event-utils';
 import { waitFor } from '@testing-library/dom';
 import HijriUtils from '../utils/hijri-utils';
 
+// Create a mock implementation of EventUtils
+class MockEventUtils {
+  private static instance: MockEventUtils | null = null;
+  
+  initialize = jest.fn(() => Promise.resolve());
+  refreshEvents = jest.fn(() => Promise.resolve([]));
+  isHoliday = jest.fn(() => false);
+  getEvents = jest.fn(() => []);
+
+  private constructor() {}
+
+  public static getInstance(): MockEventUtils {
+    if (!MockEventUtils.instance) {
+      MockEventUtils.instance = new MockEventUtils();
+    }
+    return MockEventUtils.instance;
+  }
+
+  public static initialize(): Promise<void> {
+    return MockEventUtils.getInstance().initialize();
+  }
+}
+
 // Mock EventUtils module
 jest.mock('../utils/event-utils', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      initialize: jest.fn(() => Promise.resolve()),
-      refreshEvents: jest.fn(() => Promise.resolve([])),
-      isHoliday: jest.fn(() => false),
-      getEvents: jest.fn(() => [])
-    };
-  });
+  return {
+    getInstance: jest.fn().mockImplementation(() => MockEventUtils.getInstance()),
+    initialize: jest.fn().mockImplementation(() => MockEventUtils.initialize())
+  };
 });
 
 // Define the custom element

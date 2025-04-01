@@ -32,8 +32,8 @@ describe('EventUtils', () => {
     // Reset mocks before each test
     jest.clearAllMocks();
     
-    // Create a new instance for each test
-    eventUtilsInstance = new EventUtils();
+    // Get the singleton instance
+    eventUtilsInstance = EventUtils.getInstance();
     
     // Mock the methods on the instance
     jest.spyOn(eventUtilsInstance, 'getEventTypes').mockReturnValue([...mockEventTypes]);
@@ -56,6 +56,14 @@ describe('EventUtils', () => {
   afterEach(() => {
     // Restore original implementations
     jest.restoreAllMocks();
+  });
+  
+  describe('Singleton Pattern', () => {
+    test('should return the same instance when getInstance is called multiple times', () => {
+      const instance1 = EventUtils.getInstance();
+      const instance2 = EventUtils.getInstance();
+      expect(instance1).toBe(instance2);
+    });
   });
   
   describe('Event Loading', () => {

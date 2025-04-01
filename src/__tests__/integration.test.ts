@@ -6,18 +6,37 @@ import { dispatchEvent, simulateKeyEvent, wait } from './test-utils';
 import { PersianDatePickerElement } from '../persian-datepicker-element';
 import EventUtils from '../utils/event-utils';
 
-// Mock the EventUtils to avoid real API calls
+// Create a mock implementation of EventUtils
+class MockEventUtils {
+  private static instance: MockEventUtils | null = null;
+  
+  initialize = jest.fn().mockResolvedValue(undefined);
+  refreshEvents = jest.fn().mockImplementation(() => []);
+  isHoliday = jest.fn().mockReturnValue(false);
+  getEvents = jest.fn().mockReturnValue([]);
+  getAllEvents = jest.fn().mockReturnValue([]);
+  getEventTypes = jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International']);
+
+  private constructor() {}
+
+  public static getInstance(): MockEventUtils {
+    if (!MockEventUtils.instance) {
+      MockEventUtils.instance = new MockEventUtils();
+    }
+    return MockEventUtils.instance;
+  }
+
+  public static initialize(): Promise<void> {
+    return MockEventUtils.getInstance().initialize();
+  }
+}
+
+// Mock the EventUtils class
 jest.mock('../utils/event-utils', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      initialize: jest.fn().mockResolvedValue(undefined),
-      refreshEvents: jest.fn().mockImplementation(() => []),
-      isHoliday: jest.fn().mockReturnValue(false),
-      getEvents: jest.fn().mockReturnValue([]),
-      getAllEvents: jest.fn().mockReturnValue([]),
-      getEventTypes: jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International'])
-    };
-  });
+  return {
+    getInstance: jest.fn().mockImplementation(() => MockEventUtils.getInstance()),
+    initialize: jest.fn().mockImplementation(() => MockEventUtils.initialize())
+  };
 });
 
 describe('Persian Date Picker Element Integration', () => {
