@@ -106,7 +106,8 @@ class MockEventUtils {
 jest.mock('../utils/event-utils', () => {
   return {
     getInstance: jest.fn().mockImplementation(() => MockEventUtils.getInstance()),
-    initialize: jest.fn().mockImplementation(() => MockEventUtils.initialize())
+    initialize: jest.fn().mockImplementation(() => MockEventUtils.initialize()),
+    isInitialized: jest.fn().mockReturnValue(false)
   };
 });
 
@@ -357,8 +358,8 @@ describe('Persian Datepicker 1404 Events Tests', () => {
   });
 
   describe('Religious Holiday Tests', () => {
-    test('should check that refreshEvents was called during initialization', () => {
-      expect(mockEventUtils.refreshEvents).toHaveBeenCalled();
+    test('should check that events are loaded during initialization', () => {
+      expect(mockEventUtils.initialize).toHaveBeenCalled();
     });
 
     test('should filter events by holiday type when attribute is set', () => {
