@@ -162,7 +162,7 @@ export class AppComponent {
 | rtl | boolean | false | Right-to-left layout |
 | min-date | [number, number, number] | - | Minimum selectable date |
 | max-date | [number, number, number] | - | Maximum selectable date |
-| disabled-dates | string | - | Disabled dates expression |
+| disabled-dates | string | - | The name of a function that determines if a date should be disabled. Can reference: 1) a global function, 2) a method on the element itself, or 3) for framework users, a function passed directly |
 | disabled | boolean | false | Disable the datepicker |
 | dark-mode | boolean | false | Enable dark mode |
 
@@ -171,6 +171,94 @@ export class AppComponent {
 | Event | Detail Type | Description |
 |-------|-------------|-------------|
 | change | { jalali: [number, number, number], gregorian: [number, number, number], isHoliday: boolean, events: Array } | Fired when a date is selected |
+
+## Methods
+
+| Method | Parameters | Return Type | Description |
+|--------|------------|-------------|-------------|
+| setValue | (year: number, month: number, day: number) | void | Sets the datepicker value |
+| getValue | () | [number, number, number] | Gets the current selected date as a tuple |
+| open | () | void | Opens the datepicker calendar |
+| close | () | void | Closes the datepicker calendar |
+| setMinDate | (year: number, month: number, day: number) | void | Sets the minimum allowed date |
+| setMaxDate | (year: number, month: number, day: number) | void | Sets the maximum allowed date |
+| setDisabledDatesFn | (fn: (year: number, month: number, day: number) => boolean) | void | Sets a function to determine disabled dates |
+| setRange | (start: [number, number, number], end: [number, number, number]) | void | Sets a date range (in range mode) |
+| getRange | () | { start: [number, number, number] \| null, end: [number, number, number] \| null } | Gets the current selected range |
+| clear | () | void | Clears the selected date or range |
+
+## Disabled Dates
+
+There are three ways to specify which dates should be disabled:
+
+### 1. Global Function
+
+Define a function in the global scope and reference it by name:
+
+```html
+<script>
+  function isWeekend(year, month, day) {
+    const date = new Date(year, month - 1, day);
+    const dayOfWeek = date.getDay();
+    return dayOfWeek === 5 || dayOfWeek === 6; // Disable Friday and Saturday (Persian weekend)
+  }
+</script>
+
+<persian-datepicker-element disabled-dates="isWeekend"></persian-datepicker-element>
+```
+
+### 2. Element Method
+
+Define a method directly on the element after retrieving it:
+
+```html
+<persian-datepicker-element id="my-picker"></persian-datepicker-element>
+
+<script>
+  const picker = document.getElementById('my-picker');
+  
+  // Add a method to the element
+  picker.isHoliday = function(year, month, day) {
+    // Custom logic to determine holidays
+    return day === 13; // Disable 13th of each month as an example
+  };
+  
+  // Reference the method by name
+  picker.setAttribute('disabled-dates', 'isHoliday');
+</script>
+```
+
+### 3. Direct Function Assignment (Recommended for Framework Users)
+
+For React, Vue, or other framework users, you can pass a function directly:
+
+```tsx
+// React example
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  // Define the function locally
+  const isEvenDay = (year, month, day) => {
+    return day % 2 === 0; // Disable even days
+  };
+
+  return (
+    <PersianDatepicker 
+      placeholder="Select date" 
+      disabledDates={isEvenDay}
+    />
+  );
+}
+```
+
+You can also use the `setDisabledDatesFn` method directly:
+
+```javascript
+const picker = document.getElementById('my-picker');
+picker.setDisabledDatesFn((year, month, day) => {
+  return day % 2 === 0; // Disable even days
+});
+```
 
 ## CSS Variables
 

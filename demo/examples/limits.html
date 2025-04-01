@@ -213,6 +213,48 @@
       border-bottom-color: #334155;
     }
 
+    /* Callout styles */
+    .callout {
+      background-color: #f0f9ff;
+      border-left: 4px solid #0891b2;
+      padding: 16px 20px;
+      margin: 20px 0 30px;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s;
+    }
+    
+    .callout h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: #0891b2;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .callout p {
+      margin-bottom: 10px;
+    }
+    
+    .callout ol {
+      margin: 10px 0;
+      padding-right: 20px;
+    }
+    
+    .callout li {
+      margin-bottom: 8px;
+    }
+    
+    body.dark .callout {
+      background-color: #15253b;
+      border-left-color: #0891b2;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    body.dark .callout h3 {
+      color: #22d3ee;
+    }
+
     /* Dark mode toggle */
     .theme-switch {
       position: relative;
@@ -277,6 +319,17 @@
     <h1>نمونه‌های محدودیت‌های تاریخ</h1>
     <p>نمونه‌هایی از نحوه استفاده از محدودیت‌های بازه زمانی و غیرفعال کردن تاریخ‌ها در کامپوننت انتخاب تاریخ.</p>
     
+    <div class="callout">
+      <h3>🆕 بهبود غیرفعال کردن تاریخ‌ها</h3>
+      <p>اکنون می‌توانید توابع غیرفعال‌سازی تاریخ‌ها را به سه روش مختلف استفاده کنید:</p>
+      <ol>
+        <li><strong>روش کلاسیک:</strong> تعریف تابع در فضای نام عمومی (window) و استفاده از نام تابع در ویژگی disabled-dates</li>
+        <li><strong>روش مستقیم:</strong> استفاده از متد setDisabledDatesFn برای تعیین مستقیم تابع، بدون نیاز به تعریف آن در فضای نام عمومی</li>
+        <li><strong>روش متد محلی:</strong> تعریف یک متد روی المان و استفاده از نام آن در ویژگی disabled-dates</li>
+      </ol>
+      <p>این بهبود امکان استفاده از توابع غیرفعال‌سازی را در هر محیطی، از جمله در کتابخانه‌های React، Vue و Angular، فراهم می‌کند.</p>
+    </div>
+    
     <div class="navigation">
       <div class="nav-links">
         <a href="index.html" class="link">نمونه‌های پایه</a>
@@ -324,7 +377,7 @@
 function isWeekend(year, month, day) {
   const date = new Date(year, month - 1, day);
   const dayOfWeek = date.getDay();
-  return dayOfWeek === 0 || dayOfWeek === 6; // غیرفعال کردن تعطیلات آخر هفته
+  return dayOfWeek === 5 || dayOfWeek === 6; // غیرفعال کردن روزهای جمعه و شنبه (آخر هفته در تقویم ایرانی)
 }
 
 &lt;persian-datepicker-element 
@@ -350,6 +403,50 @@ function isWeekend(year, month, day) {
   max-date="[1403,12,29]"
   disabled-dates="isWeekend"
 &gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>تاریخ‌های غیرفعال با روش جدید</h2>
+      <div class="example-label">با استفاده از تابع داخلی (بدون نیاز به وجود تابع در حوزه جهانی):</div>
+      <persian-datepicker-element 
+        id="local-function-picker"
+      ></persian-datepicker-element>
+      <div class="result">تاریخ انتخاب شده: <span id="local-function-result">هیچ</span></div>
+      
+      <pre><code>// استفاده مستقیم از متد setDisabledDatesFn بدون نیاز به تعریف تابع در سطح جهانی
+const picker = document.getElementById('local-function-picker');
+
+// تعریف تابع به صورت مستقیم و محلی
+const isEvenDay = function(year, month, day) {
+  return day % 2 === 0; // غیرفعال کردن روزهای زوج
+};
+
+// اعمال تابع غیرفعال‌سازی به تقویم
+picker.setDisabledDatesFn(isEvenDay);</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>متد روی المان</h2>
+      <div class="example-label">تعریف متد مستقیماً روی المان:</div>
+      <persian-datepicker-element 
+        id="element-method-picker"
+      ></persian-datepicker-element>
+      <div class="result">تاریخ انتخاب شده: <span id="element-method-result">هیچ</span></div>
+      
+      <pre><code>// تعریف متد مستقیماً روی المان
+const methodPicker = document.getElementById('element-method-picker');
+
+// افزودن متد دلخواه مستقیماً به المان
+methodPicker.isWorkingDay = function(year, month, day) {
+  const date = new Date(year, month - 1, day);
+  const dayOfWeek = date.getDay();
+  // غیرفعال کردن تعطیلات آخر هفته (جمعه = 5، شنبه = 6)
+  // و همچنین روزهای 13 ماه (به عنوان مثال)
+  return dayOfWeek === 5 || dayOfWeek === 6 || day === 13;
+};
+
+// استفاده از متد تعریف شده روی المان
+methodPicker.setAttribute('disabled-dates', 'isWorkingDay');</code></pre>
     </div>
 
     <div class="link-container">
@@ -431,7 +528,7 @@ function isWeekend(year, month, day) {
     function isWeekend(year, month, day) {
       const date = new Date(year, month - 1, day);
       const dayOfWeek = date.getDay();
-      return dayOfWeek === 0 || dayOfWeek === 6; // Disable weekends
+      return dayOfWeek === 5 || dayOfWeek === 6; // Disable Friday (5) and Saturday (6) - Persian weekend
     }
     
     // Range picker
@@ -447,6 +544,9 @@ function isWeekend(year, month, day) {
     const disabledPicker = document.getElementById('disabled-picker');
     const disabledResult = document.getElementById('disabled-result');
     
+    // Apply the disabled dates function directly to ensure it works correctly
+    disabledPicker.setDisabledDatesFn(isWeekend);
+    
     disabledPicker.addEventListener('change', (event) => {
       console.log(event);
       disabledResult.textContent = formatPersianDate(event.detail.jalali);
@@ -459,6 +559,44 @@ function isWeekend(year, month, day) {
     combinedPicker.addEventListener('change', (event) => {
       console.log(event);
       combinedResult.textContent = formatPersianDate(event.detail.jalali);
+    });
+
+    // Local function picker (new example for direct function assignment)
+    const localFunctionPicker = document.getElementById('local-function-picker');
+    const localFunctionResult = document.getElementById('local-function-result');
+    
+    // Define a function locally that disables even days
+    const isEvenDay = function(year, month, day) {
+      return day % 2 === 0; // Disable even days
+    };
+    
+    // Directly set the disabled dates function without adding it to the global scope
+    localFunctionPicker.setDisabledDatesFn(isEvenDay);
+    
+    localFunctionPicker.addEventListener('change', (event) => {
+      console.log(event);
+      localFunctionResult.textContent = formatPersianDate(event.detail.jalali);
+    });
+
+    // Element method picker
+    const methodPicker = document.getElementById('element-method-picker');
+    const methodResult = document.getElementById('element-method-result');
+    
+    // Add a method directly to the element
+    methodPicker.isWorkingDay = function(year, month, day) {
+      const date = new Date(year, month - 1, day);
+      const dayOfWeek = date.getDay();
+      // غیرفعال کردن تعطیلات آخر هفته (جمعه = 5، شنبه = 6)
+      // و همچنین روزهای 13 ماه (به عنوان مثال)
+      return dayOfWeek === 5 || dayOfWeek === 6 || day === 13;
+    };
+    
+    // Use the method defined on the element
+    methodPicker.setAttribute('disabled-dates', 'isWorkingDay');
+    
+    methodPicker.addEventListener('change', (event) => {
+      console.log(event);
+      methodResult.textContent = formatPersianDate(event.detail.jalali);
     });
   </script>
 </body>

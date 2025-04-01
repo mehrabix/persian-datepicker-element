@@ -320,4 +320,9 @@ export declare class PersianDatePickerElement extends HTMLElement {
         start: DateTuple | null;
         end: DateTuple | null;
     };
+    /**
+     * Set a function that determines if a date should be disabled
+     * @param fn Function that takes year, month, day and returns boolean (true if date should be disabled)
+     */
+    setDisabledDatesFn(fn: (year: number, month: number, day: number) => boolean): void;
 }

@@ -1117,9 +1117,29 @@ export class PersianDatePickerElement extends HTMLElement {
 
       case 'disabled-dates':
         if (newValue) {
-          const disabledFn = (window as any)[newValue];
+          // First try to see if the function is a property of this element
+          let disabledFn = null;
+          
+          try {
+            // Try to evaluate as a function expression
+            if (typeof newValue === 'function') {
+              // Direct function assignment (React use case)
+              disabledFn = newValue;
+            } else if (typeof this[newValue as keyof this] === 'function') {
+              // Function is a method on this element
+              disabledFn = this[newValue as keyof this] as unknown as ((year: number, month: number, day: number) => boolean);
+            } else {
+              // Look in window scope as fallback for backward compatibility
+              disabledFn = (window as any)[newValue];
+            }
+          } catch (e) {
+            console.error('Error accessing disabled dates function:', e);
+          }
+          
           if (typeof disabledFn === 'function') {
             this.disabledDatesFn = disabledFn;
+          } else {
+            console.warn(`Disabled dates function '${newValue}' not found. Function should be provided directly, as a method on the element, or available in the global scope.`);
           }
         } else {
           this.disabledDatesFn = null;
@@ -2608,6 +2628,15 @@ export class PersianDatePickerElement extends HTMLElement {
       start: this.rangeStart ? [...this.rangeStart] : null,
       end: this.rangeEnd ? [...this.rangeEnd] : null
     };
+  }
+
+  /**
+   * Set a function that determines if a date should be disabled
+   * @param fn Function that takes year, month, day and returns boolean (true if date should be disabled)
+   */
+  public setDisabledDatesFn(fn: (year: number, month: number, day: number) => boolean): void {
+    this.disabledDatesFn = fn;
+    this.renderCalendar();
   }
 }
 

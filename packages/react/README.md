@@ -45,7 +45,7 @@ function App() {
 | rtl | boolean | false | Right-to-left layout |
 | minDate | [number, number, number] | - | Minimum selectable date |
 | maxDate | [number, number, number] | - | Maximum selectable date |
-| disabledDates | string | - | Disabled dates expression |
+| disabledDates | string \| ((year: number, month: number, day: number) => boolean) | - | A function or function name to determine which dates should be disabled |
 | disabled | boolean | false | Disable the datepicker |
 | darkMode | boolean | false | Enable dark mode |
 | className | string | - | Additional CSS class |
@@ -72,6 +72,12 @@ ref.current?.close();
 
 // Get the underlying element
 const element = ref.current?.getElement();
+
+// Set a disabled dates function directly
+ref.current?.setDisabledDatesFn((year, month, day) => {
+  // Return true to disable the date
+  return day % 2 === 0; // Disable even days
+});
 ```
 
 ## TypeScript Support
@@ -118,7 +124,7 @@ persian-datepicker-element {
 ### Basic Usage
 
 ```tsx
-import { PersianDatepicker } from '@persian-datepicker/react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
 
 function BasicExample() {
   return (
@@ -133,7 +139,7 @@ function BasicExample() {
 ### With Event Handling
 
 ```tsx
-import { PersianDatepicker } from '@persian-datepicker/react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
 
 function EventExample() {
   const handleChange = (event) => {
@@ -155,14 +161,21 @@ function EventExample() {
 ### With Date Limits
 
 ```tsx
-import { PersianDatepicker } from '@persian-datepicker/react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
 
 function DateLimitsExample() {
+  // You can define the function locally - no need for global scope
+  const isWeekend = (year: number, month: number, day: number): boolean => {
+    const date = new Date(year, month - 1, day);
+    const dayOfWeek = date.getDay();
+    return dayOfWeek === 5 || dayOfWeek === 6; // Disable Friday and Saturday (Persian weekend)
+  };
+
   return (
     <PersianDatepicker
       minDate={[1400, 1, 1]}
       maxDate={[1402, 12, 29]}
-      disabledDates="isWeekend"
+      disabledDates={isWeekend} // Pass function directly
     />
   );
 }
@@ -171,7 +184,7 @@ function DateLimitsExample() {
 ### With Custom Styling
 
 ```tsx
-import { PersianDatepicker } from '@persian-datepicker/react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
 
 function StyledExample() {
   return (
