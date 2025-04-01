@@ -968,7 +968,7 @@ export class PersianDatePickerElement extends HTMLElement {
   constructor(options: PersianDatePickerElementOptions = {}) {
     super();
     this.options = options;
-    this.eventUtils = new EventUtils();
+    this.eventUtils = EventUtils.getInstance();
     
     // Create shadow DOM and render initial structure
     const shadow = this.attachShadow({ mode: "open" });
@@ -993,8 +993,8 @@ export class PersianDatePickerElement extends HTMLElement {
       // Initialize with today's date
       this.initializeCurrentDate();
       
-      // Initialize events data
-      await this.eventUtils.initialize();
+      // Initialize events data using the singleton
+      await EventUtils.initialize();
       
       // Setup initial UI components
       this.initializeUIComponents();

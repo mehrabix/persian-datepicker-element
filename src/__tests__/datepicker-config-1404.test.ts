@@ -6,6 +6,8 @@ import EventUtils from '../utils/event-utils';
 
 // Create a mock implementation of EventUtils
 class MockEventUtils {
+  private static instance: MockEventUtils | null = null;
+  
   initialize = jest.fn().mockResolvedValue(undefined);
   refreshEvents = jest.fn().mockImplementation(() => []);
   isHoliday = jest.fn().mockImplementation((month, day, types = ['Iran', 'AncientIran'], includeAll = true) => {
@@ -32,13 +34,27 @@ class MockEventUtils {
     { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
     { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
   ]);
+
+  private constructor() {}
+
+  public static getInstance(): MockEventUtils {
+    if (!MockEventUtils.instance) {
+      MockEventUtils.instance = new MockEventUtils();
+    }
+    return MockEventUtils.instance;
+  }
+
+  public static initialize(): Promise<void> {
+    return MockEventUtils.getInstance().initialize();
+  }
 }
 
-// Mock the EventUtils class constructor
+// Mock the EventUtils class
 jest.mock('../utils/event-utils', () => {
-  return jest.fn().mockImplementation(() => {
-    return new MockEventUtils();
-  });
+  return {
+    getInstance: jest.fn().mockImplementation(() => MockEventUtils.getInstance()),
+    initialize: jest.fn().mockImplementation(() => MockEventUtils.initialize())
+  };
 });
 
 describe('Persian Datepicker Configuration Tests for 1404', () => {
@@ -55,11 +71,8 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
     // Clear mock call history before each test
     jest.clearAllMocks();
     
-    // Reset the mock implementation
-    const mockedEventUtils = EventUtils as jest.MockedFunction<any>;
-    mockedEventUtils.mockClear();
-    mockEventUtils = new MockEventUtils();
-    mockedEventUtils.mockImplementation(() => mockEventUtils);
+    // Get the mock instance
+    mockEventUtils = MockEventUtils.getInstance();
     
     // Define the custom element if not already defined
     if (!customElements.get('persian-datepicker-element')) {

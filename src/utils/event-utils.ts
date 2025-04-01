@@ -1,11 +1,12 @@
-import { PersianEvent } from '../types';
-import HijriUtils from './hijri-utils';
 import { PersianDate } from '../persian-date';
+import { PersianEvent } from '../types';
 
 // Fallback events in case JSON loading fails
 const fallbackEvents: PersianEvent[] = [];
 
 class EventUtils {
+  private static instance: EventUtils | null = null;
+  private static initializationPromise: Promise<void> | null = null;
   private mappedEvents: PersianEvent[] = [...fallbackEvents];
   private persianCalendarData: any = {
     "Persian Calendar": [],
@@ -16,6 +17,39 @@ class EventUtils {
   private lastFetchYear: number | null = null;
   private fetchPromise: Promise<void> | null = null;
   private isInitialized = false;
+  private readonly CACHE_KEY = 'persian_calendar_events';
+  private readonly CACHE_EXPIRY_DAYS = 7; // Cache events for 7 days
+
+  private constructor() {
+    // Private constructor to prevent direct instantiation
+  }
+
+  /**
+   * Get the singleton instance of EventUtils
+   */
+  public static getInstance(): EventUtils {
+    if (!EventUtils.instance) {
+      EventUtils.instance = new EventUtils();
+    }
+    return EventUtils.instance;
+  }
+
+  /**
+   * Initialize the singleton instance
+   * This ensures only one initialization happens across all instances
+   */
+  public static async initialize(): Promise<void> {
+    if (EventUtils.initializationPromise) {
+      return EventUtils.initializationPromise;
+    }
+
+    EventUtils.initializationPromise = EventUtils.getInstance().loadEventsData();
+    try {
+      await EventUtils.initializationPromise;
+    } finally {
+      EventUtils.initializationPromise = null;
+    }
+  }
 
   /**
    * Maps events from the Persian Calendar repo format to our PersianEvent format
@@ -54,7 +88,48 @@ class EventUtils {
   }
 
   /**
-   * Loads events data from the external JSON file
+   * Saves events data to localStorage with expiration
+   */
+  private saveToCache(data: any): void {
+    try {
+      const cacheData = {
+        data,
+        timestamp: new Date().getTime(),
+        year: this.lastFetchYear
+      };
+      localStorage.setItem(this.CACHE_KEY, JSON.stringify(cacheData));
+    } catch (error) {
+      console.warn('Failed to save events to cache:', error);
+    }
+  }
+
+  /**
+   * Retrieves events data from localStorage if not expired
+   */
+  private getFromCache(): any | null {
+    try {
+      const cached = localStorage.getItem(this.CACHE_KEY);
+      if (!cached) return null;
+
+      const { data, timestamp, year } = JSON.parse(cached);
+      const now = new Date().getTime();
+      const expiryTime = this.CACHE_EXPIRY_DAYS * 24 * 60 * 60 * 1000; // Convert days to milliseconds
+
+      // Check if cache is expired or year doesn't match
+      if (now - timestamp > expiryTime || year !== this.lastFetchYear) {
+        localStorage.removeItem(this.CACHE_KEY);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.warn('Failed to read events from cache:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Loads events data from the external JSON file with caching
    */
   private async loadEventsData(): Promise<void> {
     // If already loading, return the existing promise
@@ -71,9 +146,14 @@ class EventUtils {
     );
     const currentYear = jalaliToday[0];
 
-    // Only use cache if we've already initialized and it's the same year
-    if (this.isInitialized && this.lastFetchYear === currentYear) {
-      console.log('Using cached events data for year:', currentYear);
+    // Try to get data from cache first
+    const cachedData = this.getFromCache();
+    if (cachedData) {
+      console.log('Using cached events data');
+      this.persianCalendarData = cachedData;
+      this.mappedEvents = this.mapPersianCalendarEvents();
+      this.lastFetchYear = currentYear;
+      this.isInitialized = true;
       return;
     }
 
@@ -81,25 +161,18 @@ class EventUtils {
     
     try {
       console.log('Attempting to load events.json...');
-      // Try to load the events.json file
-      const response = await fetch('data/events.json');
+      // Try to load the events.json file with retry mechanism
+      const response = await this.fetchWithRetry('data/events.json', 3);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       this.persianCalendarData = await response.json();
-      console.log('Successfully loaded events.json:', {
-        hasData: !!this.persianCalendarData,
-        keys: Object.keys(this.persianCalendarData),
-        sampleMonth: Object.entries(this.persianCalendarData).find(([key]) => key !== 'Source' && key !== '#meta')
-      });
+      
+      // Save to cache
+      this.saveToCache(this.persianCalendarData);
       
       // Update mapped events with the new data
       const newEvents = this.mapPersianCalendarEvents();
-      console.log('Mapped events:', {
-        totalEvents: newEvents.length,
-        sampleEvent: newEvents[0],
-        eventTypes: [...new Set(newEvents.map(e => e.type))]
-      });
       this.mappedEvents = [...newEvents];
       
       // Update last fetch year and mark as initialized
@@ -115,9 +188,27 @@ class EventUtils {
     }
   }
 
-  async initialize(): Promise<void> {
-    // Always try to load data on initialize
-    await this.loadEventsData();
+  /**
+   * Fetches data with retry mechanism
+   */
+  private async fetchWithRetry(url: string, maxRetries: number): Promise<Response> {
+    let lastError: Error | null = null;
+    
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        const response = await fetch(url);
+        if (response.ok) return response;
+        throw new Error(`HTTP error! status: ${response.status}`);
+      } catch (error) {
+        lastError = error as Error;
+        if (i < maxRetries - 1) {
+          // Exponential backoff
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+        }
+      }
+    }
+    
+    throw lastError || new Error('Failed to fetch events data after multiple retries');
   }
 
   getEvents(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
