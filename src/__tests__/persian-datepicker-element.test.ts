@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { PersianDatePickerElement } from '../persian-datepicker-element';
-import { EventUtils } from '../utils/event-utils';
+import EventUtils from '../utils/event-utils';
 import { PersianEvent } from '../types';
 
 // Create a mock implementation of EventUtils
@@ -46,11 +46,9 @@ class MockEventUtils {
 
 // Mock the EventUtils class constructor
 jest.mock('../utils/event-utils', () => {
-  return {
-    EventUtils: jest.fn().mockImplementation(() => {
-      return new MockEventUtils();
-    })
-  };
+  return jest.fn().mockImplementation(() => {
+    return new MockEventUtils();
+  });
 });
 
 describe('PersianDatePickerElement', () => {
@@ -62,9 +60,10 @@ describe('PersianDatePickerElement', () => {
     jest.clearAllMocks();
     
     // Reset the mock implementation
-    (EventUtils as jest.Mock).mockClear();
+    const mockedEventUtils = EventUtils as jest.MockedFunction<any>;
+    mockedEventUtils.mockClear();
     mockEventUtils = new MockEventUtils();
-    (EventUtils as jest.Mock).mockImplementation(() => mockEventUtils);
+    mockedEventUtils.mockImplementation(() => mockEventUtils);
     
     // Define the custom element if not already defined
     if (!customElements.get('persian-datepicker-element')) {

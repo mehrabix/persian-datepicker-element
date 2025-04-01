@@ -2,19 +2,21 @@
  * @jest-environment jsdom
  */
 import { PersianDatePickerElement } from '../persian-datepicker-element';
-import { EventUtils } from '../utils/event-utils';
+import EventUtils from '../utils/event-utils';
 import { waitFor } from '@testing-library/dom';
 import HijriUtils from '../utils/hijri-utils';
 
 // Mock EventUtils module
-jest.mock('../utils/event-utils', () => ({
-  EventUtils: {
-    initialize: jest.fn(() => Promise.resolve()),
-    refreshEvents: jest.fn(() => Promise.resolve([])),
-    isHoliday: jest.fn(() => false),
-    getEvents: jest.fn(() => [])
-  }
-}));
+jest.mock('../utils/event-utils', () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      initialize: jest.fn(() => Promise.resolve()),
+      refreshEvents: jest.fn(() => Promise.resolve([])),
+      isHoliday: jest.fn(() => false),
+      getEvents: jest.fn(() => [])
+    };
+  });
+});
 
 // Define the custom element
 try {

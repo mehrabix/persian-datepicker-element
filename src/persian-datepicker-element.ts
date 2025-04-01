@@ -1,5 +1,5 @@
 import { PersianDate } from './persian-date';
-import { EventUtils } from './utils/event-utils';
+import EventUtils from './utils/event-utils';
 import { 
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,

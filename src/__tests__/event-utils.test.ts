@@ -1,4 +1,4 @@
-import { EventUtils } from '../utils/event-utils';
+import EventUtils from '../utils/event-utils';
 import { PersianEvent } from '../types';
 import HijriUtils from '../utils/hijri-utils';
 

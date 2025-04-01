@@ -201,4 +201,4 @@ class EventUtils {
   }
 }
 
-export { EventUtils }; 
+export default EventUtils; 
