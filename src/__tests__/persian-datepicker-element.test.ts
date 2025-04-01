@@ -5,53 +5,66 @@ import { PersianDatePickerElement } from '../persian-datepicker-element';
 import { EventUtils } from '../utils/event-utils';
 import { PersianEvent } from '../types';
 
-// Mock EventUtils
-jest.mock('../utils/event-utils', () => ({
-  EventUtils: {
-    initialize: jest.fn().mockResolvedValue(undefined),
-    refreshEvents: jest.fn().mockImplementation(() => []),
-    isHoliday: jest.fn().mockImplementation((month, day, holidayTypes) => {
-      // Mock some holidays for testing
-      if (month === 1 && day === 1) return true; // Nowruz
-      if (month === 1 && day === 13) return true; // Nature Day
-      if (month === 4 && day === 19) return true; // Tirgan
-      return false;
-    }),
-    getHolidayTitles: jest.fn().mockImplementation((month, day, holidayTypes) => {
-      if (month === 1 && day === 1) return ['عید نوروز'];
-      if (month === 1 && day === 13) return ['روز طبیعت'];
-      if (month === 4 && day === 19) return ['جشن تیرگان'];
-      return [];
-    }),
-    getAllEventTitles: jest.fn().mockImplementation((month, day, holidayTypes) => {
-      if (month === 1 && day === 1) return ['عید نوروز'];
-      if (month === 1 && day === 13) return ['روز طبیعت'];
-      if (month === 2 && day === 10) return ['روز کار'];
-      if (month === 4 && day === 19) return ['جشن تیرگان'];
-      return [];
-    }),
-    getEvents: jest.fn().mockImplementation((month, day, holidayTypes) => {
-      if (month === 1 && day === 1) return [{ title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true }];
-      if (month === 1 && day === 13) return [{ title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true }];
-      if (month === 2 && day === 10) return [{ title: 'روز کار', month: 2, day: 10, type: 'International', holiday: false }];
-      if (month === 4 && day === 19) return [{ title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }];
-      return [];
-    }),
-    getAllHolidays: jest.fn().mockImplementation((holidayTypes) => [
-      { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
-      { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true },
-      { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
-    ]),
-    getEventTypes: jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International'])
-  }
-}));
+// Create a mock implementation of EventUtils
+class MockEventUtils {
+  initialize = jest.fn().mockResolvedValue(undefined);
+  refreshEvents = jest.fn().mockImplementation(() => []);
+  isHoliday = jest.fn().mockImplementation((month, day, holidayTypes) => {
+    // Mock some holidays for testing
+    if (month === 1 && day === 1) return true; // Nowruz
+    if (month === 1 && day === 13) return true; // Nature Day
+    if (month === 4 && day === 19) return true; // Tirgan
+    return false;
+  });
+  getHolidayTitles = jest.fn().mockImplementation((month, day, holidayTypes) => {
+    if (month === 1 && day === 1) return ['عید نوروز'];
+    if (month === 1 && day === 13) return ['روز طبیعت'];
+    if (month === 4 && day === 19) return ['جشن تیرگان'];
+    return [];
+  });
+  getAllEventTitles = jest.fn().mockImplementation((month, day, holidayTypes) => {
+    if (month === 1 && day === 1) return ['عید نوروز'];
+    if (month === 1 && day === 13) return ['روز طبیعت'];
+    if (month === 2 && day === 10) return ['روز کار'];
+    if (month === 4 && day === 19) return ['جشن تیرگان'];
+    return [];
+  });
+  getEvents = jest.fn().mockImplementation((month, day, holidayTypes) => {
+    if (month === 1 && day === 1) return [{ title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true }];
+    if (month === 1 && day === 13) return [{ title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true }];
+    if (month === 2 && day === 10) return [{ title: 'روز کار', month: 2, day: 10, type: 'International', holiday: false }];
+    if (month === 4 && day === 19) return [{ title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }];
+    return [];
+  });
+  getAllHolidays = jest.fn().mockImplementation((holidayTypes) => [
+    { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
+    { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true },
+    { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
+  ]);
+  getEventTypes = jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International']);
+}
+
+// Mock the EventUtils class constructor
+jest.mock('../utils/event-utils', () => {
+  return {
+    EventUtils: jest.fn().mockImplementation(() => {
+      return new MockEventUtils();
+    })
+  };
+});
 
 describe('PersianDatePickerElement', () => {
   let element: PersianDatePickerElement;
+  let mockEventUtils: MockEventUtils;
 
   beforeEach(() => {
     // Clear mock call history before each test
     jest.clearAllMocks();
+    
+    // Reset the mock implementation
+    (EventUtils as jest.Mock).mockClear();
+    mockEventUtils = new MockEventUtils();
+    (EventUtils as jest.Mock).mockImplementation(() => mockEventUtils);
     
     // Define the custom element if not already defined
     if (!customElements.get('persian-datepicker-element')) {
@@ -149,13 +162,13 @@ describe('PersianDatePickerElement', () => {
     }
     
     // Check that isHoliday was called during rendering
-    expect(EventUtils.isHoliday).toHaveBeenCalled();
+    expect(mockEventUtils.isHoliday).toHaveBeenCalled();
     
     // Select a date that is a holiday
     element.setValue(1402, 1, 1);
     
     // Should have called getEvents to get the holiday information
-    expect(EventUtils.getEvents).toHaveBeenCalledWith(1, 1, expect.any(Array), expect.any(Boolean));
+    expect(mockEventUtils.getEvents).toHaveBeenCalledWith(1, 1, expect.any(Array), expect.any(Boolean));
   });
 
   it('should add holiday classes to holiday dates', () => {
@@ -238,5 +251,13 @@ describe('PersianDatePickerElement', () => {
     
     // Restore original requestAnimationFrame
     window.requestAnimationFrame = originalRAF;
+  });
+
+  it('should check if a date is a holiday', () => {
+    expect(mockEventUtils.isHoliday).toHaveBeenCalled();
+  });
+
+  it('should get events for a specific date', () => {
+    expect(mockEventUtils.getEvents).toHaveBeenCalledWith(1, 1, expect.any(Array), expect.any(Boolean));
   });
 }); 

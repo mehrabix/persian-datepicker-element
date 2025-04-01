@@ -76,6 +76,7 @@ export declare class PersianDatePickerElement extends HTMLElement {
     private calendar;
     private daysContainer;
     private dayNamesContainer;
+    private eventUtils;
     private jalaliYear;
     private jalaliMonth;
     private jalaliDay;

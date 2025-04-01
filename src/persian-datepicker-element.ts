@@ -889,6 +889,7 @@ export class PersianDatePickerElement extends HTMLElement {
   private calendar!: HTMLDivElement;
   private daysContainer!: HTMLDivElement;
   private dayNamesContainer!: HTMLDivElement;
+  private eventUtils: EventUtils;
   
   // Date state
   private jalaliYear: number = 0;
@@ -967,6 +968,7 @@ export class PersianDatePickerElement extends HTMLElement {
   constructor(options: PersianDatePickerElementOptions = {}) {
     super();
     this.options = options;
+    this.eventUtils = new EventUtils();
     
     // Create shadow DOM and render initial structure
     const shadow = this.attachShadow({ mode: "open" });
@@ -992,7 +994,7 @@ export class PersianDatePickerElement extends HTMLElement {
       this.initializeCurrentDate();
       
       // Initialize events data
-      await EventUtils.initialize();
+      await this.eventUtils.initialize();
       
       // Setup initial UI components
       this.initializeUIComponents();
@@ -1260,7 +1262,7 @@ export class PersianDatePickerElement extends HTMLElement {
     this.setupMonthYearSelectors();
     
     // Refresh events for correct Jalali dates
-    EventUtils.refreshEvents();
+    this.eventUtils.refreshEvents();
   }
 
   /**
@@ -1471,7 +1473,7 @@ export class PersianDatePickerElement extends HTMLElement {
       // Special case for "all" which includes all types
       if (types.toLowerCase() === 'all') {
         this.includeAllTypes = true;
-        this.holidayTypes = [...EventUtils.getEventTypes()]; // Get all available types
+        this.holidayTypes = [...this.eventUtils.getEventTypes()]; // Get all available types
         return;
       }
       
@@ -1943,12 +1945,12 @@ export class PersianDatePickerElement extends HTMLElement {
     }
     
     // Check if it's a holiday from events.json based on holiday types
-    if (EventUtils.isHoliday(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes)) {
+    if (this.eventUtils.isHoliday(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes)) {
       dayElement.classList.add("holiday");
       isHoliday = true;
       
       // Add tooltip with event titles
-      const events = EventUtils.getEvents(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes);
+      const events = this.eventUtils.getEvents(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes);
       if (events.length > 0) {
         const tooltip = this.createEventTooltip(events);
         dayElement.appendChild(tooltip);
@@ -2010,7 +2012,7 @@ export class PersianDatePickerElement extends HTMLElement {
     
     // If the year has changed, refresh the events
     if (previousYear !== this.jalaliYear) {
-      EventUtils.refreshEvents();
+      this.eventUtils.refreshEvents();
     }
     
     // Render the calendar with the new month/year
@@ -2047,7 +2049,7 @@ export class PersianDatePickerElement extends HTMLElement {
     this.formatAndSetValue();
     
     // Get all events for the selected date
-    const events = EventUtils.getEvents(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes);
+    const events = this.eventUtils.getEvents(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes);
     
     // Format the date according to the current format
     const formattedDate = this.formatDate(this.selectedDate, this.format);
@@ -2057,7 +2059,7 @@ export class PersianDatePickerElement extends HTMLElement {
       detail: {
         jalali: this.selectedDate,
         gregorian: PersianDate.jalaliToGregorian(this.jalaliYear, this.jalaliMonth, this.jalaliDay),
-        isHoliday: EventUtils.isHoliday(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes),
+        isHoliday: this.eventUtils.isHoliday(this.jalaliMonth, day, this.holidayTypes, this.includeAllTypes),
         events: events,
         formattedDate: formattedDate
       },
@@ -2236,7 +2238,7 @@ export class PersianDatePickerElement extends HTMLElement {
     
     // If the year has changed, refresh the events
     if (previousYear !== year) {
-      EventUtils.refreshEvents();
+      this.eventUtils.refreshEvents();
     }
     
     this.renderCalendar();
@@ -2266,7 +2268,7 @@ export class PersianDatePickerElement extends HTMLElement {
    */
   public isSelectedDateHoliday(): boolean {
     if (!this.selectedDate) return false;
-    return EventUtils.isHoliday(
+    return this.eventUtils.isHoliday(
       this.selectedDate[1],
       this.selectedDate[2],
       this.holidayTypes,
@@ -2279,7 +2281,7 @@ export class PersianDatePickerElement extends HTMLElement {
    */
   public getSelectedDateEvents(): any[] {
     if (!this.selectedDate) return [];
-    return [...EventUtils.getEvents(
+    return [...this.eventUtils.getEvents(
       this.selectedDate[1],
       this.selectedDate[2],
       this.holidayTypes,

@@ -4,40 +4,48 @@
 import { PersianDatePickerElement } from '../persian-datepicker-element';
 import { EventUtils } from '../utils/event-utils';
 
-// Mock the EventUtils functions
-jest.mock('../utils/event-utils', () => ({
-  EventUtils: {
-    initialize: jest.fn().mockResolvedValue(undefined),
-    refreshEvents: jest.fn().mockImplementation(() => []),
-    isHoliday: jest.fn().mockImplementation((month, day, types = ['Iran', 'AncientIran'], includeAll = true) => {
-      if (types.includes('Iran') || includeAll) {
-        if (month === 1 && day === 1) return true; // Nowruz
-      }
-      if (types.includes('AncientIran') || includeAll) {
-        if (month === 4 && day === 19) return true; // Tirgan
-      }
-      return false;
-    }),
-    getEvents: jest.fn().mockImplementation((month, day, types, includeAll) => {
-      const events = [];
-      if ((types?.includes('Iran') || includeAll) && month === 1 && day === 1) {
-        events.push({ title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true });
-      }
-      if ((types?.includes('AncientIran') || includeAll) && month === 4 && day === 19) {
-        events.push({ title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true });
-      }
-      return events;
-    }),
-    getEventTypes: jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International']),
-    getAllEvents: jest.fn().mockReturnValue([
-      { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
-      { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
-    ])
-  }
-}));
+// Create a mock implementation of EventUtils
+class MockEventUtils {
+  initialize = jest.fn().mockResolvedValue(undefined);
+  refreshEvents = jest.fn().mockImplementation(() => []);
+  isHoliday = jest.fn().mockImplementation((month, day, types = ['Iran', 'AncientIran'], includeAll = true) => {
+    if (types.includes('Iran') || includeAll) {
+      if (month === 1 && day === 1) return true; // Nowruz
+    }
+    if (types.includes('AncientIran') || includeAll) {
+      if (month === 4 && day === 19) return true; // Tirgan
+    }
+    return false;
+  });
+  getEvents = jest.fn().mockImplementation((month, day, types, includeAll) => {
+    const events = [];
+    if ((types?.includes('Iran') || includeAll) && month === 1 && day === 1) {
+      events.push({ title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true });
+    }
+    if ((types?.includes('AncientIran') || includeAll) && month === 4 && day === 19) {
+      events.push({ title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true });
+    }
+    return events;
+  });
+  getEventTypes = jest.fn().mockReturnValue(['Iran', 'AncientIran', 'International']);
+  getAllEvents = jest.fn().mockReturnValue([
+    { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
+    { title: 'جشن تیرگان', month: 4, day: 19, type: 'AncientIran', holiday: true }
+  ]);
+}
+
+// Mock the EventUtils class constructor
+jest.mock('../utils/event-utils', () => {
+  return {
+    EventUtils: jest.fn().mockImplementation(() => {
+      return new MockEventUtils();
+    })
+  };
+});
 
 describe('Persian Datepicker Configuration Tests for 1404', () => {
   let element: PersianDatePickerElement;
+  let mockEventUtils: MockEventUtils;
   const persianYear = 1404;
   
   // Helper function to check if a specific class exists in an element
@@ -46,6 +54,14 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
   };
 
   beforeEach(() => {
+    // Clear mock call history before each test
+    jest.clearAllMocks();
+    
+    // Reset the mock implementation
+    (EventUtils as jest.Mock).mockClear();
+    mockEventUtils = new MockEventUtils();
+    (EventUtils as jest.Mock).mockImplementation(() => mockEventUtils);
+    
     // Define the custom element if not already defined
     if (!customElements.get('persian-datepicker-element')) {
       customElements.define('persian-datepicker-element', PersianDatePickerElement);
@@ -64,7 +80,6 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
     if (element && element.parentNode) {
       element.parentNode.removeChild(element);
     }
-    jest.clearAllMocks();
   });
 
   describe('Holiday Types Configuration', () => {
@@ -73,7 +88,7 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       expect(element.getAttribute('show-holidays')).toBe(null); // default is true
       expect(element.getAttribute('holiday-types')).toBe(null); // default is all types
       
-      const result = EventUtils.isHoliday(1, 1);
+      const result = mockEventUtils.isHoliday(1, 1);
       expect(result).toBe(true);
     });
 
@@ -85,8 +100,8 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       
       // Instead of checking the property directly, we can check what EventUtils receives
       // When show-holidays is false, isHoliday will be modified to return false
-      const iranHoliday = EventUtils.isHoliday(1, 1, ['Iran'], false);
-      const ancientIranHoliday = EventUtils.isHoliday(4, 19, ['AncientIran'], false);
+      const iranHoliday = mockEventUtils.isHoliday(1, 1, ['Iran'], false);
+      const ancientIranHoliday = mockEventUtils.isHoliday(4, 19, ['AncientIran'], false);
       
       // We're testing the attribute behavior, not the implementation details
       expect(element.getAttribute('show-holidays')).toBe('false');
@@ -100,11 +115,11 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       expect(element.getAttribute('holiday-types')).toBe('AncientIran');
       
       // AncientIran holidays should be visible
-      const ancientIranResult = EventUtils.isHoliday(4, 19, ['AncientIran'], false);
+      const ancientIranResult = mockEventUtils.isHoliday(4, 19, ['AncientIran'], false);
       expect(ancientIranResult).toBe(true);
       
       // Iran holidays should not be visible
-      const iranResult = EventUtils.isHoliday(1, 1, ['AncientIran'], false);
+      const iranResult = mockEventUtils.isHoliday(1, 1, ['AncientIran'], false);
       expect(iranResult).toBe(false);
     });
 
@@ -116,16 +131,16 @@ describe('Persian Datepicker Configuration Tests for 1404', () => {
       expect(element.getAttribute('holiday-types')).toBe('Iran,AncientIran');
       
       // Both Iran and AncientIran holidays should be visible
-      const ancientIranResult = EventUtils.isHoliday(4, 19, ['Iran', 'AncientIran'], false);
+      const ancientIranResult = mockEventUtils.isHoliday(4, 19, ['Iran', 'AncientIran'], false);
       expect(ancientIranResult).toBe(true);
       
-      const iranResult = EventUtils.isHoliday(1, 1, ['Iran', 'AncientIran'], false);
+      const iranResult = mockEventUtils.isHoliday(1, 1, ['Iran', 'AncientIran'], false);
       expect(iranResult).toBe(true);
     });
   });
 
   describe('Date Format Configuration', () => {
-    // Set up a mock for getValue to return formatted strings instead of arrays
+    // Set up a mock for getValue to check if it was called, but don't modify its behavior
     beforeEach(() => {
       // Create a spy to check if getValue was called, but don't modify its behavior
       jest.spyOn(element, 'getValue');
