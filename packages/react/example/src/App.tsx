@@ -125,6 +125,15 @@ function App() {
   const [selectedJalali, setSelectedJalali] = useState<string>('-');
   const [selectedGregorian, setSelectedGregorian] = useState<string>('-');
   const [selectedEvents, setSelectedEvents] = useState<string>('-');
+  
+  // Disabled dates function
+  const isWeekendDay = (year: number, month: number, day: number): boolean => {
+    // Convert Jalali date to Gregorian to check the day of week
+    const date = new Date(year, month - 1, day);
+    const dayOfWeek = date.getDay();
+    // Return true if the day is Friday (5) or Saturday (6) in Iranian calendar
+    return dayOfWeek === 5 || dayOfWeek === 6;
+  };
 
   // Apply the current theme and dark mode
   const getThemeStyles = () => {
@@ -245,6 +254,20 @@ function App() {
             onChange={handleDateChange}
             cssVariables={getThemeStyles()}
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="disabled-dates">تاریخ (روزهای آخر هفته غیرفعال):</label>
+          <PersianDatepicker 
+            id="disabled-dates" 
+            placeholder="انتخاب تاریخ (به جز آخر هفته)"
+            onChange={handleDateChange}
+            cssVariables={getThemeStyles()}
+            disabledDates={isWeekendDay}
+          />
+          <div className="helper-text">
+            روزهای پنج‌شنبه و جمعه غیرفعال هستند
+          </div>
         </div>
 
         <div className="form-group">

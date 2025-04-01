@@ -34,6 +34,10 @@ declare module 'react-persian-datepicker-element' {
     max?: DateTuple;
     disabled?: boolean;
     holidayTypes?: string;
+    disabledDates?: string | ((year: number, month: number, day: number) => boolean);
+    rangeMode?: boolean;
+    rangeStart?: DateTuple;
+    rangeEnd?: DateTuple;
   }
 
   export interface PersianDatepickerMethods {
@@ -42,6 +46,10 @@ declare module 'react-persian-datepicker-element' {
     open: () => void;
     close: () => void;
     getElement: () => HTMLElement | null;
+    setRange: (start: DateTuple, end: DateTuple) => void;
+    getRange: () => { start: DateTuple | null; end: DateTuple | null };
+    clear: () => void;
+    setDisabledDatesFn: (fn: (year: number, month: number, day: number) => boolean) => void;
   }
 
   export interface PersianDatepickerProps extends Omit<PersianDatePickerElementOptions, 'onChange'> {
@@ -59,6 +67,12 @@ declare module 'react-persian-datepicker-element' {
     holidayColor?: string;
     holidayBg?: string;
     cssVariables?: CSSVariableMap;
+    minDate?: DateTuple;
+    maxDate?: DateTuple;
+    disabledDates?: string | ((year: number, month: number, day: number) => boolean);
+    rangeMode?: boolean;
+    rangeStart?: DateTuple;
+    rangeEnd?: DateTuple;
   }
 
   export const PersianDatepicker: ForwardRefExoticComponent<

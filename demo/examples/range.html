@@ -92,11 +92,24 @@
       font-size: 14px;
       margin: 20px 0;
       transition: background-color 0.3s, color 0.3s;
+      direction: ltr;
+      text-align: left;
+    }
+
+    pre code {
+      direction: ltr;
+      text-align: left;
+      white-space: pre;
+      display: block;
     }
 
     code {
       font-family: 'Fira Code', monospace;
       transition: color 0.3s;
+      direction: ltr;
+      display: block;
+      text-align: left;
+      unicode-bidi: embed;
     }
 
     .link {
@@ -284,10 +297,14 @@
     <div class="example">
       <h2>انتخاب بازه زمانی پایه</h2>
       <div class="example-label">انتخاب بازه زمانی ساده با تنظیمات پیش‌فرض:</div>
-      <persian-datepicker-element id="basic-range-picker" range-mode></persian-datepicker-element>
+      <persian-datepicker-element id="basic-range-picker" range-mode show-holidays></persian-datepicker-element>
       <div class="result">بازه انتخاب شده: <span id="basic-range-result">هیچ</span></div>
       
-      <pre><code>&lt;persian-datepicker-element id="basic-range-picker" range-mode&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+      <pre><code>&lt;persian-datepicker-element 
+  id="basic-range-picker" 
+  range-mode
+  show-holidays
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
 
     <div class="example">
@@ -297,6 +314,7 @@
         id="format-range-picker" 
         range-mode 
         format="YYYY/MM/DD"
+        show-holidays
       ></persian-datepicker-element>
       <div class="result">بازه انتخاب شده: <span id="format-range-result">هیچ</span></div>
       
@@ -304,13 +322,14 @@
   id="format-range-picker" 
   range-mode 
   format="YYYY/MM/DD"
+  show-holidays
 &gt;&lt;/persian-datepicker-element&gt;</code></pre>
     </div>
 
     <div class="example">
       <h2>انتخاب بازه زمانی با مقدار اولیه</h2>
       <div class="example-label">انتخاب بازه زمانی با تنظیم برنامه‌ای بازه اولیه:</div>
-      <persian-datepicker-element id="initial-range-picker" range-mode></persian-datepicker-element>
+      <persian-datepicker-element id="initial-range-picker" range-mode show-holidays></persian-datepicker-element>
       <div class="result">بازه انتخاب شده: <span id="initial-range-result">هیچ</span></div>
       
       <pre><code>// تنظیم بازه اولیه به صورت برنامه‌ای
@@ -321,7 +340,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
     <div class="example">
       <h2>انتخاب بازه زمانی با مدیریت رویدادها</h2>
       <div class="example-label">انتخاب بازه زمانی با مدیریت جزئی رویدادها:</div>
-      <persian-datepicker-element id="event-range-picker" range-mode></persian-datepicker-element>
+      <persian-datepicker-element id="event-range-picker" range-mode show-holidays></persian-datepicker-element>
       <div class="result">
         شروع بازه: <span id="range-start-result">هیچ</span><br>
         پایان بازه: <span id="range-end-result">هیچ</span><br>
@@ -342,6 +361,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
       <persian-datepicker-element 
         id="styled-range-picker" 
         range-mode
+        show-holidays
         style="
           --jdp-primary: #8b5cf6;
           --jdp-primary-hover: #7c3aed;
@@ -357,6 +377,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
       <pre><code>&lt;persian-datepicker-element 
   id="styled-range-picker" 
   range-mode
+  show-holidays
   style="
     --jdp-primary: #8b5cf6;
     --jdp-primary-hover: #7c3aed;
@@ -375,6 +396,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
       <persian-datepicker-element 
         id="limited-range-picker" 
         range-mode
+        show-holidays
         min-date="[1403, 1, 1]"
         max-date="[1403, 12, 29]"
       ></persian-datepicker-element>
@@ -383,6 +405,7 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
       <pre><code>&lt;persian-datepicker-element 
   id="limited-range-picker" 
   range-mode
+  show-holidays
   min-date="[1403, 1, 1]"
   max-date="[1403, 12, 29]"
 &gt;&lt;/persian-datepicker-element&gt;</code></pre>

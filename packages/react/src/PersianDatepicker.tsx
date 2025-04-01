@@ -44,7 +44,7 @@ export interface PersianDatepickerProps extends Omit<PersianDatePickerElementOpt
   // New props for format and limits
   minDate?: DateTuple;
   maxDate?: DateTuple;
-  disabledDates?: string;
+  disabledDates?: string | ((year: number, month: number, day: number) => boolean);
 
   // Range picker props
   rangeMode?: boolean;
@@ -63,6 +63,8 @@ export interface PersianDatepickerMethods {
   setRange: (start: DateTuple, end: DateTuple) => void;
   getRange: () => { start: DateTuple | null; end: DateTuple | null };
   clear: () => void;
+  // Disabled dates method
+  setDisabledDatesFn: (fn: (year: number, month: number, day: number) => boolean) => void;
 }
 
 // Define an extended HTMLElement interface with custom methods
@@ -76,6 +78,8 @@ interface PersianDatepickerElement extends HTMLElement {
   setRange?: (start: DateTuple, end: DateTuple) => void;
   getRange?: () => { start: DateTuple | null; end: DateTuple | null };
   clear?: () => void;
+  // Disabled dates method
+  setDisabledDatesFn?: (fn: (year: number, month: number, day: number) => boolean) => void;
 }
 
 // Helper to convert camelCase to kebab-case for HTML attributes
@@ -144,6 +148,10 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       },
       clear: () => {
         elementRef.current?.clear?.();
+      },
+      // Disabled dates method
+      setDisabledDatesFn: (fn: (year: number, month: number, day: number) => boolean) => {
+        elementRef.current?.setDisabledDatesFn?.(fn);
       }
     }));
 
@@ -185,7 +193,18 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
         if (rtl !== undefined) elementRef.current.setAttribute('rtl', String(rtl));
         if (minDate) elementRef.current.setAttribute('min-date', convertDateTupleToString(minDate));
         if (maxDate) elementRef.current.setAttribute('max-date', convertDateTupleToString(maxDate));
-        if (disabledDates) elementRef.current.setAttribute('disabled-dates', disabledDates);
+        if (disabledDates) {
+          if (typeof disabledDates === 'function') {
+            // Directly set the function using the new method
+            elementRef.current.setDisabledDatesFn?.(disabledDates);
+          } else {
+            // Pass the function name as a string for backward compatibility
+            elementRef.current.setAttribute('disabled-dates', disabledDates);
+          }
+        } else {
+          // Clear disabled dates function if value is falsy
+          elementRef.current.setDisabledDatesFn?.((_y, _m, _d) => false);
+        }
         if (disabled !== undefined) elementRef.current.setAttribute('disabled', String(disabled));
         // Range picker attributes
         if (rangeMode !== undefined) elementRef.current.setAttribute('range-mode', String(rangeMode));
@@ -239,6 +258,7 @@ declare global {
         'min-date'?: string;
         'max-date'?: string;
         'disabled-dates'?: string;
+        'disabled-dates-fn'?: ((year: number, month: number, day: number) => boolean);
         disabled?: boolean;
         'range-mode'?: boolean;
         'range-start'?: string;

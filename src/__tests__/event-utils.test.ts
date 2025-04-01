@@ -1,4 +1,4 @@
-import { EventUtils } from '../utils/event-utils';
+import EventUtils from '../utils/event-utils';
 import { PersianEvent } from '../types';
 import HijriUtils from '../utils/hijri-utils';
 
@@ -14,6 +14,8 @@ window.fetch = jest.fn(() =>
 ) as jest.Mock;
 
 describe('EventUtils', () => {
+  let eventUtilsInstance: EventUtils;
+  
   const mockEvents: PersianEvent[] = [
     { title: 'عید نوروز', month: 1, day: 1, type: 'Iran', holiday: true },
     { title: 'روز طبیعت', month: 1, day: 13, type: 'Iran', holiday: true },
@@ -29,12 +31,13 @@ describe('EventUtils', () => {
   beforeEach(() => {
     // Reset mocks before each test
     jest.clearAllMocks();
-  });
-
-  beforeAll(() => {
-    // Mock the methods
-    EventUtils.getEventTypes = jest.fn(() => [...mockEventTypes]);
-    EventUtils.getAllEvents = jest.fn((eventTypes?: string[], includeAllTypes: boolean = false) => {
+    
+    // Create a new instance for each test
+    eventUtilsInstance = new EventUtils();
+    
+    // Mock the methods on the instance
+    jest.spyOn(eventUtilsInstance, 'getEventTypes').mockReturnValue([...mockEventTypes]);
+    jest.spyOn(eventUtilsInstance, 'getAllEvents').mockImplementation((eventTypes?: string[], includeAllTypes: boolean = false) => {
       let events = [...mockEvents];
       
       if (eventTypes && eventTypes.length > 0 && !includeAllTypes) {
@@ -44,32 +47,27 @@ describe('EventUtils', () => {
       return events;
     });
     
-    EventUtils.getEvents = jest.fn((month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false) => {
-      const events = EventUtils.getAllEvents(eventTypes, includeAllTypes);
+    jest.spyOn(eventUtilsInstance, 'getEvents').mockImplementation((month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false) => {
+      const events = eventUtilsInstance.getAllEvents(eventTypes, includeAllTypes);
       return events.filter(event => event.month === month && event.day === day);
     });
   });
   
-  afterAll(() => {
+  afterEach(() => {
     // Restore original implementations
-    (EventUtils.getAllEvents as jest.Mock).mockRestore();
-    (EventUtils.getEvents as jest.Mock).mockRestore();
-    (EventUtils.isHoliday as jest.Mock).mockRestore();
-    (EventUtils.getHolidayTitles as jest.Mock).mockRestore();
-    (EventUtils.getAllEventTitles as jest.Mock).mockRestore();
-    (EventUtils.getEventTypes as jest.Mock).mockRestore();
+    jest.restoreAllMocks();
   });
   
   describe('Event Loading', () => {
     test('should load events from json file', () => {
-      const events = EventUtils.getAllEvents();
+      const events = eventUtilsInstance.getAllEvents();
       expect(events).toBeDefined();
       expect(Array.isArray(events)).toBe(true);
       expect(events.length).toBeGreaterThan(0);
     });
 
     test('events should have required properties', () => {
-      const events = EventUtils.getAllEvents();
+      const events = eventUtilsInstance.getAllEvents();
       const sampleEvent = events[0];
       
       expect(sampleEvent).toHaveProperty('title');
@@ -80,7 +78,7 @@ describe('EventUtils', () => {
     });
 
     test('should load Persian calendar events', () => {
-      const events = EventUtils.getAllEvents();
+      const events = eventUtilsInstance.getAllEvents();
       // Filter for events that don't have Hijri origin (focus on Persian fixed events)
       const persianEvents = events.filter(e => e.type === 'Iran');
       
@@ -94,7 +92,7 @@ describe('EventUtils', () => {
     });
 
     test('should load religious events', () => {
-      const events = EventUtils.getAllEvents();
+      const events = eventUtilsInstance.getAllEvents();
       const ancientIranEvents = events.filter(e => e.type === 'AncientIran');
       
       // It's possible our tests are running in an environment where ancient Iran events
@@ -115,18 +113,18 @@ describe('EventUtils', () => {
   describe('Event Filtering', () => {
     test('should filter events by month and day', () => {
       // Persian New Year is a fixed date (1 Farvardin)
-      const nowruzDay = EventUtils.getEvents(1, 1);
+      const nowruzDay = eventUtilsInstance.getEvents(1, 1);
       expect(nowruzDay.length).toBeGreaterThan(0);
       
       // A day with no events should return empty array
-      const randomDate = EventUtils.getEvents(6, 25); // Arbitrary date which might not have events
+      const randomDate = eventUtilsInstance.getEvents(6, 25); // Arbitrary date which might not have events
       // We can't assert exact count as it might have events, but we can check it returns array
       expect(Array.isArray(randomDate)).toBe(true);
     });
 
     test('should filter events by type', () => {
       // Get only Iran events
-      const iranEvents = EventUtils.getAllEvents(['Iran']);
+      const iranEvents = eventUtilsInstance.getAllEvents(['Iran']);
       
       if (iranEvents.length > 0) {
         // If there are Iran events, they should all have type 'Iran'
@@ -136,7 +134,7 @@ describe('EventUtils', () => {
       }
       
       // Get only AncientIran events
-      const ancientIranEvents = EventUtils.getAllEvents(['AncientIran']);
+      const ancientIranEvents = eventUtilsInstance.getAllEvents(['AncientIran']);
       
       if (ancientIranEvents.length > 0) {
         // If there are AncientIran events, they should all have type 'AncientIran'
@@ -147,7 +145,7 @@ describe('EventUtils', () => {
     });
 
     test('filters events by type', () => {
-      const events = EventUtils.getEvents(7, 16, ['AncientIran']);
+      const events = eventUtilsInstance.getEvents(7, 16, ['AncientIran']);
       expect(events).toHaveLength(1);
       expect(events[0].title).toBe('جشن مهرگان');
     });
@@ -155,7 +153,7 @@ describe('EventUtils', () => {
 
   describe('Event Types', () => {
     test('should return available event types', () => {
-      const types = EventUtils.getEventTypes();
+      const types = eventUtilsInstance.getEventTypes();
       
       expect(Array.isArray(types)).toBe(true);
       expect(types.length).toBeGreaterThan(0);
@@ -168,52 +166,57 @@ describe('EventUtils', () => {
   describe('Hijri Event Mapping', () => {
     test('should refresh events', () => {
       // Mock the refreshEvents method
-      EventUtils.refreshEvents = jest.fn().mockReturnValue([]);
+      jest.spyOn(eventUtilsInstance, 'refreshEvents').mockResolvedValue([]);
       
       // Call refreshEvents
-      const refreshedEvents = EventUtils.refreshEvents();
+      const refreshedEventsPromise = eventUtilsInstance.refreshEvents();
       
-      // Should return array of events
-      expect(Array.isArray(refreshedEvents)).toBe(true);
-      expect(EventUtils.refreshEvents).toHaveBeenCalled();
+      // Should return promise of array of events
+      expect(refreshedEventsPromise).toBeInstanceOf(Promise);
+      expect(eventUtilsInstance.refreshEvents).toHaveBeenCalled();
+      
+      // We can also test the resolved value
+      return refreshedEventsPromise.then(events => {
+        expect(Array.isArray(events)).toBe(true);
+      });
     });
   });
 
   describe('getAllEvents', () => {
     test('returns all events when no type filter is provided', () => {
-      const events = EventUtils.getAllEvents();
+      const events = eventUtilsInstance.getAllEvents();
       expect(events).toHaveLength(mockEvents.length);
     });
     
     test('filters events by type', () => {
-      const iranEvents = EventUtils.getAllEvents(['Iran']);
+      const iranEvents = eventUtilsInstance.getAllEvents(['Iran']);
       expect(iranEvents.every(event => event.type === 'Iran')).toBe(true);
       expect(iranEvents).toHaveLength(2);
       
-      const ancientIranEvents = EventUtils.getAllEvents(['AncientIran']);
+      const ancientIranEvents = eventUtilsInstance.getAllEvents(['AncientIran']);
       expect(ancientIranEvents.every(event => event.type === 'AncientIran')).toBe(true);
       expect(ancientIranEvents).toHaveLength(2);
     });
     
     test('filters events by multiple types', () => {
-      const events = EventUtils.getAllEvents(['Iran', 'AncientIran']);
+      const events = eventUtilsInstance.getAllEvents(['Iran', 'AncientIran']);
       expect(events.every(event => ['Iran', 'AncientIran'].includes(event.type))).toBe(true);
       expect(events).toHaveLength(4);
     });
     
     test('includes all types when includeAllTypes is true', () => {
-      const events = EventUtils.getAllEvents(undefined, true);
+      const events = eventUtilsInstance.getAllEvents(undefined, true);
       expect(events).toHaveLength(mockEvents.length);
     });
 
     test('includes Afghanistan events when specified in types', () => {
-      const afghanistanEvents = EventUtils.getAllEvents(['Afghanistan']);
+      const afghanistanEvents = eventUtilsInstance.getAllEvents(['Afghanistan']);
       expect(afghanistanEvents.every(event => event.type === 'Afghanistan')).toBe(true);
       expect(afghanistanEvents).toHaveLength(1);
     });
 
     test('includes International events when specified in types', () => {
-      const internationalEvents = EventUtils.getAllEvents(['International']);
+      const internationalEvents = eventUtilsInstance.getAllEvents(['International']);
       expect(internationalEvents.every(event => event.type === 'International')).toBe(true);
       expect(internationalEvents).toHaveLength(2);
     });
@@ -221,55 +224,55 @@ describe('EventUtils', () => {
   
   describe('getEvents', () => {
     test('returns events for a specific month and day', () => {
-      const events = EventUtils.getEvents(1, 1);
+      const events = eventUtilsInstance.getEvents(1, 1);
       expect(events).toHaveLength(1);
       expect(events[0].title).toBe('عید نوروز');
     });
     
     test('returns empty array for dates with no events', () => {
-      const events = EventUtils.getEvents(2, 2);
+      const events = eventUtilsInstance.getEvents(2, 2);
       expect(events).toHaveLength(0);
     });
     
     test('filters events by type', () => {
-      const events = EventUtils.getEvents(7, 16, ['AncientIran']);
+      const events = eventUtilsInstance.getEvents(7, 16, ['AncientIran']);
       expect(events).toHaveLength(1);
       expect(events[0].title).toBe('جشن مهرگان');
     });
     
     test('returns all events for a date when includeAllTypes is true', () => {
-      const events = EventUtils.getEvents(1, 1, undefined, true);
+      const events = eventUtilsInstance.getEvents(1, 1, undefined, true);
       expect(events).toHaveLength(1);
     });
   });
   
   describe('isHoliday', () => {
     beforeEach(() => {
-      EventUtils.isHoliday = jest.fn((month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false) => {
-        const events = EventUtils.getEvents(month, day, eventTypes, includeAllTypes);
+      jest.spyOn(eventUtilsInstance, 'isHoliday').mockImplementation((month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false) => {
+        const events = eventUtilsInstance.getEvents(month, day, eventTypes, includeAllTypes);
         return events.some(event => event.holiday === true);
       });
     });
     
     test('returns true for a holiday date', () => {
-      expect(EventUtils.isHoliday(1, 1)).toBe(true);
-      expect(EventUtils.isHoliday(7, 16)).toBe(true);
+      expect(eventUtilsInstance.isHoliday(1, 1)).toBe(true);
+      expect(eventUtilsInstance.isHoliday(7, 16)).toBe(true);
     });
     
     test('returns false for a non-holiday date', () => {
-      expect(EventUtils.isHoliday(2, 2)).toBe(false);
+      expect(eventUtilsInstance.isHoliday(2, 2)).toBe(false);
     });
     
     test('respects type filters', () => {
-      expect(EventUtils.isHoliday(1, 1, ['AncientIran'])).toBe(false);
-      expect(EventUtils.isHoliday(7, 16, ['AncientIran'])).toBe(true);
+      expect(eventUtilsInstance.isHoliday(1, 1, ['AncientIran'])).toBe(false);
+      expect(eventUtilsInstance.isHoliday(7, 16, ['AncientIran'])).toBe(true);
     });
   });
   
   describe('getHolidayTitles', () => {
     beforeEach(() => {
-      EventUtils.getHolidayTitles = jest.fn((month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false) => {
-        const events = EventUtils.getEvents(month, day, eventTypes, includeAllTypes);
+      jest.spyOn(eventUtilsInstance, 'getHolidayTitles').mockImplementation((month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false) => {
+        const events = eventUtilsInstance.getEvents(month, day, eventTypes, includeAllTypes);
         return events
           .filter(event => event.holiday === true)
           .map(event => event.title);
@@ -277,31 +280,31 @@ describe('EventUtils', () => {
     });
     
     test('returns holiday titles for a date', () => {
-      const titles = EventUtils.getHolidayTitles(1, 1);
+      const titles = eventUtilsInstance.getHolidayTitles(1, 1);
       expect(titles).toContain('عید نوروز');
     });
     
     test('returns empty array for non-holiday dates', () => {
-      const titles = EventUtils.getHolidayTitles(2, 2);
+      const titles = eventUtilsInstance.getHolidayTitles(2, 2);
       expect(titles).toHaveLength(0);
     });
   });
   
   describe('getAllEventTitles', () => {
     beforeEach(() => {
-      EventUtils.getAllEventTitles = jest.fn((month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false) => {
-        const events = EventUtils.getEvents(month, day, eventTypes, includeAllTypes);
+      jest.spyOn(eventUtilsInstance, 'getAllEventTitles').mockImplementation((month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false) => {
+        const events = eventUtilsInstance.getEvents(month, day, eventTypes, includeAllTypes);
         return events.map(event => event.title);
       });
     });
     
     test('returns all event titles for a date', () => {
-      const titles = EventUtils.getAllEventTitles(1, 1);
+      const titles = eventUtilsInstance.getAllEventTitles(1, 1);
       expect(titles).toContain('عید نوروز');
     });
     
     test('returns empty array for dates with no events', () => {
-      const titles = EventUtils.getAllEventTitles(2, 2);
+      const titles = eventUtilsInstance.getAllEventTitles(2, 2);
       expect(titles).toHaveLength(0);
     });
   });

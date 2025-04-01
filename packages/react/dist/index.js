@@ -87,6 +87,10 @@ var PersianDatepicker = (0, import_react.forwardRef)(
       },
       clear: () => {
         elementRef.current?.clear?.();
+      },
+      // Disabled dates method
+      setDisabledDatesFn: (fn) => {
+        elementRef.current?.setDisabledDatesFn?.(fn);
       }
     }));
     (0, import_react.useEffect)(() => {
@@ -120,7 +124,15 @@ var PersianDatepicker = (0, import_react.forwardRef)(
         if (rtl !== void 0) elementRef.current.setAttribute("rtl", String(rtl));
         if (minDate) elementRef.current.setAttribute("min-date", convertDateTupleToString(minDate));
         if (maxDate) elementRef.current.setAttribute("max-date", convertDateTupleToString(maxDate));
-        if (disabledDates) elementRef.current.setAttribute("disabled-dates", disabledDates);
+        if (disabledDates) {
+          if (typeof disabledDates === "function") {
+            elementRef.current.setDisabledDatesFn?.(disabledDates);
+          } else {
+            elementRef.current.setAttribute("disabled-dates", disabledDates);
+          }
+        } else {
+          elementRef.current.setDisabledDatesFn?.((_y, _m, _d) => false);
+        }
         if (disabled !== void 0) elementRef.current.setAttribute("disabled", String(disabled));
         if (rangeMode !== void 0) elementRef.current.setAttribute("range-mode", String(rangeMode));
         if (rangeStart) elementRef.current.setAttribute("range-start", convertDateTupleToString(rangeStart));
