@@ -994,7 +994,10 @@ export class PersianDatePickerElement extends HTMLElement {
       this.initializeCurrentDate();
       
       // Initialize events data using the singleton
-      await EventUtils.initialize();
+      // Only initialize if not already initialized
+      if (!EventUtils.isInitialized()) {
+        await EventUtils.initialize();
+      }
       
       // Setup initial UI components
       this.initializeUIComponents();
@@ -1280,9 +1283,6 @@ export class PersianDatePickerElement extends HTMLElement {
     
     // Setup month and year selectors
     this.setupMonthYearSelectors();
-    
-    // Refresh events for correct Jalali dates
-    this.eventUtils.refreshEvents();
   }
 
   /**

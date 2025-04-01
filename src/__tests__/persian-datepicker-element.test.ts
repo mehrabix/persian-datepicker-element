@@ -63,7 +63,8 @@ class MockEventUtils {
 jest.mock('../utils/event-utils', () => {
   return {
     getInstance: jest.fn().mockImplementation(() => MockEventUtils.getInstance()),
-    initialize: jest.fn().mockImplementation(() => MockEventUtils.initialize())
+    initialize: jest.fn().mockImplementation(() => MockEventUtils.initialize()),
+    isInitialized: jest.fn().mockReturnValue(false)
   };
 });
 
