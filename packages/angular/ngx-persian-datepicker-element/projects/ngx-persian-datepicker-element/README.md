@@ -8,10 +8,12 @@ An Angular wrapper for the persian-datepicker-element web component, providing a
 ✅ Angular Signals support (Angular 17+)  
 ✅ Reactive forms integration  
 ✅ Persian (Jalali) calendar  
-✅ Holiday types support (Iran, Afghanistan, Religious, etc.)  
-✅ Customizable styling  
+✅ Holiday highlighting and customization  
+✅ Range picker mode  
+✅ Min/Max date restrictions  
+✅ Disabled dates support  
 ✅ Full TypeScript support  
-✅ No CDN required - the web component is bundled with the library
+✅ Customizable theme via CSS variables
 
 ## Installation
 
@@ -19,26 +21,11 @@ An Angular wrapper for the persian-datepicker-element web component, providing a
 npm install ngx-persian-datepicker-element
 # or
 yarn add ngx-persian-datepicker-element
-# or
-pnpm add ngx-persian-datepicker-element
 ```
 
 ## Usage
 
-Import the `NgxPersianDatepickerModule` in your Angular module:
-
-```typescript
-import { NgxPersianDatepickerModule } from 'ngx-persian-datepicker-element';
-
-@NgModule({
-  imports: [
-    NgxPersianDatepickerModule
-  ]
-})
-export class AppModule { }
-```
-
-Or for standalone components:
+For standalone components (recommended):
 
 ```typescript
 import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
@@ -88,58 +75,24 @@ export class ExampleComponent {
 }
 ```
 
-### With Holiday Types
-
-You can use either the direct property names or the legacy alias name (with "Input" suffix):
+### Range Picker Example
 
 ```html
-<!-- Using signal-based inputs directly (Angular 17+ recommended) -->
 <ngx-persian-datepicker-element 
-  placeholder="انتخاب تاریخ" 
-  format="YYYY/MM/DD" 
-  [showHolidays]="true" 
-  [holidayTypes]="['Iran', 'Religious']"
-  (dateChange)="onDateChange($event)">
-</ngx-persian-datepicker-element>
-
-<!-- Using alias names (compatible with all Angular versions) -->
-<ngx-persian-datepicker-element 
-  placeholder="انتخاب تاریخ" 
-  format="YYYY/MM/DD" 
-  [showHolidaysInput]="true" 
-  [holidayTypesInput]="['Iran', 'Religious']"
-  (dateChange)="onDateChange($event)">
+  [rangeMode]="true"
+  [rangeStart]="[1402, 1, 1]"
+  [rangeEnd]="[1402, 1, 15]"
+  (dateChange)="onRangeChange($event)">
 </ngx-persian-datepicker-element>
 ```
 
-> Note: If you're using direct input properties and getting binding errors, add `CUSTOM_ELEMENTS_SCHEMA` to your component's schemas:
->
-> ```typescript
-> import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-> 
-> @Component({
->   // ...
->   schemas: [CUSTOM_ELEMENTS_SCHEMA],
->   // ...
-> })
-> export class YourComponent { }
-> ```
-
-### Custom Styling
+### With Holiday Types
 
 ```html
 <ngx-persian-datepicker-element 
-  placeholder="تاریخ سفارشی" 
-  format="YYYY/MM/DD"
-  primaryColor="#9c27b0" 
-  primaryHover="#7b1fa2"
-  backgroundColor="#f5f0fa"
-  foregroundColor="#333"
-  borderColor="#ddd"
-  borderRadius="12px"
-  holidayColor="#e91e63"
-  holidayBg="#ffe6ec"
-  [showHolidays]="true">
+  [showHolidays]="true" 
+  [holidayTypes]="['Iran', 'Religious']"
+  (dateChange)="onDateChange($event)">
 </ngx-persian-datepicker-element>
 ```
 
@@ -147,23 +100,20 @@ You can use either the direct property names or the legacy alias name (with "Inp
 
 ### Input Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `placeholder` / `placeholderInput` | `string` | Placeholder text for the input field |
-| `format` / `formatInput` | `string` | Date format string (e.g., 'YYYY/MM/DD') |
-| `showHolidays` / `showHolidaysInput` | `boolean` | Whether to show holidays in the calendar |
-| `holidayTypes` / `holidayTypesInput` | `string` or `string[]` | Holiday types to display (e.g., 'Iran', 'Religious', 'National', 'Afghanistan', or 'all') |
-| `rtl` / `rtlInput` | `boolean` | Whether the component should use RTL layout |
-| `primaryColor` / `primaryColorInput` | `string` | Primary color for the datepicker |
-| `primaryHover` / `primaryHoverInput` | `string` | Primary hover color for the datepicker |
-| `backgroundColor` / `backgroundColorInput` | `string` | Background color for the datepicker |
-| `foregroundColor` / `foregroundColorInput` | `string` | Foreground (text) color for the datepicker |
-| `borderColor` / `borderColorInput` | `string` | Border color for the datepicker |
-| `borderRadius` / `borderRadiusInput` | `string` | Border radius for the datepicker |
-| `fontFamily` / `fontFamilyInput` | `string` | Font family for the datepicker |
-| `holidayColor` / `holidayColorInput` | `string` | Holiday text color for the datepicker |
-| `holidayBg` / `holidayBgInput` | `string` | Holiday background color for the datepicker |
-| `cssVariables` / `cssVariablesInput` | `CSSVariableMap` | Custom CSS variables map for styling |
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `placeholder` | `string` | '' | Placeholder text for the input field |
+| `format` | `string` | 'YYYY/MM/DD' | Date format pattern |
+| `showHolidays` | `boolean` | true | Whether to show holidays in the calendar |
+| `holidayTypes` | `string \| string[]` | - | Types of holidays to display |
+| `rtl` | `boolean` | true | Right-to-left layout |
+| `minDate` | `[number, number, number]` | - | Minimum selectable date [year, month, day] |
+| `maxDate` | `[number, number, number]` | - | Maximum selectable date [year, month, day] |
+| `disabledDates` | `string \| Function` | - | Dates to disable (string pattern or function) |
+| `rangeMode` | `boolean` | false | Enable range selection mode |
+| `rangeStart` | `[number, number, number]` | - | Start date for range selection |
+| `rangeEnd` | `[number, number, number]` | - | End date for range selection |
+| `defaultDate` | `[number, number, number]` | - | Initial date to display |
 
 ### Output Events
 
@@ -179,13 +129,155 @@ interface DateChangeEvent {
   gregorian: [number, number, number]; // [year, month, day]
   isHoliday: boolean;
   events?: any[];
+  range?: {
+    start: [number, number, number];
+    end: [number, number, number];
+  };
 }
 ```
 
-## Angular Signals Support
+## Theme Customization
 
-This component uses Angular Signals for its inputs, making it more efficient with Angular 17+. Both the property name (e.g., `showHolidays`) and alias name (e.g., `showHolidaysInput`) are supported for backward compatibility.
+You can customize the appearance using CSS variables:
+
+```css
+ngx-persian-datepicker-element {
+  --jdp-primary: #0891b2;
+  --jdp-primary-hover: #0e7490;
+  --jdp-primary-foreground: #ffffff;
+  --jdp-background: #ffffff;
+  --jdp-foreground: #1e293b;
+  --jdp-border: #e2e8f0;
+  --jdp-border-radius: 0.5rem;
+  --jdp-font-family: system-ui;
+  --jdp-font-size: 14px;
+  --jdp-nav-button-size: 38px;
+  --jdp-day-cell-size: 36px;
+  --jdp-holiday-color: #ef4444;
+  --jdp-holiday-bg: #fee2e2;
+}
+```
 
 ## License
 
 MIT
+
+---
+
+<div dir="rtl">
+
+# کامپوننت تقویم شمسی برای Angular
+
+یک wrapper برای کامپوننت وب تقویم شمسی در Angular، با پشتیبانی از تقویم جلالی و نمایش تعطیلات.
+
+## ویژگی‌ها
+
+✅ کامپوننت Angular ساده و کاربردی  
+✅ پشتیبانی از Angular Signals (نسخه ۱۷+)  
+✅ یکپارچه‌سازی با Reactive Forms  
+✅ تقویم شمسی (جلالی)  
+✅ نمایش و شخصی‌سازی تعطیلات  
+✅ حالت انتخاب بازه  
+✅ محدودیت حداقل/حداکثر تاریخ  
+✅ پشتیبانی از تاریخ‌های غیرفعال  
+✅ پشتیبانی کامل از TypeScript  
+✅ قابلیت شخصی‌سازی ظاهر با متغیرهای CSS
+
+## نصب
+
+```bash
+npm install ngx-persian-datepicker-element
+# یا
+yarn add ngx-persian-datepicker-element
+```
+
+## نحوه استفاده
+
+برای کامپوننت‌های standalone (توصیه شده):
+
+```typescript
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  // ...
+  imports: [NgxPersianDatepickerComponent]
+  // ...
+})
+export class YourStandaloneComponent { }
+```
+
+### استفاده پایه
+
+```html
+<ngx-persian-datepicker-element 
+  placeholder="انتخاب تاریخ" 
+  format="YYYY/MM/DD" 
+  (dateChange)="onDateChange($event)">
+</ngx-persian-datepicker-element>
+```
+
+### استفاده با Reactive Forms
+
+```html
+<form [formGroup]="myForm">
+  <ngx-persian-datepicker-element formControlName="date"></ngx-persian-datepicker-element>
+</form>
+```
+
+### مثال انتخاب بازه
+
+```html
+<ngx-persian-datepicker-element 
+  [rangeMode]="true"
+  [rangeStart]="[1402, 1, 1]"
+  [rangeEnd]="[1402, 1, 15]"
+  (dateChange)="onRangeChange($event)">
+</ngx-persian-datepicker-element>
+```
+
+## ورودی‌ها
+
+| ورودی | نوع | پیش‌فرض | توضیحات |
+|-------|-----|---------|----------|
+| `placeholder` | `string` | '' | متن پیش‌فرض ورودی |
+| `format` | `string` | 'YYYY/MM/DD' | الگوی نمایش تاریخ |
+| `showHolidays` | `boolean` | true | نمایش تعطیلات |
+| `holidayTypes` | `string \| string[]` | - | انواع تعطیلات برای نمایش |
+| `rtl` | `boolean` | true | چیدمان راست به چپ |
+| `minDate` | `[number, number, number]` | - | حداقل تاریخ قابل انتخاب [سال، ماه، روز] |
+| `maxDate` | `[number, number, number]` | - | حداکثر تاریخ قابل انتخاب [سال، ماه، روز] |
+| `disabledDates` | `string \| Function` | - | تاریخ‌های غیرفعال (الگو یا تابع) |
+| `rangeMode` | `boolean` | false | فعال‌سازی حالت انتخاب بازه |
+| `rangeStart` | `[number, number, number]` | - | تاریخ شروع بازه |
+| `rangeEnd` | `[number, number, number]` | - | تاریخ پایان بازه |
+| `defaultDate` | `[number, number, number]` | - | تاریخ اولیه برای نمایش |
+
+## خروجی‌ها
+
+| رویداد | نوع | توضیحات |
+|--------|-----|----------|
+| `dateChange` | `EventEmitter<DateChangeEvent>` | هنگام انتخاب تاریخ فراخوانی می‌شود |
+
+## شخصی‌سازی ظاهر
+
+می‌توانید با استفاده از متغیرهای CSS، ظاهر تقویم را شخصی‌سازی کنید:
+
+```css
+ngx-persian-datepicker-element {
+  --jdp-primary: #0891b2;
+  --jdp-primary-hover: #0e7490;
+  --jdp-primary-foreground: #ffffff;
+  --jdp-background: #ffffff;
+  --jdp-foreground: #1e293b;
+  --jdp-border: #e2e8f0;
+  --jdp-border-radius: 0.5rem;
+  --jdp-font-family: system-ui;
+  --jdp-font-size: 14px;
+  --jdp-nav-button-size: 38px;
+  --jdp-day-cell-size: 36px;
+  --jdp-holiday-color: #ef4444;
+  --jdp-holiday-bg: #fee2e2;
+}
+```
+
+</div>

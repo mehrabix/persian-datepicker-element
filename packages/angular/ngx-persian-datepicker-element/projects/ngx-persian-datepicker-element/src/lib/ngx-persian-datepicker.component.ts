@@ -90,27 +90,19 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
   private readonly valueSignal = signal<DateTuple | null>(null);
   private readonly disabledSignal = signal<boolean>(false);
 
-  // #region Input Signals - using the new input() syntax
-  readonly placeholder = input<string | undefined>(undefined, { alias: 'placeholderInput' });
-  readonly format = input<string | undefined>(undefined, { alias: 'formatInput' });
-  readonly showHolidays = input<boolean | undefined>(undefined, { alias: 'showHolidaysInput' });
-  readonly holidayTypes = input<string | string[] | undefined>(undefined, { alias: 'holidayTypesInput' });
-  readonly rtl = input<boolean | undefined>(undefined, { alias: 'rtlInput' });
-  readonly primaryColor = input<string | undefined>(undefined, { alias: 'primaryColorInput' });
-  readonly primaryHover = input<string | undefined>(undefined, { alias: 'primaryHoverInput' });
-  readonly backgroundColor = input<string | undefined>(undefined, { alias: 'backgroundColorInput' });
-  readonly foregroundColor = input<string | undefined>(undefined, { alias: 'foregroundColorInput' });
-  readonly borderColor = input<string | undefined>(undefined, { alias: 'borderColorInput' });
-  readonly borderRadius = input<string | undefined>(undefined, { alias: 'borderRadiusInput' });
-  readonly fontFamily = input<string | undefined>(undefined, { alias: 'fontFamilyInput' });
-  readonly holidayColor = input<string | undefined>(undefined, { alias: 'holidayColorInput' });
-  readonly holidayBg = input<string | undefined>(undefined, { alias: 'holidayBgInput' });
-  
-  // Range picker inputs
-  readonly rangeMode = input<boolean | undefined>(undefined, { alias: 'rangeModeInput' });
-  readonly rangeStart = input<DateTuple | undefined>(undefined, { alias: 'rangeStartInput' });
-  readonly rangeEnd = input<DateTuple | undefined>(undefined, { alias: 'rangeEndInput' });
-  
+  // #region Input Signals
+  readonly placeholder = input<string | undefined>(undefined);
+  readonly format = input<string | undefined>(undefined);
+  readonly showHolidays = input<boolean | undefined>(undefined);
+  readonly holidayTypes = input<string | string[] | undefined>(undefined);
+  readonly rtl = input<boolean | undefined>(undefined);
+  readonly minDate = input<DateTuple | undefined>(undefined);
+  readonly maxDate = input<DateTuple | undefined>(undefined);
+  readonly disabledDates = input<string | ((year: number, month: number, day: number) => boolean) | undefined>(undefined);
+  readonly rangeMode = input<boolean | undefined>(undefined);
+  readonly rangeStart = input<DateTuple | undefined>(undefined);
+  readonly rangeEnd = input<DateTuple | undefined>(undefined);
+  readonly defaultDate = input<DateTuple | undefined>(undefined);
   // #endregion
 
   // #region Outputs
@@ -210,6 +202,42 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
       const value = this.rangeEnd();
       if (value !== undefined) {
         this.updateAttribute('range-end', JSON.stringify(value));
+      }
+    });
+
+    // Add effects for new inputs
+    effect(() => {
+      const value = this.minDate();
+      if (value !== undefined) {
+        this.updateAttribute('min-date', JSON.stringify(value));
+      }
+    });
+
+    effect(() => {
+      const value = this.maxDate();
+      if (value !== undefined) {
+        this.updateAttribute('max-date', JSON.stringify(value));
+      }
+    });
+
+    effect(() => {
+      const value = this.disabledDates();
+      if (value !== undefined) {
+        if (typeof value === 'function') {
+          const element = this.elementSignal();
+          if (element && 'setDisabledDatesFn' in element) {
+            (element as any).setDisabledDatesFn(value);
+          }
+        } else {
+          this.updateAttribute('disabled-dates', value);
+        }
+      }
+    });
+
+    effect(() => {
+      const value = this.defaultDate();
+      if (value !== undefined) {
+        this.updateAttribute('default-date', JSON.stringify(value));
       }
     });
   }
@@ -338,53 +366,45 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
     if (rtl !== undefined) {
       element.setAttribute('rtl', String(rtl));
     }
-    
-    // Apply CSS custom properties
-    const primaryColor = this.primaryColor();
-    if (primaryColor !== undefined) {
-      element.style.setProperty('--jdp-primary', primaryColor);
+
+    const minDate = this.minDate();
+    if (minDate !== undefined) {
+      element.setAttribute('min-date', JSON.stringify(minDate));
     }
-    
-    const primaryHover = this.primaryHover();
-    if (primaryHover !== undefined) {
-      element.style.setProperty('--jdp-primary-hover', primaryHover);
+
+    const maxDate = this.maxDate();
+    if (maxDate !== undefined) {
+      element.setAttribute('max-date', JSON.stringify(maxDate));
     }
-    
-    const backgroundColor = this.backgroundColor();
-    if (backgroundColor !== undefined) {
-      element.style.setProperty('--jdp-background', backgroundColor);
+
+    const disabledDates = this.disabledDates();
+    if (disabledDates !== undefined) {
+      if (typeof disabledDates === 'function') {
+        (element as any).setDisabledDatesFn(disabledDates);
+      } else {
+        element.setAttribute('disabled-dates', disabledDates);
+      }
     }
-    
-    const foregroundColor = this.foregroundColor();
-    if (foregroundColor !== undefined) {
-      element.style.setProperty('--jdp-foreground', foregroundColor);
+
+    const rangeMode = this.rangeMode();
+    if (rangeMode !== undefined) {
+      element.setAttribute('range-mode', String(rangeMode));
     }
-    
-    const borderColor = this.borderColor();
-    if (borderColor !== undefined) {
-      element.style.setProperty('--jdp-border', borderColor);
+
+    const rangeStart = this.rangeStart();
+    if (rangeStart !== undefined) {
+      element.setAttribute('range-start', JSON.stringify(rangeStart));
     }
-    
-    const borderRadius = this.borderRadius();
-    if (borderRadius !== undefined) {
-      element.style.setProperty('--jdp-border-radius', borderRadius);
+
+    const rangeEnd = this.rangeEnd();
+    if (rangeEnd !== undefined) {
+      element.setAttribute('range-end', JSON.stringify(rangeEnd));
     }
-    
-    const fontFamily = this.fontFamily();
-    if (fontFamily !== undefined) {
-      element.style.setProperty('--jdp-font-family', fontFamily);
+
+    const defaultDate = this.defaultDate();
+    if (defaultDate !== undefined) {
+      element.setAttribute('default-date', JSON.stringify(defaultDate));
     }
-    
-    const holidayColor = this.holidayColor();
-    if (holidayColor !== undefined) {
-      element.style.setProperty('--jdp-holiday-color', holidayColor);
-    }
-    
-    const holidayBg = this.holidayBg();
-    if (holidayBg !== undefined) {
-      element.style.setProperty('--jdp-holiday-bg', holidayBg);
-    }
-    
 
     // Set disabled state
     if (this.disabledSignal()) {

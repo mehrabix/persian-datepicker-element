@@ -7,7 +7,6 @@
       :format="format"
       :show-holidays="showHolidays"
       :rtl="rtl"
-      :disabled="disabled"
       :min-date="minDate"
       :max-date="maxDate"
       :disabled-dates="disabledDates"
@@ -15,6 +14,7 @@
       :range-mode="rangeMode"
       :range-start="rangeStart"
       :range-end="rangeEnd"
+      :default-date="defaultDate"
       @change="handleChange"
     />
   </div>
@@ -46,10 +46,6 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
   minDate: {
     type: Array as () => DateTuple,
     default: undefined
@@ -59,11 +55,11 @@ const props = defineProps({
     default: undefined
   },
   disabledDates: {
-    type: String,
+    type: [String, Function] as PropType<string | ((year: number, month: number, day: number) => boolean)>,
     default: undefined
   },
   holidayTypes: {
-    type: String,
+    type: [String, Array] as PropType<string | string[]>,
     default: undefined
   },
   className: {
@@ -74,7 +70,6 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  // Range picker props
   rangeMode: {
     type: Boolean,
     default: false
@@ -84,6 +79,10 @@ const props = defineProps({
     default: undefined
   },
   rangeEnd: {
+    type: Array as () => DateTuple,
+    default: undefined
+  },
+  defaultDate: {
     type: Array as () => DateTuple,
     default: undefined
   }
@@ -213,21 +212,56 @@ onMounted(() => {
 
 // Define methods to expose
 defineExpose({
-  getValue: () => (elementRef.value as any)?.getValue(),
-  setValue: (year: number, month: number, day: number) => {
-    (elementRef.value as any)?.setValue(year, month, day);
+  getValue: () => {
+    try {
+      return (elementRef.value as any)?.getValue();
+    } catch (error) {
+      console.error('Failed to get value:', error);
+      return null;
+    }
   },
-  open: () => (elementRef.value as any)?.open(),
-  close: () => (elementRef.value as any)?.close(),
-  // Range picker methods
+  setValue: (year: number, month: number, day: number) => {
+    try {
+      (elementRef.value as any)?.setValue(year, month, day);
+    } catch (error) {
+      console.error('Failed to set value:', error);
+    }
+  },
+  open: () => {
+    try {
+      (elementRef.value as any)?.open();
+    } catch (error) {
+      console.error('Failed to open datepicker:', error);
+    }
+  },
+  close: () => {
+    try {
+      (elementRef.value as any)?.close();
+    } catch (error) {
+      console.error('Failed to close datepicker:', error);
+    }
+  },
   setRange: (start: DateTuple, end: DateTuple) => {
-    (elementRef.value as any)?.setRange(start, end);
+    try {
+      (elementRef.value as any)?.setRange(start, end);
+    } catch (error) {
+      console.error('Failed to set range:', error);
+    }
   },
   getRange: () => {
-    return (elementRef.value as any)?.getRange() || { start: null, end: null };
+    try {
+      return (elementRef.value as any)?.getRange() || { start: null, end: null };
+    } catch (error) {
+      console.error('Failed to get range:', error);
+      return { start: null, end: null };
+    }
   },
   clear: () => {
-    (elementRef.value as any)?.clear();
+    try {
+      (elementRef.value as any)?.clear();
+    } catch (error) {
+      console.error('Failed to clear datepicker:', error);
+    }
   }
 });
 </script>
