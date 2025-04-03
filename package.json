@@ -114,6 +114,7 @@
     "build:esm-optimize": "node scripts/optimize/esm-optimize.js",
     "build:extreme": "node scripts/build/extreme-build.js",
     "build:production": "pnpm build:prod && pnpm build:optimal",
+    "build:css-optimize": "node scripts/optimize/css-optimize.js",
     "minify": "node scripts/optimize/minify.js persian-datepicker-element.min.js && node scripts/optimize/esm-optimize.js",
     "cleanup": "pnpm build:clean",
     "dev": "pnpm -r dev",

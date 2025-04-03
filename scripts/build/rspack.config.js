@@ -101,6 +101,21 @@ const config = {
         },
         exclude: /node_modules/,
       },
+      // Add CSS handling rules
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: false,
+              sourceMap: !isProduction || !shouldMinify,
+            }
+          }
+        ]
+      },
       // Add JSON loader to handle the events.json file
       {
         test: /\.json$/,
@@ -110,7 +125,7 @@ const config = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.css'],
     // Enforce resolution of ES modules for better tree shaking
     mainFields: ['module', 'main'],
     // Add conditions to prefer newer module formats
@@ -120,7 +135,7 @@ const config = {
   devtool: isProduction && shouldMinify ? false : 'source-map',
   optimization: {
     // Enable aggressive optimization
-    minimize: true,
+    minimize: shouldMinify,
     usedExports: true,
     sideEffects: true,
     providedExports: true,

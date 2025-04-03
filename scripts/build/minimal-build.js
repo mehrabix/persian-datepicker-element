@@ -29,6 +29,10 @@ process.env.MODULE_TYPE = 'umd';
 process.env.MINIFY = 'true';
 execSync('npx rspack --config scripts/build/rspack.config.js', { stdio: 'inherit' });
 
+// Optimize CSS in the built files
+console.log('Optimizing CSS in built files...');
+execSync('node scripts/optimize/css-optimize.js', { stdio: 'inherit' });
+
 // Generate TypeScript declaration files
 console.log('Generating TypeScript declaration files...');
 execSync('npx tsc --emitDeclarationOnly --declaration --outDir dist/types --excludeDirectories "**/__tests__"', { stdio: 'inherit' });
