@@ -1,6 +1,6 @@
 {
   "name": "vue-persian-datepicker-element",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Vue wrapper for persian-datepicker-element",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",

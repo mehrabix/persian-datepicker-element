@@ -1,4 +1,4 @@
-import { defineComponent as p, ref as s, computed as A, watch as i, nextTick as o, onMounted as b, createElementBlock as D, openBlock as S, normalizeStyle as k, normalizeClass as V, createElementVNode as x } from "vue";
+import { defineComponent as p, ref as s, computed as A, watch as o, nextTick as n, onMounted as b, createElementBlock as D, openBlock as S, normalizeStyle as k, normalizeClass as V, createElementVNode as x } from "vue";
 const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date", "max-date", "disabled-dates", "holiday-types", "range-mode", "range-start", "range-end", "default-date"], c = /* @__PURE__ */ p({
   __name: "PersianDatepicker",
   props: {
@@ -64,13 +64,13 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
     }
   },
   emits: ["update:modelValue", "change"],
-  setup(l, { expose: f, emit: y }) {
-    const a = l, u = y, m = s(null), t = s(null), g = A(() => a.modelValue ? Array.isArray(a.modelValue) ? a.modelValue.join("/") : String(a.modelValue) : ""), v = (e) => {
+  setup(l, { expose: f, emit: m }) {
+    const a = l, u = m, y = s(null), t = s(null), g = A(() => a.modelValue ? Array.isArray(a.modelValue) ? a.modelValue.join("/") : String(a.modelValue) : ""), v = (e) => {
       const r = e.detail;
       u("update:modelValue", r.jalali), u("change", r);
     };
-    return i(() => a.modelValue, (e) => {
-      o(() => {
+    return o(() => a.modelValue, (e) => {
+      n(() => {
         if (t.value)
           if (Array.isArray(e) && e.length === 3)
             try {
@@ -80,32 +80,32 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
             }
           else typeof e == "string" && t.value.setAttribute("value", e);
       });
-    }, { immediate: !1 }), i(() => a.minDate, (e) => {
-      o(() => {
+    }, { immediate: !1 }), o(() => a.minDate, (e) => {
+      n(() => {
         t.value && e && t.value.setAttribute("min-date", JSON.stringify(e));
       });
-    }), i(() => a.maxDate, (e) => {
-      o(() => {
+    }), o(() => a.maxDate, (e) => {
+      n(() => {
         t.value && e && t.value.setAttribute("max-date", JSON.stringify(e));
       });
-    }), i(() => a.disabledDates, (e) => {
-      o(() => {
+    }), o(() => a.disabledDates, (e) => {
+      n(() => {
         t.value && (e ? t.value.setAttribute("disabled-dates", JSON.stringify(e)) : t.value.removeAttribute("disabled-dates"));
       });
-    }), i(() => a.rangeMode, (e) => {
-      o(() => {
+    }), o(() => a.rangeMode, (e) => {
+      n(() => {
         t.value && t.value.setAttribute("range-mode", String(e));
       });
-    }), i(() => a.rangeStart, (e) => {
-      o(() => {
+    }), o(() => a.rangeStart, (e) => {
+      n(() => {
         t.value && e && t.value.setAttribute("range-start", JSON.stringify(e));
       });
-    }), i(() => a.rangeEnd, (e) => {
-      o(() => {
+    }), o(() => a.rangeEnd, (e) => {
+      n(() => {
         t.value && e && t.value.setAttribute("range-end", JSON.stringify(e));
       });
     }), b(() => {
-      o(() => {
+      n(() => {
         if (a.modelValue && t.value)
           if (Array.isArray(a.modelValue) && a.modelValue.length === 3)
             try {
@@ -124,10 +124,10 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
           return console.error("Failed to get value:", r), null;
         }
       },
-      setValue: (e, r, n) => {
+      setValue: (e, r, i) => {
         var d;
         try {
-          (d = t.value) == null || d.setValue(e, r, n);
+          (d = t.value) == null || d.setValue(e, r, i);
         } catch (h) {
           console.error("Failed to set value:", h);
         }
@@ -149,9 +149,9 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
         }
       },
       setRange: (e, r) => {
-        var n;
+        var i;
         try {
-          (n = t.value) == null || n.setRange(e, r);
+          (i = t.value) == null || i.setRange(e, r);
         } catch (d) {
           console.error("Failed to set range:", d);
         }
@@ -174,7 +174,7 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
       }
     }), (e, r) => (S(), D("div", {
       ref_key: "container",
-      ref: m,
+      ref: y,
       class: V(l.className),
       style: k(l.style)
     }, [
@@ -198,7 +198,7 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
       }, null, 40, F)
     ], 6));
   }
-}), M = {
+}), E = {
   PersianDatepicker: c,
   install: (l) => {
     l.component("PersianDatepicker", c);
@@ -206,5 +206,5 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
 };
 export {
   c as PersianDatepicker,
-  M as default
+  E as default
 };
