@@ -513,8 +513,15 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
     const initialRangePicker = document.getElementById('initial-range-picker');
     const initialRangeResult = document.getElementById('initial-range-result');
     
+    // Set initial range and automatically navigate to that month
     initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);
     initialRangeResult.textContent = formatRange([1403, 3, 1], [1403, 3, 15]);
+    
+    // Add click handler to demonstrate the calendar opens to the correct month
+    initialRangePicker.addEventListener('click', () => {
+      // The calendar will now automatically show the month of the start date
+      console.log('Calendar opened to:', [1403, 3]);
+    });
     
     initialRangePicker.addEventListener('change', (event) => {
       console.log(event);

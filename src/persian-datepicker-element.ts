@@ -2765,16 +2765,21 @@ export class PersianDatePickerElement extends HTMLElement {
 
   // Add new methods for range selection
   public setRange(start: DateTuple, end: DateTuple): void {
-    if (!this.isRangeMode) return;
+    this.rangeStart = start;
+    this.rangeEnd = end;
+    this.isRangeMode = true;
     
-    // Ensure range is in correct order
-    if (start > end) {
-      [start, end] = [end, start];
-    }
+    // Navigate to the start date's month and year
+    this.jalaliYear = start[0];
+    this.jalaliMonth = start[1];
     
-    this.rangeStart = [...start];
-    this.rangeEnd = [...end];
+    // Update the month and year selectors
+    this.updateMonthYearSelectors();
+    
+    // Format and display the range
     this.formatAndSetValue();
+    
+    // Force a re-render of the calendar
     this.renderCalendar();
   }
 
