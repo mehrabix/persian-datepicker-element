@@ -2469,115 +2469,89 @@ export class PersianDatePickerElement extends HTMLElement {
   private initTouchGestures(): void {
     if (!this.calendar || !this.shadowRoot) return;
     
-    let startX: number = 0;
-    let startY: number = 0;
-    let isDragging: boolean = false;
-    const threshold = 20;
-    let touchStartTime: number = 0;
-    let isSwiping = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    let isScrolling = false;
+    let canPreventScroll = true;
     
-    // Helper for touch event handler setup - fixed type issues
-    const setupTouchHandler = <K extends keyof HTMLElementEventMap>(
-      element: HTMLElement | null, 
-      eventType: K, 
-      handler: (e: HTMLElementEventMap[K]) => void, 
-      options?: AddEventListenerOptions
-    ): void => {
-      if (element) {
-        element.addEventListener(eventType, handler as EventListener, options);
-      }
-    };
-    
-    // Handle touch start
     const handleTouchStart = (e: TouchEvent): void => {
       if (!this.calendar?.classList.contains("visible")) return;
       
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      isDragging = false;
-      isSwiping = false;
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
       touchStartTime = Date.now();
-      e.stopPropagation();
+      isScrolling = false;
+      canPreventScroll = true;
     };
     
-    // Handle touch move
     const handleTouchMove = (e: TouchEvent): void => {
       if (!this.calendar?.classList.contains("visible")) return;
       
-      const currentX = e.touches[0].clientX;
-      const currentY = e.touches[0].clientY;
-      const diffX = currentX - startX;
-      const diffY = currentY - startY;
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
       
-      // If already swiping, prevent default
-      if (isSwiping) {
-        e.preventDefault();
+      // Determine if user is trying to scroll vertically
+      if (!isScrolling) {
+        isScrolling = Math.abs(deltaY) > Math.abs(deltaX);
+      }
+      
+      // If user is scrolling vertically, don't try to prevent default
+      if (isScrolling) {
+        canPreventScroll = false;
         return;
       }
       
-      // Detect horizontal swipe
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+      // Only try to prevent default for significant horizontal swipes
+      if (Math.abs(deltaX) > 10 && canPreventScroll) {
+        try {
           e.preventDefault();
-          isDragging = true;
-          isSwiping = true;
-      }
-    };
-    
-    // Handle touch end
-    const handleTouchEnd = (e: TouchEvent): void => {
-      if (!this.calendar?.classList.contains("visible")) return;
-      
-      const wasSwiping = isSwiping;
-      isSwiping = false;
-      
-      const touchEndTime = Date.now();
-      const touchDuration = touchEndTime - touchStartTime;
-      
-      // Process if touch was quick or we detected dragging
-      if ((touchDuration < 300 || isDragging) && !this.isTransitioning) {
-        const endX = e.changedTouches[0].clientX;
-        const endY = e.changedTouches[0].clientY;
-        
-        const diffX = endX - startX;
-        const diffY = endY - startY;
-        
-        // Consider only significant horizontal movements
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
-          // Determine direction based on RTL mode
-          const isRTL = getComputedStyle(this).getPropertyValue('--jdp-direction').trim() === 'rtl';
-          
-          if ((isRTL && diffX < 0) || (!isRTL && diffX > 0)) {
-              e.preventDefault();
-            e.stopPropagation();
-            this.changeMonth(1); // Next month
-          } else if ((isRTL && diffX > 0) || (!isRTL && diffX < 0)) {
-              e.preventDefault();
-            e.stopPropagation();
-            this.changeMonth(-1); // Previous month
-          }
+        } catch (err) {
+          // If we can't prevent default, mark it for future reference
+          canPreventScroll = false;
         }
       }
+    };
+    
+    const handleTouchEnd = (e: TouchEvent): void => {
+      if (!this.calendar?.classList.contains("visible") || isScrolling) return;
       
-      // Prevent click events if we were swiping
-      if (wasSwiping) {
-        e.preventDefault();
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const touchDuration = Date.now() - touchStartTime;
+      
+      // Process swipe only if:
+      // 1. The swipe was fast enough (under 300ms)
+      // 2. The distance was significant (over 50px)
+      // 3. Not currently transitioning between months
+      if (touchDuration < 300 && Math.abs(deltaX) > 50 && !this.isTransitioning) {
+        const isRTL = getComputedStyle(this).getPropertyValue('--jdp-direction').trim() === 'rtl';
+        
+        if ((isRTL && deltaX < 0) || (!isRTL && deltaX > 0)) {
+          this.changeMonth(1); // Next month
+        } else if ((isRTL && deltaX > 0) || (!isRTL && deltaX < 0)) {
+          this.changeMonth(-1); // Previous month
+        }
       }
     };
     
-    // Handle touch cancel
     const handleTouchCancel = (): void => {
-      isSwiping = false;
-      isDragging = false;
+      isScrolling = false;
+      canPreventScroll = true;
     };
     
-    // Set up calendar touch events
-    // Use explicit 'touchstart' type instead of string
-    this.calendar.addEventListener('touchstart', handleTouchStart as EventListener, { passive: true });
-    this.calendar.addEventListener('touchmove', handleTouchMove as EventListener, { passive: false });
-    this.calendar.addEventListener('touchend', handleTouchEnd as EventListener, { passive: false });
-    this.calendar.addEventListener('touchcancel', handleTouchCancel as EventListener);
+    // Add event listeners with correct passive options
+    this.calendar.addEventListener('touchstart', handleTouchStart, { passive: true });
+    this.calendar.addEventListener('touchmove', handleTouchMove, { passive: false });
+    this.calendar.addEventListener('touchend', handleTouchEnd, { passive: true });
+    this.calendar.addEventListener('touchcancel', handleTouchCancel, { passive: true });
     
-    // Set up navigation button touch handlers
+    // Update CSS to improve touch handling
+    this.calendar.style.touchAction = 'pan-y pinch-zoom';
+    
+    // Prevent touch event propagation on navigation buttons
     const prevMonthBtn = this.shadowRoot.getElementById("prev-month");
     const nextMonthBtn = this.shadowRoot.getElementById("next-month");
     
