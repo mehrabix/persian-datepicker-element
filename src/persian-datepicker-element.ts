@@ -1553,7 +1553,11 @@ export class PersianDatePickerElement extends HTMLElement {
     const target = e.target as HTMLElement;
     const dayElement = target.closest('.day') as HTMLElement;
     
-    if (!dayElement || dayElement.classList.contains('empty') || dayElement.classList.contains('disabled')) {
+    // Early return for any invalid or disabled dates
+    if (!dayElement || 
+        dayElement.classList.contains('empty') || 
+        dayElement.classList.contains('disabled') ||
+        this.isDateDisabled(this.jalaliYear, this.jalaliMonth, parseInt(dayElement.textContent || '0'))) {
       return;
     }
     
@@ -1566,11 +1570,6 @@ export class PersianDatePickerElement extends HTMLElement {
     // Convert Persian numerals to standard numbers if needed
     const day = this.fromPersianNum(dayText);
     if (isNaN(day)) return;
-    
-    // Check if date is disabled before handling selection
-    if (this.isDateDisabled(this.jalaliYear, this.jalaliMonth, day)) {
-      return;
-    }
     
     // Handle range or single selection
     this.handleRangeSelection(day);
@@ -2227,6 +2226,12 @@ export class PersianDatePickerElement extends HTMLElement {
    * Select a specific date
    */
   selectDate(day: number) {
+    // Validate date before proceeding with selection
+    if (this.isDateDisabled(this.jalaliYear, this.jalaliMonth, day) || 
+        !this.isDateInRange(this.jalaliYear, this.jalaliMonth, day)) {
+      return;
+    }
+
     this.jalaliDay = day;
     this.selectedDate = [this.jalaliYear, this.jalaliMonth, this.jalaliDay];
     
@@ -2698,6 +2703,10 @@ export class PersianDatePickerElement extends HTMLElement {
 
   private handleRangeSelection(day: number): void {
     if (!this.isRangeMode) {
+      // For single date selection, check if date is valid
+      if (this.isDateDisabled(this.jalaliYear, this.jalaliMonth, day)) {
+        return;
+      }
       this.selectDate(day);
       return;
     }
