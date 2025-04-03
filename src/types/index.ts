@@ -41,6 +41,20 @@ export interface PersianDatePickerElementOptions {
   showHolidays?: boolean;
   /** Types of holidays to display (e.g. 'Iran', 'Religious') */
   holidayTypes?: string[] | string;
+  /** Whether to enable range selection mode */
+  rangeMode?: boolean;
+  /** Start date for range selection */
+  rangeStart?: DateTuple;
+  /** End date for range selection */
+  rangeEnd?: DateTuple;
+  /** Minimum selectable date */
+  minDate?: DateTuple;
+  /** Maximum selectable date */
+  maxDate?: DateTuple;
+  /** Function or name of function to determine disabled dates */
+  disabledDates?: string | ((year: number, month: number, day: number) => boolean);
+  /** Default date to select when the component is initialized */
+  defaultDate?: DateTuple;
 }
 
 /**

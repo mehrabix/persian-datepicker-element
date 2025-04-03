@@ -970,6 +970,65 @@ export class PersianDatePickerElement extends HTMLElement {
     this.options = options;
     this.eventUtils = EventUtils.getInstance();
     
+    // Set showHolidays from options if provided
+    if (options.showHolidays !== undefined) {
+      this.showHolidays = options.showHolidays;
+    }
+    
+    // Set format from options if provided
+    if (options.format) {
+      this.format = options.format;
+    }
+    
+    // Set RTL from options if provided
+    if (options.rtl !== undefined) {
+      this.style.setProperty('--jdp-direction', options.rtl ? 'rtl' : 'ltr');
+    }
+    
+    // Set range mode from options if provided
+    if (options.rangeMode !== undefined) {
+      this.isRangeMode = options.rangeMode;
+    }
+    
+    // Set range start and end from options if provided
+    if (options.rangeStart) {
+      this.rangeStart = options.rangeStart;
+    }
+    
+    if (options.rangeEnd) {
+      this.rangeEnd = options.rangeEnd;
+    }
+    
+    // Set min and max dates from options if provided
+    if (options.minDate) {
+      this.minDate = options.minDate;
+    }
+    
+    if (options.maxDate) {
+      this.maxDate = options.maxDate;
+    }
+    
+    // Set disabled dates function from options if provided
+    if (options.disabledDates) {
+      if (typeof options.disabledDates === 'function') {
+        this.disabledDatesFn = options.disabledDates;
+      } else if (typeof options.disabledDates === 'string') {
+        // Try to find the function in the global scope
+        const disabledFn = (window as any)[options.disabledDates];
+        if (typeof disabledFn === 'function') {
+          this.disabledDatesFn = disabledFn;
+        }
+      }
+    }
+    
+    // Set default date from options if provided
+    if (options.defaultDate) {
+      this.selectedDate = options.defaultDate;
+      this.jalaliYear = options.defaultDate[0];
+      this.jalaliMonth = options.defaultDate[1];
+      this.jalaliDay = options.defaultDate[2];
+    }
+    
     // Create shadow DOM and render initial structure
     const shadow = this.attachShadow({ mode: "open" });
     this.render(shadow);
@@ -1026,16 +1085,55 @@ export class PersianDatePickerElement extends HTMLElement {
       PersianDatePickerElement.openCalendarInstance = null;
     }
     
-    // Clean up any references that could cause memory leaks
-    const elements = [this.input, this.calendar, this.daysContainer, this.dayNamesContainer];
-    elements.forEach(element => {
-      if (element) {
-        const clone = element.cloneNode(false);
-        if (element.parentNode) {
-          element.parentNode.replaceChild(clone, element);
-        }
+    // Remove all event listeners from the shadow DOM elements
+    if (this.shadowRoot) {
+      // Remove input event listener
+      if (this.input) {
+        this.input.removeEventListener("click", this.handleInputClick);
       }
-    });
+      
+      // Remove calendar event listeners
+      if (this.calendar) {
+        this.calendar.removeEventListener("click", (e) => e.stopPropagation());
+      }
+      
+      // Remove days container event listener
+      if (this.daysContainer) {
+        this.daysContainer.removeEventListener("click", this.handleDayClick.bind(this));
+      }
+      
+      // Remove navigation button event listeners
+      const prevMonthBtn = this.shadowRoot.getElementById("prev-month");
+      const nextMonthBtn = this.shadowRoot.getElementById("next-month");
+      const todayBtn = this.shadowRoot.getElementById("today-button");
+      const tomorrowBtn = this.shadowRoot.getElementById("tomorrow-button");
+      
+      if (prevMonthBtn) {
+        prevMonthBtn.removeEventListener("click", () => this.changeMonth(-1));
+        prevMonthBtn.removeEventListener("touchstart", (e) => e.stopPropagation());
+      }
+      
+      if (nextMonthBtn) {
+        nextMonthBtn.removeEventListener("click", () => this.changeMonth(1));
+        nextMonthBtn.removeEventListener("touchstart", (e) => e.stopPropagation());
+      }
+      
+      if (todayBtn) {
+        todayBtn.removeEventListener("click", () => this.goToToday());
+      }
+      
+      if (tomorrowBtn) {
+        tomorrowBtn.removeEventListener("click", () => this.goToTomorrow());
+      }
+      
+      // Remove touch event listeners
+      if (this.calendar) {
+        this.calendar.removeEventListener("touchstart", this.handleTouchStart as EventListener);
+        this.calendar.removeEventListener("touchmove", this.handleTouchMove as EventListener);
+        this.calendar.removeEventListener("touchend", this.handleTouchEnd as EventListener);
+        this.calendar.removeEventListener("touchcancel", this.handleTouchCancel as EventListener);
+      }
+    }
   }
 
   /**
@@ -1329,6 +1427,10 @@ export class PersianDatePickerElement extends HTMLElement {
     monthSelectContent.innerHTML = "";
     yearSelectContent.innerHTML = "";
     
+    // Create document fragments for better performance
+    const monthFragment = document.createDocumentFragment();
+    const yearFragment = document.createDocumentFragment();
+    
     // Setup month options
     this.persianMonths.forEach((month, index) => {
       const monthValue = index + 1;
@@ -1348,7 +1450,7 @@ export class PersianDatePickerElement extends HTMLElement {
         this.closeAllDropdowns();
       });
       
-      monthSelectContent.appendChild(monthItem);
+      monthFragment.appendChild(monthItem);
     });
     
     // Setup year options
@@ -1381,8 +1483,12 @@ export class PersianDatePickerElement extends HTMLElement {
         this.closeAllDropdowns();
       });
       
-      yearSelectContent.appendChild(yearItem);
+      yearFragment.appendChild(yearItem);
     }
+    
+    // Append fragments to DOM
+    monthSelectContent.appendChild(monthFragment);
+    yearSelectContent.appendChild(yearFragment);
     
     // Add toggle event listeners to triggers
     monthSelectTrigger.addEventListener("click", (e) => {
@@ -1418,6 +1524,9 @@ export class PersianDatePickerElement extends HTMLElement {
     // Prevent clicks inside the calendar from bubbling up
     this.calendar.addEventListener("click", e => e.stopPropagation());
     
+    // Use event delegation for day elements instead of adding individual listeners
+    this.daysContainer.addEventListener("click", this.handleDayClick.bind(this));
+    
     // Close dropdowns when clicking on empty space in calendar
     this.calendar.addEventListener("click", e => {
       const target = e.target as HTMLElement;
@@ -1430,6 +1539,39 @@ export class PersianDatePickerElement extends HTMLElement {
     // Document click handler to close calendar when clicking outside
     this._documentClickHandler = this.handleDocumentClick.bind(this);
     document.addEventListener("click", this._documentClickHandler);
+  }
+
+  /**
+   * Handle day click using event delegation
+   */
+  private handleDayClick(e: Event): void {
+    const target = e.target as HTMLElement;
+    const dayElement = target.closest('.day') as HTMLElement;
+    
+    if (!dayElement || dayElement.classList.contains('empty') || dayElement.classList.contains('disabled')) {
+      return;
+    }
+    
+    e.stopPropagation();
+    
+    // Get the day number from the element
+    const dayText = dayElement.textContent;
+    if (!dayText) return;
+    
+    // Convert Persian numerals to standard numbers if needed
+    const day = this.fromPersianNum(dayText);
+    if (isNaN(day)) return;
+    
+    // Handle range or single selection
+    this.handleRangeSelection(day);
+  }
+
+  /**
+   * Convert Persian numerals to standard numbers
+   */
+  private fromPersianNum(persianNum: string): number {
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return parseInt(persianNum.replace(/[۰-۹]/g, d => persianDigits.indexOf(d).toString()));
   }
 
   /**
@@ -1757,14 +1899,14 @@ export class PersianDatePickerElement extends HTMLElement {
   renderCalendar() {
     if (!this.shadowRoot || !this.daysContainer) return;
       
-      // Update month and year selectors
+    // Update month and year selectors
     this.updateMonthYearSelectors();
 
     // Clear previous days
-      this.daysContainer.innerHTML = "";
+    this.daysContainer.innerHTML = "";
       
-      // Render the calendar content
-      this.renderCalendarContent();
+    // Render the calendar content
+    this.renderCalendarContent();
   }
 
   /**
@@ -1778,55 +1920,50 @@ export class PersianDatePickerElement extends HTMLElement {
     const daysInMonth = PersianDate.getDaysInMonth(this.jalaliYear, this.jalaliMonth);
     
     // Get today's date for highlighting
-      const today = new Date();
+    const today = new Date();
     const jalaliToday = PersianDate.gregorianToJalali(
-        today.getFullYear(), 
-        today.getMonth() + 1, 
-        today.getDate()
-      );
+      today.getFullYear(), 
+      today.getMonth() + 1, 
+      today.getDate()
+    );
     
     // Adjust first day of month for Persian calendar (Saturday is first day of week)
     const adjustedFirstDay = (firstDayOfMonth + 1) % 7;
     
-    // Clear the container
-    this.daysContainer.innerHTML = "";
+    // Create document fragment for better performance
+    const fragment = document.createDocumentFragment();
     
     // Add empty cells for days before the first day of month
     for (let i = 0; i < adjustedFirstDay; i++) {
       const emptyDay = document.createElement("div");
       emptyDay.classList.add("day", "empty");
-      this.daysContainer.appendChild(emptyDay);
+      fragment.appendChild(emptyDay);
     }
 
     // Generate days of month
     for (let i = 1; i <= daysInMonth; i++) {
-        const dayElement = document.createElement("div");
-        dayElement.classList.add("day");
+      const dayElement = document.createElement("div");
+      dayElement.classList.add("day");
       dayElement.textContent = this.toPersianNum(i);
+      dayElement.dataset.day = i.toString();
             
-            // Check if date is in range and not disabled
+      // Check if date is in range and not disabled
       const isInRange = this.isDateInRange(this.jalaliYear, this.jalaliMonth, i);
       const isDisabled = this.isDateDisabled(this.jalaliYear, this.jalaliMonth, i);
             
-            if (!isInRange || isDisabled) {
-              dayElement.classList.add("disabled");
-              dayElement.style.opacity = "0.4";
-              dayElement.style.cursor = "not-allowed";
-            } else {
-              // Add hover handler for tooltips
-              this.setupDayTooltips(dayElement);
-              
-              // Add click handler
-        this.setupDayClickHandler(dayElement, i);
-            }
+      if (!isInRange || isDisabled) {
+        dayElement.classList.add("disabled");
+        dayElement.style.opacity = "0.4";
+        dayElement.style.cursor = "not-allowed";
+      }
             
-            // Highlight today
+      // Highlight today
       if (this.jalaliYear === jalaliToday[0] && this.jalaliMonth === jalaliToday[1] && i === jalaliToday[2]) {
-              dayElement.classList.add("today");
-            }
+        dayElement.classList.add("today");
+      }
             
-            // Handle range selection highlighting
-            if (this.isRangeMode) {
+      // Handle range selection highlighting
+      if (this.isRangeMode) {
         const currentDate: DateTuple = [this.jalaliYear, this.jalaliMonth, i];
         
         // First remove any existing range classes
@@ -1859,20 +1996,23 @@ export class PersianDatePickerElement extends HTMLElement {
             dayElement.classList.add("range-start");
           }
         }
-            } else if (this.selectedDate && 
-                this.jalaliYear === this.selectedDate[0] && 
-                this.jalaliMonth === this.selectedDate[1] && 
+      } else if (this.selectedDate && 
+          this.jalaliYear === this.selectedDate[0] && 
+          this.jalaliMonth === this.selectedDate[1] && 
           i === this.selectedDate[2]) {
-              dayElement.classList.add("selected");
-            }
+        dayElement.classList.add("selected");
+      }
             
-            // Add holiday information if enabled
-            if (this.showHolidays) {
+      // Add holiday information if enabled
+      if (this.showHolidays) {
         this.addHolidayInfo(dayElement, i);
       }
       
-      this.daysContainer.appendChild(dayElement);
+      fragment.appendChild(dayElement);
     }
+    
+    // Append all days at once for better performance
+    this.daysContainer.appendChild(fragment);
   }
 
   /**
@@ -2329,115 +2469,89 @@ export class PersianDatePickerElement extends HTMLElement {
   private initTouchGestures(): void {
     if (!this.calendar || !this.shadowRoot) return;
     
-    let startX: number = 0;
-    let startY: number = 0;
-    let isDragging: boolean = false;
-    const threshold = 20;
-    let touchStartTime: number = 0;
-    let isSwiping = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    let isScrolling = false;
+    let canPreventScroll = true;
     
-    // Helper for touch event handler setup - fixed type issues
-    const setupTouchHandler = <K extends keyof HTMLElementEventMap>(
-      element: HTMLElement | null, 
-      eventType: K, 
-      handler: (e: HTMLElementEventMap[K]) => void, 
-      options?: AddEventListenerOptions
-    ): void => {
-      if (element) {
-        element.addEventListener(eventType, handler as EventListener, options);
-      }
-    };
-    
-    // Handle touch start
     const handleTouchStart = (e: TouchEvent): void => {
       if (!this.calendar?.classList.contains("visible")) return;
       
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      isDragging = false;
-      isSwiping = false;
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
       touchStartTime = Date.now();
-      e.stopPropagation();
+      isScrolling = false;
+      canPreventScroll = true;
     };
     
-    // Handle touch move
     const handleTouchMove = (e: TouchEvent): void => {
       if (!this.calendar?.classList.contains("visible")) return;
       
-      const currentX = e.touches[0].clientX;
-      const currentY = e.touches[0].clientY;
-      const diffX = currentX - startX;
-      const diffY = currentY - startY;
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
       
-      // If already swiping, prevent default
-      if (isSwiping) {
-        e.preventDefault();
+      // Determine if user is trying to scroll vertically
+      if (!isScrolling) {
+        isScrolling = Math.abs(deltaY) > Math.abs(deltaX);
+      }
+      
+      // If user is scrolling vertically, don't try to prevent default
+      if (isScrolling) {
+        canPreventScroll = false;
         return;
       }
       
-      // Detect horizontal swipe
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+      // Only try to prevent default for significant horizontal swipes
+      if (Math.abs(deltaX) > 10 && canPreventScroll) {
+        try {
           e.preventDefault();
-          isDragging = true;
-          isSwiping = true;
-      }
-    };
-    
-    // Handle touch end
-    const handleTouchEnd = (e: TouchEvent): void => {
-      if (!this.calendar?.classList.contains("visible")) return;
-      
-      const wasSwiping = isSwiping;
-      isSwiping = false;
-      
-      const touchEndTime = Date.now();
-      const touchDuration = touchEndTime - touchStartTime;
-      
-      // Process if touch was quick or we detected dragging
-      if ((touchDuration < 300 || isDragging) && !this.isTransitioning) {
-        const endX = e.changedTouches[0].clientX;
-        const endY = e.changedTouches[0].clientY;
-        
-        const diffX = endX - startX;
-        const diffY = endY - startY;
-        
-        // Consider only significant horizontal movements
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
-          // Determine direction based on RTL mode
-          const isRTL = getComputedStyle(this).getPropertyValue('--jdp-direction').trim() === 'rtl';
-          
-          if ((isRTL && diffX < 0) || (!isRTL && diffX > 0)) {
-              e.preventDefault();
-            e.stopPropagation();
-            this.changeMonth(1); // Next month
-          } else if ((isRTL && diffX > 0) || (!isRTL && diffX < 0)) {
-              e.preventDefault();
-            e.stopPropagation();
-            this.changeMonth(-1); // Previous month
-          }
+        } catch (err) {
+          // If we can't prevent default, mark it for future reference
+          canPreventScroll = false;
         }
       }
+    };
+    
+    const handleTouchEnd = (e: TouchEvent): void => {
+      if (!this.calendar?.classList.contains("visible") || isScrolling) return;
       
-      // Prevent click events if we were swiping
-      if (wasSwiping) {
-        e.preventDefault();
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const touchDuration = Date.now() - touchStartTime;
+      
+      // Process swipe only if:
+      // 1. The swipe was fast enough (under 300ms)
+      // 2. The distance was significant (over 50px)
+      // 3. Not currently transitioning between months
+      if (touchDuration < 300 && Math.abs(deltaX) > 50 && !this.isTransitioning) {
+        const isRTL = getComputedStyle(this).getPropertyValue('--jdp-direction').trim() === 'rtl';
+        
+        if ((isRTL && deltaX < 0) || (!isRTL && deltaX > 0)) {
+          this.changeMonth(1); // Next month
+        } else if ((isRTL && deltaX > 0) || (!isRTL && deltaX < 0)) {
+          this.changeMonth(-1); // Previous month
+        }
       }
     };
     
-    // Handle touch cancel
     const handleTouchCancel = (): void => {
-      isSwiping = false;
-      isDragging = false;
+      isScrolling = false;
+      canPreventScroll = true;
     };
     
-    // Set up calendar touch events
-    // Use explicit 'touchstart' type instead of string
-    this.calendar.addEventListener('touchstart', handleTouchStart as EventListener, { passive: true });
-    this.calendar.addEventListener('touchmove', handleTouchMove as EventListener, { passive: false });
-    this.calendar.addEventListener('touchend', handleTouchEnd as EventListener, { passive: false });
-    this.calendar.addEventListener('touchcancel', handleTouchCancel as EventListener);
+    // Add event listeners with correct passive options
+    this.calendar.addEventListener('touchstart', handleTouchStart, { passive: true });
+    this.calendar.addEventListener('touchmove', handleTouchMove, { passive: false });
+    this.calendar.addEventListener('touchend', handleTouchEnd, { passive: true });
+    this.calendar.addEventListener('touchcancel', handleTouchCancel, { passive: true });
     
-    // Set up navigation button touch handlers
+    // Update CSS to improve touch handling
+    this.calendar.style.touchAction = 'pan-y pinch-zoom';
+    
+    // Prevent touch event propagation on navigation buttons
     const prevMonthBtn = this.shadowRoot.getElementById("prev-month");
     const nextMonthBtn = this.shadowRoot.getElementById("next-month");
     
@@ -2638,6 +2752,82 @@ export class PersianDatePickerElement extends HTMLElement {
     this.disabledDatesFn = fn;
     this.renderCalendar();
   }
+
+  /**
+   * Handle touch start event for swipe detection
+   */
+  private handleTouchStart(e: TouchEvent): void {
+    if (e.touches.length !== 1) return;
+    
+    const touch = e.touches[0];
+    this._touchStartX = touch.clientX;
+    this._touchStartY = touch.clientY;
+    this._isDragging = true;
+    this._isSwiping = false;
+  }
+
+  /**
+   * Handle touch move event for swipe detection
+   */
+  private handleTouchMove(e: TouchEvent): void {
+    if (!this._isDragging || e.touches.length !== 1) return;
+    
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - this._touchStartX;
+    const deltaY = touch.clientY - this._touchStartY;
+    
+    // If we haven't determined if this is a swipe yet
+    if (!this._isSwiping) {
+      // If horizontal movement is greater than vertical and exceeds threshold
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+        this._isSwiping = true;
+        e.preventDefault(); // Prevent default only if we're swiping
+      }
+    } else {
+      // If we're swiping, prevent default to stop page scrolling
+      e.preventDefault();
+    }
+  }
+
+  /**
+   * Handle touch end event for swipe detection
+   */
+  private handleTouchEnd(e: TouchEvent): void {
+    if (!this._isDragging) return;
+    
+    if (this._isSwiping) {
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - this._touchStartX;
+      
+      // If swipe distance is significant enough
+      if (Math.abs(deltaX) > 50) {
+        if (deltaX > 0) {
+          this.changeMonth(-1); // Swipe right -> previous month
+        } else {
+          this.changeMonth(1); // Swipe left -> next month
+        }
+      }
+    }
+    
+    // Reset touch state
+    this._isDragging = false;
+    this._isSwiping = false;
+  }
+
+  /**
+   * Handle touch cancel event
+   */
+  private handleTouchCancel(): void {
+    // Reset touch state
+    this._isDragging = false;
+    this._isSwiping = false;
+  }
+
+  // Touch event properties
+  private _touchStartX: number = 0;
+  private _touchStartY: number = 0;
+  private _isDragging: boolean = false;
+  private _isSwiping: boolean = false;
 }
 
 // Register the custom element with the browser

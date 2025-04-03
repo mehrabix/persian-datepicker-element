@@ -6,13 +6,16 @@ A modern, customizable Persian (Jalali) date picker web component with framework
 
 - 🎨 Fully customizable with CSS variables
 - 🌙 Dark mode support
-- 📱 Mobile-friendly
+- 📱 Mobile-friendly with touch gestures
 - 🎯 Framework integrations (React, Vue, Angular)
 - 📅 Holiday support with multiple event types (Iran, Afghanistan, Ancient Iran, International)
 - 🔄 RTL support
 - 🎨 Multiple theme options
 - 📦 Zero dependencies
 - 🎯 TypeScript support
+- 📊 Range selection mode
+- 🚫 Disabled dates support
+- 🎨 Customizable UI elements visibility
 
 ## Installation
 
@@ -86,10 +89,10 @@ function App() {
       <PersianDatepicker
         placeholder="انتخاب تاریخ"
         format="YYYY/MM/DD"
-      showHolidays
-      rtl
-      onChange={handleChange}
-    />
+        showHolidays
+        rtl
+        onChange={handleChange}
+      />
   );
 }
 ```
@@ -102,8 +105,8 @@ function App() {
       placeholder="انتخاب تاریخ"
       format="YYYY/MM/DD"
       :show-holidays="true"
-    :rtl="true"
-    @change="handleChange"
+      :rtl="true"
+      @change="handleChange"
     />
 </template>
 
@@ -162,22 +165,34 @@ export class AppComponent {
 | rtl | boolean | false | Right-to-left layout |
 | min-date | [number, number, number] | - | Minimum selectable date |
 | max-date | [number, number, number] | - | Maximum selectable date |
-| disabled-dates | string | - | The name of a function that determines if a date should be disabled. Can reference: 1) a global function, 2) a method on the element itself, or 3) for framework users, a function passed directly |
+| disabled-dates | string | - | The name of a function that determines if a date should be disabled |
 | disabled | boolean | false | Disable the datepicker |
 | dark-mode | boolean | false | Enable dark mode |
+| range-mode | boolean | false | Enable date range selection mode |
+| show-month-selector | boolean | true | Show month selector dropdown |
+| show-year-selector | boolean | true | Show year selector dropdown |
+| show-prev-button | boolean | true | Show previous month button |
+| show-next-button | boolean | true | Show next month button |
+| show-today-button | boolean | true | Show today button |
+| show-tomorrow-button | boolean | true | Show tomorrow button |
+| today-button-text | string | "امروز" | Custom text for today button |
+| tomorrow-button-text | string | "فردا" | Custom text for tomorrow button |
+| today-button-class | string | "" | Additional CSS classes for today button |
+| tomorrow-button-class | string | "" | Additional CSS classes for tomorrow button |
 
 ## Events
 
 | Event | Detail Type | Description |
 |-------|-------------|-------------|
-| change | { jalali: [number, number, number], gregorian: [number, number, number], isHoliday: boolean, events: Array } | Fired when a date is selected |
+| change | { jalali: [number, number, number], gregorian: [number, number, number], isHoliday: boolean, events: Array, formattedDate: string } | Fired when a date is selected |
+| change | { range: { start: [number, number, number], end: [number, number, number] }, isRange: true } | Fired when a date range is selected (in range mode) |
 
 ## Methods
 
 | Method | Parameters | Return Type | Description |
 |--------|------------|-------------|-------------|
 | setValue | (year: number, month: number, day: number) | void | Sets the datepicker value |
-| getValue | () | [number, number, number] | Gets the current selected date as a tuple |
+| getValue | () | [number, number, number] \| null | Gets the current selected date as a tuple |
 | open | () | void | Opens the datepicker calendar |
 | close | () | void | Closes the datepicker calendar |
 | setMinDate | (year: number, month: number, day: number) | void | Sets the minimum allowed date |
@@ -186,6 +201,79 @@ export class AppComponent {
 | setRange | (start: [number, number, number], end: [number, number, number]) | void | Sets a date range (in range mode) |
 | getRange | () | { start: [number, number, number] \| null, end: [number, number, number] \| null } | Gets the current selected range |
 | clear | () | void | Clears the selected date or range |
+| setHolidayTypes | (types: string \| string[]) | void | Sets the holiday types to display |
+| getHolidayTypes | () | string[] | Gets the current holiday types |
+| isShowingAllTypes | () | boolean | Checks if all holiday types are being shown |
+| isSelectedDateHoliday | () | boolean | Checks if the currently selected date is a holiday |
+| getSelectedDateEvents | () | any[] | Gets events for the currently selected date |
+
+## Advanced Usage
+
+### Date Range Selection
+
+To enable date range selection mode:
+
+```html
+<persian-datepicker-element range-mode></persian-datepicker-element>
+```
+
+In React:
+```tsx
+<PersianDatepicker rangeMode />
+```
+
+In Vue:
+```vue
+<PersianDatepicker :range-mode="true" />
+```
+
+In Angular:
+```html
+<persian-datepicker [rangeMode]="true"></persian-datepicker>
+```
+
+### Customizing UI Elements
+
+You can control the visibility of various UI elements:
+
+```html
+<persian-datepicker-element
+  show-month-selector="false"
+  show-year-selector="true"
+  show-prev-button="true"
+  show-next-button="true"
+  show-today-button="false"
+  show-tomorrow-button="true"
+></persian-datepicker-element>
+```
+
+### Custom Button Text and Styling
+
+```html
+<persian-datepicker-element
+  today-button-text="Go to Today"
+  tomorrow-button-text="Next Day"
+  today-button-class="primary rounded"
+  tomorrow-button-class="secondary rounded"
+></persian-datepicker-element>
+```
+
+### Dark Mode
+
+```html
+<persian-datepicker-element dark-mode></persian-datepicker-element>
+```
+
+### Custom CSS Styling
+
+```html
+<style>
+  persian-datepicker-element {
+    --jdp-primary: #3b82f6;
+    --jdp-font-family: 'Vazir', sans-serif;
+  }
+</style>
+```
 
 ## Disabled Dates
 
@@ -269,12 +357,43 @@ picker.setDisabledDatesFn((year, month, day) => {
 | --jdp-primary-foreground | #ffffff | Primary text color |
 | --jdp-background | #ffffff | Background color |
 | --jdp-foreground | #1e293b | Text color |
+| --jdp-muted | #f1f5f9 | Muted background color |
+| --jdp-muted-foreground | #64748b | Muted text color |
 | --jdp-border | #e2e8f0 | Border color |
+| --jdp-ring | #0284c7 | Focus ring color |
+| --jdp-holiday-color | #ef4444 | Holiday text color |
+| --jdp-holiday-bg | #fee2e2 | Holiday background color |
+| --jdp-holiday-hover-bg | #fecaca | Holiday hover background color |
+| --jdp-range-bg | rgba(8, 145, 178, 0.1) | Range selection background color |
+| --jdp-range-color | var(--jdp-foreground) | Range selection text color |
+| --jdp-range-start-bg | var(--jdp-primary) | Range start background color |
+| --jdp-range-start-color | var(--jdp-primary-foreground) | Range start text color |
+| --jdp-range-end-bg | var(--jdp-primary) | Range end background color |
+| --jdp-range-end-color | var(--jdp-primary-foreground) | Range end text color |
 | --jdp-border-radius | 0.5rem | Border radius |
 | --jdp-font-family | system-ui | Font family |
 | --jdp-font-size | 14px | Font size |
-| --jdp-nav-button-size | 38px | Navigation button size |
-| --jdp-day-cell-size | 36px | Day cell size |
+| --jdp-line-height | 1.5 | Line height |
+| --jdp-font-weight | 400 | Font weight |
+| --jdp-font-weight-medium | 500 | Medium font weight |
+| --jdp-day-name-font-size | 12px | Day name font size |
+| --jdp-day-name-font-weight | 400 | Day name font weight |
+| --jdp-day-font-size | 13px | Day font size |
+| --jdp-day-font-weight | 400 | Day font weight |
+| --jdp-month-year-font-size | 14px | Month/year font size |
+| --jdp-month-year-font-weight | 500 | Month/year font weight |
+| --jdp-nav-button-size | 30px | Navigation button size |
+| --jdp-day-cell-size | 32px | Day cell size |
+| --jdp-day-cell-margin | 1px | Day cell margin |
+| --jdp-day-cell-border-radius | var(--jdp-border-radius) | Day cell border radius |
+| --jdp-day-hover-bg | var(--jdp-muted) | Day hover background color |
+| --jdp-day-selected-bg | var(--jdp-primary) | Selected day background color |
+| --jdp-day-selected-color | var(--jdp-primary-foreground) | Selected day text color |
+| --jdp-day-today-border-color | var(--jdp-primary) | Today border color |
+| --jdp-day-today-border-width | 1px | Today border width |
+| --jdp-day-disabled-opacity | 0.4 | Disabled day opacity |
+| --jdp-transition-duration | 0.2s | Transition duration |
+| --jdp-direction | rtl | Text direction (rtl or ltr) |
 
 ## Framework-Specific Features
 
@@ -282,16 +401,31 @@ picker.setDisabledDatesFn((year, month, day) => {
 - Full TypeScript support
 - Ref forwarding for imperative methods
 - React event handling
+- Controlled and uncontrolled modes
+- Custom hooks for date manipulation
 
 ### Vue
 - Vue 3 Composition API support
 - TypeScript support
 - Vue event handling
+- v-model support
+- Custom directives for date formatting
 
 ### Angular
 - Angular Ivy support
 - TypeScript support
 - Angular event binding
+- Reactive forms integration
+- Custom pipes for date formatting
+
+## Mobile Support
+
+The component includes built-in support for mobile devices:
+
+- Touch swipe gestures for month navigation
+- Mobile-optimized tooltips
+- Responsive design
+- Touch-friendly UI elements
 
 ## Browser Support
 
@@ -299,6 +433,31 @@ picker.setDisabledDatesFn((year, month, day) => {
 - Firefox 63+
 - Safari 10.1+
 - Edge 79+
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Component not rendering**: Make sure you've imported the component correctly and that the script is loaded before using the component.
+
+2. **Events not firing**: Check that you're using the correct event name and that the event handler is properly attached.
+
+3. **Styling issues**: Verify that your CSS variables are correctly defined and that there are no conflicting styles.
+
+4. **Date format issues**: Ensure that the format string is valid and that the date is in the correct format.
+
+5. **Holidays not showing**: Check that the `show-holidays` attribute is set to `true` and that the `holiday-types` attribute includes the desired holiday types.
+
+### Debugging
+
+For debugging purposes, you can enable verbose logging:
+
+```javascript
+const picker = document.getElementById('my-picker');
+picker.setAttribute('debug', 'true');
+```
+
+This will log additional information to the console, which can help identify issues.
 
 ## Contributing
 

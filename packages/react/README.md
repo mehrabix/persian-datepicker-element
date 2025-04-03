@@ -1,34 +1,44 @@
-# react-persian-datepicker-element
+# Persian Datepicker React Component
 
-React integration for the Persian Date Picker web component.
+A modern, fully-featured Persian (Jalali) date picker component for React applications.
+
+## Features
+
+- 🎨 Fully customizable theme
+- 📱 Responsive design
+- 🔤 RTL support
+- 📅 Holiday highlighting
+- 🎯 Range picker mode
+- ⌨️ Keyboard navigation
+- 🎭 Custom holiday types
+- 🚫 Disabled dates support
+- 📋 Min/Max date restrictions
+- 🎨 Custom scrollbar styling
 
 ## Installation
 
 ```bash
-npm install react-persian-datepicker-element persian-datepicker-element
+npm install persian-datepicker-react
 # or
-yarn add react-persian-datepicker-element persian-datepicker-element
-# or
-pnpm add react-persian-datepicker-element persian-datepicker-element
+yarn add persian-datepicker-react
 ```
 
-## Usage
+## Basic Usage
 
-```tsx
-import { PersianDatepicker } from 'react-persian-datepicker-element';
+```jsx
+import { PersianDatepicker } from 'persian-datepicker-react';
 
 function App() {
-  const handleChange = (event) => {
-    console.log('تاریخ انتخاب شده:', event.detail);
+  const handleDateChange = (event) => {
+    const { jalali, gregorian, isHoliday } = event.detail;
+    console.log('Selected date:', jalali);
   };
 
   return (
-      <PersianDatepicker
-        placeholder="انتخاب تاریخ"
-        format="YYYY/MM/DD"
-      showHolidays
-      rtl
-      onChange={handleChange}
+    <PersianDatepicker
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+      onChange={handleDateChange}
     />
   );
 }
@@ -38,164 +48,200 @@ function App() {
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| value | string \| [number, number, number] | - | The selected date value |
-| placeholder | string | - | Placeholder text |
-| format | string | "YYYY/MM/DD" | Date format string |
-| showHolidays | boolean | false | Show holiday indicators |
-| rtl | boolean | false | Right-to-left layout |
-| minDate | [number, number, number] | - | Minimum selectable date |
-| maxDate | [number, number, number] | - | Maximum selectable date |
-| disabledDates | string \| ((year: number, month: number, day: number) => boolean) | - | A function or function name to determine which dates should be disabled |
+| value | string \| number[] | - | Selected date value |
+| placeholder | string | '' | Input placeholder text |
+| format | string | 'YYYY/MM/DD' | Date format pattern |
+| showHolidays | boolean | true | Show holiday indicators |
+| rtl | boolean | true | Right-to-left layout |
 | disabled | boolean | false | Disable the datepicker |
-| darkMode | boolean | false | Enable dark mode |
-| className | string | - | Additional CSS class |
-| style | CSSProperties | - | Inline styles |
+| minDate | [number, number, number] | - | Minimum selectable date [year, month, day] |
+| maxDate | [number, number, number] | - | Maximum selectable date [year, month, day] |
+| disabledDates | string \| Function | - | Dates to disable (string pattern or function) |
+| holidayTypes | string \| string[] | - | Types of holidays to highlight |
+| rangeMode | boolean | false | Enable range selection mode |
+| rangeStart | [number, number, number] | - | Start date for range selection |
+| rangeEnd | [number, number, number] | - | End date for range selection |
 
-## Ref Methods
+## Theme Customization
 
-The component supports ref forwarding with the following methods:
-
-```tsx
-const ref = useRef<PersianDatepickerMethods>(null);
-
-// Set a date
-ref.current?.setValue(1401, 7, 1);
-
-// Get current date
-const date = ref.current?.getValue();
-
-// Open the datepicker
-ref.current?.open();
-
-// Close the datepicker
-ref.current?.close();
-
-// Get the underlying element
-const element = ref.current?.getElement();
-
-// Set a disabled dates function directly
-ref.current?.setDisabledDatesFn((year, month, day) => {
-  // Return true to disable the date
-  return day % 2 === 0; // Disable even days
-});
+```jsx
+<PersianDatepicker
+  primaryColor="#1a73e8"
+  primaryHover="#1557b0"
+  backgroundColor="#ffffff"
+  foregroundColor="#333333"
+  borderColor="#e0e0e0"
+  borderRadius="8px"
+  fontFamily="IRANSans"
+  holidayColor="#ff4d4f"
+  holidayBg="#fff1f0"
+  scrollbarWidth="8px"
+  scrollbarThumbColor="#c1c1c1"
+  scrollbarThumbHoverColor="#a8a8a8"
+  scrollbarTrackColor="#f1f1f1"
+  scrollbarBorderRadius="4px"
+/>
 ```
 
-## TypeScript Support
+## Methods
 
-The package includes full TypeScript support:
+Access component methods using a ref:
 
-```tsx
-import { PersianDatepicker, PersianDatepickerProps, PersianDatepickerMethods } from '@persian-datepicker/react';
+```jsx
+const datepickerRef = useRef();
 
-// Props type
-const props: PersianDatepickerProps = {
-  placeholder: "انتخاب تاریخ",
-  format: "YYYY/MM/DD",
-  showHolidays: true,
-  rtl: true
-};
-
-// Ref type
-const ref = useRef<PersianDatepickerMethods>(null);
+// Available methods
+datepickerRef.current.getValue();
+datepickerRef.current.setValue(year, month, day);
+datepickerRef.current.open();
+datepickerRef.current.close();
+datepickerRef.current.setRange(startDate, endDate);
+datepickerRef.current.getRange();
+datepickerRef.current.clear();
 ```
 
-## Styling
+## Events
 
-You can style the component using CSS variables:
+| Event | Description |
+|-------|-------------|
+| onChange | Fired when date selection changes |
+| onOpen | Fired when datepicker opens |
+| onClose | Fired when datepicker closes |
 
-```css
-persian-datepicker-element {
-  --jdp-primary: #0891b2;
-  --jdp-primary-hover: #0e7490;
-  --jdp-primary-foreground: #ffffff;
-  --jdp-background: #ffffff;
-  --jdp-foreground: #1e293b;
-  --jdp-border: #e2e8f0;
-  --jdp-border-radius: 0.5rem;
-  --jdp-font-family: system-ui;
-  --jdp-font-size: 14px;
-  --jdp-nav-button-size: 38px;
-  --jdp-day-cell-size: 36px;
-}
+## Range Picker Example
+
+```jsx
+<PersianDatepicker
+  rangeMode={true}
+  rangeStart={[1402, 1, 1]}
+  rangeEnd={[1402, 1, 15]}
+  onChange={handleRangeChange}
+/>
 ```
 
-## Examples
+---
 
-### Basic Usage
+<div dir="rtl">
 
-```tsx
-import { PersianDatepicker } from 'react-persian-datepicker-element';
+# کامپوننت React تقویم شمسی
 
-function BasicExample() {
-  return (
-      <PersianDatepicker 
-      placeholder="انتخاب تاریخ"
-      format="YYYY/MM/DD"
-      />
-  );
-}
+یک کامپوننت مدرن و کامل انتخاب تاریخ شمسی (جلالی) برای برنامه‌های React
+
+## ویژگی‌ها
+
+- 🎨 قابلیت شخصی‌سازی کامل ظاهر
+- 📱 طراحی واکنش‌گرا
+- 🔤 پشتیبانی از RTL
+- 📅 نمایش تعطیلات
+- 🎯 حالت انتخاب بازه
+- ⌨️ پیمایش با کیبورد
+- 🎭 انواع تعطیلات سفارشی
+- 🚫 پشتیبانی از تاریخ‌های غیرفعال
+- 📋 محدودیت حداقل/حداکثر تاریخ
+- 🎨 شخصی‌سازی نوار اسکرول
+
+## نصب
+
+```bash
+npm install persian-datepicker-react
+# یا
+yarn add persian-datepicker-react
 ```
 
-### With Event Handling
+## استفاده پایه
 
-```tsx
-import { PersianDatepicker } from 'react-persian-datepicker-element';
+```jsx
+import { PersianDatepicker } from 'persian-datepicker-react';
 
-function EventExample() {
-  const handleChange = (event) => {
-    const { jalali, gregorian, isHoliday, events } = event.detail;
-    console.log('Jalali:', jalali);
-    console.log('Gregorian:', gregorian);
-    console.log('Is Holiday:', isHoliday);
-    console.log('Events:', events);
-  };
-
-  return (
-      <PersianDatepicker
-      onChange={handleChange}
-      />
-  );
-}
-```
-
-### With Date Limits
-
-```tsx
-import { PersianDatepicker } from 'react-persian-datepicker-element';
-
-function DateLimitsExample() {
-  // You can define the function locally - no need for global scope
-  const isWeekend = (year: number, month: number, day: number): boolean => {
-    const date = new Date(year, month - 1, day);
-    const dayOfWeek = date.getDay();
-    return dayOfWeek === 5 || dayOfWeek === 6; // Disable Friday and Saturday (Persian weekend)
+function App() {
+  const handleDateChange = (event) => {
+    const { jalali, gregorian, isHoliday } = event.detail;
+    console.log('تاریخ انتخاب شده:', jalali);
   };
 
   return (
     <PersianDatepicker
-      minDate={[1400, 1, 1]}
-      maxDate={[1402, 12, 29]}
-      disabledDates={isWeekend} // Pass function directly
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+      onChange={handleDateChange}
     />
   );
 }
 ```
 
-### With Custom Styling
+## پراپ‌ها
 
-```tsx
-import { PersianDatepicker } from 'react-persian-datepicker-element';
+| پراپ | نوع | پیش‌فرض | توضیحات |
+|------|------|---------|-------------|
+| value | string \| number[] | - | مقدار تاریخ انتخاب شده |
+| placeholder | string | '' | متن پیش‌فرض ورودی |
+| format | string | 'YYYY/MM/DD' | الگوی نمایش تاریخ |
+| showHolidays | boolean | true | نمایش نشانگر تعطیلات |
+| rtl | boolean | true | چیدمان راست به چپ |
+| disabled | boolean | false | غیرفعال کردن تقویم |
+| minDate | [number, number, number] | - | حداقل تاریخ قابل انتخاب [سال، ماه، روز] |
+| maxDate | [number, number, number] | - | حداکثر تاریخ قابل انتخاب [سال، ماه، روز] |
+| disabledDates | string \| Function | - | تاریخ‌های غیرفعال (الگو یا تابع) |
+| holidayTypes | string \| string[] | - | انواع تعطیلات برای نمایش |
+| rangeMode | boolean | false | فعال‌سازی حالت انتخاب بازه |
+| rangeStart | [number, number, number] | - | تاریخ شروع بازه |
+| rangeEnd | [number, number, number] | - | تاریخ پایان بازه |
 
-function StyledExample() {
-  return (
+## شخصی‌سازی ظاهر
+
+```jsx
 <PersianDatepicker
-      className="custom-datepicker"
-      style={{ width: '300px' }}
-    />
-  );
-}
+  primaryColor="#1a73e8"
+  primaryHover="#1557b0"
+  backgroundColor="#ffffff"
+  foregroundColor="#333333"
+  borderColor="#e0e0e0"
+  borderRadius="8px"
+  fontFamily="IRANSans"
+  holidayColor="#ff4d4f"
+  holidayBg="#fff1f0"
+  scrollbarWidth="8px"
+  scrollbarThumbColor="#c1c1c1"
+  scrollbarThumbHoverColor="#a8a8a8"
+  scrollbarTrackColor="#f1f1f1"
+  scrollbarBorderRadius="4px"
+/>
 ```
 
-## License
+## متدها
 
-MIT
+دسترسی به متدهای کامپوننت با استفاده از ref:
+
+```jsx
+const datepickerRef = useRef();
+
+// متدهای در دسترس
+datepickerRef.current.getValue();
+datepickerRef.current.setValue(year, month, day);
+datepickerRef.current.open();
+datepickerRef.current.close();
+datepickerRef.current.setRange(startDate, endDate);
+datepickerRef.current.getRange();
+datepickerRef.current.clear();
+```
+
+## رویدادها
+
+| رویداد | توضیحات |
+|--------|----------|
+| onChange | هنگام تغییر تاریخ انتخاب شده |
+| onOpen | هنگام باز شدن تقویم |
+| onClose | هنگام بسته شدن تقویم |
+
+## مثال انتخاب بازه
+
+```jsx
+<PersianDatepicker
+  rangeMode={true}
+  rangeStart={[1402, 1, 1]}
+  rangeEnd={[1402, 1, 15]}
+  onChange={handleRangeChange}
+/>
+```
+
+</div>

@@ -137,6 +137,14 @@ export declare class PersianDatePickerElement extends HTMLElement {
     private setupMonthYearSelectors;
     private addEventListeners;
     /**
+     * Handle day click using event delegation
+     */
+    private handleDayClick;
+    /**
+     * Convert Persian numerals to standard numbers
+     */
+    private fromPersianNum;
+    /**
      * Handle input field click
      */
     private handleInputClick;
@@ -325,4 +333,24 @@ export declare class PersianDatePickerElement extends HTMLElement {
      * @param fn Function that takes year, month, day and returns boolean (true if date should be disabled)
      */
     setDisabledDatesFn(fn: (year: number, month: number, day: number) => boolean): void;
+    /**
+     * Handle touch start event for swipe detection
+     */
+    private handleTouchStart;
+    /**
+     * Handle touch move event for swipe detection
+     */
+    private handleTouchMove;
+    /**
+     * Handle touch end event for swipe detection
+     */
+    private handleTouchEnd;
+    /**
+     * Handle touch cancel event
+     */
+    private handleTouchCancel;
+    private _touchStartX;
+    private _touchStartY;
+    private _isDragging;
+    private _isSwiping;
 }
