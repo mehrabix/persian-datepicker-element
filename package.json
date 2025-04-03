@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.0.50",
+  "version": "1.1.0",
   "private": false,
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.min.js",
@@ -13,6 +13,11 @@
   ],
   "sideEffects": false,
   "changelog": {
+    "1.1.0": [
+      "Added support for new input attributes: min-date, max-date, disabled-dates, range-mode, range-start, range-end, default-date",
+      "Updated documentation to reflect new input attributes",
+      "Added Persian labels for all input attributes"
+    ],
     "1.0.39": [
       "Updated holiday event types to include Iran, Afghanistan, Ancient Iran, and International",
       "Added support for 'all' option in holiday-types to display all available holiday types",
