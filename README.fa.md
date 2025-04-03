@@ -89,7 +89,7 @@ function App() {
       <PersianDatepicker
         placeholder="انتخاب تاریخ"
         format="YYYY/MM/DD"
-        showHolidays
+        showEvents
         rtl
         onChange={handleChange}
       />
@@ -140,7 +140,7 @@ import { Component } from '@angular/core';
     <persian-datepicker
       placeholder="انتخاب تاریخ"
       format="YYYY/MM/DD"
-      [showHolidays]="true"
+      [showEvents]="true"
       [rtl]="true"
       (change)="handleChange($event)"
     ></persian-datepicker>
@@ -201,8 +201,8 @@ export class AppComponent {
 | setRange | (start: [number, number, number], end: [number, number, number]) | void | تنظیم بازه تاریخ (در حالت بازه) |
 | getRange | () | { start: [number, number, number] \| null, end: [number, number, number] \| null } | دریافت بازه انتخاب شده فعلی |
 | clear | () | void | پاک کردن تاریخ یا بازه انتخاب شده |
-| setHolidayTypes | (types: string \| string[]) | void | تنظیم انواع تعطیلات برای نمایش |
-| getHolidayTypes | () | string[] | دریافت انواع تعطیلات فعلی |
+| seteventTypes | (types: string \| string[]) | void | تنظیم انواع تعطیلات برای نمایش |
+| geteventTypes | () | string[] | دریافت انواع تعطیلات فعلی |
 | isShowingAllTypes | () | boolean | بررسی نمایش همه انواع تعطیلات |
 | isSelectedDateHoliday | () | boolean | بررسی تعطیلی تاریخ انتخاب شده فعلی |
 | getSelectedDateEvents | () | any[] | دریافت رویدادهای تاریخ انتخاب شده فعلی |

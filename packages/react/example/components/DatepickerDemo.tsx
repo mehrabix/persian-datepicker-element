@@ -112,7 +112,7 @@ const DatepickerDemo: React.FC = () => {
             ref={basicRef}
             placeholder="انتخاب تاریخ"
             format="YYYY/MM/DD"
-            showHolidays={true}
+            showEvents={true}
             onChange={handleDateChange}
             primaryColor={currentTheme.primary}
             primaryHover={currentTheme.primaryHover}
@@ -189,7 +189,7 @@ const DatepickerDemo: React.FC = () => {
             value={controlledValue}
             onChange={handleControlledDateChange}
             placeholder="Controlled datepicker"
-            showHolidays={true}
+            showEvents={true}
             primaryColor={currentTheme.primary}
             backgroundColor={currentTheme.background}
             foregroundColor={currentTheme.foreground}
@@ -205,7 +205,7 @@ const DatepickerDemo: React.FC = () => {
             placeholder="محدوده ۱۴۰۰/۱/۱ تا ۱۴۰۲/۱۲/۲۹"
             min={[1400, 1, 1]}
             max={[1402, 12, 29]}
-            showHolidays={true}
+            showEvents={true}
             primaryColor={currentTheme.primary}
             backgroundColor={currentTheme.background}
             foregroundColor={currentTheme.foreground}
@@ -223,7 +223,7 @@ const DatepickerDemo: React.FC = () => {
           <PersianDatepicker
             ref={customRef}
             placeholder="Custom Styled"
-            showHolidays={true}
+            showEvents={true}
             rtl={true}
             primaryColor="#8b5cf6"
             primaryHover="#7c3aed"

@@ -43,7 +43,7 @@ import 'persian-datepicker-element';
  * <ngx-persian-datepicker-element 
  *   placeholderInput="انتخاب تاریخ"
  *   formatInput="YYYY/MM/DD" 
- *   [showHolidaysInput]="true" 
+ *   [showEventsInput]="true" 
  *   (dateChange)="onDateChange($event)">
  * </ngx-persian-datepicker-element>
  * ```
@@ -93,8 +93,8 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
   // #region Input Signals
   readonly placeholder = input<string | undefined>(undefined);
   readonly format = input<string | undefined>(undefined);
-  readonly showHolidays = input<boolean | undefined>(undefined);
-  readonly holidayTypes = input<string | string[] | undefined>(undefined);
+  readonly showEvents = input<boolean | undefined>(undefined);
+  readonly eventTypes = input<string | string[] | undefined>(undefined);
   readonly rtl = input<boolean | undefined>(undefined);
   readonly minDate = input<DateTuple | undefined>(undefined);
   readonly maxDate = input<DateTuple | undefined>(undefined);
@@ -161,7 +161,7 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
 
     // Show Holidays
     effect(() => {
-      const value = this.showHolidays();
+      const value = this.showEvents();
       if (value !== undefined) {
         this.updateAttribute('show-holidays', String(value));
       }
@@ -169,9 +169,9 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
 
     // Holiday Types
     effect(() => {
-      const value = this.holidayTypes();
+      const value = this.eventTypes();
       if (value !== undefined) {
-        this.updateHolidayTypesAttribute(value);
+        this.updateeventTypesAttribute(value);
       }
     });
 
@@ -291,7 +291,7 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
 
 
   // Helper method specifically for holiday types
-  private updateHolidayTypesAttribute(value: string | string[] | undefined) {
+  private updateeventTypesAttribute(value: string | string[] | undefined) {
     const element = this.elementSignal();
     if (element && value !== undefined) {
       const formattedValue = Array.isArray(value) ? value.join(',') : value;
@@ -352,14 +352,14 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
       element.setAttribute('format', format);
     }
     
-    const showHolidays = this.showHolidays();
-    if (showHolidays !== undefined) {
-      element.setAttribute('show-holidays', String(showHolidays));
+    const showEvents = this.showEvents();
+    if (showEvents !== undefined) {
+      element.setAttribute('show-holidays', String(showEvents));
     }
     
-    const holidayTypes = this.holidayTypes();
-    if (holidayTypes !== undefined) {
-      this.updateHolidayTypesAttribute(holidayTypes);
+    const eventTypes = this.eventTypes();
+    if (eventTypes !== undefined) {
+      this.updateeventTypesAttribute(eventTypes);
     }
     
     const rtl = this.rtl();

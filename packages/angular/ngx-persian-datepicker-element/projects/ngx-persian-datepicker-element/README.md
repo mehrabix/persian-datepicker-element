@@ -90,8 +90,8 @@ export class ExampleComponent {
 
 ```html
 <ngx-persian-datepicker-element 
-  [showHolidays]="true" 
-  [holidayTypes]="['Iran', 'Religious']"
+  [showEvents]="true" 
+  [eventTypes]="['Iran', 'Religious']"
   (dateChange)="onDateChange($event)">
 </ngx-persian-datepicker-element>
 ```
@@ -104,8 +104,8 @@ export class ExampleComponent {
 |----------|------|---------|-------------|
 | `placeholder` | `string` | '' | Placeholder text for the input field |
 | `format` | `string` | 'YYYY/MM/DD' | Date format pattern |
-| `showHolidays` | `boolean` | true | Whether to show holidays in the calendar |
-| `holidayTypes` | `string \| string[]` | - | Types of holidays to display |
+| `showEvents` | `boolean` | true | Whether to show holidays in the calendar |
+| `eventTypes` | `string \| string[]` | - | Types of holidays to display |
 | `rtl` | `boolean` | true | Right-to-left layout |
 | `minDate` | `[number, number, number]` | - | Minimum selectable date [year, month, day] |
 | `maxDate` | `[number, number, number]` | - | Maximum selectable date [year, month, day] |
@@ -241,8 +241,8 @@ export class YourStandaloneComponent { }
 |-------|-----|---------|----------|
 | `placeholder` | `string` | '' | متن پیش‌فرض ورودی |
 | `format` | `string` | 'YYYY/MM/DD' | الگوی نمایش تاریخ |
-| `showHolidays` | `boolean` | true | نمایش تعطیلات |
-| `holidayTypes` | `string \| string[]` | - | انواع تعطیلات برای نمایش |
+| `showEvents` | `boolean` | true | نمایش تعطیلات |
+| `eventTypes` | `string \| string[]` | - | انواع تعطیلات برای نمایش |
 | `rtl` | `boolean` | true | چیدمان راست به چپ |
 | `minDate` | `[number, number, number]` | - | حداقل تاریخ قابل انتخاب [سال، ماه، روز] |
 | `maxDate` | `[number, number, number]` | - | حداکثر تاریخ قابل انتخاب [سال، ماه، روز] |

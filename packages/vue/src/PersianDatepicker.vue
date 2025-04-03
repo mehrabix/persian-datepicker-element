@@ -5,12 +5,12 @@
       :value="formattedValue"
       :placeholder="placeholder"
       :format="format"
-      :show-holidays="showHolidays"
+      :show-holidays="showEvents"
       :rtl="rtl"
       :min-date="minDate"
       :max-date="maxDate"
       :disabled-dates="disabledDates"
-      :holiday-types="holidayTypes"
+      :holiday-types="eventTypes"
       :range-mode="rangeMode"
       :range-start="rangeStart"
       :range-end="rangeEnd"
@@ -38,7 +38,7 @@ const props = defineProps({
     type: String,
     default: 'YYYY/MM/DD'
   },
-  showHolidays: {
+  showEvents: {
     type: Boolean,
     default: true
   },
@@ -58,7 +58,7 @@ const props = defineProps({
     type: [String, Function] as PropType<string | ((year: number, month: number, day: number) => boolean)>,
     default: undefined
   },
-  holidayTypes: {
+  eventTypes: {
     type: [String, Array] as PropType<string | string[]>,
     default: undefined
   },

@@ -32,8 +32,8 @@ export interface PersianDatePickerElementOptions {
   defaultDate?: DateTuple;
   placeholder?: string;
   format?: string;
-  showHolidays?: boolean;
-  holidayTypes?: string | string[];
+  showEvents?: boolean;
+  eventTypes?: string | string[];
   cssVariables?: CSSVariableMap;
   rtl?: boolean;
   rangeMode?: boolean;

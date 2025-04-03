@@ -37,10 +37,6 @@ export interface PersianDatePickerElementOptions {
   format?: string;
   /** Whether the date picker should use RTL layout */
   rtl?: boolean;
-  /** Whether to show holidays in the calendar */
-  showHolidays?: boolean;
-  /** Types of holidays to display (e.g. 'Iran', 'Religious') */
-  holidayTypes?: string[] | string;
   /** Whether to enable range selection mode */
   rangeMode?: boolean;
   /** Start date for range selection */
@@ -55,6 +51,10 @@ export interface PersianDatePickerElementOptions {
   disabledDates?: string | ((year: number, month: number, day: number) => boolean);
   /** Default date to select when the component is initialized */
   defaultDate?: DateTuple;
+  /** Whether to show events in the calendar */
+  showEvents?: boolean;
+  /** Types of events to display (e.g. 'Iran', 'Religious') */
+  eventTypes?: string[] | string;
 }
 
 /**

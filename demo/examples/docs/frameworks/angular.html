@@ -407,7 +407,7 @@ export class AppModule { }</code></pre>
 &lt;persian-datepicker 
   placeholder="تاریخ را انتخاب کنید"
   format="YYYY/MM/DD"
-  [showHolidays]="true"
+  [showEvents]="true"
   (dateChange)="onDateChange($event)"&gt;
 &lt;/persian-datepicker&gt;</code></pre>
 
@@ -554,17 +554,17 @@ export class AppComponent {
           <pre><code>// app.component.html
 &lt;div&gt;
   &lt;persian-datepicker
-    holidayTypes="Iran,Afghanistan,AncientIran,International"
+    eventTypes="Iran,Afghanistan,AncientIran,International"
     placeholder="نمایش همه تعطیلات"&gt;
   &lt;/persian-datepicker&gt;
 
   &lt;persian-datepicker
-    holidayTypes="Afghanistan"
+    eventTypes="Afghanistan"
     placeholder="تعطیلات افغانستان"&gt;
   &lt;/persian-datepicker&gt;
 
   &lt;persian-datepicker
-    holidayTypes="all"
+    eventTypes="all"
     placeholder="نمایش همه انواع تعطیلات"&gt;
   &lt;/persian-datepicker&gt;
 &lt;/div&gt;</code></pre>
@@ -592,12 +592,12 @@ export class AppComponent {
             <td>فرمت نمایش تاریخ (مثال: "YYYY/MM/DD")</td>
           </tr>
           <tr>
-            <td>showHolidays</td>
+            <td>showEvents</td>
             <td>boolean</td>
             <td>نمایش نشانگر تعطیلات</td>
           </tr>
           <tr>
-            <td>holidayTypes</td>
+            <td>eventTypes</td>
             <td>string</td>
           <td>انواع تعطیلات برای نمایش (با کاما جدا شده: "Iran", "Afghanistan", "AncientIran", "International" یا "all" برای نمایش همه انواع)</td>
           </tr>

@@ -106,7 +106,7 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       onChange,
       placeholder,
       format,
-      showHolidays,
+      showEvents,
       rtl,
       minDate,
       maxDate,
@@ -189,7 +189,7 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
         if (value) elementRef.current.setAttribute('value', Array.isArray(value) ? value.join('/') : String(value));
         if (placeholder) elementRef.current.setAttribute('placeholder', placeholder);
         if (format) elementRef.current.setAttribute('format', format);
-        if (showHolidays !== undefined) elementRef.current.setAttribute('show-holidays', String(showHolidays));
+        if (showEvents !== undefined) elementRef.current.setAttribute('show-holidays', String(showEvents));
         if (rtl !== undefined) elementRef.current.setAttribute('rtl', String(rtl));
         if (minDate) elementRef.current.setAttribute('min-date', convertDateTupleToString(minDate));
         if (maxDate) elementRef.current.setAttribute('max-date', convertDateTupleToString(maxDate));
@@ -211,7 +211,7 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
         if (rangeStart) elementRef.current.setAttribute('range-start', convertDateTupleToString(rangeStart));
         if (rangeEnd) elementRef.current.setAttribute('range-end', convertDateTupleToString(rangeEnd));
       }
-    }, [value, placeholder, format, showHolidays, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd]);
+    }, [value, placeholder, format, showEvents, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd]);
 
     const minDateStr = convertDateTupleToString(minDate);
     const maxDateStr = convertDateTupleToString(maxDate);
@@ -222,7 +222,7 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       value,
       placeholder,
       format,
-      'show-holidays': showHolidays,
+      'show-holidays': showEvents,
       rtl,
       'min-date': minDateStr,
       'max-date': maxDateStr,

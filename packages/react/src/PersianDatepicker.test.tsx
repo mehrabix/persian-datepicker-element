@@ -25,7 +25,7 @@ describe('PersianDatepicker', () => {
       <PersianDatepicker 
         placeholder="Test Placeholder"
         format="YYYY-MM-DD"
-        showHolidays={true}
+        showEvents={true}
         rtl={true}
         minDate={[1400, 1, 1]}
         maxDate={[1402, 12, 29]}

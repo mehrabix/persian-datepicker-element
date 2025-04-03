@@ -51,13 +51,13 @@ function App() {
 | value | string \| number[] | - | Selected date value |
 | placeholder | string | '' | Input placeholder text |
 | format | string | 'YYYY/MM/DD' | Date format pattern |
-| showHolidays | boolean | true | Show holiday indicators |
+| showEvents | boolean | true | Show holiday indicators |
 | rtl | boolean | true | Right-to-left layout |
 | disabled | boolean | false | Disable the datepicker |
 | minDate | [number, number, number] | - | Minimum selectable date [year, month, day] |
 | maxDate | [number, number, number] | - | Maximum selectable date [year, month, day] |
 | disabledDates | string \| Function | - | Dates to disable (string pattern or function) |
-| holidayTypes | string \| string[] | - | Types of holidays to highlight |
+| eventTypes | string \| string[] | - | Types of holidays to highlight |
 | rangeMode | boolean | false | Enable range selection mode |
 | rangeStart | [number, number, number] | - | Start date for range selection |
 | rangeEnd | [number, number, number] | - | End date for range selection |
@@ -176,13 +176,13 @@ function App() {
 | value | string \| number[] | - | مقدار تاریخ انتخاب شده |
 | placeholder | string | '' | متن پیش‌فرض ورودی |
 | format | string | 'YYYY/MM/DD' | الگوی نمایش تاریخ |
-| showHolidays | boolean | true | نمایش نشانگر تعطیلات |
+| showEvents | boolean | true | نمایش نشانگر تعطیلات |
 | rtl | boolean | true | چیدمان راست به چپ |
 | disabled | boolean | false | غیرفعال کردن تقویم |
 | minDate | [number, number, number] | - | حداقل تاریخ قابل انتخاب [سال، ماه، روز] |
 | maxDate | [number, number, number] | - | حداکثر تاریخ قابل انتخاب [سال، ماه، روز] |
 | disabledDates | string \| Function | - | تاریخ‌های غیرفعال (الگو یا تابع) |
-| holidayTypes | string \| string[] | - | انواع تعطیلات برای نمایش |
+| eventTypes | string \| string[] | - | انواع تعطیلات برای نمایش |
 | rangeMode | boolean | false | فعال‌سازی حالت انتخاب بازه |
 | rangeStart | [number, number, number] | - | تاریخ شروع بازه |
 | rangeEnd | [number, number, number] | - | تاریخ پایان بازه |
