@@ -1567,6 +1567,11 @@ export class PersianDatePickerElement extends HTMLElement {
     const day = this.fromPersianNum(dayText);
     if (isNaN(day)) return;
     
+    // Check if date is disabled before handling selection
+    if (this.isDateDisabled(this.jalaliYear, this.jalaliMonth, day)) {
+      return;
+    }
+    
     // Handle range or single selection
     this.handleRangeSelection(day);
   }
