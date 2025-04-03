@@ -2699,6 +2699,13 @@ export class PersianDatePickerElement extends HTMLElement {
 
     const currentDate: DateTuple = [this.jalaliYear, this.jalaliMonth, day];
 
+    // Check if date is within min/max range and not disabled
+    if (!this.isDateInRange(this.jalaliYear, this.jalaliMonth, day) || 
+        this.isDateDisabled(this.jalaliYear, this.jalaliMonth, day)) {
+      // Don't allow selection of invalid dates
+      return;
+    }
+
     if (!this.isSelectingRange) {
       // Start new range
       this.rangeStart = currentDate;
