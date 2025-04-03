@@ -1,128 +1,419 @@
-# Testing Persian Datepicker Element
+# Testing Guide for Persian Date Picker Element
 
-This document describes the test suite for the Persian Datepicker Element, including what's tested and how to run the tests.
+This document provides comprehensive information about testing the Persian Date Picker component, including unit tests, integration tests, and framework-specific tests.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Test Structure](#test-structure)
+- [Running Tests](#running-tests)
+- [Writing Tests](#writing-tests)
+- [Framework-Specific Tests](#framework-specific-tests)
+- [Test Coverage](#test-coverage)
+- [Continuous Integration](#continuous-integration)
+- [Troubleshooting](#troubleshooting)
 
 ## Overview
 
-The test suite includes multiple types of tests:
+The Persian Date Picker component uses Jest as its testing framework, with additional tools for framework-specific testing:
 
-1. **Unit Tests**: Testing individual functions and components
-2. **Integration Tests**: Testing how multiple components work together
-3. **Event Tests**: Specifically testing event handling for the Persian calendar year 1404
-4. **Configuration Tests**: Testing different user configuration options
-5. **Hijri-to-Jalali Conversion Tests**: Testing accurate mapping of Islamic to Persian calendar dates
+- **Jest**: For unit and integration testing
+- **Testing Library**: For DOM testing utilities
+- **JSDOM**: For browser environment simulation
+- **Vitest**: For Vue-specific testing
+- **Jest DOM**: For DOM-specific assertions
+
+## Test Structure
+
+The test suite is organized as follows:
+
+```
+├── src/
+│   ├── __tests__/
+│   │   ├── core/
+│   │   │   ├── persian-datepicker-element.test.ts
+│   │   │   ├── utils.test.ts
+│   │   │   └── holidays.test.ts
+│   │   ├── react/
+│   │   │   └── persian-datepicker.test.tsx
+│   │   ├── vue/
+│   │   │   └── persian-datepicker.test.ts
+│   │   └── angular/
+│   │       └── persian-datepicker.component.spec.ts
+│   └── ...
+├── packages/
+│   ├── react/
+│   │   └── test/
+│   ├── vue/
+│   │   └── test/
+│   └── angular/
+│       └── test/
+└── ...
+```
 
 ## Running Tests
 
-To run the tests, use the following commands:
+### Core Tests
 
 ```bash
 # Run all tests
 npm test
 
-# Run tests with watch mode (for development)
-npm run test:watch
+# Run core tests only
+npm run test:core
 
-# Run tests with coverage report
-npm run test:coverage
+# Run tests with coverage
+npm test -- --coverage
+
+# Run tests in watch mode
+npm test -- --watch
+
+# Run tests in a specific file
+npm test -- path/to/file.test.ts
 ```
 
-## Test Files
+### Framework-Specific Tests
 
-The test suite includes the following files:
+```bash
+# React tests
+npm run test:react
 
-- `src/__tests__/persian-datepicker-element.test.ts`: Basic component tests
-- `src/__tests__/event-utils.test.ts`: Tests for event utility functions
-- `src/__tests__/hijri-utils.test.ts`: Tests for Hijri-to-Jalali calendar conversion
-- `src/__tests__/calendar-events-1404.test.ts`: Persian year 1404 events tests
-- `src/__tests__/datepicker-config-1404.test.ts`: Configuration options tests 
-- `src/__tests__/integration.test.ts`: Integration tests
-- `src/__tests__/year-change-events.test.ts`: Tests for event updates on year changes
+# Vue tests
+npm run test:vue
 
-## What is Tested
+# Angular tests
+npm run test:angular
+```
 
-### Basic Component Functionality
+## Writing Tests
 
-- Component rendering and initialization
-- Date selection and formatting
-- Calendar navigation
-- Input field interaction
+### Unit Tests
 
-### Event Utilities
+Unit tests focus on testing individual functions and methods in isolation. Here's an example:
 
-- Loading and parsing events from JSON
-- Filtering events by type and date
-- Holiday detection
-- Event tooltips display
+```typescript
+import { PersianDatepickerElement } from '../src/persian-datepicker-element';
 
-### Hijri-to-Jalali Conversion
+describe('PersianDatepickerElement', () => {
+  let element: PersianDatepickerElement;
 
-- Accurate conversion between Islamic calendar dates and Persian calendar
-- Religious event date mapping to current Jalali year
-- Handling of date validation and edge cases
-- Proper refreshing of events when year changes
+  beforeEach(() => {
+    element = document.createElement('persian-datepicker-element') as PersianDatepickerElement;
+    document.body.appendChild(element);
+  });
 
-### Year 1404 Events
+  afterEach(() => {
+    document.body.removeChild(element);
+  });
 
-- Calendar accurately shows holidays and events for Persian year 1404
-- Religious events appear on the correct Jalali dates
-- Tooltip information is accurate and complete
+  it('should initialize with default values', () => {
+    expect(element.value).toBe('');
+    expect(element.format).toBe('YYYY/MM/DD');
+    expect(element.showHolidays).toBe(false);
+    expect(element.rtl).toBe(false);
+  });
 
-### User Configuration
+  it('should update value when setValue is called', () => {
+    element.setValue(1402, 1, 1);
+    expect(element.value).toBe('1402/01/01');
+  });
 
-Tests for various user configuration options:
+  it('should emit change event when a date is selected', () => {
+    const changeHandler = jest.fn();
+    element.addEventListener('change', changeHandler);
+    
+    element.setValue(1402, 1, 1);
+    
+    expect(changeHandler).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: expect.objectContaining({
+          jalali: [1402, 1, 1],
+          isHoliday: expect.any(Boolean),
+          events: expect.any(Array)
+        })
+      })
+    );
+  });
+});
+```
 
-- Holiday type filtering (`holiday-types` attribute)
-- Date formatting (`format` attribute)
-- RTL/LTR direction (`rtl` attribute)
-- Custom CSS styling (various CSS attributes)
-- Custom button text and styling
+### Integration Tests
 
-### Mobile Specific Features
+Integration tests verify that different parts of the component work together correctly:
 
-- Touch event handling
-- Mobile tooltip display
-- Close button functionality on mobile
+```typescript
+describe('PersianDatepickerElement Integration', () => {
+  it('should update calendar when month/year changes', () => {
+    const element = document.createElement('persian-datepicker-element');
+    document.body.appendChild(element);
+    
+    // Open the calendar
+    element.open();
+    
+    // Change month
+    const nextButton = element.shadowRoot.querySelector('.next-month-button');
+    nextButton.click();
+    
+    // Verify calendar updated
+    const currentMonth = element.shadowRoot.querySelector('.current-month');
+    expect(currentMonth.textContent).toMatch(/فروردین/);
+    
+    document.body.removeChild(element);
+  });
+  
+  it('should handle range selection correctly', () => {
+    const element = document.createElement('persian-datepicker-element');
+    element.setAttribute('range-mode', '');
+    document.body.appendChild(element);
+    
+    // Open calendar
+    element.open();
+    
+    // Select start date
+    const startDate = element.shadowRoot.querySelector('[data-day="1"]');
+    startDate.click();
+    
+    // Select end date
+    const endDate = element.shadowRoot.querySelector('[data-day="5"]');
+    endDate.click();
+    
+    // Verify range selected
+    const range = element.getRange();
+    expect(range.start).toEqual([1402, 1, 1]);
+    expect(range.end).toEqual([1402, 1, 5]);
+    
+    document.body.removeChild(element);
+  });
+});
+```
 
-## Religious Events Testing
+### Accessibility Tests
 
-Special attention is given to religious events (mostly from the Hijri calendar) to ensure they appear on the correct Jalali (Persian) dates. This includes:
+```typescript
+describe('PersianDatepickerElement Accessibility', () => {
+  it('should have correct ARIA attributes', () => {
+    const element = document.createElement('persian-datepicker-element');
+    document.body.appendChild(element);
+    
+    const input = element.shadowRoot.querySelector('input');
+    expect(input).toHaveAttribute('role', 'combobox');
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(input).toHaveAttribute('aria-haspopup', 'listbox');
+    
+    document.body.removeChild(element);
+  });
+  
+  it('should handle keyboard navigation', () => {
+    const element = document.createElement('persian-datepicker-element');
+    document.body.appendChild(element);
+    
+    // Open calendar with keyboard
+    element.focus();
+    element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    
+    // Navigate with arrow keys
+    element.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+    element.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    
+    // Verify focus moved
+    const focusedDay = element.shadowRoot.querySelector(':focus');
+    expect(focusedDay).toHaveAttribute('data-day', '2');
+    
+    document.body.removeChild(element);
+  });
+});
+```
 
-- Ashura
-- Ramadan
-- Eid al-Fitr
-- Eid al-Adha
-- Other religious holidays
+## Framework-Specific Tests
 
-## Expected Test Coverage
+### React Tests
 
-The test suite aims to provide over 90% code coverage, with particular focus on:
+```tsx
+import { render, fireEvent, screen } from '@testing-library/react';
+import { PersianDatepicker } from '../src/react';
 
-- Event handling logic
-- Date calculations and conversions
-- User configuration options
-- Calendar UI components
+describe('PersianDatepicker React Component', () => {
+  it('should render correctly', () => {
+    render(<PersianDatepicker placeholder="Select date" />);
+    expect(screen.getByPlaceholderText('Select date')).toBeInTheDocument();
+  });
+  
+  it('should handle controlled mode', () => {
+    const onChange = jest.fn();
+    render(
+      <PersianDatepicker
+        value="1402/01/01"
+        onChange={onChange}
+      />
+    );
+    
+    const input = screen.getByRole('combobox');
+    fireEvent.change(input, { target: { value: '1402/01/02' } });
+    
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: expect.objectContaining({
+          jalali: [1402, 1, 2]
+        })
+      })
+    );
+  });
+});
+```
 
-## Adding New Tests
+### Vue Tests
 
-When adding new tests, please follow these guidelines:
+```typescript
+import { mount } from '@vue/test-utils';
+import { PersianDatepicker } from '../src/vue';
 
-1. Place tests in the `src/__tests__/` directory
-2. Use descriptive test names that indicate what's being tested
-3. Group related tests using `describe` blocks
-4. Use setup and teardown hooks appropriately
-5. Mock external dependencies when necessary
+describe('PersianDatepicker Vue Component', () => {
+  it('should render correctly', () => {
+    const wrapper = mount(PersianDatepicker, {
+      props: {
+        placeholder: 'Select date'
+      }
+    });
+    
+    expect(wrapper.find('input').attributes('placeholder')).toBe('Select date');
+  });
+  
+  it('should handle v-model', async () => {
+    const wrapper = mount(PersianDatepicker, {
+      props: {
+        modelValue: '1402/01/01',
+        'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e })
+      }
+    });
+    
+    await wrapper.find('input').setValue('1402/01/02');
+    expect(wrapper.props('modelValue')).toBe('1402/01/02');
+  });
+});
+```
 
-## Test Utilities
+### Angular Tests
 
-Custom test utilities are provided to make testing easier:
+```typescript
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PersianDatepickerComponent } from '../src/angular';
 
-- `wait`: For waiting a specific time to allow for DOM updates
-- `dispatchEvent`: For simulating events with proper async handling
-- `simulateKeyEvent`: For simulating keyboard events
+describe('PersianDatepickerComponent', () => {
+  let component: PersianDatepickerComponent;
+  let fixture: ComponentFixture<PersianDatepickerComponent>;
+  
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ PersianDatepickerComponent ]
+    })
+    .compileComponents();
+    
+    fixture = TestBed.createComponent(PersianDatepickerComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+  
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+  
+  it('should handle form control', () => {
+    component.writeValue('1402/01/01');
+    expect(component.value).toBe('1402/01/01');
+    
+    const onChange = jasmine.createSpy('onChange');
+    component.registerOnChange(onChange);
+    
+    component.value = '1402/01/02';
+    component.onChange();
+    
+    expect(onChange).toHaveBeenCalledWith('1402/01/02');
+  });
+});
+```
 
-## Common Testing Issues
+## Test Coverage
 
-- **Time Zone Differences**: Some tests related to date calculations might fail if run in different time zones. Make sure to account for this in your test logic.
-- **DOM Events**: When testing events, ensure that event propagation is properly handled.
-- **Asynchronous Operations**: Use `async/await` or appropriate Jest matchers for async operations. 
+The test coverage report is generated after running tests with the `--coverage` flag. The current coverage targets are:
+
+- Statements: 80%
+- Branches: 70%
+- Functions: 80%
+- Lines: 80%
+
+To improve coverage:
+
+1. Identify uncovered code paths in the coverage report
+2. Write additional tests for edge cases
+3. Add tests for error handling
+4. Test framework-specific features
+
+## Continuous Integration
+
+Tests are automatically run on:
+
+- Pull requests
+- Merges to main branch
+- Nightly builds
+
+The CI pipeline includes:
+
+1. Linting
+2. Type checking
+3. Unit tests
+4. Integration tests
+5. Framework-specific tests
+6. Coverage reporting
+
+## Troubleshooting
+
+### Common Test Issues
+
+1. **Shadow DOM Access**: When testing web components, remember to use `shadowRoot` to access elements inside the shadow DOM.
+
+2. **Async Operations**: Use `async/await` or `done` callback for tests involving asynchronous operations.
+
+3. **Event Handling**: For custom events, use `CustomEvent` and include the correct `detail` property.
+
+4. **Framework Integration**: When testing framework wrappers, ensure you're testing both the wrapper functionality and the underlying web component.
+
+### Debugging Tests
+
+1. Use `console.log` or `debugger` statements in tests
+2. Run tests in watch mode with `--watch`
+3. Use `--verbose` flag for detailed output
+4. Check test coverage report for uncovered code
+
+### Performance Considerations
+
+1. Use `beforeAll` for expensive setup
+2. Clean up DOM elements in `afterEach`
+3. Mock external dependencies
+4. Use `jest.mock()` for complex modules
+
+## Best Practices
+
+1. **Test Organization**:
+   - Group related tests using `describe` blocks
+   - Use clear, descriptive test names
+   - Follow the Arrange-Act-Assert pattern
+
+2. **Test Isolation**:
+   - Each test should be independent
+   - Clean up after each test
+   - Don't rely on test order
+
+3. **Assertions**:
+   - Use specific assertions
+   - Include meaningful error messages
+   - Test both positive and negative cases
+
+4. **Code Coverage**:
+   - Aim for high coverage
+   - Focus on critical paths
+   - Test edge cases and error conditions
+
+5. **Maintenance**:
+   - Keep tests up to date with code changes
+   - Refactor tests when refactoring code
+   - Document complex test setups
