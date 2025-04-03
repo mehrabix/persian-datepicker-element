@@ -380,7 +380,7 @@
           <label>فقط تعطیلات ایران:</label>
           <ngx-persian-datepicker-element
             id="iran-holidays"
-            holidayTypesInput="Iran"
+            eventTypesInput="Iran"
             placeholderInput="فقط تعطیلات ایران"
             [(ngModel)]="iranHolidays"
             (dateChange)="handleDateChange($event)"
@@ -392,7 +392,7 @@
           <label>تعطیلات افغانستان:</label>
           <ngx-persian-datepicker-element
             id="afghanistan-holidays"
-            holidayTypesInput="Afghanistan"
+            eventTypesInput="Afghanistan"
             placeholderInput="تعطیلات افغانستان"
             [(ngModel)]="afghanistanHolidays"
             (dateChange)="handleDateChange($event)"
@@ -404,7 +404,7 @@
           <label>همه تعطیلات:</label>
           <ngx-persian-datepicker-element
             id="all-holidays"
-            holidayTypesInput="Iran,Religious,Afghanistan"
+            eventTypesInput="Iran,Religious,Afghanistan"
             placeholderInput="همه تعطیلات"
             [(ngModel)]="allHolidays"
             (dateChange)="handleDateChange($event)"

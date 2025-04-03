@@ -47,7 +47,7 @@
             <label>فقط تعطیلات ایران:</label>
             <PersianDatepicker 
               id="iran-holidays" 
-              holidayTypes="Iran" 
+              eventTypes="Iran" 
               placeholder="فقط تعطیلات ایران"
               @change="handleDateChange"
               v-model="iranHolidays"
@@ -61,7 +61,7 @@
             <label>تعطیلات افغانستان:</label>
             <PersianDatepicker 
               id="afghanistan-holidays" 
-              holidayTypes="Afghanistan" 
+              eventTypes="Afghanistan" 
               placeholder="تعطیلات افغانستان"
               @change="handleDateChange"
               v-model="afghanistanHolidays"
@@ -72,7 +72,7 @@
             <label>همه تعطیلات:</label>
             <PersianDatepicker 
               id="all-holidays" 
-              holidayTypes="all" 
+              eventTypes="all" 
               placeholder="همه تعطیلات"
               @change="handleDateChange"
               v-model="allHolidays"

@@ -27,13 +27,13 @@ declare module 'react-persian-datepicker-element' {
   export interface PersianDatePickerElementOptions {
     placeholder?: string;
     format?: string;
-    showHolidays?: boolean;
+    showEvents?: boolean;
     rtl?: boolean;
     value?: DateTuple;
     min?: DateTuple;
     max?: DateTuple;
     disabled?: boolean;
-    holidayTypes?: string;
+    eventTypes?: string;
     disabledDates?: string | ((year: number, month: number, day: number) => boolean);
     rangeMode?: boolean;
     rangeStart?: DateTuple;

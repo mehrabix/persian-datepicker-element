@@ -99,8 +99,8 @@ export class ExampleComponent {
 <ngx-persian-datepicker-element 
   placeholderInput="انتخاب تاریخ" 
   formatInput="YYYY/MM/DD" 
-  [showHolidaysInput]="true" 
-  [holidayTypesInput]="['Iran', 'Religious']"
+  [showEventsInput]="true" 
+  [eventTypesInput]="['Iran', 'Religious']"
   (dateChange)="onDateChange($event)">
 </ngx-persian-datepicker-element>
 
@@ -108,8 +108,8 @@ export class ExampleComponent {
 <ngx-persian-datepicker-element 
   placeholderInput="انتخاب تاریخ" 
   formatInput="YYYY/MM/DD" 
-  [showHolidaysInput]="true" 
-  [holidayTypesInput]="['Iran', 'Religious']"
+  [showEventsInput]="true" 
+  [eventTypesInput]="['Iran', 'Religious']"
   (dateChange)="onDateChange($event)">
 </ngx-persian-datepicker-element>
 ```
@@ -277,7 +277,7 @@ applyTheme() {
   borderRadiusInput="12px"
   holidayColorInput="#e91e63"
   holidayBgInput="#ffe6ec"
-  [showHolidaysInput]="true">
+  [showEventsInput]="true">
 </ngx-persian-datepicker-element>
 ```
 
@@ -289,8 +289,8 @@ applyTheme() {
 |----------|------|-------------|
 | `placeholder` / `placeholderInput` | `string` | متن راهنما برای ورودی |
 | `format` / `formatInput` | `string` | قالب تاریخ (به عنوان مثال 'YYYY/MM/DD') |
-| `showHolidays` / `showHolidaysInput` | `boolean` | نمایش تعطیلات در تقویم |
-| `holidayTypes` / `holidayTypesInput` | `string` یا `string[]` | انواع تعطیلات برای نمایش (مانند 'Iran'، 'Religious'، 'National'، 'Afghanistan' یا 'all') |
+| `showEvents` / `showEventsInput` | `boolean` | نمایش تعطیلات در تقویم |
+| `eventTypes` / `eventTypesInput` | `string` یا `string[]` | انواع تعطیلات برای نمایش (مانند 'Iran'، 'Religious'، 'National'، 'Afghanistan' یا 'all') |
 | `rtl` / `rtlInput` | `boolean` | استفاده از چینش راست به چپ |
 | `primaryColor` / `primaryColorInput` | `string` | رنگ اصلی دیت‌پیکر |
 | `primaryHover` / `primaryHoverInput` | `string` | رنگ هاور اصلی دیت‌پیکر |
@@ -322,7 +322,7 @@ interface DateChangeEvent {
 
 ## پشتیبانی از سیگنال‌های انگولار
 
-این کامپوننت از سیگنال‌های انگولار برای ورودی‌ها استفاده می‌کند، که باعث بهبود کارایی در انگولار ۱۷+ می‌شود. برای حفظ سازگاری با نسخه‌های قبلی، هم نام اصلی خاصیت (مانند `showHolidays`) و هم نام قدیمی با پسوند (مانند `showHolidaysInput`) پشتیبانی می‌شوند.
+این کامپوننت از سیگنال‌های انگولار برای ورودی‌ها استفاده می‌کند، که باعث بهبود کارایی در انگولار ۱۷+ می‌شود. برای حفظ سازگاری با نسخه‌های قبلی، هم نام اصلی خاصیت (مانند `showEvents`) و هم نام قدیمی با پسوند (مانند `showEventsInput`) پشتیبانی می‌شوند.
 
 ## مجوز
 

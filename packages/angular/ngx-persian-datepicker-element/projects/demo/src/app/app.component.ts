@@ -42,7 +42,7 @@ export class AppComponent implements AfterViewInit {
   rtlDirection = true;
   
   // Show holidays - true for holiday datepickers
-  showHolidays = true;
+  showEvents = true;
   
   // Dark mode toggle
   isDarkMode: boolean = false;

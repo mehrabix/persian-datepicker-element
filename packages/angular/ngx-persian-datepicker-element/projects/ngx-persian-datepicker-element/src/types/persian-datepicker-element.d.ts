@@ -8,8 +8,8 @@ declare module 'persian-datepicker-element' {
     setValue(year: number, month: number, day: number): void;
     getValue(): [number, number, number] | null;
     clear(): void;
-    setHolidayTypes(types: string | string[]): void;
-    getHolidayTypes(): string[];
+    seteventTypes(types: string | string[]): void;
+    geteventTypes(): string[];
     isSelectedDateHoliday(): boolean;
     getSelectedDateEvents(): any[];
   }

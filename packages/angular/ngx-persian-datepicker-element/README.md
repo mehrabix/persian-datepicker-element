@@ -74,7 +74,7 @@ The component uses Angular Signals for better performance. Use the input propert
 <ngx-persian-datepicker-element
   placeholderInput="انتخاب تاریخ"
   formatInput="YYYY/MM/DD"
-  [showHolidaysInput]="true"
+  [showEventsInput]="true"
   (dateChange)="onDateChange($event)">
 </ngx-persian-datepicker-element>
 ```
@@ -191,16 +191,16 @@ You can specify which holiday types to display:
 
 ```html
 <!-- Show only Iran holidays -->
-<ngx-persian-datepicker-element holidayTypesInput="Iran"></ngx-persian-datepicker-element>
+<ngx-persian-datepicker-element eventTypesInput="Iran"></ngx-persian-datepicker-element>
 
 <!-- Show Iran and Religious holidays -->
-<ngx-persian-datepicker-element holidayTypesInput="Iran,Religious"></ngx-persian-datepicker-element>
+<ngx-persian-datepicker-element eventTypesInput="Iran,Religious"></ngx-persian-datepicker-element>
 
 <!-- Show all holiday types -->
-<ngx-persian-datepicker-element holidayTypesInput="all"></ngx-persian-datepicker-element>
+<ngx-persian-datepicker-element eventTypesInput="all"></ngx-persian-datepicker-element>
 
 <!-- Or using an array -->
-<ngx-persian-datepicker-element [holidayTypesInput]="['Iran', 'Religious', 'Afghanistan']"></ngx-persian-datepicker-element>
+<ngx-persian-datepicker-element [eventTypesInput]="['Iran', 'Religious', 'Afghanistan']"></ngx-persian-datepicker-element>
 ```
 
 ### Dynamic Holiday Types Selection
@@ -220,21 +220,21 @@ checkboxStates: Record<HolidayTypeKey, boolean> = {
 };
 
 // The selected holiday types (initially Iran and Religious)
-holidayTypes = ['Iran', 'Religious'];
+eventTypes = ['Iran', 'Religious'];
 
 // Update holiday types based on user selection
-updateHolidayTypes(type: HolidayTypeKey, event: any) {
+updateeventTypes(type: HolidayTypeKey, event: any) {
   // Update checkbox state
   this.checkboxStates[type] = event.target.checked;
   
-  // Rebuild the holidayTypes array based on checked boxes
-  this.holidayTypes = Object.keys(this.checkboxStates).filter(
+  // Rebuild the eventTypes array based on checked boxes
+  this.eventTypes = Object.keys(this.checkboxStates).filter(
     key => this.checkboxStates[key as HolidayTypeKey]
   ) as HolidayTypeKey[];
   
   // If no types are selected, ensure we have at least one to prevent errors
-  if (this.holidayTypes.length === 0) {
-    this.holidayTypes = ['Iran'];
+  if (this.eventTypes.length === 0) {
+    this.eventTypes = ['Iran'];
     this.checkboxStates['Iran'] = true;
   }
 }
@@ -244,26 +244,26 @@ updateHolidayTypes(type: HolidayTypeKey, event: any) {
 <!-- In your template -->
 <div class="checkbox-group">
   <label>
-    <input type="checkbox" [checked]="checkboxStates['Iran']" (change)="updateHolidayTypes('Iran', $event)">
+    <input type="checkbox" [checked]="checkboxStates['Iran']" (change)="updateeventTypes('Iran', $event)">
     Show Iran Holidays
   </label>
   <label>
-    <input type="checkbox" [checked]="checkboxStates['Religious']" (change)="updateHolidayTypes('Religious', $event)">
+    <input type="checkbox" [checked]="checkboxStates['Religious']" (change)="updateeventTypes('Religious', $event)">
     Show Religious Holidays
   </label>
   <label>
-    <input type="checkbox" [checked]="checkboxStates['National']" (change)="updateHolidayTypes('National', $event)">
+    <input type="checkbox" [checked]="checkboxStates['National']" (change)="updateeventTypes('National', $event)">
     Show National Holidays
   </label>
   <label>
-    <input type="checkbox" [checked]="checkboxStates['Afghanistan']" (change)="updateHolidayTypes('Afghanistan', $event)">
+    <input type="checkbox" [checked]="checkboxStates['Afghanistan']" (change)="updateeventTypes('Afghanistan', $event)">
     Show Afghanistan Holidays
   </label>
 </div>
 
 <ngx-persian-datepicker-element 
-  [holidayTypesInput]="holidayTypes"
-  [showHolidaysInput]="true">
+  [eventTypesInput]="eventTypes"
+  [showEventsInput]="true">
 </ngx-persian-datepicker-element>
 ```
 
@@ -292,8 +292,8 @@ onDateChange(event) {
 |-------|------|-------------|
 | `placeholderInput` | string | Placeholder text for the input field |
 | `formatInput` | string | Date format string (e.g., 'YYYY/MM/DD') |
-| `showHolidaysInput` | boolean | Whether to show holidays in the calendar |
-| `holidayTypesInput` | string \| string[] | Holiday types to display (comma-separated or array) |
+| `showEventsInput` | boolean | Whether to show holidays in the calendar |
+| `eventTypesInput` | string \| string[] | Holiday types to display (comma-separated or array) |
 | `rtlInput` | boolean | Whether the component should use RTL layout |
 | `primaryColorInput` | string | Primary color for the datepicker |
 | `primaryHoverInput` | string | Primary hover color for the datepicker |

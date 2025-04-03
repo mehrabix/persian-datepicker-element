@@ -28,7 +28,7 @@ describe('PersianDatepicker', () => {
         modelValue: [1403, 1, 1],
         placeholder: 'Select a date',
         format: 'YYYY/MM/DD',
-        showHolidays: true,
+        showEvents: true,
         rtl: true,
         disabled: false
       }

@@ -47,14 +47,14 @@ describe('NgxPersianDatepickerComponent', () => {
     expect(typeof component.format).toBe('function');
   });
 
-  it('should have a showHolidays signal', () => {
-    expect(component.showHolidays).toBeDefined();
-    expect(typeof component.showHolidays).toBe('function');
+  it('should have a showEvents signal', () => {
+    expect(component.showEvents).toBeDefined();
+    expect(typeof component.showEvents).toBe('function');
   });
 
-  it('should have a holidayTypes signal', () => {
-    expect(component.holidayTypes).toBeDefined();
-    expect(typeof component.holidayTypes).toBe('function');
+  it('should have a eventTypes signal', () => {
+    expect(component.eventTypes).toBeDefined();
+    expect(typeof component.eventTypes).toBe('function');
   });
 
   it('should have a dateChange output emitter', () => {

@@ -290,7 +290,7 @@ function App() {
               <label htmlFor="iran-holidays">فقط تعطیلات ایران:</label>
               <PersianDatepicker 
                 id="iran-holidays" 
-                holidayTypes="Iran" 
+                eventTypes="Iran" 
                 placeholder="فقط تعطیلات ایران"
                 onChange={handleDateChange}
                 cssVariables={getThemeStyles()}
@@ -301,7 +301,7 @@ function App() {
               <label htmlFor="afghanistan-holidays">تعطیلات افغانستان:</label>
               <PersianDatepicker 
                 id="afghanistan-holidays" 
-                holidayTypes="Afghanistan" 
+                eventTypes="Afghanistan" 
                 placeholder="تعطیلات افغانستان"
                 onChange={handleDateChange}
                 cssVariables={getThemeStyles()}
@@ -312,7 +312,7 @@ function App() {
               <label htmlFor="all-holidays">همه تعطیلات:</label>
               <PersianDatepicker 
                 id="all-holidays" 
-                holidayTypes="all" 
+                eventTypes="all" 
                 placeholder="همه تعطیلات"
                 onChange={handleDateChange}
                 cssVariables={getThemeStyles()}

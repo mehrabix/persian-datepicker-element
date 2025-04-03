@@ -101,7 +101,7 @@ function App() {
       <PersianDatepicker
         placeholder="انتخاب تاریخ"
         format="YYYY/MM/DD"
-        showHolidays={true}
+        showEvents={true}
         onChange={handleDateChange}
         cssVariables={{
           '--jdp-primary': '#3b82f6',
@@ -176,7 +176,7 @@ import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
     <ngx-persian-datepicker-element
       placeholderInput="انتخاب تاریخ"
       formatInput="YYYY/MM/DD"
-      [showHolidaysInput]="true"
+      [showEventsInput]="true"
       [primaryColorInput]="'#3b82f6'"
       [fontFamilyInput]="'Vazir, sans-serif'"
       (dateChange)="onDateChange($event)">

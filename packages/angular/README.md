@@ -39,7 +39,7 @@ import { Component } from '@angular/core';
     <persian-datepicker
       placeholder="انتخاب تاریخ"
       format="YYYY/MM/DD"
-      [showHolidays]="true"
+      [showEvents]="true"
       [rtl]="true"
       (change)="handleChange($event)"
     ></persian-datepicker>
@@ -59,7 +59,7 @@ export class AppComponent {
 | value | string \| [number, number, number] | - | The selected date value |
 | placeholder | string | - | Placeholder text |
 | format | string | "YYYY/MM/DD" | Date format string |
-| showHolidays | boolean | false | Show holiday indicators |
+| showEvents | boolean | false | Show holiday indicators |
 | rtl | boolean | false | Right-to-left layout |
 | minDate | [number, number, number] | - | Minimum selectable date |
 | maxDate | [number, number, number] | - | Maximum selectable date |
@@ -126,7 +126,7 @@ import { PersianDatepickerComponent, PersianDatepickerChangeEvent } from '@persi
     <persian-datepicker
       [placeholder]="placeholder"
       [format]="format"
-      [showHolidays]="showHolidays"
+      [showEvents]="showEvents"
       [rtl]="rtl"
       (change)="handleChange($event)"
     ></persian-datepicker>
@@ -135,7 +135,7 @@ import { PersianDatepickerComponent, PersianDatepickerChangeEvent } from '@persi
 export class AppComponent {
   placeholder = "انتخاب تاریخ";
   format = "YYYY/MM/DD";
-  showHolidays = true;
+  showEvents = true;
   rtl = true;
 
   handleChange(event: PersianDatepickerChangeEvent) {

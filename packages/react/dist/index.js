@@ -47,7 +47,7 @@ var PersianDatepicker = (0, import_react.forwardRef)(
       onChange,
       placeholder,
       format,
-      showHolidays,
+      showEvents,
       rtl,
       minDate,
       maxDate,
@@ -120,7 +120,7 @@ var PersianDatepicker = (0, import_react.forwardRef)(
         if (value) elementRef.current.setAttribute("value", Array.isArray(value) ? value.join("/") : String(value));
         if (placeholder) elementRef.current.setAttribute("placeholder", placeholder);
         if (format) elementRef.current.setAttribute("format", format);
-        if (showHolidays !== void 0) elementRef.current.setAttribute("show-holidays", String(showHolidays));
+        if (showEvents !== void 0) elementRef.current.setAttribute("show-holidays", String(showEvents));
         if (rtl !== void 0) elementRef.current.setAttribute("rtl", String(rtl));
         if (minDate) elementRef.current.setAttribute("min-date", convertDateTupleToString(minDate));
         if (maxDate) elementRef.current.setAttribute("max-date", convertDateTupleToString(maxDate));
@@ -138,7 +138,7 @@ var PersianDatepicker = (0, import_react.forwardRef)(
         if (rangeStart) elementRef.current.setAttribute("range-start", convertDateTupleToString(rangeStart));
         if (rangeEnd) elementRef.current.setAttribute("range-end", convertDateTupleToString(rangeEnd));
       }
-    }, [value, placeholder, format, showHolidays, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd]);
+    }, [value, placeholder, format, showEvents, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd]);
     const minDateStr = convertDateTupleToString(minDate);
     const maxDateStr = convertDateTupleToString(maxDate);
     const rangeStartStr = convertDateTupleToString(rangeStart);
@@ -147,7 +147,7 @@ var PersianDatepicker = (0, import_react.forwardRef)(
       value,
       placeholder,
       format,
-      "show-holidays": showHolidays,
+      "show-holidays": showEvents,
       rtl,
       "min-date": minDateStr,
       "max-date": maxDateStr,

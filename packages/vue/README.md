@@ -50,12 +50,12 @@ const handleChange = (event) => {
 | modelValue | string \| DateTuple | - | v-model value |
 | placeholder | string | '' | Input placeholder text |
 | format | string | 'YYYY/MM/DD' | Date format pattern |
-| showHolidays | boolean | true | Show holiday indicators |
+| showEvents | boolean | true | Show holiday indicators |
 | rtl | boolean | true | Right-to-left layout |
 | minDate | DateTuple | - | Minimum selectable date [year, month, day] |
 | maxDate | DateTuple | - | Maximum selectable date [year, month, day] |
 | disabledDates | string \| Function | - | Dates to disable (string pattern or function) |
-| holidayTypes | string \| string[] | - | Types of holidays to highlight |
+| eventTypes | string \| string[] | - | Types of holidays to highlight |
 | rangeMode | boolean | false | Enable range selection mode |
 | rangeStart | DateTuple | - | Start date for range selection |
 | rangeEnd | DateTuple | - | End date for range selection |
@@ -191,12 +191,12 @@ const handleChange = (event) => {
 | modelValue | string \| DateTuple | - | مقدار v-model |
 | placeholder | string | '' | متن پیش‌فرض ورودی |
 | format | string | 'YYYY/MM/DD' | الگوی نمایش تاریخ |
-| showHolidays | boolean | true | نمایش نشانگر تعطیلات |
+| showEvents | boolean | true | نمایش نشانگر تعطیلات |
 | rtl | boolean | true | چیدمان راست به چپ |
 | minDate | DateTuple | - | حداقل تاریخ قابل انتخاب [سال، ماه، روز] |
 | maxDate | DateTuple | - | حداکثر تاریخ قابل انتخاب [سال، ماه، روز] |
 | disabledDates | string \| Function | - | تاریخ‌های غیرفعال (الگو یا تابع) |
-| holidayTypes | string \| string[] | - | انواع تعطیلات برای نمایش |
+| eventTypes | string \| string[] | - | انواع تعطیلات برای نمایش |
 | rangeMode | boolean | false | فعال‌سازی حالت انتخاب بازه |
 | rangeStart | DateTuple | - | تاریخ شروع بازه |
 | rangeEnd | DateTuple | - | تاریخ پایان بازه |

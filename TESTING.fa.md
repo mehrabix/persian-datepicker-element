@@ -109,7 +109,7 @@ describe('PersianDatepickerElement', () => {
   it('should initialize with default values', () => {
     expect(element.value).toBe('');
     expect(element.format).toBe('YYYY/MM/DD');
-    expect(element.showHolidays).toBe(false);
+    expect(element.showEvents).toBe(false);
     expect(element.rtl).toBe(false);
   });
 

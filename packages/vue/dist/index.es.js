@@ -14,7 +14,7 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
       type: String,
       default: "YYYY/MM/DD"
     },
-    showHolidays: {
+    showEvents: {
       type: Boolean,
       default: !0
     },
@@ -34,7 +34,7 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
       type: [String, Function],
       default: void 0
     },
-    holidayTypes: {
+    eventTypes: {
       type: [String, Array],
       default: void 0
     },
@@ -184,12 +184,12 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
         value: g.value,
         placeholder: l.placeholder,
         format: l.format,
-        "show-holidays": l.showHolidays,
+        "show-holidays": l.showEvents,
         rtl: l.rtl,
         "min-date": l.minDate,
         "max-date": l.maxDate,
         "disabled-dates": l.disabledDates,
-        "holiday-types": l.holidayTypes,
+        "holiday-types": l.eventTypes,
         "range-mode": l.rangeMode,
         "range-start": l.rangeStart,
         "range-end": l.rangeEnd,
