@@ -2007,6 +2007,10 @@ export class PersianDatePickerElement extends HTMLElement {
       if (this.showHolidays) {
         this.addHolidayInfo(dayElement, i);
       }
+
+      // Setup tooltip and click handlers
+      this.setupDayTooltips(dayElement);
+      this.setupDayClickHandler(dayElement, i);
       
       fragment.appendChild(dayElement);
     }
