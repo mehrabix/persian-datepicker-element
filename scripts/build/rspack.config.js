@@ -142,14 +142,59 @@ const config = {
     concatenateModules: true,
     // Add advanced tree shaking
     innerGraph: true,
-    mangleExports: isProduction ? 'size' : false,
+    mangleExports: isProduction ? 'deterministic' : false,
     // Disable chunk splitting for ESM builds
     splitChunks: false,
     // Disable runtime chunk for ESM builds
     runtimeChunk: false,
     // Add module concatenation
     moduleIds: isProduction ? 'deterministic' : 'named',
-    chunkIds: isProduction ? 'deterministic' : 'named'
+    chunkIds: isProduction ? 'deterministic' : 'named',
+    // Add compatible aggressive optimizations
+    removeAvailableModules: true,
+    removeEmptyChunks: true,
+    mergeDuplicateChunks: true,
+    // Add tree shaking optimizations
+    sideEffects: true,
+    usedExports: true,
+    providedExports: true,
+    innerGraph: true,
+    // Add module concatenation
+    concatenateModules: true,
+    // Add custom minimizer
+    minimizer: [
+      {
+        apply(compiler) {
+          compiler.hooks.compilation.tap('CustomMinimizer', (compilation) => {
+            compilation.hooks.processAssets.tap(
+              {
+                name: 'CustomMinimizer',
+                stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
+              },
+              (assets) => {
+                Object.keys(assets).forEach(file => {
+                  if (file.endsWith('.js')) {
+                    let source = assets[file].source();
+                    
+                    // Replace common patterns with shorter versions
+                    source = source
+                      .replace(/\btrue\b/g, '!0')
+                      .replace(/\bfalse\b/g, '!1')
+                      .replace(/\bundefined\b/g, 'void 0')
+                      .replace(/\bnull\b/g, '""[0]');
+                    
+                    assets[file] = {
+                      source: () => source,
+                      size: () => source.length
+                    };
+                  }
+                });
+              }
+            );
+          });
+        }
+      }
+    ]
   },
   devServer: {
     static: {
