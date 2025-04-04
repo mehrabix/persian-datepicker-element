@@ -29,6 +29,14 @@ process.env.MODULE_TYPE = 'umd';
 process.env.MINIFY = 'true';
 execSync('npx rspack --config scripts/build/rspack.config.js', { stdio: 'inherit' });
 
+// Optimize CSS in the built files
+console.log('Optimizing CSS in built files...');
+execSync('node scripts/optimize/css-optimize.js', { stdio: 'inherit' });
+
+// Run extreme optimization
+console.log('Running extreme optimization...');
+execSync('node scripts/optimize/extreme-optimize.js', { stdio: 'inherit' });
+
 // Generate TypeScript declaration files
 console.log('Generating TypeScript declaration files...');
 execSync('npx tsc --emitDeclarationOnly --declaration --outDir dist/types --excludeDirectories "**/__tests__"', { stdio: 'inherit' });
@@ -59,18 +67,29 @@ function cleanupDirectory(dir) {
 
 cleanupDirectory(typesDir);
 
-// Create compressed versions
+// Create compressed versions with maximum compression
 console.log('Creating compressed versions...');
 
-// Function to compress a file
+// Function to compress a file with maximum settings
 function compressFile(inputFile, outputFile, compressionType) {
   const contents = fs.readFileSync(inputFile);
   let compressed;
   
   if (compressionType === 'gzip') {
-    compressed = zlib.gzipSync(contents, { level: 9 });
+    compressed = zlib.gzipSync(contents, {
+      level: 9,
+      memLevel: 9,
+      strategy: zlib.constants.Z_DEFAULT_STRATEGY
+    });
   } else if (compressionType === 'brotli') {
-    compressed = zlib.brotliCompressSync(contents, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11 } });
+    compressed = zlib.brotliCompressSync(contents, {
+      params: {
+        [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+        [zlib.constants.BROTLI_PARAM_LGWIN]: 24,
+        [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
+        [zlib.constants.BROTLI_PARAM_SIZE_HINT]: contents.length
+      }
+    });
   }
   
   fs.writeFileSync(outputFile, compressed);

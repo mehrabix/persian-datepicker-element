@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "private": false,
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.min.js",
@@ -114,6 +114,7 @@
     "build:esm-optimize": "node scripts/optimize/esm-optimize.js",
     "build:extreme": "node scripts/build/extreme-build.js",
     "build:production": "pnpm build:prod && pnpm build:optimal",
+    "build:css-optimize": "node scripts/optimize/css-optimize.js",
     "minify": "node scripts/optimize/minify.js persian-datepicker-element.min.js && node scripts/optimize/esm-optimize.js",
     "cleanup": "pnpm build:clean",
     "dev": "pnpm -r dev",
