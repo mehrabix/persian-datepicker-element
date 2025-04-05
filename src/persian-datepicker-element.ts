@@ -1931,6 +1931,14 @@ export class PersianDatePickerElement extends HTMLElement {
       
     // Render the calendar content
     this.renderCalendarContent();
+    
+    // Remove footer if in range mode
+    if (this.isRangeMode) {
+      const footer = this.shadowRoot.querySelector('.footer');
+      if (footer) {
+        footer.remove();
+      }
+    }
   }
 
   /**
