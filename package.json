@@ -96,7 +96,7 @@
   },
   "scripts": {
     "build": "pnpm build:core && pnpm build:angular && pnpm build:react && pnpm build:vue",
-    "build:core": "node scripts/build/minimal-build.js",
+    "build:core": "node scripts/build/build.js",
     "build:angular": "cd packages/angular/ngx-persian-datepicker-element && pnpm ng build ngx-persian-datepicker-element",
     "build:react": "pnpm --filter react-persian-datepicker-element build",
     "build:vue": "pnpm --filter vue-persian-datepicker-element build",
