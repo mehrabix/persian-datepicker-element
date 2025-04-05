@@ -748,6 +748,7 @@ input:focus {
   color: var(--jdp-range-color);
   position: relative;
   z-index: 1;
+  border-radius: 0;
 }
 
 .day.range-start,
@@ -786,6 +787,7 @@ input:focus {
 .day.in-range:not(.range-start):not(.range-end) {
   background-color: var(--jdp-range-bg);
   color: var(--jdp-range-color);
+  border-radius: 0;
 }
 
 /* Handle disabled dates in range */
@@ -793,12 +795,14 @@ input:focus {
   opacity: 0.4;
   background-color: var(--jdp-range-bg);
   color: var(--jdp-range-color);
+  border-radius: 0;
 }
 
 /* Handle holidays in range */
 .day.holiday.in-range:not(.range-start):not(.range-end) {
   background-color: var(--jdp-range-bg);
   color: var(--jdp-range-color);
+  border-radius: 0;
 }
 
 .day.holiday.range-start,
