@@ -344,12 +344,14 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
       <div class="result">
         شروع بازه: <span id="range-start-result">هیچ</span><br>
         پایان بازه: <span id="range-end-result">هیچ</span><br>
-        تعداد روزها: <span id="range-days-result">هیچ</span>
+        تعداد روزها: <span id="range-days-result">هیچ</span><br>
+        تاریخ ISO شروع: <span id="range-iso-start-result">N/A</span><br>
+        تاریخ ISO پایان: <span id="range-iso-end-result">N/A</span>
       </div>
 
       <pre><code>document.getElementById('event-range-picker').addEventListener('change', (event) => {
   if (event.detail.isRange) {
-    const { start, end } = event.detail.range;
+    const { start, end, startISOString, endISOString } = event.detail.range;
     // مدیریت انتخاب بازه
   }
 });</code></pre>
@@ -535,13 +537,19 @@ initialRangePicker.setRange([1403, 3, 1], [1403, 3, 15]);</code></pre>
     const rangeStartResult = document.getElementById('range-start-result');
     const rangeEndResult = document.getElementById('range-end-result');
     const rangeDaysResult = document.getElementById('range-days-result');
+    const rangeISOStartResult = document.getElementById('range-iso-start-result');
+    const rangeISOEndResult = document.getElementById('range-iso-end-result');
     
     eventRangePicker.addEventListener('change', (event) => {
       console.log(event);
       if (event.detail.isRange) {
-        const { start, end } = event.detail.range;
+        const { start, end, startISOString, endISOString } = event.detail.range;
         rangeStartResult.textContent = formatPersianDate(start);
         rangeEndResult.textContent = formatPersianDate(end);
+        
+        // Display ISO strings
+        if (rangeISOStartResult) rangeISOStartResult.textContent = startISOString || 'N/A';
+        if (rangeISOEndResult) rangeISOEndResult.textContent = endISOString || 'N/A';
         
         // Calculate days between dates
         const startDate = new Date(start[0], start[1] - 1, start[2]);

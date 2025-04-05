@@ -2256,14 +2256,21 @@ export class PersianDatePickerElement extends HTMLElement {
     // Format the date according to the current format
     const formattedDate = this.formatDate(this.selectedDate, this.format);
     
+    // Convert to Gregorian date
+    const gregorianDate = PersianDate.jalaliToGregorian(this.jalaliYear, this.jalaliMonth, this.jalaliDay);
+    
+    // Create ISO string from Gregorian date
+    const isoString = this.jalaliToISOString(this.selectedDate);
+    
     // Dispatch change event
     this.dispatchEvent(new CustomEvent("change", {
       detail: {
         jalali: this.selectedDate,
-        gregorian: PersianDate.jalaliToGregorian(this.jalaliYear, this.jalaliMonth, this.jalaliDay),
+        gregorian: gregorianDate,
         isHoliday: this.eventUtils.isHoliday(this.jalaliMonth, day, this.eventTypes, this.includeAllTypes),
         events: events,
-        formattedDate: formattedDate
+        formattedDate: formattedDate,
+        isoString: isoString
       },
       bubbles: true
     }) as PersianDateChangeEvent);
@@ -2713,6 +2720,20 @@ export class PersianDatePickerElement extends HTMLElement {
     return this.disabledDatesFn(year, month, day);
   }
 
+  /**
+   * Convert a Jalali date tuple to an ISO string
+   */
+  private jalaliToISOString(date: DateTuple): string {
+    if (!date) return '';
+    
+    const gregorianDate = PersianDate.jalaliToGregorian(date[0], date[1], date[2]);
+    return new Date(
+      gregorianDate[0], 
+      gregorianDate[1] - 1, // Months are 0-indexed in JavaScript Date
+      gregorianDate[2]
+    ).toISOString();
+  }
+
   private handleRangeSelection(day: number): void {
     if (!this.isRangeMode) {
       // For single date selection, check if date is valid
@@ -2754,12 +2775,24 @@ export class PersianDatePickerElement extends HTMLElement {
       // Format and display the range
       this.formatAndSetValue();
       
+      // Create ISO strings for start and end dates
+      const startISOString = this.rangeStart ? this.jalaliToISOString(this.rangeStart) : null;
+      const endISOString = this.rangeEnd ? this.jalaliToISOString(this.rangeEnd) : null;
+      
+      // Convert to Gregorian dates
+      const startGregorian = this.rangeStart ? PersianDate.jalaliToGregorian(this.rangeStart[0], this.rangeStart[1], this.rangeStart[2]) : null;
+      const endGregorian = this.rangeEnd ? PersianDate.jalaliToGregorian(this.rangeEnd[0], this.rangeEnd[1], this.rangeEnd[2]) : null;
+      
       // Dispatch change event with range data
       this.dispatchEvent(new CustomEvent("change", {
         detail: {
           range: {
             start: this.rangeStart,
-            end: this.rangeEnd
+            end: this.rangeEnd,
+            startISOString: startISOString,
+            endISOString: endISOString,
+            startGregorian: startGregorian,
+            endGregorian: endGregorian
           },
           isRange: true
         },

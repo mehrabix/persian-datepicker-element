@@ -19,6 +19,8 @@ export interface PersianEvent {
     originalHijriMonth?: number;
     /** Original Hijri day for converted events */
     originalHijriDay?: number;
+    /** ISO string representation of the event date (e.g. "2023-04-01T00:00:00.000Z") */
+    isoString?: string;
 }
 /**
  * A date represented as [year, month, day]
@@ -40,6 +42,27 @@ export interface PersianDateChangeEvent extends CustomEvent {
         isHoliday: boolean;
         /** Events associated with the selected date */
         events: PersianEvent[];
+        /** Formatted date string according to the current format */
+        formattedDate?: string;
+        /** ISO string representation of the date (e.g. "2023-04-01T00:00:00.000Z") */
+        isoString?: string;
+        /** Whether this is a range selection */
+        isRange?: boolean;
+        /** Range selection details when in range mode */
+        range?: {
+            /** Start date in Jalali format */
+            start: DateTuple | null;
+            /** End date in Jalali format */
+            end: DateTuple | null;
+            /** Start date in ISO string format */
+            startISOString?: string | null;
+            /** End date in ISO string format */
+            endISOString?: string | null;
+            /** Start date in Gregorian format */
+            startGregorian?: DateTuple | null;
+            /** End date in Gregorian format */
+            endGregorian?: DateTuple | null;
+        };
     };
 }
 export interface PersianDate {

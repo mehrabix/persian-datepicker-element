@@ -270,6 +270,41 @@
       font-size: 14px;
       font-weight: 500;
     }
+
+    /* Event display styles */
+    .events-container {
+      margin-top: 10px;
+      padding: 5px 0;
+      border-top: 1px dashed #ddd;
+    }
+
+    .event-item {
+      font-size: 13px;
+      padding: 3px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .event-title {
+      flex-grow: 1;
+    }
+
+    .event-iso {
+      color: #718096;
+      font-size: 12px;
+      margin-right: 5px;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    body.dark .events-container {
+      border-top-color: #4a5568;
+    }
+
+    body.dark .event-iso {
+      color: #a0aec0;
+    }
   </style>
 </head>
 <body>
@@ -448,6 +483,37 @@
     
     defaultEventsPicker.addEventListener('change', (event) => {
       defaultEventsResult.textContent = formatPersianDate(event.detail.jalali);
+      
+      // Display events with ISO strings if available
+      if (event.detail.events && event.detail.events.length > 0) {
+        // Create a container for events if it doesn't exist
+        let eventsContainer = document.getElementById('default-events-container');
+        if (!eventsContainer) {
+          eventsContainer = document.createElement('div');
+          eventsContainer.id = 'default-events-container';
+          eventsContainer.className = 'events-container';
+          defaultEventsResult.parentNode.insertBefore(eventsContainer, defaultEventsResult.nextSibling);
+        } else {
+          eventsContainer.innerHTML = '';
+        }
+        
+        // Add events with ISO strings
+        event.detail.events.forEach(eventItem => {
+          const eventElement = document.createElement('div');
+          eventElement.className = 'event-item';
+          eventElement.innerHTML = `
+            <span class="event-title">${eventItem.title}</span>
+            <span class="event-iso">${eventItem.isoString ? '(' + eventItem.isoString.split('T')[0] + ')' : ''}</span>
+          `;
+          eventsContainer.appendChild(eventElement);
+        });
+      } else {
+        // Remove events container if no events
+        const eventsContainer = document.getElementById('default-events-container');
+        if (eventsContainer) {
+          eventsContainer.remove();
+        }
+      }
     });
     
     // Custom events picker
