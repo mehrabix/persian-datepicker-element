@@ -759,22 +759,22 @@ input:focus {
 }
 
 .day.range-start {
-  border-radius: var(--jdp-border-radius) 0 0 var(--jdp-border-radius);
+  border-radius: 0 var(--jdp-border-radius) var(--jdp-border-radius) 0;
 }
 
 .day.range-end {
-  border-radius: 0 var(--jdp-border-radius) var(--jdp-border-radius) 0;
+  border-radius: var(--jdp-border-radius) 0 0 var(--jdp-border-radius);
 }
 
 /* RTL specific range styles */
 :host([rtl="true"]) .day.range-start,
 :host([dir="rtl"]) .day.range-start {
-  border-radius: 0 var(--jdp-border-radius) var(--jdp-border-radius) 0;
+  border-radius: var(--jdp-border-radius) 0 0 var(--jdp-border-radius);
 }
 
 :host([rtl="true"]) .day.range-end,
 :host([dir="rtl"]) .day.range-end {
-  border-radius: var(--jdp-border-radius) 0 0 var(--jdp-border-radius);
+  border-radius: 0 var(--jdp-border-radius) var(--jdp-border-radius) 0;
 }
 
 /* Special handling for single day range */
