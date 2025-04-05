@@ -308,7 +308,7 @@
 const format1 = document.getElementById('format1');
 format1.setValue(1404, 1, 18);
 format1.addEventListener('change', (event) => {
-  document.getElementById('result1').textContent = event.detail.formattedDate;
+  document.getElementById('result1').textContent = `${event.detail.formattedDate} (ISO: ${event.detail.isoString})`;
 });</code></pre>
       
       <div class="example-label">فرمت: YYYY MMMM DD</div>
@@ -486,7 +486,7 @@ dddd YYYY MMMM DDth → دوشنبه ۱۴۰۴ فروردین ۱۷ام</code></pr
 
     // Add change event listeners
     format1.addEventListener('change', (event) => {
-      document.getElementById('result1').textContent = event.detail.formattedDate;
+      document.getElementById('result1').textContent = `${event.detail.formattedDate} (ISO: ${event.detail.isoString})`;
     });
 
     format2.addEventListener('change', (event) => {

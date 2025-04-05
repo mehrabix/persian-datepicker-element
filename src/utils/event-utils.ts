@@ -1,8 +1,44 @@
 import { PersianDate } from '../persian-date';
 import { PersianEvent } from '../types';
 
+/**
+ * Convert a Jalali date to ISO string format
+ * @param year The Jalali year
+ * @param month The Jalali month (1-12)
+ * @param day The Jalali day
+ * @returns ISO string representation of the date
+ */
+function jalaliDateToISOString(year: number, month: number, day: number): string {
+  const gregorianDate = PersianDate.jalaliToGregorian(year, month, day);
+  return new Date(
+    gregorianDate[0],
+    gregorianDate[1] - 1, // JavaScript months are 0-indexed
+    gregorianDate[2]
+  ).toISOString();
+}
+
+// Get current year in Jalali calendar for events
+const today = new Date();
+const jalaliToday = PersianDate.gregorianToJalali(
+  today.getFullYear(),
+  today.getMonth() + 1,
+  today.getDate()
+);
+const currentJalaliYear = jalaliToday[0];
+
 // Fallback events in case JSON loading fails
-const fallbackEvents: PersianEvent[] = [];
+const fallbackEvents: PersianEvent[] = [
+  // Add any default fallback events here
+  // Example:
+  // {
+  //   title: "نوروز",
+  //   month: 1,
+  //   day: 1,
+  //   type: "Iran",
+  //   holiday: true,
+  //   isoString: jalaliDateToISOString(currentJalaliYear, 1, 1)
+  // }
+];
 
 class EventUtils {
   private static instance: EventUtils | null = null;
@@ -68,16 +104,21 @@ class EventUtils {
       // Process Persian Calendar events
       if (this.persianCalendarData && this.persianCalendarData["Persian Calendar"] && Array.isArray(this.persianCalendarData["Persian Calendar"])) {
         
-        allEvents = this.persianCalendarData["Persian Calendar"].map((event: any) => ({
-          title: event.title || '',
-          month: event.month || 1,
-          day: event.day || 1,
-          type: event.type || 'Iran',
-          holiday: event.holiday || false
-        }));
+        allEvents = this.persianCalendarData["Persian Calendar"].map((event: any) => {
+          // Create DateTuple for the event using current year
+          const month = event.month || 1;
+          const day = event.day || 1;
+          
+          return {
+            title: event.title || '',
+            month: month,
+            day: day,
+            type: event.type || 'Iran',
+            holiday: event.holiday || false,
+            isoString: jalaliDateToISOString(currentJalaliYear, month, day)
+          };
+        });
       }
-      
-
       
       return allEvents;
     } catch (error) {
@@ -216,24 +257,65 @@ class EventUtils {
 
   getEvents(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
     const events = this.getAllEvents(eventTypes, includeAllTypes);
-    return events.filter(event => 
+    const filteredEvents = events.filter(event => 
       event.month === month && 
       event.day === day
     );
+    
+    // Ensure all events have ISO strings
+    return filteredEvents.map(event => {
+      if (!event.isoString) {
+        return {
+          ...event,
+          isoString: jalaliDateToISOString(currentJalaliYear, event.month, event.day)
+        };
+      }
+      return event;
+    });
   }
 
   getEvent(month: number, day: number): PersianEvent | undefined {
-    return this.mappedEvents.find(event => 
-      event.month === month && event.day === day
+    const event = this.mappedEvents.find(event => 
+      event.month === month && 
+      event.day === day
     );
+    
+    if (event && !event.isoString) {
+      return {
+        ...event,
+        isoString: jalaliDateToISOString(currentJalaliYear, event.month, event.day)
+      };
+    }
+    
+    return event;
   }
 
   getEventsForMonth(month: number): PersianEvent[] {
-    return this.mappedEvents.filter(event => event.month === month);
+    const events = this.mappedEvents.filter(event => event.month === month);
+    
+    // Ensure all events have ISO strings
+    return events.map(event => {
+      if (!event.isoString) {
+        return {
+          ...event,
+          isoString: jalaliDateToISOString(currentJalaliYear, event.month, event.day)
+        };
+      }
+      return event;
+    });
   }
 
   getEventsForYear(): PersianEvent[] {
-    return this.mappedEvents;
+    // Ensure all events have ISO strings
+    return this.mappedEvents.map(event => {
+      if (!event.isoString) {
+        return {
+          ...event,
+          isoString: jalaliDateToISOString(currentJalaliYear, event.month, event.day)
+        };
+      }
+      return event;
+    });
   }
 
   isHoliday(month: number, day: number, eventTypes?: string[], includeAllTypes: boolean = false): boolean {
@@ -254,12 +336,26 @@ class EventUtils {
   }
 
   getAllEvents(eventTypes?: string[], includeAllTypes: boolean = false): PersianEvent[] {
+    let events: PersianEvent[];
+    
     if (includeAllTypes) {
-      return [...this.mappedEvents];
+      events = [...this.mappedEvents];
+    } else {
+      events = this.mappedEvents.filter(event => 
+        eventTypes?.includes(event.type) ?? true
+      );
     }
-    return this.mappedEvents.filter(event => 
-      eventTypes?.includes(event.type) ?? true
-    );
+    
+    // Ensure all events have ISO strings
+    return events.map(event => {
+      if (!event.isoString) {
+        return {
+          ...event,
+          isoString: jalaliDateToISOString(currentJalaliYear, event.month, event.day)
+        };
+      }
+      return event;
+    });
   }
 
   getEventsByType(type: string, includeAllTypes: boolean = false, holidaysOnly: boolean = false): PersianEvent[] {

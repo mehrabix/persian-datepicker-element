@@ -184,8 +184,36 @@ export class AppComponent {
 
 | Event | Detail Type | Description |
 |-------|-------------|-------------|
-| change | { jalali: [number, number, number], gregorian: [number, number, number], isHoliday: boolean, events: Array, formattedDate: string } | Fired when a date is selected |
-| change | { range: { start: [number, number, number], end: [number, number, number] }, isRange: true } | Fired when a date range is selected (in range mode) |
+| change | { jalali: [number, number, number], gregorian: [number, number, number], isHoliday: boolean, events: Array, formattedDate: string, isoString: string } | Fired when a date is selected |
+| change | { range: { start: [number, number, number], end: [number, number, number], startISOString: string, endISOString: string, startGregorian: [number, number, number], endGregorian: [number, number, number] }, isRange: true } | Fired when a date range is selected (in range mode) |
+
+### Examples for accessing ISO strings
+
+#### For single date selection:
+```javascript
+datepicker.addEventListener('change', (event) => {
+  // ISO string for the selected date
+  console.log('Selected date ISO string:', event.detail.isoString);
+  
+  // Access ISO strings from events (like holidays)
+  if (event.detail.events.length > 0) {
+    event.detail.events.forEach(eventItem => {
+      console.log(`Event: ${eventItem.title}, ISO date: ${eventItem.isoString}`);
+    });
+  }
+});
+```
+
+#### For range selection:
+```javascript
+rangePicker.addEventListener('change', (event) => {
+  if (event.detail.isRange) {
+    // ISO strings for range start and end
+    console.log('Range start ISO:', event.detail.range.startISOString);
+    console.log('Range end ISO:', event.detail.range.endISOString);
+  }
+});
+```
 
 ## Methods
 

@@ -323,6 +323,10 @@ export declare class PersianDatePickerElement extends HTMLElement {
      * Check if a date is disabled
      */
     private isDateDisabled;
+    /**
+     * Convert a Jalali date tuple to an ISO string
+     */
+    private jalaliToISOString;
     private handleRangeSelection;
     setRange(start: DateTuple, end: DateTuple): void;
     getRange(): {
