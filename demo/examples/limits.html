@@ -556,6 +556,9 @@ methodPicker.setAttribute('disabled-dates', 'isWorkingDay');</code></pre>
     const combinedPicker = document.getElementById('combined-picker');
     const combinedResult = document.getElementById('combined-result');
     
+    // Explicitly set the disabledDatesFn to ensure it works correctly with min/max date
+    combinedPicker.setDisabledDatesFn(isWeekend);
+    
     combinedPicker.addEventListener('change', (event) => {
       console.log(event);
       combinedResult.textContent = formatPersianDate(event.detail.jalali);
