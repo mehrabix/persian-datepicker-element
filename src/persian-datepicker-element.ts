@@ -2704,10 +2704,10 @@ export class PersianDatePickerElement extends HTMLElement {
   private isDateInRange(year: number, month: number, day: number): boolean {
     if (!this.minDate && !this.maxDate) return true;
     
-    const date = [year, month, day];
+    const date: DateTuple = [year, month, day];
     
-    if (this.minDate && date < this.minDate) return false;
-    if (this.maxDate && date > this.maxDate) return false;
+    if (this.minDate && this.compareDates(date, this.minDate) < 0) return false;
+    if (this.maxDate && this.compareDates(date, this.maxDate) > 0) return false;
     
     return true;
   }
