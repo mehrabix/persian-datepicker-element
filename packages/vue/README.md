@@ -17,9 +17,11 @@ A modern, fully-featured Persian (Jalali) date picker component for Vue 3 applic
 ## Installation
 
 ```bash
-npm install persian-datepicker-vue
+npm install vue-persian-datepicker-element persian-datepicker-element
 # or
-yarn add persian-datepicker-vue
+yarn add vue-persian-datepicker-element persian-datepicker-element
+# or
+pnpm add vue-persian-datepicker-element persian-datepicker-element
 ```
 
 ## Basic Usage
@@ -158,9 +160,11 @@ const handleRangeChange = (event) => {
 ## نصب
 
 ```bash
-npm install persian-datepicker-vue
+npm install vue-persian-datepicker-element persian-datepicker-element
 # یا
-yarn add persian-datepicker-vue
+yarn add vue-persian-datepicker-element persian-datepicker-element
+# یا
+pnpm add vue-persian-datepicker-element persian-datepicker-element
 ```
 
 ## استفاده پایه

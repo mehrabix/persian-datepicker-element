@@ -18,9 +18,11 @@ A modern, fully-featured Persian (Jalali) date picker component for React applic
 ## Installation
 
 ```bash
-npm install persian-datepicker-react
+npm install react-persian-datepicker-element persian-datepicker-element
 # or
-yarn add persian-datepicker-react
+yarn add react-persian-datepicker-element persian-datepicker-element
+# or
+pnpm add react-persian-datepicker-element persian-datepicker-element
 ```
 
 ## Basic Usage
@@ -143,9 +145,11 @@ datepickerRef.current.clear();
 ## نصب
 
 ```bash
-npm install persian-datepicker-react
+npm install react-persian-datepicker-element persian-datepicker-element
 # یا
-yarn add persian-datepicker-react
+yarn add react-persian-datepicker-element persian-datepicker-element
+# یا
+pnpm add react-persian-datepicker-element persian-datepicker-element
 ```
 
 ## استفاده پایه
