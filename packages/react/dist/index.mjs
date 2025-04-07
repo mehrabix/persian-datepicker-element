@@ -1,7 +1,7 @@
 // src/PersianDatepicker.tsx
 import React, { forwardRef, useRef, useEffect, useImperativeHandle } from "react";
 if (typeof window !== "undefined") {
-  import("persian-datepicker-element");
+  import("persian-datepicker-element/dist/persian-datepicker-element.min.js");
 }
 var PersianDatepicker = forwardRef(
   (props, ref) => {

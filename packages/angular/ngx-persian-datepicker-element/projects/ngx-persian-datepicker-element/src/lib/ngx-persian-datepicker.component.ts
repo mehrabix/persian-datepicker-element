@@ -25,7 +25,7 @@ import { DateTuple } from './persian-datepicker-types';
 
 // Import the web component
 // This import ensures the web component script is included in the bundle
-import 'persian-datepicker-element';
+import 'persian-datepicker-element/dist/persian-datepicker-element.min.js';
 
 /** 
  * Angular wrapper for the Persian DatePicker Web Component

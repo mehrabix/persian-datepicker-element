@@ -38,7 +38,7 @@ module.exports = __toCommonJS(index_exports);
 // src/PersianDatepicker.tsx
 var import_react = __toESM(require("react"));
 if (typeof window !== "undefined") {
-  import("persian-datepicker-element");
+  import("persian-datepicker-element/dist/persian-datepicker-element.min.js");
 }
 var PersianDatepicker = (0, import_react.forwardRef)(
   (props, ref) => {

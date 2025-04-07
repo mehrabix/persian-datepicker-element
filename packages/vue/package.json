@@ -1,6 +1,6 @@
 {
   "name": "vue-persian-datepicker-element",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Vue wrapper for persian-datepicker-element",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
@@ -41,7 +41,7 @@
   "author": "Ahmad Mehrabi",
   "license": "MIT",
   "dependencies": {
-    "persian-datepicker-element": "^1.1.7",
+    "persian-datepicker-element": "1.1.14",
     "vue": "^3.4.0"
   },
   "peerDependencies": {
