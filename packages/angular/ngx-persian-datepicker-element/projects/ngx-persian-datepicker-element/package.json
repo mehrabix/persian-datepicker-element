@@ -1,6 +1,6 @@
 {
   "name": "ngx-persian-datepicker-element",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Angular wrapper for Persian DatePicker Web Component with signal-based inputs (English/Persian docs)",
   "author": "Ahmad",
   "license": "MIT",
@@ -22,7 +22,7 @@
   ],
   "dependencies": {
     "tslib": "^2.3.0",
-    "persian-datepicker-element": "^1.1.7"
+    "persian-datepicker-element": "^1.1.14"
   },
   "peerDependencies": {
     "@angular/common": "^16.0.0 || ^17.0.0",

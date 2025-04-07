@@ -125,11 +125,16 @@ const config = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.css'],
+    extensions: ['.tsx', '.ts', '.js', '.css', '.mjs'],
     // Enforce resolution of ES modules for better tree shaking
-    mainFields: ['module', 'main'],
+    mainFields: ['module', 'main', 'browser'],
     // Add conditions to prefer newer module formats
-    conditionNames: ['import', 'module', 'require', 'default'],
+    conditionNames: ['import', 'module', 'require', 'default', 'browser'],
+    // Add fallback for node modules
+    fallback: {
+      "path": false,
+      "fs": false
+    }
   },
   mode: isProduction ? 'production' : 'development',
   devtool: isProduction && shouldMinify ? false : 'source-map',

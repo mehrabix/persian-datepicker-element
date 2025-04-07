@@ -8,7 +8,7 @@ import type {
 
 // Ensure the web component is registered globally when imported
 if (typeof window !== 'undefined') {
-  import('persian-datepicker-element');
+  import('persian-datepicker-element/dist/persian-datepicker-element.min.js');
 }
 
 // Props interface that extends the web component options

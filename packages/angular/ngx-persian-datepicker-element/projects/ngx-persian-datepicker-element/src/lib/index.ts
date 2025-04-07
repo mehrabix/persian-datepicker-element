@@ -1,5 +1,6 @@
 // Register the web component first
-import 'persian-datepicker-element';
+// Use a more explicit import path to help bundlers resolve the package
+import 'persian-datepicker-element/dist/persian-datepicker-element.min.js';
 
 // Then export the Angular components
 export * from './persian-datepicker-types';

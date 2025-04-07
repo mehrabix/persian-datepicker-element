@@ -1,6 +1,6 @@
 {
   "name": "ngx-persian-datepicker-element",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -16,13 +16,13 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
-    "persian-datepicker-element": "^1.1.7",
+    "persian-datepicker-element": "1.1.14",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.2.4",
+    "@angular-devkit/build-angular": "^19.2.6",
     "@angular/cli": "^19.2.4",
     "@angular/compiler-cli": "^19.2.0",
     "@types/jasmine": "~5.1.0",
@@ -32,7 +32,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "ng-packagr": "^19.2.0",
+    "ng-packagr": "^19.2.1",
     "typescript": "~5.7.2"
   }
 }

@@ -93,7 +93,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { PersianDatepicker } from 'vue-persian-datepicker-element';
-import 'persian-datepicker-element';
+import 'persian-datepicker-element/dist/persian-datepicker-element.min.js';
 
 // State
 const isDarkMode = ref(false);
