@@ -387,18 +387,10 @@
       </div>
     </div>
 
-      <h2>نصب و راه‌اندازی</h2>
-      <p>برای نصب کامپوننت تاریخ شمسی در پروژه Angular خود:</p>
-      <pre><code>// Using npm
-npm install ngx-persian-datepicker-element persian-datepicker-element
-
-// Using Yarn
-yarn add ngx-persian-datepicker-element persian-datepicker-element
-
-// Using pnpm
-pnpm add ngx-persian-datepicker-element persian-datepicker-element</code></pre>
-
       <h2>تنظیمات اولیه</h2>
+      <p>برای استفاده از کامپوننت تاریخ شمسی در پروژه Angular خود، دو روش وجود دارد:</p>
+
+      <h3>روش ۱: استفاده از ماژول (Module-based)</h3>
       <p>در فایل Module خود کتابخانه را Import کنید:</p>
       <pre><code>// app.module.ts
 import { NgModule } from '@angular/core';
@@ -420,31 +412,105 @@ import { AppComponent } from './app.component';
 })
 export class AppModule { }</code></pre>
 
+      <h3>روش ۲: استفاده از کامپوننت مستقل (Standalone)</h3>
+      <p>در کامپوننت خود، PersianDatepickerComponent را به صورت مستقیم import کنید:</p>
+      <pre><code>// app.component.ts
+import { Component } from '@angular/core';
+import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PersianDatepickerComponent],
+  template: `
+    &lt;persian-datepicker 
+      placeholder="تاریخ را انتخاب کنید"
+      format="YYYY/MM/DD"
+      [showEvents]="true"
+      (dateChange)="onDateChange($event)"&gt;
+    &lt;/persian-datepicker&gt;
+  `
+})
+export class AppComponent {
+  onDateChange(event: PersianDateChangeEvent) {
+    console.log('تاریخ شمسی:', event.jalali); // [سال, ماه, روز]
+    console.log('تاریخ میلادی:', event.gregorian);
+    console.log('آیا تعطیل است:', event.isHoliday);
+    console.log('رویدادها:', event.events);
+  }
+}</code></pre>
+
       <h2>استفاده پایه</h2>
-      <pre><code>// app.component.html
-&lt;persian-datepicker 
+      <p>حالا می‌توانید از کامپوننت تاریخ شمسی در تمپلیت‌های خود استفاده کنید:</p>
+      <pre><code>&lt;persian-datepicker 
   placeholder="تاریخ را انتخاب کنید"
   format="YYYY/MM/DD"
   [showEvents]="true"
   (dateChange)="onDateChange($event)"&gt;
 &lt;/persian-datepicker&gt;</code></pre>
 
+      <h2>مثال‌های پیشرفته</h2>
+      
+      <h3>استفاده با Two-way Binding</h3>
+      <pre><code>&lt;persian-datepicker 
+  [(ngModel)]="selectedDate"
+  placeholder="تاریخ را انتخاب کنید"
+  format="YYYY/MM/DD"&gt;
+&lt;/persian-datepicker&gt;</code></pre>
+
+      <h3>استفاده با Reactive Forms</h3>
       <pre><code>// app.component.ts
 import { Component } from '@angular/core';
-import { PersianDateChangeEvent } from 'ngx-persian-datepicker-element';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  standalone: true,
+  imports: [PersianDatepickerComponent, ReactiveFormsModule],
+  template: `
+    &lt;form [formGroup]="dateForm"&gt;
+      &lt;persian-datepicker 
+        formControlName="date"
+        placeholder="تاریخ را انتخاب کنید"
+        format="YYYY/MM/DD"&gt;
+      &lt;/persian-datepicker&gt;
+    &lt;/form&gt;
+  `
 })
 export class AppComponent {
-  
-  onDateChange(event: PersianDateChangeEvent) {
-    console.log('تاریخ شمسی:', event.jalali); // [سال, ماه, روز]
-    console.log('تاریخ میلادی:', event.gregorian);
-    console.log('آیا تعطیل است:', event.isHoliday);
-    console.log('رویدادها:', event.events);
+  dateForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.dateForm = this.fb.group({
+      date: ['']
+    });
+  }
+}</code></pre>
+
+      <h3>استفاده با ViewChild</h3>
+      <pre><code>// app.component.ts
+import { Component, ViewChild } from '@angular/core';
+import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PersianDatepickerComponent],
+  template: `
+    &lt;persian-datepicker 
+      #datepicker
+      placeholder="تاریخ را انتخاب کنید"
+      format="YYYY/MM/DD"&gt;
+    &lt;/persian-datepicker&gt;
+    &lt;button (click)="clearDate()"&gt;پاک کردن تاریخ&lt;/button&gt;
+  `
+})
+export class AppComponent {
+  @ViewChild('datepicker') datepicker!: PersianDatepickerComponent;
+
+  clearDate() {
+    this.datepicker.setValue('');
   }
 }</code></pre>
 
@@ -588,6 +654,127 @@ export class AppComponent {
 &lt;/div&gt;</code></pre>
         </div>
       </div>
+
+      <h2>ویژگی‌های ورودی (Input Properties)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>نام</th>
+            <th>نوع</th>
+            <th>پیش‌فرض</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>value</td>
+            <td>string</td>
+            <td>''</td>
+            <td>مقدار اولیه تاریخ</td>
+          </tr>
+          <tr>
+            <td>placeholder</td>
+            <td>string</td>
+            <td>''</td>
+            <td>متن راهنما</td>
+          </tr>
+          <tr>
+            <td>format</td>
+            <td>string</td>
+            <td>'YYYY/MM/DD'</td>
+            <td>فرمت نمایش تاریخ</td>
+          </tr>
+          <tr>
+            <td>showEvents</td>
+            <td>boolean</td>
+            <td>false</td>
+            <td>نمایش رویدادها</td>
+          </tr>
+          <tr>
+            <td>rtl</td>
+            <td>boolean</td>
+            <td>true</td>
+            <td>راست به چپ</td>
+          </tr>
+          <tr>
+            <td>minDate</td>
+            <td>string</td>
+            <td>null</td>
+            <td>حداقل تاریخ مجاز</td>
+          </tr>
+          <tr>
+            <td>maxDate</td>
+            <td>string</td>
+            <td>null</td>
+            <td>حداکثر تاریخ مجاز</td>
+          </tr>
+          <tr>
+            <td>disabledDates</td>
+            <td>string[]</td>
+            <td>[]</td>
+            <td>تاریخ‌های غیرفعال</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>رویدادها (Events)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>نام</th>
+            <th>نوع</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>dateChange</td>
+            <td>PersianDateChangeEvent</td>
+            <td>در صورت تغییر تاریخ</td>
+          </tr>
+          <tr>
+            <td>valueChange</td>
+            <td>string</td>
+            <td>در صورت تغییر مقدار</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>متدها (Methods)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>نام</th>
+            <th>پارامترها</th>
+            <th>توضیحات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>getValue</td>
+            <td>-</td>
+            <td>دریافت مقدار فعلی</td>
+          </tr>
+          <tr>
+            <td>setValue</td>
+            <td>value: string</td>
+            <td>تنظیم مقدار جدید</td>
+          </tr>
+          <tr>
+            <td>clear</td>
+            <td>-</td>
+            <td>پاک کردن مقدار</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>نکات مهم</h2>
+      <ul>
+        <li>در حالت standalone، حتماً باید PersianDatepickerComponent را در imports کامپوننت خود اضافه کنید.</li>
+        <li>برای استفاده از Two-way binding، باید FormsModule را نیز import کنید.</li>
+        <li>برای استفاده از Reactive Forms، باید ReactiveFormsModule را import کنید.</li>
+        <li>در صورت نیاز به دسترسی مستقیم به کامپوننت، می‌توانید از ViewChild استفاده کنید.</li>
+      </ul>
 
       <h2>ویژگی‌ها (Inputs)</h2>
       <table class="props-table">

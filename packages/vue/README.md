@@ -36,11 +36,180 @@ pnpm add vue-persian-datepicker-element persian-datepicker-element
 </template>
 
 <script setup>
-import { PersianDatepicker } from 'persian-datepicker-vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
 
 const handleChange = (event) => {
   const { jalali, gregorian, isHoliday } = event.detail;
   console.log('Selected date:', jalali);
+};
+</script>
+```
+
+## Advanced Examples
+
+### With v-model
+
+```vue
+<template>
+  <PersianDatepicker
+    v-model="selectedDate"
+    placeholder="انتخاب تاریخ"
+    format="YYYY/MM/DD"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+const selectedDate = ref('');
+</script>
+```
+
+### With Date Limits
+
+```vue
+<template>
+  <PersianDatepicker
+    :min-date="[1400, 1, 1]"
+    :max-date="[1402, 12, 29]"
+    :disabled-dates="isWeekend"
+    placeholder="انتخاب تاریخ"
+    format="YYYY/MM/DD"
+  />
+</template>
+
+<script setup>
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+const isWeekend = (year, month, day) => {
+  // Disable weekends (Friday and Saturday)
+  const date = new Date(year, month - 1, day);
+  const dayOfWeek = date.getDay();
+  return dayOfWeek === 5 || dayOfWeek === 6;
+};
+</script>
+```
+
+### With Range Selection
+
+```vue
+<template>
+  <PersianDatepicker
+    range-mode
+    :range-start="[1402, 1, 1]"
+    :range-end="[1402, 1, 15]"
+    @change="handleRangeChange"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+const dateRange = ref({ start: null, end: null });
+
+const handleRangeChange = (event) => {
+  if (event.detail.isRange) {
+    dateRange.value = {
+      start: event.detail.range.start,
+      end: event.detail.range.end
+    };
+  }
+};
+</script>
+```
+
+### With Custom Styling
+
+```vue
+<template>
+  <PersianDatepicker
+    placeholder="انتخاب تاریخ"
+    format="YYYY/MM/DD"
+    class="custom-datepicker"
+  />
+</template>
+
+<script setup>
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+</script>
+
+<style>
+.custom-datepicker {
+  --jdp-primary: #3b82f6;
+  --jdp-primary-hover: #2563eb;
+  --jdp-border-radius: 0.5rem;
+  --jdp-font-family: 'IRANSans', sans-serif;
+}
+</style>
+```
+
+### With Holiday Types
+
+```vue
+<template>
+  <div>
+    <PersianDatepicker
+      event-types="Iran,Afghanistan,AncientIran,International"
+      placeholder="نمایش همه تعطیلات"
+    />
+
+    <PersianDatepicker
+      event-types="Afghanistan"
+      placeholder="تعطیلات افغانستان"
+    />
+
+    <PersianDatepicker
+      event-types="all"
+      placeholder="نمایش همه انواع تعطیلات"
+    />
+  </div>
+</template>
+
+<script setup>
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+</script>
+```
+
+### With Ref Methods
+
+```vue
+<template>
+  <div>
+    <PersianDatepicker ref="datepicker" />
+    
+    <div style="margin-top: 1rem">
+      <button @click="getValue">دریافت مقدار</button>
+      <button @click="setValue">تنظیم به ۱۵ دی ۱۴۰۲</button>
+      <button @click="openCalendar">باز کردن تقویم</button>
+      <button @click="closeCalendar">بستن تقویم</button>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
+
+const datepicker = ref();
+
+const getValue = () => {
+  const value = datepicker.value?.getValue();
+  console.log('مقدار فعلی:', value);
+};
+
+const setValue = () => {
+  // تنظیم تاریخ به ۱۵ دی ۱۴۰۲
+  datepicker.value?.setValue(1402, 10, 15);
+};
+
+const openCalendar = () => {
+  datepicker.value?.open();
+};
+
+const closeCalendar = () => {
+  datepicker.value?.close();
 };
 </script>
 ```
@@ -95,24 +264,12 @@ datepicker.value?.clear();
 
 ## Theme Customization
 
-Customize the appearance using CSS variables:
+You can customize the appearance using standard CSS:
 
 ```vue
 <style>
 .persian-datepicker {
-  --jdp-primary: #0891b2;
-  --jdp-primary-hover: #0e7490;
-  --jdp-primary-foreground: #ffffff;
-  --jdp-background: #ffffff;
-  --jdp-foreground: #1e293b;
-  --jdp-border: #e2e8f0;
-  --jdp-border-radius: 0.5rem;
-  --jdp-font-family: system-ui;
-  --jdp-font-size: 14px;
-  --jdp-nav-button-size: 38px;
-  --jdp-day-cell-size: 36px;
-  --jdp-holiday-color: #ef4444;
-  --jdp-holiday-bg: #fee2e2;
+  /* Add your custom styles here */
 }
 </style>
 ```
@@ -179,7 +336,7 @@ pnpm add vue-persian-datepicker-element persian-datepicker-element
 </template>
 
 <script setup>
-import { PersianDatepicker } from 'persian-datepicker-vue';
+import { PersianDatepicker } from 'vue-persian-datepicker-element';
 
 const handleChange = (event) => {
   const { jalali, gregorian, isHoliday } = event.detail;
@@ -243,19 +400,7 @@ datepicker.value?.clear();
 ```vue
 <style>
 .persian-datepicker {
-  --jdp-primary: #0891b2;
-  --jdp-primary-hover: #0e7490;
-  --jdp-primary-foreground: #ffffff;
-  --jdp-background: #ffffff;
-  --jdp-foreground: #1e293b;
-  --jdp-border: #e2e8f0;
-  --jdp-border-radius: 0.5rem;
-  --jdp-font-family: system-ui;
-  --jdp-font-size: 14px;
-  --jdp-nav-button-size: 38px;
-  --jdp-day-cell-size: 36px;
-  --jdp-holiday-color: #ef4444;
-  --jdp-holiday-bg: #fee2e2;
+  /* Add your custom styles here */
 }
 </style>
 ```

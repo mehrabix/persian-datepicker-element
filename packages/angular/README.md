@@ -52,6 +52,126 @@ export class AppComponent {
 }
 ```
 
+## Standalone Component Usage
+
+You can also use the component in standalone components:
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PersianDatepickerComponent],
+  template: `
+    <persian-datepicker
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+      [showEvents]="true"
+      [rtl]="true"
+      (dateChange)="onDateChange($event)"
+    ></persian-datepicker>
+  `
+})
+export class AppComponent {
+  onDateChange(event: PersianDateChangeEvent) {
+    console.log('تاریخ شمسی:', event.jalali); // [سال, ماه, روز]
+    console.log('تاریخ میلادی:', event.gregorian);
+    console.log('آیا تعطیل است:', event.isHoliday);
+    console.log('رویدادها:', event.events);
+  }
+}
+```
+
+## Reactive Forms Integration
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PersianDatepickerComponent, ReactiveFormsModule],
+  template: `
+    <form [formGroup]="dateForm">
+      <persian-datepicker 
+        formControlName="date"
+        placeholder="تاریخ را انتخاب کنید"
+        format="YYYY/MM/DD">
+      </persian-datepicker>
+    </form>
+  `
+})
+export class AppComponent {
+  dateForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.dateForm = this.fb.group({
+      date: ['']
+    });
+  }
+}
+```
+
+## Two-way Binding
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PersianDatepickerComponent, FormsModule],
+  template: `
+    <persian-datepicker 
+      [(ngModel)]="selectedDate"
+      placeholder="تاریخ را انتخاب کنید"
+      format="YYYY/MM/DD">
+    </persian-datepicker>
+  `
+})
+export class AppComponent {
+  selectedDate: string = '';
+}
+```
+
+## ViewChild Usage
+
+```typescript
+// app.component.ts
+import { Component, ViewChild } from '@angular/core';
+import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PersianDatepickerComponent],
+  template: `
+    <persian-datepicker 
+      #datepicker
+      placeholder="تاریخ را انتخاب کنید"
+      format="YYYY/MM/DD">
+    </persian-datepicker>
+    <button (click)="clearDate()">پاک کردن تاریخ</button>
+  `
+})
+export class AppComponent {
+  @ViewChild('datepicker') datepicker!: PersianDatepickerComponent;
+
+  clearDate() {
+    this.datepicker.setValue('');
+  }
+}
+```
+
 ## Inputs
 
 | Input | Type | Default | Description |
@@ -150,7 +270,7 @@ export class AppComponent {
 
 ## Styling
 
-You can style the component using CSS variables:
+You can style the component using standard CSS:
 
 ```typescript
 // app.component.ts
@@ -160,95 +280,9 @@ You can style the component using CSS variables:
   `,
   styles: [`
     .custom-datepicker {
-      --jdp-primary: #0891b2;
-      --jdp-primary-hover: #0e7490;
-      --jdp-primary-foreground: #ffffff;
-      --jdp-background: #ffffff;
-      --jdp-foreground: #1e293b;
-      --jdp-border: #e2e8f0;
-      --jdp-border-radius: 0.5rem;
-      --jdp-font-family: system-ui;
-      --jdp-font-size: 14px;
-      --jdp-nav-button-size: 38px;
-      --jdp-day-cell-size: 36px;
+      /* Add your custom styles here */
     }
   `]
 })
 export class AppComponent {}
 ```
-
-## Examples
-
-### Basic Usage
-
-```typescript
-// app.component.ts
-@Component({
-  template: `
-    <persian-datepicker
-      placeholder="انتخاب تاریخ"
-      format="YYYY/MM/DD"
-    ></persian-datepicker>
-  `
-})
-export class AppComponent {}
-```
-
-### With Event Handling
-
-```typescript
-// app.component.ts
-@Component({
-  template: `
-    <persian-datepicker (change)="handleChange($event)"></persian-datepicker>
-  `
-})
-export class AppComponent {
-  handleChange(event: any) {
-    const { jalali, gregorian, isHoliday, events } = event.detail;
-    console.log('Jalali:', jalali);
-    console.log('Gregorian:', gregorian);
-    console.log('Is Holiday:', isHoliday);
-    console.log('Events:', events);
-  }
-}
-```
-
-### With Date Limits
-
-```typescript
-// app.component.ts
-@Component({
-  template: `
-    <persian-datepicker
-      [minDate]="[1400, 1, 1]"
-      [maxDate]="[1402, 12, 29]"
-      disabledDates="isWeekend"
-    ></persian-datepicker>
-  `
-})
-export class AppComponent {}
-```
-
-### With Custom Styling
-
-```typescript
-// app.component.ts
-@Component({
-  template: `
-    <persian-datepicker class="custom-datepicker"></persian-datepicker>
-  `,
-  styles: [`
-    .custom-datepicker {
-      width: 300px;
-      --jdp-primary: #3b82f6;
-      --jdp-primary-hover: #2563eb;
-    }
-  `]
-})
-export class AppComponent {}
-```
-
-## License
-
-MIT 
