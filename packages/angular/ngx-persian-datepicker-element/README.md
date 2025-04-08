@@ -75,7 +75,7 @@ The component uses Angular Signals for better performance. Use the input propert
   placeholderInput="انتخاب تاریخ"
   formatInput="YYYY/MM/DD"
   [showEventsInput]="true"
-  (dateChange)="onDateChange($event)">
+  (change)="onDateChange($event)">
 </ngx-persian-datepicker-element>
 ```
 
@@ -272,7 +272,7 @@ updateeventTypes(type: HolidayTypeKey, event: any) {
 ### Date Change Event
 
 ```html
-<ngx-persian-datepicker-element (dateChange)="onDateChange($event)"></ngx-persian-datepicker-element>
+<ngx-persian-datepicker-element (change)="onDateChange($event)"></ngx-persian-datepicker-element>
 ```
 
 ```typescript
@@ -310,7 +310,7 @@ onDateChange(event) {
 
 | Output | Type | Description |
 |--------|------|-------------|
-| `dateChange` | EventEmitter\<any\> | Event emitted when a date is selected |
+| `change` | `EventEmitter<DateChangeEvent>` | Emitted when a date is selected |
 
 ## License
 

@@ -354,7 +354,7 @@
         placeholderInput="انتخاب تاریخ تولد"
         formatInput="YYYY/MM/DD"
         [(ngModel)]="birthdate"
-        (dateChange)="handleDateChange($event)"
+        (change)="handleDateChange($event)"
         #datepicker1
       ></ngx-persian-datepicker-element>
     </div>
@@ -366,7 +366,7 @@
         formatInput="YYYY/MM/DD"
         placeholderInput="تاریخ عضویت"
         [(ngModel)]="joinDate"
-        (dateChange)="handleDateChange($event)"
+        (change)="handleDateChange($event)"
         #datepicker2
       ></ngx-persian-datepicker-element>
     </div>
@@ -383,7 +383,7 @@
             eventTypesInput="Iran"
             placeholderInput="فقط تعطیلات ایران"
             [(ngModel)]="iranHolidays"
-            (dateChange)="handleDateChange($event)"
+            (change)="handleDateChange($event)"
             #datepicker3
           ></ngx-persian-datepicker-element>
         </div>
@@ -395,7 +395,7 @@
             eventTypesInput="Afghanistan"
             placeholderInput="تعطیلات افغانستان"
             [(ngModel)]="afghanistanHolidays"
-            (dateChange)="handleDateChange($event)"
+            (change)="handleDateChange($event)"
             #datepicker5
           ></ngx-persian-datepicker-element>
         </div>
@@ -407,7 +407,7 @@
             eventTypesInput="Iran,Religious,Afghanistan"
             placeholderInput="همه تعطیلات"
             [(ngModel)]="allHolidays"
-            (dateChange)="handleDateChange($event)"
+            (change)="handleDateChange($event)"
             #datepicker6
           ></ngx-persian-datepicker-element>
         </div>

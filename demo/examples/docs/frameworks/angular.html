@@ -427,7 +427,7 @@ import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
       placeholder="تاریخ را انتخاب کنید"
       format="YYYY/MM/DD"
       [showEvents]="true"
-      (dateChange)="onDateChange($event)"&gt;
+      (change)="onDateChange($event)"&gt;
     &lt;/ngx-persian-datepicker-element&gt;
   `
 })
@@ -446,7 +446,7 @@ export class AppComponent {
   placeholder="تاریخ را انتخاب کنید"
   format="YYYY/MM/DD"
   [showEvents]="true"
-  (dateChange)="onDateChange($event)"&gt;
+  (change)="onDateChange($event)"&gt;
 &lt;/ngx-persian-datepicker-element&gt;</code></pre>
 
       <h2>مثال‌های پیشرفته</h2>
@@ -696,7 +696,7 @@ export class AppComponent {
         </thead>
         <tbody>
           <tr>
-            <td>dateChange</td>
+            <td>change</td>
             <td>PersianDateChangeEvent</td>
             <td>در صورت تغییر تاریخ</td>
           </tr>
@@ -813,7 +813,7 @@ export class AppComponent {
         </thead>
         <tbody>
           <tr>
-            <td>dateChange</td>
+            <td>change</td>
             <td>{ jalali, gregorian, isHoliday, events }</td>
             <td>هنگام تغییر تاریخ ارسال می‌شود</td>
           </tr>
@@ -844,7 +844,7 @@ import {
 @Component({
   selector: 'app-root',
   template: `
-    &lt;ngx-persian-datepicker-element (dateChange)="handleDateChange($event)"&gt;&lt;/ngx-persian-datepicker-element&gt;
+    &lt;ngx-persian-datepicker-element (change)="handleDateChange($event)"&gt;&lt;/ngx-persian-datepicker-element&gt;
   `
 })
 export class AppComponent {

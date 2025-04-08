@@ -155,7 +155,7 @@ import { Component } from '@angular/core';
       format="YYYY/MM/DD"
       [showEvents]="true"
       [rtl]="true"
-      (dateChange)="onDateChange($event)"
+      (change)="onDateChange($event)"
     ></ngx-persian-datepicker-element>
   `
 })
@@ -185,7 +185,7 @@ import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
       placeholder="تاریخ را انتخاب کنید"
       format="YYYY/MM/DD"
       [showEvents]="true"
-      (dateChange)="onDateChange($event)"
+      (change)="onDateChange($event)"
     ></ngx-persian-datepicker-element>
   `
 })
@@ -218,7 +218,7 @@ import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
       formatInput="YYYY/MM/DD"
       [showEventsInput]="true"
       [rtlInput]="true"
-      (dateChange)="onDateChange($event)"
+      (change)="onDateChange($event)"
     ></ngx-persian-datepicker-element>
   `
 })

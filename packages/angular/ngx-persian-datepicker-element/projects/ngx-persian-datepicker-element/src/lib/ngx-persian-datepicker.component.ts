@@ -106,7 +106,7 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
   // #endregion
 
   // #region Outputs
-  @Output() dateChange = new EventEmitter<any>();
+  @Output() change = new EventEmitter<any>();
   // #endregion
 
   /** Reference to the container where the web component will be attached */
@@ -317,8 +317,8 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
       // Get the selected date from the event detail
       const { jalali, gregorian, isHoliday, events, isRange, range } = event.detail;
       
-      // Emit the dateChange event
-      this.dateChange.emit({
+      // Emit the change event
+      this.change.emit({
         jalali,
         gregorian,
         isHoliday,
