@@ -199,40 +199,8 @@ export class AppComponent {
 }
 ```
 
-#### 3. With Angular Signal Support (Recommended)
 
-The component uses Angular Signals for better performance:
-
-```typescript
-// app.component.ts
-import { Component } from '@angular/core';
-import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
-
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [NgxPersianDatepickerComponent],
-  template: `
-    <ngx-persian-datepicker-element
-      placeholderInput="انتخاب تاریخ"
-      formatInput="YYYY/MM/DD"
-      [showEventsInput]="true"
-      [rtlInput]="true"
-      (dateChange)="onDateChange($event)"
-    ></ngx-persian-datepicker-element>
-  `
-})
-export class AppComponent {
-  onDateChange(event: any) {
-    console.log('تاریخ شمسی:', event.jalali);
-    console.log('تاریخ میلادی:', event.gregorian);
-    console.log('آیا تعطیل است:', event.isHoliday);
-    console.log('رویدادها:', event.events);
-  }
-}
-```
-
-#### 4. With Reactive Forms
+#### 3. With Reactive Forms
 
 ```typescript
 // app.component.ts
