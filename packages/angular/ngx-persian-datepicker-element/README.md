@@ -106,7 +106,7 @@ export class MyFormComponent implements OnInit {
 
   ngOnInit() {
     this.myForm = this.fb.group({
-      date: [[1403, 6, 15]] // Initial value: [year, month, day]
+      date: [1403, 6, 15] // Initial value: [year, month, day]
     });
 
     // Subscribe to value changes
