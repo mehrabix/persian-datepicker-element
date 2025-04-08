@@ -520,18 +520,13 @@ export class AppComponent {
           <h3>شخصی‌سازی ظاهر</h3>
           <pre><code>// app.component.html
 &lt;persian-datepicker 
-  placeholder="انتخاب تاریخ با تم آبی"
-  [cssVariables]="blueTheme"&gt;
+  placeholder="انتخاب تاریخ"
+  class="custom-datepicker"&gt;
 &lt;/persian-datepicker&gt;</code></pre>
 
           <pre><code>// app.component.ts
 export class AppComponent {
-  blueTheme = {
-    '--jdp-primary': '#3b82f6',
-    '--jdp-primary-hover': '#2563eb',
-    '--jdp-ring': '#60a5fa',
-    '--jdp-border-radius': '0.5rem'
-  };
+  // Add your custom styles in your component's CSS file
 }</code></pre>
         </div>
 
@@ -545,40 +540,13 @@ export class AppComponent {
   
   &lt;persian-datepicker
     placeholder="تاریخ را انتخاب کنید"
-    [cssVariables]="isDarkMode ? darkTheme : lightTheme"&gt;
+    [darkMode]="isDarkMode"&gt;
   &lt;/persian-datepicker&gt;
 &lt;/div&gt;</code></pre>
 
           <pre><code>// app.component.ts
 export class AppComponent {
   isDarkMode = false;
-  
-  // تم روشن
-  lightTheme = {
-    '--jdp-primary': '#0891b2',
-    '--jdp-primary-hover': '#0e7490'
-  };
-  
-  // تم تاریک
-  darkTheme = {
-    // رنگ‌های پایه
-    '--jdp-background': '#1e1e2f',
-    '--jdp-foreground': '#e2e8f0',
-    '--jdp-muted': '#334155',
-    '--jdp-muted-foreground': '#94a3b8',
-    '--jdp-border': '#475569',
-    '--jdp-input-border-color': '#475569',
-    '--jdp-primary': '#0891b2',
-    '--jdp-primary-hover': '#0e7490',
-    
-    // فیلد ورودی
-    '--jdp-input-bg': '#1e1e2f',
-    '--jdp-input-text': '#e2e8f0',
-    
-    // بدنه تقویم
-    '--jdp-calendar-bg': '#0f172a',
-    '--jdp-day-text': '#e2e8f0'
-  };
   
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
@@ -831,11 +799,6 @@ export class AppComponent {
             <td>[number, number, number]</td>
             <td>حداکثر تاریخ قابل انتخاب به صورت [سال، ماه، روز]</td>
           </tr>
-          <tr>
-            <td>cssVariables</td>
-            <td>object</td>
-            <td>متغیرهای CSS برای سفارشی‌سازی ظاهر</td>
-          </tr>
         </tbody>
       </table>
 
@@ -863,107 +826,6 @@ export class AppComponent {
             <td>calendarClose</td>
             <td>-</td>
             <td>هنگام بسته شدن تقویم ارسال می‌شود</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h2>متغیرهای CSS برای سفارشی‌سازی</h2>
-      <p>تمام متغیرهای CSS از پیشوند <code>--jdp-</code> (مخفف Jalali DatePicker) استفاده می‌کنند:</p>
-      <table class="props-table">
-        <thead>
-          <tr>
-            <th>متغیر CSS</th>
-            <th>توضیحات</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>--jdp-primary</td>
-            <td>رنگ اصلی برای تاریخ‌های انتخاب شده</td>
-          </tr>
-          <tr>
-            <td>--jdp-primary-hover</td>
-            <td>رنگ هاور</td>
-          </tr>
-          <tr>
-            <td>--jdp-primary-foreground</td>
-            <td>رنگ متن روی پس‌زمینه اصلی</td>
-          </tr>
-          <tr>
-            <td>--jdp-background</td>
-            <td>رنگ پس‌زمینه اصلی</td>
-          </tr>
-          <tr>
-            <td>--jdp-foreground</td>
-            <td>رنگ متن اصلی</td>
-          </tr>
-          <tr>
-            <td>--jdp-muted</td>
-            <td>رنگ پس‌زمینه عناصر کم‌رنگ</td>
-          </tr>
-          <tr>
-            <td>--jdp-muted-foreground</td>
-            <td>رنگ متن عناصر کم‌رنگ</td>
-          </tr>
-          <tr>
-            <td>--jdp-border</td>
-            <td>رنگ خط حاشیه</td>
-          </tr>
-          <tr>
-            <td>--jdp-input-border-color</td>
-            <td>رنگ خط حاشیه فیلد ورودی</td>
-          </tr>
-          <tr>
-            <td>--jdp-input-bg</td>
-            <td>رنگ پس‌زمینه فیلد ورودی</td>
-          </tr>
-          <tr>
-            <td>--jdp-input-text</td>
-            <td>رنگ متن فیلد ورودی</td>
-          </tr>
-          <tr>
-            <td>--jdp-input-placeholder</td>
-            <td>رنگ متن پیش‌فرض فیلد ورودی</td>
-          </tr>
-          <tr>
-            <td>--jdp-calendar-bg</td>
-            <td>رنگ پس‌زمینه تقویم</td>
-          </tr>
-          <tr>
-            <td>--jdp-day-hover-bg</td>
-            <td>رنگ پس‌زمینه روز هنگام هاور</td>
-          </tr>
-          <tr>
-            <td>--jdp-holiday-color</td>
-            <td>رنگ متن تعطیلات</td>
-          </tr>
-          <tr>
-            <td>--jdp-holiday-bg</td>
-            <td>رنگ پس‌زمینه تعطیلات</td>
-          </tr>
-          <tr>
-            <td>--jdp-font-size</td>
-            <td>اندازه فونت پایه</td>
-          </tr>
-          <tr>
-            <td>--jdp-font-family</td>
-            <td>فونت خانواده</td>
-          </tr>
-          <tr>
-            <td>--jdp-border-radius</td>
-            <td>شعاع گرد شدن حاشیه پایه</td>
-          </tr>
-          <tr>
-            <td>--jdp-input-border-radius</td>
-            <td>شعاع گرد شدن حاشیه فیلد ورودی</td>
-          </tr>
-          <tr>
-            <td>--jdp-calendar-border-radius</td>
-            <td>شعاع گرد شدن حاشیه تقویم</td>
-          </tr>
-          <tr>
-            <td>--jdp-day-cell-border-radius</td>
-            <td>شعاع گرد شدن حاشیه سلول روز</td>
           </tr>
         </tbody>
       </table>
@@ -1016,28 +878,8 @@ export class AppComponent {
       allPickers.forEach(picker => {
         if (isDark) {
           picker.setAttribute('darkmode', 'true');
-          picker.style.setProperty('--jdp-background', '#1e1e2f');
-          picker.style.setProperty('--jdp-foreground', '#e2e8f0');
-          picker.style.setProperty('--jdp-muted', '#334155');
-          picker.style.setProperty('--jdp-muted-foreground', '#94a3b8');
-          picker.style.setProperty('--jdp-border', '#475569');
-          picker.style.setProperty('--jdp-day-hover-bg', '#334155');
-          picker.style.setProperty('--jdp-input-border-color', '#475569');
-          picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
-          picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
-          picker.style.setProperty('--jdp-holiday-bg', '#3f1e2e');
         } else {
           picker.removeAttribute('darkmode');
-          picker.style.removeProperty('--jdp-background');
-          picker.style.removeProperty('--jdp-foreground');
-          picker.style.removeProperty('--jdp-muted');
-          picker.style.removeProperty('--jdp-muted-foreground');
-          picker.style.removeProperty('--jdp-border');
-          picker.style.removeProperty('--jdp-day-hover-bg');
-          picker.style.removeProperty('--jdp-input-border-color');
-          picker.style.removeProperty('--jdp-input-bg');
-          picker.style.removeProperty('--jdp-calendar-bg');
-          picker.style.removeProperty('--jdp-holiday-bg');
         }
       });
     }
