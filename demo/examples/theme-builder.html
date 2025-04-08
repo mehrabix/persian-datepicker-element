@@ -763,12 +763,12 @@
           </div>
           
         <div class="radius-control">
-          <label for="border-radius">شعاع گوشه‌ها:</label>
-          <input type="range" id="border-radius" min="0" max="20" value="8">
-          <span id="radius-value">8px</span>
-            </div>
-          </div>
-          
+          <label for="border-radius-main">شعاع گوشه‌ها:</label>
+          <input type="range" id="border-radius-main" min="0" max="20" value="8">
+          <span id="border-radius-main-value">8px</span>
+        </div>
+      </div>
+      
       <div class="datepicker-container">
         <persian-datepicker-element id="theme-datepicker" placeholder="تاریخ را انتخاب کنید"></persian-datepicker-element>
             </div>
@@ -1199,7 +1199,7 @@
     // Border controls
     const inputBorderWidth = document.getElementById('input-border-width');
     const calendarBorderWidth = document.getElementById('calendar-border-width');
-    const borderRadius = document.getElementById('border-radius');
+    const borderRadiusMain = document.getElementById('border-radius-main');
     const dayCellBorderRadius = document.getElementById('day-cell-border-radius');
     const navButtonBorderRadius = document.getElementById('nav-button-border-radius');
     const dayTodayBorderWidth = document.getElementById('day-today-border-width');
@@ -1325,9 +1325,9 @@
           --jdp-day-today-border-width: ${dayTodayBorderWidth.value}px;
 
           /* Border Radius */
-          --jdp-border-radius: ${borderRadius.value}px;
-          --jdp-input-border-radius: ${borderRadius.value}px;
-          --jdp-calendar-border-radius: ${borderRadius.value}px;
+          --jdp-border-radius: ${borderRadiusMain.value}px;
+          --jdp-input-border-radius: ${borderRadiusMain.value}px;
+          --jdp-calendar-border-radius: ${borderRadiusMain.value}px;
           --jdp-day-cell-border-radius: ${dayCellBorderRadius.value}px;
           --jdp-nav-button-border-radius: ${navButtonBorderRadius.value}px;
 
@@ -1425,11 +1425,11 @@
     });
 
     // Add event listener for the main border radius control
-    borderRadius.addEventListener('input', () => {
-      updateRangeValue(borderRadius);
+    borderRadiusMain.addEventListener('input', () => {
+      updateRangeValue(borderRadiusMain);
       // Update other border radius controls to match
-      dayCellBorderRadius.value = borderRadius.value;
-      navButtonBorderRadius.value = borderRadius.value;
+      dayCellBorderRadius.value = borderRadiusMain.value;
+      navButtonBorderRadius.value = borderRadiusMain.value;
       updateRangeValue(dayCellBorderRadius);
       updateRangeValue(navButtonBorderRadius);
       updateThemeCSS();
@@ -1448,6 +1448,11 @@
 
     // Initialize theme
     updateThemeCSS();
+
+    // Make sure all range displays are updated
+    document.querySelectorAll('input[type="range"]').forEach(input => {
+      updateRangeValue(input, input.id.includes('duration') ? 'ms' : 'px');
+    });
 
     // Initialize dark mode based on system preference
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -1656,14 +1661,26 @@
         if (daySelectedColor) daySelectedColor.value = theme.daySelectedColor;
         if (dayTodayBorderColor) dayTodayBorderColor.value = theme.dayTodayBorderColor;
         
-        // Update border radius
-        const radiusInputs = document.querySelectorAll('input[id$="border-radius"]');
-        radiusInputs.forEach(input => {
-          input.value = theme.borderRadius;
-          updateRangeValue(input);
+        // Update border radius controls with the new value
+        const allRadiusControls = [
+          borderRadiusMain,
+          dayCellBorderRadius,
+          navButtonBorderRadius
+        ];
+        
+        allRadiusControls.forEach(control => {
+          if (control) {
+            control.value = theme.borderRadius;
+            updateRangeValue(control);
+          }
         });
         
         updateThemeCSS();
+        
+        // Make sure all range displays are updated after theme change
+        document.querySelectorAll('input[type="range"]').forEach(input => {
+          updateRangeValue(input, input.id.includes('duration') ? 'ms' : 'px');
+        });
       });
     });
 
