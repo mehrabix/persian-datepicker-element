@@ -259,7 +259,7 @@ export class AppComponent {
 
   constructor(private fb: FormBuilder) {
     this.dateForm = this.fb.group({
-      date: [[1403, 6, 15]] // Initial value: [year, month, day]
+      date: [1403, 6, 15] // Initial value: [year, month, day]
     });
   }
 }
