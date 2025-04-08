@@ -121,14 +121,26 @@ const handleChange = (event) => {
 
 ### Angular
 
+#### 1. Using the NgModule (Traditional Angular)
+
 ```typescript
 // app.module.ts
-import { PersianDatepickerModule } from 'ngx-persian-datepicker-element';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgxPersianDatepickerModule } from 'ngx-persian-datepicker-element';
+
+import { AppComponent } from './app.component';
 
 @NgModule({
+  declarations: [
+    AppComponent
+  ],
   imports: [
-    PersianDatepickerModule
-  ]
+    BrowserModule,
+    NgxPersianDatepickerModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
 
@@ -136,46 +148,49 @@ export class AppModule { }
 import { Component } from '@angular/core';
 
 @Component({
-  template: `
-    <persian-datepicker
-      placeholder="انتخاب تاریخ"
-      format="YYYY/MM/DD"
-      [showEvents]="true"
-      [rtl]="true"
-      (change)="handleChange($event)"
-    ></persian-datepicker>
-  `
-})
-export class AppComponent {
-  handleChange(event: any) {
-    console.log('تاریخ انتخاب شده:', event.detail);
-  }
-}
-```
-
-### Angular Standalone Component Usage
-
-```typescript
-// app.component.ts
-import { Component } from '@angular/core';
-import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
-
-@Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [PersianDatepickerComponent],
   template: `
-    <persian-datepicker
+    <ngx-persian-datepicker-element
       placeholder="انتخاب تاریخ"
       format="YYYY/MM/DD"
       [showEvents]="true"
       [rtl]="true"
       (dateChange)="onDateChange($event)"
-    ></persian-datepicker>
+    ></ngx-persian-datepicker-element>
   `
 })
 export class AppComponent {
-  onDateChange(event: PersianDateChangeEvent) {
+  onDateChange(event: any) {
+    console.log('تاریخ شمسی:', event.jalali); // [year, month, day]
+    console.log('تاریخ میلادی:', event.gregorian);
+    console.log('آیا تعطیل است:', event.isHoliday);
+    console.log('رویدادها:', event.events);
+  }
+}
+```
+
+#### 2. As a Standalone Component (Angular 17+)
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [NgxPersianDatepickerComponent],
+  template: `
+    <ngx-persian-datepicker-element
+      placeholder="تاریخ را انتخاب کنید"
+      format="YYYY/MM/DD"
+      [showEvents]="true"
+      (dateChange)="onDateChange($event)"
+    ></ngx-persian-datepicker-element>
+  `
+})
+export class AppComponent {
+  onDateChange(event: any) {
     console.log('تاریخ شمسی:', event.jalali); // [سال, ماه, روز]
     console.log('تاریخ میلادی:', event.gregorian);
     console.log('آیا تعطیل است:', event.isHoliday);
@@ -184,25 +199,58 @@ export class AppComponent {
 }
 ```
 
-### Angular with Reactive Forms
+#### 3. With Angular Signal Support (Recommended)
+
+The component uses Angular Signals for better performance:
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [NgxPersianDatepickerComponent],
+  template: `
+    <ngx-persian-datepicker-element
+      placeholderInput="انتخاب تاریخ"
+      formatInput="YYYY/MM/DD"
+      [showEventsInput]="true"
+      [rtlInput]="true"
+      (dateChange)="onDateChange($event)"
+    ></ngx-persian-datepicker-element>
+  `
+})
+export class AppComponent {
+  onDateChange(event: any) {
+    console.log('تاریخ شمسی:', event.jalali);
+    console.log('تاریخ میلادی:', event.gregorian);
+    console.log('آیا تعطیل است:', event.isHoliday);
+    console.log('رویدادها:', event.events);
+  }
+}
+```
+
+#### 4. With Reactive Forms
 
 ```typescript
 // app.component.ts
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [PersianDatepickerComponent, ReactiveFormsModule],
+  imports: [NgxPersianDatepickerComponent, ReactiveFormsModule],
   template: `
     <form [formGroup]="dateForm">
-      <persian-datepicker 
+      <ngx-persian-datepicker-element 
         formControlName="date"
         placeholder="تاریخ را انتخاب کنید"
         format="YYYY/MM/DD">
-      </persian-datepicker>
+      </ngx-persian-datepicker-element>
     </form>
   `
 })
@@ -211,7 +259,7 @@ export class AppComponent {
 
   constructor(private fb: FormBuilder) {
     this.dateForm = this.fb.group({
-      date: ['']
+      date: [[1403, 6, 15]] // Initial value: [year, month, day]
     });
   }
 }
@@ -321,7 +369,7 @@ In Vue:
 
 In Angular:
 ```html
-<persian-datepicker [rangeMode]="true"></persian-datepicker>
+<ngx-persian-datepicker-element [rangeMode]="true"></ngx-persian-datepicker-element>
 ```
 
 ### Customizing UI Elements
@@ -446,11 +494,13 @@ picker.setDisabledDatesFn((year, month, day) => {
 - Custom directives for date formatting
 
 ### Angular
-- Angular Ivy support
+- Angular Ivy and Angular Signals support
 - TypeScript support
 - Angular event binding
-- Reactive forms integration
-- Custom pipes for date formatting
+- Reactive Forms and Template-driven Forms integration
+- Customization using CSS variables and direct inputs
+- Zero configuration required
+- Both module-based and standalone component support
 
 ## Mobile Support
 
