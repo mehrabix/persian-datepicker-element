@@ -395,7 +395,7 @@
       <pre><code>// app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { PersianDatepickerModule } from 'ngx-persian-datepicker-element';
+import { NgxPersianDatepickerModule } from 'ngx-persian-datepicker-element';
 
 import { AppComponent } from './app.component';
 
@@ -405,7 +405,7 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    PersianDatepickerModule // افزودن ماژول به imports
+    NgxPersianDatepickerModule // افزودن ماژول به imports
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -413,22 +413,22 @@ import { AppComponent } from './app.component';
 export class AppModule { }</code></pre>
 
       <h3>روش ۲: استفاده از کامپوننت مستقل (Standalone)</h3>
-      <p>در کامپوننت خود، PersianDatepickerComponent را به صورت مستقیم import کنید:</p>
+      <p>در کامپوننت خود، NgxPersianDatepickerComponent را به صورت مستقیم import کنید:</p>
       <pre><code>// app.component.ts
 import { Component } from '@angular/core';
-import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [PersianDatepickerComponent],
+  imports: [NgxPersianDatepickerComponent],
   template: `
-    &lt;persian-datepicker 
+    &lt;ngx-persian-datepicker-element 
       placeholder="تاریخ را انتخاب کنید"
       format="YYYY/MM/DD"
       [showEvents]="true"
       (dateChange)="onDateChange($event)"&gt;
-    &lt;/persian-datepicker&gt;
+    &lt;/ngx-persian-datepicker-element&gt;
   `
 })
 export class AppComponent {
@@ -442,39 +442,39 @@ export class AppComponent {
 
       <h2>استفاده پایه</h2>
       <p>حالا می‌توانید از کامپوننت تاریخ شمسی در تمپلیت‌های خود استفاده کنید:</p>
-      <pre><code>&lt;persian-datepicker 
+      <pre><code>&lt;ngx-persian-datepicker-element 
   placeholder="تاریخ را انتخاب کنید"
   format="YYYY/MM/DD"
   [showEvents]="true"
   (dateChange)="onDateChange($event)"&gt;
-&lt;/persian-datepicker&gt;</code></pre>
+&lt;/ngx-persian-datepicker-element&gt;</code></pre>
 
       <h2>مثال‌های پیشرفته</h2>
       
       <h3>استفاده با Two-way Binding</h3>
-      <pre><code>&lt;persian-datepicker 
+      <pre><code>&lt;ngx-persian-datepicker-element 
   [(ngModel)]="selectedDate"
   placeholder="تاریخ را انتخاب کنید"
   format="YYYY/MM/DD"&gt;
-&lt;/persian-datepicker&gt;</code></pre>
+&lt;/ngx-persian-datepicker-element&gt;</code></pre>
 
       <h3>استفاده با Reactive Forms</h3>
       <pre><code>// app.component.ts
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [PersianDatepickerComponent, ReactiveFormsModule],
+  imports: [NgxPersianDatepickerComponent, ReactiveFormsModule],
   template: `
     &lt;form [formGroup]="dateForm"&gt;
-      &lt;persian-datepicker 
+      &lt;ngx-persian-datepicker-element 
         formControlName="date"
         placeholder="تاریخ را انتخاب کنید"
         format="YYYY/MM/DD"&gt;
-      &lt;/persian-datepicker&gt;
+      &lt;/ngx-persian-datepicker-element&gt;
     &lt;/form&gt;
   `
 })
@@ -491,23 +491,23 @@ export class AppComponent {
       <h3>استفاده با ViewChild</h3>
       <pre><code>// app.component.ts
 import { Component, ViewChild } from '@angular/core';
-import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [PersianDatepickerComponent],
+  imports: [NgxPersianDatepickerComponent],
   template: `
-    &lt;persian-datepicker 
+    &lt;ngx-persian-datepicker-element 
       #datepicker
       placeholder="تاریخ را انتخاب کنید"
       format="YYYY/MM/DD"&gt;
-    &lt;/persian-datepicker&gt;
+    &lt;/ngx-persian-datepicker-element&gt;
     &lt;button (click)="clearDate()"&gt;پاک کردن تاریخ&lt;/button&gt;
   `
 })
 export class AppComponent {
-  @ViewChild('datepicker') datepicker!: PersianDatepickerComponent;
+  @ViewChild('datepicker') datepicker!: NgxPersianDatepickerComponent;
 
   clearDate() {
     this.datepicker.setValue('');
@@ -519,10 +519,10 @@ export class AppComponent {
         <div class="example">
           <h3>شخصی‌سازی ظاهر</h3>
           <pre><code>// app.component.html
-&lt;persian-datepicker 
+&lt;ngx-persian-datepicker-element 
   placeholder="انتخاب تاریخ"
   class="custom-datepicker"&gt;
-&lt;/persian-datepicker&gt;</code></pre>
+&lt;/ngx-persian-datepicker-element&gt;</code></pre>
 
           <pre><code>// app.component.ts
 export class AppComponent {
@@ -538,10 +538,10 @@ export class AppComponent {
     تغییر به حالت {{ isDarkMode ? 'روشن' : 'تاریک' }}
   &lt;/button&gt;
   
-  &lt;persian-datepicker
+  &lt;ngx-persian-datepicker-element
     placeholder="تاریخ را انتخاب کنید"
     [darkMode]="isDarkMode"&gt;
-  &lt;/persian-datepicker&gt;
+  &lt;/ngx-persian-datepicker-element&gt;
 &lt;/div&gt;</code></pre>
 
           <pre><code>// app.component.ts
@@ -558,9 +558,9 @@ export class AppComponent {
           <h3>View Child و متدهای دستوری</h3>
           <pre><code>// app.component.html
 &lt;div&gt;
-  &lt;persian-datepicker #datepicker
+  &lt;ngx-persian-datepicker-element #datepicker
     placeholder="از دکمه‌ها استفاده کنید"&gt;
-  &lt;/persian-datepicker&gt;
+  &lt;/ngx-persian-datepicker-element&gt;
   
   &lt;div style="margin-top: 1rem"&gt;
     &lt;button (click)="getValue()"&gt;دریافت مقدار&lt;/button&gt;
@@ -572,14 +572,14 @@ export class AppComponent {
 
           <pre><code>// app.component.ts
 import { Component, ViewChild } from '@angular/core';
-import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+import { NgxPersianDatepickerComponent } from 'ngx-persian-datepicker-element';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
 export class AppComponent {
-  @ViewChild('datepicker') datepicker: PersianDatepickerComponent;
+  @ViewChild('datepicker') datepicker: NgxPersianDatepickerComponent;
   
   getValue() {
     const value = this.datepicker.getValue();
@@ -605,20 +605,20 @@ export class AppComponent {
           <h3>انواع تعطیلات</h3>
           <pre><code>// app.component.html
 &lt;div&gt;
-  &lt;persian-datepicker
+  &lt;ngx-persian-datepicker-element
     eventTypes="Iran,Afghanistan,AncientIran,International"
     placeholder="نمایش همه تعطیلات"&gt;
-  &lt;/persian-datepicker&gt;
+  &lt;/ngx-persian-datepicker-element&gt;
 
-  &lt;persian-datepicker
+  &lt;ngx-persian-datepicker-element
     eventTypes="Afghanistan"
     placeholder="تعطیلات افغانستان"&gt;
-  &lt;/persian-datepicker&gt;
+  &lt;/ngx-persian-datepicker-element&gt;
 
-  &lt;persian-datepicker
+  &lt;ngx-persian-datepicker-element
     eventTypes="all"
     placeholder="نمایش همه انواع تعطیلات"&gt;
-  &lt;/persian-datepicker&gt;
+  &lt;/ngx-persian-datepicker-element&gt;
 &lt;/div&gt;</code></pre>
         </div>
       </div>
@@ -738,7 +738,7 @@ export class AppComponent {
 
       <h2>نکات مهم</h2>
       <ul>
-        <li>در حالت standalone، حتماً باید PersianDatepickerComponent را در imports کامپوننت خود اضافه کنید.</li>
+        <li>در حالت standalone، حتماً باید NgxPersianDatepickerComponent را در imports کامپوننت خود اضافه کنید.</li>
         <li>برای استفاده از Two-way binding، باید FormsModule را نیز import کنید.</li>
         <li>برای استفاده از Reactive Forms، باید ReactiveFormsModule را import کنید.</li>
         <li>در صورت نیاز به دسترسی مستقیم به کامپوننت، می‌توانید از ViewChild استفاده کنید.</li>
@@ -836,7 +836,7 @@ export class AppComponent {
       </p>
       <pre><code>import { Component } from '@angular/core';
 import { 
-  PersianDatepickerComponent,
+  NgxPersianDatepickerComponent,
   PersianDateChangeEvent,
   DateTuple 
 } from 'ngx-persian-datepicker-element';
@@ -844,7 +844,7 @@ import {
 @Component({
   selector: 'app-root',
   template: `
-    &lt;persian-datepicker (dateChange)="handleDateChange($event)"&gt;&lt;/persian-datepicker&gt;
+    &lt;ngx-persian-datepicker-element (dateChange)="handleDateChange($event)"&gt;&lt;/ngx-persian-datepicker-element&gt;
   `
 })
 export class AppComponent {
