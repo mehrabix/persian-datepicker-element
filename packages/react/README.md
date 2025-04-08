@@ -28,7 +28,7 @@ pnpm add react-persian-datepicker-element persian-datepicker-element
 ## Basic Usage
 
 ```jsx
-import { PersianDatepicker } from 'persian-datepicker-react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
 
 function App() {
   const handleDateChange = (event) => {
@@ -42,6 +42,123 @@ function App() {
       format="YYYY/MM/DD"
       onChange={handleDateChange}
     />
+  );
+}
+```
+
+## Advanced Examples
+
+### With Two-way Binding
+
+```jsx
+import { useState } from 'react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  const [selectedDate, setSelectedDate] = useState('');
+
+  return (
+    <PersianDatepicker
+      value={selectedDate}
+      onChange={(event) => setSelectedDate(event.detail.formattedDate)}
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+    />
+  );
+}
+```
+
+### With Date Limits
+
+```jsx
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  return (
+    <PersianDatepicker
+      minDate={[1400, 1, 1]}
+      maxDate={[1402, 12, 29]}
+      disabledDates={(year, month, day) => {
+        // Disable weekends (Friday and Saturday)
+        const date = new Date(year, month - 1, day);
+        const dayOfWeek = date.getDay();
+        return dayOfWeek === 5 || dayOfWeek === 6;
+      }}
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+    />
+  );
+}
+```
+
+### With Range Selection
+
+```jsx
+import { useState } from 'react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  const [dateRange, setDateRange] = useState({ start: null, end: null });
+
+  const handleRangeChange = (event) => {
+    if (event.detail.isRange) {
+      setDateRange({
+        start: event.detail.range.start,
+        end: event.detail.range.end
+      });
+    }
+  };
+
+  return (
+    <PersianDatepicker
+      rangeMode={true}
+      onChange={handleRangeChange}
+      placeholder="انتخاب بازه تاریخ"
+      format="YYYY/MM/DD"
+    />
+  );
+}
+```
+
+### With Custom Styling
+
+```jsx
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  return (
+    <PersianDatepicker
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+      className="custom-datepicker"
+    />
+  );
+}
+```
+
+### With Holiday Types
+
+```jsx
+import { PersianDatepicker } from 'react-persian-datepicker-element';
+
+function App() {
+  return (
+    <div>
+      <PersianDatepicker
+        eventTypes="Iran,Afghanistan,AncientIran,International"
+        placeholder="نمایش همه تعطیلات"
+      />
+
+      <PersianDatepicker
+        eventTypes="Afghanistan"
+        placeholder="تعطیلات افغانستان"
+      />
+
+      <PersianDatepicker
+        eventTypes="all"
+        placeholder="نمایش همه انواع تعطیلات"
+      />
+    </div>
   );
 }
 ```
@@ -66,23 +183,21 @@ function App() {
 
 ## Theme Customization
 
+You can customize the appearance using standard CSS:
+
 ```jsx
 <PersianDatepicker
-  primaryColor="#1a73e8"
-  primaryHover="#1557b0"
-  backgroundColor="#ffffff"
-  foregroundColor="#333333"
-  borderColor="#e0e0e0"
-  borderRadius="8px"
-  fontFamily="IRANSans"
-  holidayColor="#ff4d4f"
-  holidayBg="#fff1f0"
-  scrollbarWidth="8px"
-  scrollbarThumbColor="#c1c1c1"
-  scrollbarThumbHoverColor="#a8a8a8"
-  scrollbarTrackColor="#f1f1f1"
-  scrollbarBorderRadius="4px"
+  className="custom-datepicker"
+  placeholder="انتخاب تاریخ"
+  format="YYYY/MM/DD"
 />
+```
+
+With CSS:
+```css
+.custom-datepicker {
+  /* Add your custom styles here */
+}
 ```
 
 ## Methods
@@ -155,7 +270,7 @@ pnpm add react-persian-datepicker-element persian-datepicker-element
 ## استفاده پایه
 
 ```jsx
-import { PersianDatepicker } from 'persian-datepicker-react';
+import { PersianDatepicker } from 'react-persian-datepicker-element';
 
 function App() {
   const handleDateChange = (event) => {
@@ -193,23 +308,21 @@ function App() {
 
 ## شخصی‌سازی ظاهر
 
+شما می‌توانید ظاهر کامپوننت را با استفاده از CSS استاندارد شخصی‌سازی کنید:
+
 ```jsx
 <PersianDatepicker
-  primaryColor="#1a73e8"
-  primaryHover="#1557b0"
-  backgroundColor="#ffffff"
-  foregroundColor="#333333"
-  borderColor="#e0e0e0"
-  borderRadius="8px"
-  fontFamily="IRANSans"
-  holidayColor="#ff4d4f"
-  holidayBg="#fff1f0"
-  scrollbarWidth="8px"
-  scrollbarThumbColor="#c1c1c1"
-  scrollbarThumbHoverColor="#a8a8a8"
-  scrollbarTrackColor="#f1f1f1"
-  scrollbarBorderRadius="4px"
+  className="custom-datepicker"
+  placeholder="انتخاب تاریخ"
+  format="YYYY/MM/DD"
 />
+```
+
+با CSS:
+```css
+.custom-datepicker {
+  /* استایل‌های سفارشی خود را اینجا اضافه کنید */
+}
 ```
 
 ## متدها

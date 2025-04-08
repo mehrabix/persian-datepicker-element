@@ -153,6 +153,70 @@ export class AppComponent {
 }
 ```
 
+### Angular Standalone Component Usage
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PersianDatepickerComponent],
+  template: `
+    <persian-datepicker
+      placeholder="انتخاب تاریخ"
+      format="YYYY/MM/DD"
+      [showEvents]="true"
+      [rtl]="true"
+      (dateChange)="onDateChange($event)"
+    ></persian-datepicker>
+  `
+})
+export class AppComponent {
+  onDateChange(event: PersianDateChangeEvent) {
+    console.log('تاریخ شمسی:', event.jalali); // [سال, ماه, روز]
+    console.log('تاریخ میلادی:', event.gregorian);
+    console.log('آیا تعطیل است:', event.isHoliday);
+    console.log('رویدادها:', event.events);
+  }
+}
+```
+
+### Angular with Reactive Forms
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { PersianDatepickerComponent } from 'ngx-persian-datepicker-element';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PersianDatepickerComponent, ReactiveFormsModule],
+  template: `
+    <form [formGroup]="dateForm">
+      <persian-datepicker 
+        formControlName="date"
+        placeholder="تاریخ را انتخاب کنید"
+        format="YYYY/MM/DD">
+      </persian-datepicker>
+    </form>
+  `
+})
+export class AppComponent {
+  dateForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.dateForm = this.fb.group({
+      date: ['']
+    });
+  }
+}
+```
+
 ## Props & Attributes
 
 | Prop/Attribute | Type | Default | Description |
@@ -292,17 +356,6 @@ You can control the visibility of various UI elements:
 <persian-datepicker-element dark-mode></persian-datepicker-element>
 ```
 
-### Custom CSS Styling
-
-```html
-<style>
-  persian-datepicker-element {
-    --jdp-primary: #3b82f6;
-    --jdp-font-family: 'Vazir', sans-serif;
-  }
-</style>
-```
-
 ## Disabled Dates
 
 There are three ways to specify which dates should be disabled:
@@ -375,53 +428,6 @@ picker.setDisabledDatesFn((year, month, day) => {
   return day % 2 === 0; // Disable even days
 });
 ```
-
-## CSS Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| --jdp-primary | #0891b2 | Primary color |
-| --jdp-primary-hover | #0e7490 | Primary hover color |
-| --jdp-primary-foreground | #ffffff | Primary text color |
-| --jdp-background | #ffffff | Background color |
-| --jdp-foreground | #1e293b | Text color |
-| --jdp-muted | #f1f5f9 | Muted background color |
-| --jdp-muted-foreground | #64748b | Muted text color |
-| --jdp-border | #e2e8f0 | Border color |
-| --jdp-ring | #0284c7 | Focus ring color |
-| --jdp-holiday-color | #ef4444 | Holiday text color |
-| --jdp-holiday-bg | #fee2e2 | Holiday background color |
-| --jdp-holiday-hover-bg | #fecaca | Holiday hover background color |
-| --jdp-range-bg | rgba(8, 145, 178, 0.1) | Range selection background color |
-| --jdp-range-color | var(--jdp-foreground) | Range selection text color |
-| --jdp-range-start-bg | var(--jdp-primary) | Range start background color |
-| --jdp-range-start-color | var(--jdp-primary-foreground) | Range start text color |
-| --jdp-range-end-bg | var(--jdp-primary) | Range end background color |
-| --jdp-range-end-color | var(--jdp-primary-foreground) | Range end text color |
-| --jdp-border-radius | 0.5rem | Border radius |
-| --jdp-font-family | system-ui | Font family |
-| --jdp-font-size | 14px | Font size |
-| --jdp-line-height | 1.5 | Line height |
-| --jdp-font-weight | 400 | Font weight |
-| --jdp-font-weight-medium | 500 | Medium font weight |
-| --jdp-day-name-font-size | 12px | Day name font size |
-| --jdp-day-name-font-weight | 400 | Day name font weight |
-| --jdp-day-font-size | 13px | Day font size |
-| --jdp-day-font-weight | 400 | Day font weight |
-| --jdp-month-year-font-size | 14px | Month/year font size |
-| --jdp-month-year-font-weight | 500 | Month/year font weight |
-| --jdp-nav-button-size | 30px | Navigation button size |
-| --jdp-day-cell-size | 32px | Day cell size |
-| --jdp-day-cell-margin | 1px | Day cell margin |
-| --jdp-day-cell-border-radius | var(--jdp-border-radius) | Day cell border radius |
-| --jdp-day-hover-bg | var(--jdp-muted) | Day hover background color |
-| --jdp-day-selected-bg | var(--jdp-primary) | Selected day background color |
-| --jdp-day-selected-color | var(--jdp-primary-foreground) | Selected day text color |
-| --jdp-day-today-border-color | var(--jdp-primary) | Today border color |
-| --jdp-day-today-border-width | 1px | Today border width |
-| --jdp-day-disabled-opacity | 0.4 | Disabled day opacity |
-| --jdp-transition-duration | 0.2s | Transition duration |
-| --jdp-direction | rtl | Text direction (rtl or ltr) |
 
 ## Framework-Specific Features
 
