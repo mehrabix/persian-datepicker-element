@@ -16,7 +16,7 @@ An Angular wrapper for the Persian DatePicker Web Component. This package provid
 ## Installation
 
 ```bash
-npm install ngx-persian-datepicker-element
+npm install ngx-persian-datepicker-element persian-datepicker-element
 ```
 
 ### Zero Configuration Required

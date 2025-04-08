@@ -18,11 +18,11 @@
 ## نصب
 
 ```bash
-npm install ngx-persian-datepicker-element
+npm install ngx-persian-datepicker-element persian-datepicker-element
 # یا
-yarn add ngx-persian-datepicker-element
+yarn add ngx-persian-datepicker-element persian-datepicker-element
 # یا
-pnpm add ngx-persian-datepicker-element
+pnpm add ngx-persian-datepicker-element persian-datepicker-element
 ```
 
 ## نحوه استفاده

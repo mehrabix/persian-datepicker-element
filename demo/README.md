@@ -163,7 +163,7 @@ const handleDateChange = (event) => {
 For Angular applications, use our Angular wrapper:
 
 ```bash
-npm install ngx-persian-datepicker-element
+npm install ngx-persian-datepicker-element persian-datepicker-element
 ```
 
 ```typescript
