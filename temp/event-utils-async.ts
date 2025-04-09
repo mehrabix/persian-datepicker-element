@@ -55,7 +55,6 @@ class EventUtils {
   private isInitialized = false;
   private readonly CACHE_KEY = 'persian_calendar_events';
   private readonly CACHE_EXPIRY_DAYS = 7; // Cache events for 7 days
-  private eventLoadedCallbacks: Array<() => void> = [];
 
   private constructor() {
     // Private constructor to prevent direct instantiation
@@ -79,36 +78,19 @@ class EventUtils {
   }
 
   /**
-   * Check if EventUtils is currently loading data
-   */
-  public static isLoading(): boolean {
-    return EventUtils.instance?.isLoading ?? false;
-  }
-
-  /**
    * Initialize the singleton instance
-   * This returns immediately and triggers the background loading of events
+   * This ensures only one initialization happens across all instances
    */
-  public static initialize(): void {
-    // Get the instance
-    const instance = EventUtils.getInstance();
-    
-    // Start the loading process in the background
-    // We don't await this, so it won't block the caller
-    instance.loadEventsData();
-  }
+  public static async initialize(): Promise<void> {
+    if (EventUtils.initializationPromise) {
+      return EventUtils.initializationPromise;
+    }
 
-  /**
-   * Register a callback to be notified when events are loaded
-   * If events are already loaded, the callback will be called immediately
-   */
-  public onEventsLoaded(callback: () => void): void {
-    if (this.isInitialized) {
-      // Events already loaded, call the callback asynchronously
-      setTimeout(callback, 0);
-    } else {
-      // Store the callback for later
-      this.eventLoadedCallbacks.push(callback);
+    EventUtils.initializationPromise = EventUtils.getInstance().loadEventsData();
+    try {
+      await EventUtils.initializationPromise;
+    } finally {
+      EventUtils.initializationPromise = null;
     }
   }
 
@@ -187,12 +169,11 @@ class EventUtils {
 
   /**
    * Loads events data from the external JSON file with caching
-   * This function now starts the loading process but returns immediately
-   * The actual loading happens in the background
    */
-  private loadEventsData(): void {
-    // If already loading, don't start another load
-    if (this.isLoading || this.fetchPromise) {
+  private async loadEventsData(): Promise<void> {
+    // If already loading, wait for the current fetch to complete
+    if (this.fetchPromise) {
+      await this.fetchPromise;
       return;
     }
 
@@ -203,90 +184,52 @@ class EventUtils {
       today.getDate()
     );
     const currentYear = jalaliToday[0];
-    this.lastFetchYear = currentYear;
 
-    // Try to get data from cache first - this is synchronous and fast
+    // Try to get data from cache first
     const cachedData = this.getFromCache();
     if (cachedData) {
       this.persianCalendarData = cachedData;
       this.mappedEvents = this.mapPersianCalendarEvents();
       this.lastFetchYear = currentYear;
       this.isInitialized = true;
-      
-      // Notify callbacks that events are loaded (from cache)
-      this.notifyEventsLoaded();
       return;
     }
 
-    // Start the fetch promise but don't await it
-    // This allows the function to return immediately while loading happens in background
-    this.fetchPromise = this.startBackgroundLoading();
-  }
-
-  /**
-   * Starts loading events data in the background
-   * @returns Promise that resolves when loading is complete
-   */
-  private async startBackgroundLoading(): Promise<void> {
-    this.isLoading = true;
-    try {
-      console.log('Attempting to load events.json in background...');
-      // Try to load the events.json file with retry mechanism
-      const response = await this.fetchWithRetry('data/events.json', 3);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    // Create the fetch promise
+    this.fetchPromise = (async () => {
+      this.isLoading = true;
+      try {
+        console.log('Attempting to load events.json...');
+        // Try to load the events.json file with retry mechanism
+        const response = await this.fetchWithRetry('data/events.json', 3);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        this.persianCalendarData = await response.json();
+        
+        // Save to cache
+        this.saveToCache(this.persianCalendarData);
+        
+        // Update mapped events with the new data
+        const newEvents = this.mapPersianCalendarEvents();
+        this.mappedEvents = [...newEvents];
+        
+        // Update last fetch year and mark as initialized
+        this.lastFetchYear = currentYear;
+        this.isInitialized = true;
+      } catch (error) {
+        // Keep using fallback events
+        this.mappedEvents = [...fallbackEvents];
+      } finally {
+        this.isLoading = false;
       }
-      this.persianCalendarData = await response.json();
-      
-      // Save to cache
-      this.saveToCache(this.persianCalendarData);
-      
-      // Update mapped events with the new data
-      const newEvents = this.mapPersianCalendarEvents();
-      this.mappedEvents = [...newEvents];
-      
-      // Update last fetch year and mark as initialized
-      this.lastFetchYear = this.lastFetchYear || currentJalaliYear;
-      this.isInitialized = true;
-      
-      // Notify all registered callbacks
-      this.notifyEventsLoaded();
-    } catch (error) {
-      console.warn('Failed to load events:', error);
-      // Keep using fallback events
-      this.mappedEvents = [...fallbackEvents];
-      
-      // Still mark as initialized so UI can proceed
-      this.isInitialized = true;
-      
-      // Notify callbacks even with fallback data
-      this.notifyEventsLoaded();
+    })();
+
+    try {
+      await this.fetchPromise;
     } finally {
-      this.isLoading = false;
       this.fetchPromise = null;
     }
-  }
-
-  /**
-   * Notifies all registered callbacks that events are loaded
-   */
-  private notifyEventsLoaded(): void {
-    // Make a copy of the callbacks array
-    const callbacks = [...this.eventLoadedCallbacks];
-    
-    // Clear the callbacks array
-    this.eventLoadedCallbacks = [];
-    
-    // Execute callbacks asynchronously to prevent blocking
-    setTimeout(() => {
-      callbacks.forEach(callback => {
-        try {
-          callback();
-        } catch (e) {
-          console.error('Error in event loaded callback:', e);
-        }
-      });
-    }, 0);
   }
 
   /**
@@ -443,39 +386,45 @@ class EventUtils {
   async refreshEvents(): Promise<PersianEvent[]> {
     // Only reload if not already loading
     if (!this.isLoading) {
-      this.isLoading = true;
-      try {
-        console.log('Refreshing events...');
-        // Try to load the events.json file with retry mechanism
-        const response = await this.fetchWithRetry('data/events.json', 3);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+      // Create the fetch promise
+      this.fetchPromise = (async () => {
+        this.isLoading = true;
+        try {
+          console.log('Refreshing events...');
+          // Try to load the events.json file with retry mechanism
+          const response = await this.fetchWithRetry('data/events.json', 3);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          this.persianCalendarData = await response.json();
+          
+          // Save to cache
+          this.saveToCache(this.persianCalendarData);
+          
+          // Update mapped events with the new data
+          const newEvents = this.mapPersianCalendarEvents();
+          this.mappedEvents = [...newEvents];
+          
+          // Update last fetch year
+          const today = new Date();
+          const jalaliToday = PersianDate.gregorianToJalali(
+            today.getFullYear(),
+            today.getMonth() + 1,
+            today.getDate()
+          );
+          this.lastFetchYear = jalaliToday[0];
+        } catch (error) {
+          // Keep using existing events
+          console.warn('Failed to refresh events:', error);
+        } finally {
+          this.isLoading = false;
         }
-        this.persianCalendarData = await response.json();
-        
-        // Save to cache
-        this.saveToCache(this.persianCalendarData);
-        
-        // Update mapped events with the new data
-        const newEvents = this.mapPersianCalendarEvents();
-        this.mappedEvents = [...newEvents];
-        
-        // Update last fetch year
-        const today = new Date();
-        const jalaliToday = PersianDate.gregorianToJalali(
-          today.getFullYear(),
-          today.getMonth() + 1,
-          today.getDate()
-        );
-        this.lastFetchYear = jalaliToday[0];
-        
-        // Notify callbacks about refreshed events
-        this.notifyEventsLoaded();
-      } catch (error) {
-        // Keep using existing events
-        console.warn('Failed to refresh events:', error);
+      })();
+
+      try {
+        await this.fetchPromise;
       } finally {
-        this.isLoading = false;
+        this.fetchPromise = null;
       }
     }
     
