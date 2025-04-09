@@ -1060,10 +1060,10 @@ export class PersianDatePickerElement extends HTMLElement {
       this.initializeCurrentDate();
       
       // Initialize events data using the singleton
-      // Only initialize if not already initialized
-      if (!EventUtils.isInitialized()) {
-        await EventUtils.initialize();
-      }
+      EventUtils.initialize();
+      
+      // Get the EventUtils instance to be used throughout the component
+      this.eventUtils = EventUtils.getInstance();
       
       // Setup initial UI components
       this.initializeUIComponents();
@@ -1076,6 +1076,14 @@ export class PersianDatePickerElement extends HTMLElement {
       
       // Update the UI with the current date
       this.renderCalendar();
+      
+      // Add a slight delay and re-render after initialization to ensure events are loaded
+      setTimeout(() => {
+        if (this.calendar) {
+          console.log('Events loaded, updating calendar after delay');
+          this.renderCalendar();
+        }
+      }, 100);
     } catch (error) {
       console.error("Error in connectedCallback:", error);
     }
@@ -2140,6 +2148,7 @@ export class PersianDatePickerElement extends HTMLElement {
       isHoliday = true;
     }
     
+    // Always try to check for holidays from events data
     // Check if it's a holiday from events.json based on holiday types
     if (this.eventUtils.isHoliday(this.jalaliMonth, day, this.eventTypes, this.includeAllTypes)) {
       dayElement.classList.add("holiday");
