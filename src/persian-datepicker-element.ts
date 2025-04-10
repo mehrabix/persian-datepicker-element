@@ -1695,63 +1695,114 @@ export class PersianDatePickerElement extends HTMLElement {
   }
 
   /**
+   * Get button configuration from attributes
+   */
+  private getButtonConfig(): {
+    todayButtonText: string;
+    todayButtonClass: string;
+    tomorrowButtonText: string;
+    tomorrowButtonClass: string;
+  } {
+    return {
+      todayButtonText: this.getAttribute('today-button-text') || 'امروز',
+      todayButtonClass: this.getAttribute('today-button-class') || '',
+      tomorrowButtonText: this.getAttribute('tomorrow-button-text') || 'فردا',
+      tomorrowButtonClass: this.getAttribute('tomorrow-button-class') || ''
+    };
+  }
+
+  /**
+   * Get visibility configuration from attributes
+   */
+  private getVisibilityConfig(): {
+    showMonthSelector: boolean;
+    showYearSelector: boolean;
+    showPrevButton: boolean;
+    showNextButton: boolean;
+    showTodayButton: boolean;
+    showTomorrowButton: boolean;
+  } {
+    return {
+      showMonthSelector: this.getAttribute('show-month-selector') !== 'false',
+      showYearSelector: this.getAttribute('show-year-selector') !== 'false',
+      showPrevButton: this.getAttribute('show-prev-button') !== 'false',
+      showNextButton: this.getAttribute('show-next-button') !== 'false',
+      showTodayButton: this.getAttribute('show-today-button') !== 'false',
+      showTomorrowButton: this.getAttribute('show-tomorrow-button') !== 'false'
+    };
+  }
+
+  /**
+   * Generate header HTML based on visibility configuration
+   */
+  private generateHeaderHTML(visibility: ReturnType<typeof this.getVisibilityConfig>): string {
+    const chevronSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
+
+    return `
+      <div class="header">
+        ${visibility.showPrevButton ? `<button id="prev-month" type="button" class="nav-button prev"></button>` : ''}
+        <div class="selectors-container">
+          ${visibility.showMonthSelector ? `
+          <div class="custom-select month-select" id="month-select-container">
+            <button type="button" class="select-trigger" id="month-select-trigger">
+              <span id="month-select-value"></span>
+              <span class="select-icon">${chevronSVG}</span>
+            </button>
+            <div class="select-content month-select-content" id="month-select-content"></div>
+          </div>
+          ` : ''}
+          ${visibility.showYearSelector ? `
+          <div class="custom-select year-select" id="year-select-container">
+            <button type="button" class="select-trigger" id="year-select-trigger">
+              <span id="year-select-value"></span>
+              <span class="select-icon">${chevronSVG}</span>
+            </button>
+            <div class="select-content year-select-content" id="year-select-content"></div>
+          </div>
+          ` : ''}
+        </div>
+        ${visibility.showNextButton ? `<button id="next-month" type="button" class="nav-button next"></button>` : ''}
+      </div>
+    `;
+  }
+
+  /**
+   * Generate footer HTML based on visibility and button configuration
+   */
+  private generateFooterHTML(
+    visibility: ReturnType<typeof this.getVisibilityConfig>,
+    buttons: ReturnType<typeof this.getButtonConfig>
+  ): string {
+    return `
+      <div class="footer">
+        ${visibility.showTodayButton ? 
+          `<button id="today-button" type="button" class="date-nav-button today-button ${buttons.todayButtonClass}">${buttons.todayButtonText}</button>` 
+          : ''}
+        ${visibility.showTomorrowButton ? 
+          `<button id="tomorrow-button" type="button" class="date-nav-button tomorrow-button ${buttons.tomorrowButtonClass}">${buttons.tomorrowButtonText}</button>` 
+          : ''}
+      </div>
+    `;
+  }
+
+  /**
    * Render the initial component HTML
    */
   private render(shadow: ShadowRoot) {
-    // Get button text from attributes or use defaults
-    const todayButtonText = this.getAttribute('today-button-text') || 'امروز';
-    const todayButtonClass = this.getAttribute('today-button-class') || '';
-    const tomorrowButtonText = this.getAttribute('tomorrow-button-text') || 'فردا';
-    const tomorrowButtonClass = this.getAttribute('tomorrow-button-class') || '';
-    
-    // Check visibility attributes (defaults to true if not specified)
-    const showMonthSelector = this.getAttribute('show-month-selector') !== 'false';
-    const showYearSelector = this.getAttribute('show-year-selector') !== 'false';
-    const showPrevButton = this.getAttribute('show-prev-button') !== 'false';
-    const showNextButton = this.getAttribute('show-next-button') !== 'false';
-    const showTodayButton = this.getAttribute('show-today-button') !== 'false';
-    const showTomorrowButton = this.getAttribute('show-tomorrow-button') !== 'false';
-    
-    // SVG for dropdown icon
-    const chevronSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
-    
+    const buttonConfig = this.getButtonConfig();
+    const visibilityConfig = this.getVisibilityConfig();
+
     shadow.innerHTML = `
       <style>${styles}</style>
       <div class="picker-container">
         <input type="text" id="date-input" readonly placeholder="انتخاب تاریخ">
         <div class="calendar" id="calendar">
-   <div class="header">
-            ${showPrevButton ? `<button id="prev-month" type="button" class="nav-button prev"></button>` : ''}
-            <div class="selectors-container">
-              ${showMonthSelector ? `
-              <div class="custom-select month-select" id="month-select-container">
-                <button type="button" class="select-trigger" id="month-select-trigger">
-                  <span id="month-select-value"></span>
-                  <span class="select-icon">${chevronSVG}</span>
-                </button>
-                <div class="select-content month-select-content" id="month-select-content"></div>
-              </div>
-              ` : ''}
-              ${showYearSelector ? `
-              <div class="custom-select year-select" id="year-select-container">
-                <button type="button" class="select-trigger" id="year-select-trigger">
-                  <span id="year-select-value"></span>
-                  <span class="select-icon">${chevronSVG}</span>
-                </button>
-                <div class="select-content year-select-content" id="year-select-content"></div>
-              </div>
-              ` : ''}
-            </div>
-            ${showNextButton ? `<button id="next-month" type="button" class="nav-button next"></button>` : ''}
-          </div>
+          ${this.generateHeaderHTML(visibilityConfig)}
           <div class="day-names" id="day-names"></div>
           <div class="days-wrapper">
             <div class="days" id="days-container"></div>
           </div>
-          <div class="footer">
-            ${showTodayButton ? `<button id="today-button" type="button" class="date-nav-button today-button ${todayButtonClass}">${todayButtonText}</button>` : ''}
-            ${showTomorrowButton ? `<button id="tomorrow-button" type="button" class="date-nav-button tomorrow-button ${tomorrowButtonClass}">${tomorrowButtonText}</button>` : ''}
-          </div>
+          ${this.generateFooterHTML(visibilityConfig, buttonConfig)}
         </div>
       </div>
     `;
