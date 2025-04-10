@@ -111,7 +111,6 @@
     "test:all": "pnpm test:core && pnpm test:workspaces",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "serve": "pnpm -r serve",
     "prepublishOnly": "pnpm test:core && pnpm build:core"
   },
   "keywords": [
