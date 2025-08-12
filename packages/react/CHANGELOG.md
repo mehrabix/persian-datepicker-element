@@ -5,6 +5,15 @@ All notable changes to the `react-persian-datepicker-element` package will be do
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.9] - 2025-01-08
+
+### Fixed
+- **BREAKING FIX**: Fixed TypeScript types for `onChange` event handler
+  - Added missing properties to `PersianDateChangeEvent` interface: `formattedDate`, `isoString`, `isRange`, and `range`
+  - Resolved issue where TypeScript couldn't access properties like `isoString` from the event object
+  - Fixed issue [#60](https://github.com/mehrabix/persian-datepicker-element/issues/60)
+  - Now `event.isoString` and other properties are properly typed and accessible
+
 ## [1.0.17] - 2024-06-21
 
 ### Added

@@ -160,6 +160,7 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       if (onChange) {
         handleChange.current = (e: Event) => {
           const customEvent = e as CustomEvent<PersianDateChangeEvent>;
+          // The event detail contains the actual data
           onChange(customEvent.detail);
         };
       }
