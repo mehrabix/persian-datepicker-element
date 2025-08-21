@@ -67,7 +67,7 @@ export const persianDatepickerStyles = `:host {
   --jdp-calendar-border-color: var(--jdp-border);
   --jdp-calendar-border-radius: var(--jdp-border-radius);
   --jdp-calendar-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2);
-  --jdp-calendar-z-index: 10;
+  --jdp-calendar-z-index: 99999;
   
   /* Navigation buttons */
   --jdp-nav-button-size: 30px;
@@ -429,7 +429,7 @@ input:focus {
   bottom: 120%;
   right: 0;
   transform: translateY(-5px);
-  z-index: 9999;
+  z-index: 100001;
 }
 
 .event-tooltip.tooltip-visible {
@@ -453,7 +453,7 @@ input:focus {
     bottom: auto;
     right: auto;
     background: var(--jdp-background);
-    z-index: 9999;
+    z-index: 100001;
   }
 
   .event-tooltip::before {
@@ -638,7 +638,7 @@ input:focus {
   border: var(--jdp-select-content-border-width, 1px) solid var(--jdp-select-content-border-color, var(--jdp-border));
   border-radius: var(--jdp-select-content-border-radius, var(--jdp-border-radius));
   box-shadow: var(--jdp-select-content-shadow, 0 4px 8px rgba(0,0,0,0.1));
-  z-index: var(--jdp-select-content-z-index, 20);
+  z-index: var(--jdp-select-content-z-index, 100000);
   overflow-y: auto;
   max-height: var(--jdp-select-content-max-height, 200px);
   display: none;

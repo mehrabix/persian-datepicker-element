@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.1.17",
+  "version": "1.1.18",
   "private": false,
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.min.js",
@@ -13,6 +13,14 @@
   ],
   "sideEffects": false,
   "changelog": {
+    "1.1.18": [
+      "Enhanced z-index management to ensure datepicker always appears at highest layer",
+      "Updated calendar z-index from 10 to 99999 for better visibility",
+      "Updated select dropdown z-index to 100000 for proper layering",
+      "Updated event tooltip z-index to 100001 for optimal display",
+      "Ensures datepicker is never hidden behind other web elements",
+      "Improved compatibility with modern web frameworks and CSS libraries"
+    ],
     "1.1.2": [
       "Added support for new input attributes: min-date, max-date, disabled-dates, range-mode, range-start, range-end, default-date",
       "Updated documentation to reflect new input attributes",
@@ -97,7 +105,7 @@
   "scripts": {
     "build": "pnpm build:core && pnpm build:angular && pnpm build:react && pnpm build:vue",
     "build:core": "pnpm build:clean && npx rspack build",
-    "build:angular": "cd packages/angular/ngx-persian-datepicker-element && pnpm ng build ngx-persian-datepicker-element",
+    "build:angular": "cd packages/angular/ngx-persian-datepicker-element && npx ng build ngx-persian-datepicker-element",
     "build:react": "pnpm --filter react-persian-datepicker-element build",
     "build:vue": "pnpm --filter vue-persian-datepicker-element build",
     "build:angular:watch": "cd packages/angular/ngx-persian-datepicker-element && pnpm ng build ngx-persian-datepicker-element --watch",
