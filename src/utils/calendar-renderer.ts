@@ -306,12 +306,23 @@ export class CalendarRenderer {
     monthSelectContent.innerHTML = "";
     yearSelectContent.innerHTML = "";
     
+    // Create wrapper functions that close dropdowns after selection
+    const monthChangeWrapper = (month: number, monthName: string) => {
+      onMonthChange(month, monthName);
+      this.closeAllDropdowns(shadowRoot);
+    };
+    
+    const yearChangeWrapper = (year: number) => {
+      onYearChange(year);
+      this.closeAllDropdowns(shadowRoot);
+    };
+    
     // Create month options
-    const monthFragment = UIRenderer.createMonthOptions(jalaliMonth, onMonthChange);
+    const monthFragment = UIRenderer.createMonthOptions(jalaliMonth, monthChangeWrapper);
     monthSelectContent.appendChild(monthFragment);
     
     // Create year options
-    const yearFragment = UIRenderer.createYearOptions(jalaliYear, onYearChange, DateFormatter.toPersianNum);
+    const yearFragment = UIRenderer.createYearOptions(jalaliYear, yearChangeWrapper, DateFormatter.toPersianNum);
     yearSelectContent.appendChild(yearFragment);
     
     // Add toggle event listeners to triggers

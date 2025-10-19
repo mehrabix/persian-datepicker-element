@@ -72,8 +72,8 @@ importers:
   packages/react:
     dependencies:
       persian-datepicker-element:
-        specifier: 1.1.17
-        version: 1.1.17
+        specifier: 1.1.18
+        version: 1.1.18
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^5.17.0
@@ -130,8 +130,8 @@ importers:
   packages/vue:
     dependencies:
       persian-datepicker-element:
-        specifier: 1.1.17
-        version: 1.1.17
+        specifier: 1.1.18
+        version: 1.1.18
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.8.3)
@@ -3538,6 +3538,9 @@ packages:
 
   persian-datepicker-element@1.1.17:
     resolution: {integrity: sha512-UPPf9I2e/pJ3EeGaIT3WVeG/7ZL61hinSGlNcv1remWsdB8Qk1B/YRPJixsrump1UGYKRl8mPv8SnYqb4zyIzQ==}
+
+  persian-datepicker-element@1.1.18:
+    resolution: {integrity: sha512-SQby4qbmYuueSeXst3+yy9tfkuvYVpvaKkYVr+vISB7m9tbMxFAsy4S93whmQ4xFqQmPIjERB2ZU270YrnStdg==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -8037,7 +8040,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.14.0
+      '@types/node': 20.17.30
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -8573,6 +8576,8 @@ snapshots:
   pathval@1.1.1: {}
 
   persian-datepicker-element@1.1.17: {}
+
+  persian-datepicker-element@1.1.18: {}
 
   picocolors@1.1.1: {}
 
