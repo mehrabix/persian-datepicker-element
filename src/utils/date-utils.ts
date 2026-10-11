@@ -75,14 +75,23 @@ export class DateUtils {
   /**
    * Convert a Jalali date tuple to an ISO string
    */
-  static jalaliToISOString(date: DateTuple, persianDateClass: any): string {
+  static jalaliToISOString(
+    date: DateTuple,
+    persianDateClass: any,
+    hour: number = 0,
+    minute: number = 0,
+    second: number = 0
+  ): string {
     if (!date) return '';
     
     const gregorianDate = persianDateClass.jalaliToGregorian(date[0], date[1], date[2]);
     return new Date(
       gregorianDate[0], 
       gregorianDate[1] - 1, // Months are 0-indexed in JavaScript Date
-      gregorianDate[2]
+      gregorianDate[2],
+      hour,
+      minute,
+      second
     ).toISOString();
   }
 

@@ -231,6 +231,10 @@ const closeCalendar = () => {
 | rangeStart | DateTuple | - | Start date for range selection |
 | rangeEnd | DateTuple | - | End date for range selection |
 | defaultDate | DateTuple | - | Initial date to display |
+| showTime | boolean | false | Show the time picker inside the calendar |
+| timeFormat | string | 'HH:mm' | Time format. Tokens: `HH` (24h), `hh` (12h), `mm`, `ss`, `A` (AM/PM) |
+| defaultTime | TimeTuple | - | Default selected time |
+| minuteStep | number | 1 | Interval in minutes for the minutes dropdown |
 
 ## Methods
 
@@ -252,6 +256,8 @@ datepicker.value?.close();
 datepicker.value?.setRange(startDate, endDate);
 datepicker.value?.getRange();
 datepicker.value?.clear();
+datepicker.value?.setTime(9, 45, 30);
+datepicker.value?.getTime();
 </script>
 ```
 
@@ -362,6 +368,10 @@ const handleChange = (event) => {
 | rangeStart | DateTuple | - | تاریخ شروع بازه |
 | rangeEnd | DateTuple | - | تاریخ پایان بازه |
 | defaultDate | DateTuple | - | تاریخ اولیه برای نمایش |
+| showTime | boolean | false | نمایش انتخابگر ساعت در کنار تقویم |
+| timeFormat | string | 'HH:mm' | الگوی نمایش ساعت. توکن‌ها: `HH` (۲۴ ساعته)، `hh` (۱۲ ساعته)، `mm`، `ss`، `A` |
+| defaultTime | TimeTuple | - | ساعت پیش‌فرض |
+| minuteStep | number | 1 | فاصله بین گزینه‌های دقیقه |
 
 ## متدها
 
@@ -383,6 +393,8 @@ datepicker.value?.close();
 datepicker.value?.setRange(startDate, endDate);
 datepicker.value?.getRange();
 datepicker.value?.clear();
+datepicker.value?.setTime(9, 45, 30);
+datepicker.value?.getTime();
 </script>
 ```
 

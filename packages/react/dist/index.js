@@ -59,6 +59,10 @@ var PersianDatepicker = (0, import_react.forwardRef)(
       rangeMode,
       rangeStart,
       rangeEnd,
+      showTime,
+      timeFormat,
+      defaultTime,
+      minuteStep,
       ...rest
     } = props;
     const elementRef = (0, import_react.useRef)(null);
@@ -91,6 +95,13 @@ var PersianDatepicker = (0, import_react.forwardRef)(
       // Disabled dates method
       setDisabledDatesFn: (fn) => {
         elementRef.current?.setDisabledDatesFn?.(fn);
+      },
+      // Time picker methods
+      setTime: (hour, minute, second = 0) => {
+        elementRef.current?.setTime?.(hour, minute, second);
+      },
+      getTime: () => {
+        return elementRef.current?.getTime?.() || { hour: 0, minute: 0, second: 0 };
       }
     }));
     (0, import_react.useEffect)(() => {
@@ -137,8 +148,12 @@ var PersianDatepicker = (0, import_react.forwardRef)(
         if (rangeMode !== void 0) elementRef.current.setAttribute("range-mode", String(rangeMode));
         if (rangeStart) elementRef.current.setAttribute("range-start", convertDateTupleToString(rangeStart));
         if (rangeEnd) elementRef.current.setAttribute("range-end", convertDateTupleToString(rangeEnd));
+        if (showTime !== void 0) elementRef.current.setAttribute("show-time", String(showTime));
+        if (timeFormat) elementRef.current.setAttribute("time-format", timeFormat);
+        if (defaultTime) elementRef.current.setAttribute("default-time", JSON.stringify(defaultTime));
+        if (minuteStep !== void 0) elementRef.current.setAttribute("minute-step", String(minuteStep));
       }
-    }, [value, placeholder, format, showEvents, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd]);
+    }, [value, placeholder, format, showEvents, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd, showTime, timeFormat, defaultTime, minuteStep]);
     const minDateStr = convertDateTupleToString(minDate);
     const maxDateStr = convertDateTupleToString(maxDate);
     const rangeStartStr = convertDateTupleToString(rangeStart);
@@ -156,6 +171,10 @@ var PersianDatepicker = (0, import_react.forwardRef)(
       "range-mode": rangeMode,
       "range-start": rangeStartStr,
       "range-end": rangeEndStr,
+      "show-time": showTime,
+      "time-format": timeFormat,
+      "default-time": defaultTime ? JSON.stringify(defaultTime) : void 0,
+      "minute-step": minuteStep,
       ...rest
     };
     return /* @__PURE__ */ import_react.default.createElement("div", { className, style }, /* @__PURE__ */ import_react.default.createElement(

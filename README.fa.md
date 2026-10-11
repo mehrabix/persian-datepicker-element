@@ -179,6 +179,10 @@ export class AppComponent {
 | tomorrow-button-text | string | "فردا" | متن سفارشی برای دکمه فردا |
 | today-button-class | string | "" | کلاس‌های CSS اضافی برای دکمه امروز |
 | tomorrow-button-class | string | "" | کلاس‌های CSS اضافی برای دکمه فردا |
+| show-time | boolean | false | نمایش انتخابگر ساعت در کنار تقویم |
+| time-format | string | "HH:mm" | الگوی نمایش ساعت. توکن‌ها: `HH` (۲۴ ساعته)، `hh` (۱۲ ساعته)، `mm`، `ss`، `A` (ق.ظ/ب.ظ) |
+| default-time | `[number, number]` \| `[number, number, number]` | `[0,0,0]` | ساعت پیش‌فرض به صورت `[ساعت, دقیقه]` یا `[ساعت, دقیقه, ثانیه]` |
+| minute-step | number | 1 | فاصله بین گزینه‌های دقیقه (بر حسب دقیقه) |
 
 ## رویدادها
 
@@ -206,6 +210,8 @@ export class AppComponent {
 | isShowingAllTypes | () | boolean | بررسی نمایش همه انواع تعطیلات |
 | isSelectedDateHoliday | () | boolean | بررسی تعطیلی تاریخ انتخاب شده فعلی |
 | getSelectedDateEvents | () | any[] | دریافت رویدادهای تاریخ انتخاب شده فعلی |
+| setTime | (hour: number, minute: number, second?: number) | void | تنظیم مقدار ساعت |
+| getTime | () | `{ hour: number, minute: number, second: number }` | دریافت مقدار ساعت فعلی |
 
 ## استفاده پیشرفته
 
@@ -262,6 +268,35 @@ export class AppComponent {
 
 ```html
 <persian-datepicker-element dark-mode></persian-datepicker-element>
+```
+
+### انتخاب تاریخ و ساعت
+
+با ویژگی `show-time` می‌توانید انتخابگر ساعت را در کنار تقویم فعال کنید. ساعت را می‌توانید از فهرست‌های کشویی ساعت/دقیقه (و در صورت نیاز ثانیه و ق.ظ/ب.ظ) انتخاب کنید یا مستقیماً در فیلد ساعت تایپ کنید.
+
+```html
+<persian-datepicker-element
+  show-time
+  time-format="HH:mm"
+  default-time="[13, 30]"
+></persian-datepicker-element>
+```
+
+- `time-format` از توکن‌های `HH` (۲۴ ساعته)، `hh` (۱۲ ساعته)، `mm`، `ss` و `A` پشتیبانی می‌کند. برای مثال `hh:mm A` یک ساعت ۱۲ ساعته همراه با برچسب ق.ظ/ب.ظ نمایش می‌دهد.
+- `minute-step` فاصله بین گزینه‌های دقیقه را تعیین می‌کند (مثلاً `15`).
+- وقتی ساعت فعال است، با کلیک روی روز، تقویم باز می‌ماند تا ساعت تنظیم شود و با کلیک بیرون بسته می‌شود.
+- زمان در جزئیات رویداد `change` به صورت `time` و `formattedDateTime` ارائه می‌شود و `isoString` شامل ساعت است.
+
+```javascript
+picker.addEventListener('change', (event) => {
+  const { time, formattedDateTime, isoString } = event.detail;
+  console.log(time);              // { hour: 13, minute: 30, second: 0 }
+  console.log(formattedDateTime); // "۱۴۰۴/۰۱/۰۵ ۱۳:۳۰"
+});
+
+// دسترسی برنامه‌ای
+picker.setTime(9, 45, 30);
+picker.getTime(); // { hour: 9, minute: 45, second: 30 }
 ```
 
 ### استایل CSS سفارشی

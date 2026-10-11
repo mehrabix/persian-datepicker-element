@@ -3,6 +3,8 @@ import type {
   PersianDatePickerElementOptions,
   PersianDateChangeEvent,
   DateTuple,
+  TimeTuple,
+  TimeValue,
   PersianEvent
 } from 'persian-datepicker-element';
 
@@ -50,6 +52,12 @@ export interface PersianDatepickerProps extends Omit<PersianDatePickerElementOpt
   rangeMode?: boolean;
   rangeStart?: DateTuple;
   rangeEnd?: DateTuple;
+
+  // Time picker props
+  showTime?: boolean;
+  timeFormat?: string;
+  defaultTime?: TimeTuple;
+  minuteStep?: number;
 }
 
 // Methods that will be available via ref
@@ -65,6 +73,9 @@ export interface PersianDatepickerMethods {
   clear: () => void;
   // Disabled dates method
   setDisabledDatesFn: (fn: (year: number, month: number, day: number) => boolean) => void;
+  // Time picker methods
+  setTime: (hour: number, minute: number, second?: number) => void;
+  getTime: () => TimeValue;
 }
 
 // Define an extended HTMLElement interface with custom methods
@@ -80,6 +91,9 @@ interface PersianDatepickerElement extends HTMLElement {
   clear?: () => void;
   // Disabled dates method
   setDisabledDatesFn?: (fn: (year: number, month: number, day: number) => boolean) => void;
+  // Time picker methods
+  setTime?: (hour: number, minute: number, second?: number) => void;
+  getTime?: () => TimeValue;
 }
 
 // Helper to convert camelCase to kebab-case for HTML attributes
@@ -118,6 +132,10 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       rangeMode,
       rangeStart,
       rangeEnd,
+      showTime,
+      timeFormat,
+      defaultTime,
+      minuteStep,
       ...rest
     } = props;
 
@@ -152,6 +170,13 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       // Disabled dates method
       setDisabledDatesFn: (fn: (year: number, month: number, day: number) => boolean) => {
         elementRef.current?.setDisabledDatesFn?.(fn);
+      },
+      // Time picker methods
+      setTime: (hour: number, minute: number, second: number = 0) => {
+        elementRef.current?.setTime?.(hour, minute, second);
+      },
+      getTime: () => {
+        return elementRef.current?.getTime?.() || { hour: 0, minute: 0, second: 0 };
       }
     }));
 
@@ -211,8 +236,13 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
         if (rangeMode !== undefined) elementRef.current.setAttribute('range-mode', String(rangeMode));
         if (rangeStart) elementRef.current.setAttribute('range-start', convertDateTupleToString(rangeStart));
         if (rangeEnd) elementRef.current.setAttribute('range-end', convertDateTupleToString(rangeEnd));
+        // Time picker attributes
+        if (showTime !== undefined) elementRef.current.setAttribute('show-time', String(showTime));
+        if (timeFormat) elementRef.current.setAttribute('time-format', timeFormat);
+        if (defaultTime) elementRef.current.setAttribute('default-time', JSON.stringify(defaultTime));
+        if (minuteStep !== undefined) elementRef.current.setAttribute('minute-step', String(minuteStep));
       }
-    }, [value, placeholder, format, showEvents, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd]);
+    }, [value, placeholder, format, showEvents, rtl, minDate, maxDate, disabledDates, disabled, rangeMode, rangeStart, rangeEnd, showTime, timeFormat, defaultTime, minuteStep]);
 
     const minDateStr = convertDateTupleToString(minDate);
     const maxDateStr = convertDateTupleToString(maxDate);
@@ -232,6 +262,10 @@ export const PersianDatepicker = forwardRef<PersianDatepickerMethods, PersianDat
       'range-mode': rangeMode,
       'range-start': rangeStartStr,
       'range-end': rangeEndStr,
+      'show-time': showTime,
+      'time-format': timeFormat,
+      'default-time': defaultTime ? JSON.stringify(defaultTime) : undefined,
+      'minute-step': minuteStep,
       ...rest
     } as React.HTMLAttributes<HTMLElement>;
 
@@ -264,6 +298,10 @@ declare global {
         'range-mode'?: boolean;
         'range-start'?: string;
         'range-end'?: string;
+        'show-time'?: boolean;
+        'time-format'?: string;
+        'default-time'?: string;
+        'minute-step'?: number;
       }, HTMLElement>;
     }
   }

@@ -6,6 +6,14 @@ export interface DateTuple extends Array<number> {
   length: 3;
 }
 
+export type TimeTuple = [number, number] | [number, number, number];
+
+export interface TimeValue {
+  hour: number;
+  minute: number;
+  second: number;
+}
+
 export interface PersianEvent {
   title: string;
   type: string;
@@ -17,6 +25,10 @@ export interface PersianDateChangeEvent {
   gregorian: DateTuple;
   isHoliday: boolean;
   events: PersianEvent[];
+  formattedDate?: string;
+  isoString?: string;
+  time?: TimeValue;
+  formattedDateTime?: string;
   isRange?: boolean;
   range?: {
     start: DateTuple | null;
@@ -39,4 +51,8 @@ export interface PersianDatePickerElementOptions {
   rangeMode?: boolean;
   rangeStart?: DateTuple;
   rangeEnd?: DateTuple;
+  showTime?: boolean;
+  timeFormat?: string;
+  defaultTime?: TimeTuple;
+  minuteStep?: number;
 } 

@@ -118,6 +118,13 @@ export const persianDatepickerStyles = `:host {
   --jdp-scrollbar-thumb: rgba(0, 0, 0, 0.15);
   --jdp-scrollbar-thumb-hover: rgba(0, 0, 0, 0.25);
   --jdp-scrollbar-border-radius: 4px;
+
+  /* Time picker */
+  --jdp-time-picker-margin-top: var(--jdp-spacing-md);
+  --jdp-time-picker-gap: var(--jdp-spacing-sm);
+  --jdp-time-select-min-width: 56px;
+  --jdp-time-select-max-width: 80px;
+  --jdp-time-select-padding-x: var(--jdp-spacing-sm);
 }
 
 * {
@@ -524,6 +531,53 @@ input:focus {
   transform: translateY(1px);
 }
 
+/* Time picker */
+:host .time-picker {
+  margin-top: var(--jdp-time-picker-margin-top, var(--jdp-spacing-md));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--jdp-time-picker-gap, var(--jdp-spacing-sm));
+  direction: var(--jdp-direction);
+}
+
+:host .time-picker .custom-select {
+  width: auto;
+  min-width: var(--jdp-time-select-min-width, 56px);
+  margin: 0;
+}
+
+:host .time-picker .select-trigger {
+  padding: 0 var(--jdp-time-select-padding-x, var(--jdp-spacing-sm));
+  max-width: var(--jdp-time-select-max-width, 80px);
+}
+
+:host .time-picker .select-content {
+  width: var(--jdp-time-select-content-width, 100%);
+  min-width: 100%;
+}
+
+:host .time-picker .time-input {
+  width: var(--jdp-time-input-width, 76px);
+  height: var(--jdp-select-trigger-height, var(--jdp-nav-button-size));
+  padding: 0 var(--jdp-time-select-padding-x, var(--jdp-spacing-sm));
+  border: var(--jdp-select-trigger-border-width, 1px) solid var(--jdp-select-trigger-border-color, var(--jdp-border));
+  border-radius: var(--jdp-select-trigger-border-radius, var(--jdp-border-radius));
+  background-color: var(--jdp-select-trigger-bg, var(--jdp-muted));
+  color: var(--jdp-foreground);
+  font-family: inherit;
+  font-size: var(--jdp-font-size);
+  text-align: center;
+  box-sizing: border-box;
+  outline: none;
+}
+
+:host .time-picker .time-input:focus {
+  outline: 2px solid var(--jdp-select-trigger-focus-ring-color, var(--jdp-ring));
+  outline-offset: 2px;
+}
+
 /* Month/Year selectors - scoped to the component */
 :host .selectors-container {
   display: flex;
@@ -643,7 +697,7 @@ input:focus {
   max-height: var(--jdp-select-content-max-height, 200px);
   display: none;
   padding: var(--jdp-select-content-padding-y, 0.25rem) var(--jdp-select-content-padding-x, 0);
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   
   /* Custom scrollbar styling */
   scrollbar-width: var(--jdp-scrollbar-width-size, none);

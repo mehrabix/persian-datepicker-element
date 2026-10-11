@@ -21,6 +21,9 @@ export class UIRenderer {
     'International': 'بین‌المللی'
   };
 
+  // Chevron icon reused by all custom selects
+  private static readonly chevronSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
+
   /**
    * Generate header HTML based on visibility configuration
    */
@@ -30,7 +33,7 @@ export class UIRenderer {
     showPrevButton: boolean;
     showNextButton: boolean;
   }): string {
-    const chevronSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
+    const chevronSVG = this.chevronSVG;
 
     return `
       <div class="header">
@@ -88,6 +91,69 @@ export class UIRenderer {
   }
 
   /**
+   * Generate the time picker HTML based on the time configuration
+   */
+  static generateTimeHTML(config: {
+    hour12: boolean;
+    showHour: boolean;
+    showMinute: boolean;
+    showSecond: boolean;
+    showAmPm: boolean;
+  }): string {
+    const chevronSVG = this.chevronSVG;
+
+    const buildSelect = (key: string, extraClass: string): string => `
+      <div class="custom-select time-select ${extraClass}" id="${key}-select-container">
+        <button type="button" class="select-trigger" id="${key}-select-trigger">
+          <span id="${key}-select-value"></span>
+          <span class="select-icon">${chevronSVG}</span>
+        </button>
+        <div class="select-content ${key}-select-content" id="${key}-select-content"></div>
+      </div>`;
+
+    const parts: string[] = [];
+    if (config.showMinute) parts.push(buildSelect('minute', 'minute-select'));
+    if (config.showHour) parts.push(buildSelect('hour', 'hour-select'));
+    if (config.showSecond) parts.push(buildSelect('second', 'second-select'));
+    if (config.showAmPm) parts.push(buildSelect('ampm', 'ampm-select'));
+
+    const timeInput = `<input type="text" id="time-input" class="time-input" inputmode="numeric" autocomplete="off" />`;
+
+    return `<div class="time-picker" id="time-picker">${timeInput}${parts.join('')}</div>`;
+  }
+
+  /**
+   * Create the options for a time dropdown
+   */
+  static createTimeOptions(
+    values: { value: number | string; label: string }[],
+    current: number | string,
+    onSelect: (value: number | string) => void
+  ): DocumentFragment {
+    const fragment = document.createDocumentFragment();
+
+    values.forEach(({ value, label }) => {
+      const item = document.createElement("div");
+      item.classList.add("select-item");
+      item.textContent = label;
+      item.dataset.value = value.toString();
+
+      if (value.toString() === current.toString()) {
+        item.classList.add("selected");
+      }
+
+      item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        onSelect(value);
+      });
+
+      fragment.appendChild(item);
+    });
+
+    return fragment;
+  }
+
+  /**
    * Generate the complete component HTML
    */
   static generateComponentHTML(
@@ -104,6 +170,14 @@ export class UIRenderer {
       todayButtonClass: string;
       tomorrowButtonText: string;
       tomorrowButtonClass: string;
+    },
+    timeConfig?: {
+      showTime: boolean;
+      hour12: boolean;
+      showHour: boolean;
+      showMinute: boolean;
+      showSecond: boolean;
+      showAmPm: boolean;
     }
   ): string {
     return `
@@ -115,6 +189,7 @@ export class UIRenderer {
           <div class="days-wrapper">
             <div class="days" id="days-container"></div>
           </div>
+          ${timeConfig && timeConfig.showTime ? this.generateTimeHTML(timeConfig) : ''}
           ${this.generateFooterHTML(visibility, buttons)}
         </div>
       </div>

@@ -1,9 +1,10 @@
 import { PersianDate } from './persian-date';
 import EventUtils from './utils/event-utils';
-import { 
-  PersianDatePickerElementOptions, 
+import {
+  PersianDatePickerElementOptions,
   PersianDateChangeEvent,
-  DateTuple
+  DateTuple,
+  TimeValue
 } from './types';
 import { persianDatepickerStyles } from './styles/persian-datepicker.styles';
 import { DateUtils } from './utils/date-utils';
@@ -11,6 +12,7 @@ import { UIRenderer } from './utils/ui-renderer';
 import { TouchGestureHandler } from './utils/touch-gesture-handler';
 import { DateFormatter } from './utils/date-formatter';
 import { CalendarRenderer } from './utils/calendar-renderer';
+import { TimeUtils, TimePickerConfig } from './utils/time-utils';
 
 // Default holiday types
 const DEFAULT_HOLIDAY_TYPES = ['Iran', 'AncientIran', 'International'];
@@ -72,6 +74,12 @@ export class PersianDatePickerElement extends HTMLElement {
   private maxDate: DateTuple | null = null;
   private disabledDatesFn: ((year: number, month: number, day: number) => boolean) | null = null;
 
+  // Time picker state and configuration
+  private showTime: boolean = false;
+  private timeFormat: string = TimeUtils.DEFAULT_TIME_FORMAT;
+  private minuteStep: number = 1;
+  private selectedTime: TimeValue = { ...TimeUtils.DEFAULT_TIME };
+
   static get observedAttributes() {
     return [
       'placeholder', 
@@ -89,6 +97,10 @@ export class PersianDatePickerElement extends HTMLElement {
       'max-date',
       'disabled-dates',
       'range-mode',
+      'show-time',
+      'time-format',
+      'default-time',
+      'minute-step',
       // UI visibility props
       'show-month-selector',
       'show-year-selector',
@@ -178,6 +190,23 @@ export class PersianDatePickerElement extends HTMLElement {
       this.jalaliDay = options.defaultDate[2];
     }
 
+    // Set time picker options if provided
+    if (options.showTime !== undefined) {
+      this.showTime = options.showTime;
+    }
+
+    if (options.timeFormat && TimeUtils.isValidTimeFormat(options.timeFormat)) {
+      this.timeFormat = options.timeFormat;
+    }
+
+    if (options.minuteStep !== undefined) {
+      this.minuteStep = Math.max(1, Math.floor(options.minuteStep) || 1);
+    }
+
+    if (options.defaultTime) {
+      this.selectedTime = TimeUtils.normalizeTime(options.defaultTime);
+    }
+
     // Set holiday types if provided in options
     if (options.showEvents && options.eventTypes) {
       this.seteventTypes(options.eventTypes);
@@ -201,8 +230,22 @@ export class PersianDatePickerElement extends HTMLElement {
 
     shadow.innerHTML = `
       <style>${persianDatepickerStyles}</style>
-      ${UIRenderer.generateComponentHTML(visibilityConfig, buttonConfig)}
+      ${UIRenderer.generateComponentHTML(visibilityConfig, buttonConfig, {
+        showTime: this.showTime,
+        ...this.getTimeConfig()
+      })}
     `;
+  }
+
+  /**
+   * Get the parsed time picker configuration
+   */
+  private getTimeConfig(): TimePickerConfig {
+    return {
+      ...TimeUtils.parseTimeFormat(this.timeFormat),
+      minuteStep: this.minuteStep,
+      format: this.timeFormat
+    };
   }
 
   async connectedCallback() {
@@ -359,6 +402,11 @@ export class PersianDatePickerElement extends HTMLElement {
     
     // Setup month and year selectors
     this.setupMonthYearSelectors();
+
+    // Setup time selectors when enabled
+    if (this.showTime) {
+      this.setupTimeSelectors();
+    }
   }
 
   /**
@@ -374,6 +422,34 @@ export class PersianDatePickerElement extends HTMLElement {
       this.handleMonthChange.bind(this),
       this.handleYearChange.bind(this)
     );
+  }
+
+  /**
+   * Setup the time picker dropdowns
+   */
+  private setupTimeSelectors(): void {
+    if (!this.shadowRoot) return;
+
+    this.calendarRenderer.setupTimeSelectors(
+      this.shadowRoot,
+      this.getTimeConfig(),
+      () => this.selectedTime,
+      this.handleTimeChange.bind(this)
+    );
+  }
+
+  /**
+   * Handle a time change coming from the time picker dropdowns
+   */
+  private handleTimeChange(time: TimeValue): void {
+    this.selectedTime = TimeUtils.normalizeTime(time);
+    this.formatAndSetValue();
+    this.renderCalendar();
+
+    // Re-emit the change event when a date is already selected
+    if (this.selectedDate && !this.isRangeMode) {
+      this.dispatchDateChange();
+    }
   }
 
   /**
@@ -448,6 +524,11 @@ export class PersianDatePickerElement extends HTMLElement {
     // Update month and year selectors
     this.calendarRenderer.updateMonthYearSelectors(this.shadowRoot, this.jalaliYear, this.jalaliMonth);
 
+    // Update time selectors when enabled
+    if (this.showTime) {
+      this.calendarRenderer.updateTimeSelectors(this.shadowRoot, this.getTimeConfig(), this.selectedTime);
+    }
+
     // Render the calendar
     this.calendarRenderer.renderCalendar(
       this.daysContainer,
@@ -462,11 +543,16 @@ export class PersianDatePickerElement extends HTMLElement {
       this.disabledDatesFn
     );
     
-    // Remove footer if in range mode
+    // Remove footer and time picker if in range mode
     if (this.isRangeMode) {
       const footer = this.shadowRoot.querySelector('.footer');
       if (footer) {
         footer.remove();
+      }
+
+      const timePicker = this.shadowRoot.querySelector('.time-picker');
+      if (timePicker) {
+        timePicker.remove();
       }
     }
   }
@@ -608,42 +694,69 @@ export class PersianDatePickerElement extends HTMLElement {
     // Format and display the date
     this.formatAndSetValue();
     
-    // Get all events for the selected date
-    const events = this.eventUtils.getEvents(this.jalaliMonth, day, this.eventTypes, this.includeAllTypes);
-    
-    // Format the date according to the current format
-    const formattedDate = DateFormatter.formatDate(this.selectedDate, this.format);
-    
-    // Convert to Gregorian date
-    const gregorianDate = PersianDate.jalaliToGregorian(this.jalaliYear, this.jalaliMonth, this.jalaliDay);
-    
-    // Create ISO string from Jalali date
-    const isoString = DateUtils.jalaliToISOString(this.selectedDate, PersianDate);
-    
     // Dispatch change event
-    this.dispatchEvent(new CustomEvent("change", {
-      detail: {
-        jalali: this.selectedDate,
-        gregorian: gregorianDate,
-        isHoliday: this.eventUtils.isHoliday(this.jalaliMonth, day, this.eventTypes, this.includeAllTypes),
-        events: events,
-        formattedDate: formattedDate,
-        isoString: isoString
-      },
-      bubbles: true
-    }) as PersianDateChangeEvent);
+    this.dispatchDateChange();
     
     // Close any open dropdowns before hiding the calendar
     this.closeAllDropdowns();
     
-    this.toggleCalendar();
+    // Keep the calendar open when a time can still be selected
+    if (!this.showTime) {
+      this.toggleCalendar();
+    }
     this.renderCalendar();
+  }
+
+  /**
+   * Build and dispatch the change event for the current selection
+   */
+  private dispatchDateChange(): void {
+    if (!this.selectedDate) return;
+
+    const [year, month, day] = this.selectedDate;
+
+    // Get all events for the selected date
+    const events = this.eventUtils.getEvents(month, day, this.eventTypes, this.includeAllTypes);
+
+    // Format the date according to the current format
+    const formattedDate = DateFormatter.formatDate(this.selectedDate, this.format);
+
+    // Convert to Gregorian date
+    const gregorianDate = PersianDate.jalaliToGregorian(year, month, day);
+
+    // Build the event detail with the current time
+    const detail: PersianDateChangeEvent['detail'] = {
+      jalali: this.selectedDate,
+      gregorian: gregorianDate,
+      isHoliday: this.eventUtils.isHoliday(month, day, this.eventTypes, this.includeAllTypes),
+      events: events,
+      formattedDate: formattedDate,
+      isoString: DateUtils.jalaliToISOString(
+        this.selectedDate,
+        PersianDate,
+        this.selectedTime.hour,
+        this.selectedTime.minute,
+        this.selectedTime.second
+      )
+    };
+
+    if (this.showTime) {
+      detail.time = { ...this.selectedTime };
+      detail.formattedDateTime = `${formattedDate} ${TimeUtils.formatTime(this.selectedTime, this.timeFormat)}`;
+    }
+
+    this.dispatchEvent(new CustomEvent("change", {
+      detail,
+      bubbles: true
+    }) as PersianDateChangeEvent);
   }
 
   /**
    * Format the selected date and set input value
    */
   private formatAndSetValue() {
+    if (!this.input) return;
+
     if (this.isRangeMode) {
       if (!this.rangeStart || !this.rangeEnd) {
         this.input.value = '';
@@ -659,7 +772,13 @@ export class PersianDatePickerElement extends HTMLElement {
       return;
     }
 
-    this.input.value = DateFormatter.formatDate(this.selectedDate, this.format);
+    let value = DateFormatter.formatDate(this.selectedDate, this.format);
+
+    if (this.showTime) {
+      value += ' ' + TimeUtils.formatTime(this.selectedTime, this.timeFormat);
+    }
+
+    this.input.value = value;
   }
 
   /**
@@ -810,6 +929,24 @@ export class PersianDatePickerElement extends HTMLElement {
   }
 
   /**
+   * Gets the currently selected time as { hour, minute, second }
+   */
+  public getTime(): TimeValue {
+    return { ...this.selectedTime };
+  }
+
+  /**
+   * Sets the time value programmatically
+   */
+  public setTime(hour: number, minute: number, second: number = 0): void {
+    this.selectedTime = TimeUtils.normalizeTime([hour, minute, second]);
+    this.formatAndSetValue();
+    if (this.calendar) {
+      this.renderCalendar();
+    }
+  }
+
+  /**
    * Checks if the currently selected date is a holiday
    */
   public isSelectedDateHoliday(): boolean {
@@ -845,6 +982,7 @@ export class PersianDatePickerElement extends HTMLElement {
     } else {
       this.selectedDate = null;
     }
+    this.selectedTime = { ...TimeUtils.DEFAULT_TIME };
     this.input.value = '';
     this.renderCalendar();
   }
@@ -1258,6 +1396,60 @@ export class PersianDatePickerElement extends HTMLElement {
           this.renderCalendar();
         }
         break;
+
+      case 'show-time':
+        this.showTime = newValue !== null && newValue !== 'false';
+        if (this.shadowRoot) {
+          this.render(this.shadowRoot);
+          this.initializeDomReferences();
+          this.initializeUIComponents();
+          this.addEventListeners();
+          this.formatAndSetValue();
+          this.renderCalendar();
+        }
+        break;
+
+      case 'time-format':
+        if (newValue && TimeUtils.isValidTimeFormat(newValue)) {
+          this.timeFormat = newValue;
+        } else if (!newValue) {
+          this.timeFormat = TimeUtils.DEFAULT_TIME_FORMAT;
+        }
+        if (this.shadowRoot) {
+          this.render(this.shadowRoot);
+          this.initializeDomReferences();
+          this.initializeUIComponents();
+          this.addEventListeners();
+          this.formatAndSetValue();
+          this.renderCalendar();
+        }
+        break;
+
+      case 'default-time':
+        if (newValue) {
+          try {
+            this.selectedTime = TimeUtils.normalizeTime(JSON.parse(newValue));
+          } catch (e) {
+            console.error('Invalid default-time format');
+          }
+        } else {
+          this.selectedTime = { ...TimeUtils.DEFAULT_TIME };
+        }
+        this.formatAndSetValue();
+        if (this.calendar) {
+          this.renderCalendar();
+        }
+        break;
+
+      case 'minute-step': {
+        const parsedStep = parseInt(newValue, 10);
+        this.minuteStep = Number.isFinite(parsedStep) && parsedStep > 0 ? parsedStep : 1;
+        if (this.shadowRoot && this.showTime) {
+          this.setupTimeSelectors();
+          this.renderCalendar();
+        }
+        break;
+      }
         
       // Visibility attributes that require re-rendering
       case 'show-month-selector':

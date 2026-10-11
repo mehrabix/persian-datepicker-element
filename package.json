@@ -1,6 +1,6 @@
 {
   "name": "persian-datepicker-element",
-  "version": "1.1.18",
+  "version": "1.2.0",
   "private": false,
   "description": "A modern Jalali (Shamsi) Date Picker web component with shadcn-like styling",
   "main": "dist/persian-datepicker-element.min.js",
@@ -13,6 +13,20 @@
   ],
   "sideEffects": false,
   "changelog": {
+    "1.2.0": [
+      "Added optional time picker support via the show-time attribute",
+      "Added time-format attribute supporting HH (24h), hh (12h), mm, ss and A (AM/PM) tokens",
+      "Added default-time attribute to set an initial time ([hour, minute] or [hour, minute, second])",
+      "Added minute-step attribute to control the interval between minute options",
+      "Time can be selected from dropdowns or typed directly into the time field",
+      "The change event now includes time and formattedDateTime, and isoString carries the selected time",
+      "Added setTime() and getTime() methods",
+      "Clicking a day keeps the calendar open when the time picker is enabled",
+      "Fixed dropdowns opening with a slow smooth-scroll animation (now instant)",
+      "Added TimeUtils utility and exported TimeTuple/TimeValue types",
+      "Updated React, Vue and Angular wrappers with time picker props and methods",
+      "Resolved issue #62 (Time picker)"
+    ],
     "1.1.18": [
       "Enhanced z-index management to ensure datepicker always appears at highest layer",
       "Updated calendar z-index from 10 to 99999 for better visibility",

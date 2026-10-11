@@ -114,6 +114,10 @@ export class ExampleComponent {
 | `rangeStart` | `[number, number, number]` | - | Start date for range selection |
 | `rangeEnd` | `[number, number, number]` | - | End date for range selection |
 | `defaultDate` | `[number, number, number]` | - | Initial date to display |
+| `showTime` | `boolean` | false | Show the time picker inside the calendar |
+| `timeFormat` | `string` | 'HH:mm' | Time format. Tokens: `HH` (24h), `hh` (12h), `mm`, `ss`, `A` (AM/PM) |
+| `defaultTime` | `[number, number] \| [number, number, number]` | [0,0,0] | Default selected time |
+| `minuteStep` | `number` | 1 | Interval in minutes for the minutes dropdown |
 
 ### Output Events
 
@@ -129,6 +133,9 @@ interface DateChangeEvent {
   gregorian: [number, number, number]; // [year, month, day]
   isHoliday: boolean;
   events?: any[];
+  time?: { hour: number; minute: number; second: number };
+  formattedDateTime?: string;
+  isoString?: string;
   range?: {
     start: [number, number, number];
     end: [number, number, number];
@@ -251,6 +258,10 @@ export class YourStandaloneComponent { }
 | `rangeStart` | `[number, number, number]` | - | تاریخ شروع بازه |
 | `rangeEnd` | `[number, number, number]` | - | تاریخ پایان بازه |
 | `defaultDate` | `[number, number, number]` | - | تاریخ اولیه برای نمایش |
+| `showTime` | `boolean` | false | نمایش انتخابگر ساعت در کنار تقویم |
+| `timeFormat` | `string` | 'HH:mm' | الگوی نمایش ساعت. توکن‌ها: `HH` (۲۴ ساعته)، `hh` (۱۲ ساعته)، `mm`، `ss`، `A` |
+| `defaultTime` | `[number, number] \| [number, number, number]` | [0,0,0] | ساعت پیش‌فرض |
+| `minuteStep` | `number` | 1 | فاصله بین گزینه‌های دقیقه |
 
 ## خروجی‌ها
 

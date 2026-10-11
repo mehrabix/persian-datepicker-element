@@ -21,7 +21,7 @@ import {
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 // Import local type definitions
-import { DateTuple } from './persian-datepicker-types';
+import { DateTuple, TimeTuple, TimeValue } from './persian-datepicker-types';
 
 // Import the web component
 // This import ensures the web component script is included in the bundle
@@ -103,6 +103,10 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
   readonly rangeStart = input<DateTuple | undefined>(undefined);
   readonly rangeEnd = input<DateTuple | undefined>(undefined);
   readonly defaultDate = input<DateTuple | undefined>(undefined);
+  readonly showTime = input<boolean | undefined>(undefined);
+  readonly timeFormat = input<string | undefined>(undefined);
+  readonly defaultTime = input<TimeTuple | undefined>(undefined);
+  readonly minuteStep = input<number | undefined>(undefined);
   // #endregion
 
   // #region Outputs
@@ -240,6 +244,35 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
         this.updateAttribute('default-date', JSON.stringify(value));
       }
     });
+
+    // Time picker effects
+    effect(() => {
+      const value = this.showTime();
+      if (value !== undefined) {
+        this.updateAttribute('show-time', String(value));
+      }
+    });
+
+    effect(() => {
+      const value = this.timeFormat();
+      if (value !== undefined) {
+        this.updateAttribute('time-format', value);
+      }
+    });
+
+    effect(() => {
+      const value = this.defaultTime();
+      if (value !== undefined) {
+        this.updateAttribute('default-time', JSON.stringify(value));
+      }
+    });
+
+    effect(() => {
+      const value = this.minuteStep();
+      if (value !== undefined) {
+        this.updateAttribute('minute-step', String(value));
+      }
+    });
   }
 
   ngOnInit() {
@@ -315,7 +348,7 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
     // Use NgZone to ensure the change is detected by Angular
     this.zone.run(() => {
       // Get the selected date from the event detail
-      const { jalali, gregorian, isHoliday, events, isRange, range } = event.detail;
+      const { jalali, gregorian, isHoliday, events, isRange, range, time, formattedDateTime, isoString } = event.detail;
       
       // Emit the dateChange event
       this.dateChange.emit({
@@ -324,7 +357,10 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
         isHoliday,
         events,
         isRange,
-        range
+        range,
+        time,
+        formattedDateTime,
+        isoString
       });
       
       // Update form control value
@@ -404,6 +440,26 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
     const defaultDate = this.defaultDate();
     if (defaultDate !== undefined) {
       element.setAttribute('default-date', JSON.stringify(defaultDate));
+    }
+
+    const showTime = this.showTime();
+    if (showTime !== undefined) {
+      element.setAttribute('show-time', String(showTime));
+    }
+
+    const timeFormat = this.timeFormat();
+    if (timeFormat !== undefined) {
+      element.setAttribute('time-format', timeFormat);
+    }
+
+    const defaultTime = this.defaultTime();
+    if (defaultTime !== undefined) {
+      element.setAttribute('default-time', JSON.stringify(defaultTime));
+    }
+
+    const minuteStep = this.minuteStep();
+    if (minuteStep !== undefined) {
+      element.setAttribute('minute-step', String(minuteStep));
     }
 
     // Set disabled state
@@ -487,6 +543,21 @@ export class NgxPersianDatepickerComponent implements OnInit, OnDestroy, Control
     if (element) {
       (element as any).clear();
     }
+  }
+
+  public setTime(hour: number, minute: number, second: number = 0): void {
+    const element = this.elementSignal();
+    if (element) {
+      (element as any).setTime(hour, minute, second);
+    }
+  }
+
+  public getTime(): TimeValue {
+    const element = this.elementSignal();
+    if (element) {
+      return (element as any).getTime() || { hour: 0, minute: 0, second: 0 };
+    }
+    return { hour: 0, minute: 0, second: 0 };
   }
 }
 

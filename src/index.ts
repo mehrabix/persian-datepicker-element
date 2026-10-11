@@ -3,12 +3,14 @@ import { PersianDatePickerElement } from './persian-datepicker-element';
 // Import the utility class
 import { PersianDate } from './persian-date';
 // Import utility modules for advanced usage
-import { DateUtils, UIRenderer, TouchGestureHandler, DateFormatter, CalendarRenderer } from './utils';
+import { DateUtils, UIRenderer, TouchGestureHandler, DateFormatter, CalendarRenderer, TimeUtils } from './utils';
 // Import types from types directory
 import type { 
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,
   DateTuple,
+  TimeTuple,
+  TimeValue,
   PersianEvent
 } from './types';
 
@@ -40,13 +42,15 @@ if (hasCustomElements) {
 export { PersianDatePickerElement, PersianDate };
 
 // Export utility modules for advanced usage
-export { DateUtils, UIRenderer, TouchGestureHandler, DateFormatter, CalendarRenderer };
+export { DateUtils, UIRenderer, TouchGestureHandler, DateFormatter, CalendarRenderer, TimeUtils };
 
 // Export types
 export type { 
   PersianDatePickerElementOptions, 
   PersianDateChangeEvent,
   DateTuple,
+  TimeTuple,
+  TimeValue,
   PersianEvent
 };
 

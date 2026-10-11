@@ -1,7 +1,8 @@
-import { DateTuple } from '../types';
+import { DateTuple, TimeValue } from '../types';
 import { DateUtils } from './date-utils';
 import { UIRenderer } from './ui-renderer';
 import { DateFormatter } from './date-formatter';
+import { TimeUtils, TimePickerConfig } from './time-utils';
 
 /**
  * Calendar Renderer for Persian Datepicker
@@ -276,6 +277,174 @@ export class CalendarRenderer {
   }
 
   /**
+   * Setup the time picker dropdowns (hour, minute, second, AM/PM)
+   */
+  setupTimeSelectors(
+    shadowRoot: ShadowRoot,
+    config: TimePickerConfig,
+    getCurrent: () => TimeValue,
+    onChange: (time: TimeValue) => void
+  ): void {
+    if (!shadowRoot) return;
+
+    const wire = (
+      contentId: string,
+      triggerId: string,
+      values: { value: number | string; label: string }[],
+      currentValue: number | string,
+      onSelect: (value: number | string) => void
+    ): void => {
+      const content = shadowRoot.getElementById(contentId) as HTMLDivElement | null;
+      const trigger = shadowRoot.getElementById(triggerId) as HTMLButtonElement | null;
+      if (!content || !trigger) return;
+
+      content.innerHTML = "";
+      content.appendChild(UIRenderer.createTimeOptions(values, currentValue, (value) => {
+        onSelect(value);
+        this.closeAllDropdowns(shadowRoot);
+      }));
+
+      this.bindOnce(trigger, "click", (e) => {
+        e.stopPropagation();
+        this.toggleDropdown(content, shadowRoot);
+      });
+
+      this.bindOnce(content, "click", (e) => {
+        e.stopPropagation();
+      });
+    };
+
+    if (config.showHour) {
+      const values = TimeUtils.getHourValues(config.hour12).map(hour => ({
+        value: hour,
+        label: TimeUtils.toPersianNum(hour.toString().padStart(2, "0")),
+      }));
+      const currentHour = config.hour12 ? TimeUtils.to12Hour(getCurrent().hour) : getCurrent().hour;
+
+      wire("hour-select-content", "hour-select-trigger", values, currentHour, (value) => {
+        const current = getCurrent();
+        const newHour = config.hour12
+          ? TimeUtils.from12Hour(Number(value), TimeUtils.isPm(current.hour))
+          : Number(value);
+        onChange({ ...current, hour: newHour });
+      });
+    }
+
+    if (config.showMinute) {
+      const values = TimeUtils.getMinuteValues(config.minuteStep).map(minute => ({
+        value: minute,
+        label: TimeUtils.toPersianNum(minute.toString().padStart(2, "0")),
+      }));
+
+      wire("minute-select-content", "minute-select-trigger", values, getCurrent().minute, (value) => {
+        onChange({ ...getCurrent(), minute: Number(value) });
+      });
+    }
+
+    if (config.showSecond) {
+      const values = TimeUtils.getSecondValues().map(second => ({
+        value: second,
+        label: TimeUtils.toPersianNum(second.toString().padStart(2, "0")),
+      }));
+
+      wire("second-select-content", "second-select-trigger", values, getCurrent().second, (value) => {
+        onChange({ ...getCurrent(), second: Number(value) });
+      });
+    }
+
+    if (config.showAmPm) {
+      const values = [
+        { value: "am", label: TimeUtils.AMPM_LABELS.am },
+        { value: "pm", label: TimeUtils.AMPM_LABELS.pm },
+      ];
+      const currentAmpm = TimeUtils.isPm(getCurrent().hour) ? "pm" : "am";
+
+      wire("ampm-select-content", "ampm-select-trigger", values, currentAmpm, (value) => {
+        const latest = getCurrent();
+        const hour12 = TimeUtils.to12Hour(latest.hour);
+        onChange({ ...latest, hour: TimeUtils.from12Hour(hour12, value === "pm") });
+      });
+    }
+
+    // Allow the time to be typed directly into the text input
+    const timeInput = shadowRoot.getElementById("time-input") as HTMLInputElement | null;
+    if (timeInput) {
+      const commit = (): void => {
+        const parsed = TimeUtils.parseTime(timeInput.value);
+        if (parsed) {
+          onChange(parsed);
+        } else {
+          timeInput.value = TimeUtils.formatTime(getCurrent(), config.format);
+        }
+      };
+
+      this.bindOnce(timeInput, "keydown", (e) => {
+        if ((e as KeyboardEvent).key === "Enter") {
+          e.preventDefault();
+          timeInput.blur();
+        }
+      });
+
+      this.bindOnce(timeInput, "change", commit);
+    }
+  }
+
+  /**
+   * Update the time picker dropdown UI elements
+   */
+  updateTimeSelectors(
+    shadowRoot: ShadowRoot,
+    config: TimePickerConfig,
+    current: TimeValue
+  ): void {
+    if (!shadowRoot) return;
+
+    const setValue = (id: string, text: string): void => {
+      const el = shadowRoot.getElementById(id) as HTMLSpanElement | null;
+      if (el) el.textContent = text;
+    };
+
+    const markSelected = (contentId: string, value: number | string): void => {
+      const content = shadowRoot.getElementById(contentId);
+      if (!content) return;
+      content.querySelectorAll(".select-item").forEach(item => {
+        if (item.getAttribute("data-value") === value.toString()) {
+          item.classList.add("selected");
+        } else {
+          item.classList.remove("selected");
+        }
+      });
+    };
+
+    if (config.showHour) {
+      const hourValue = config.hour12 ? TimeUtils.to12Hour(current.hour) : current.hour;
+      setValue("hour-select-value", TimeUtils.toPersianNum(hourValue.toString().padStart(2, "0")));
+      markSelected("hour-select-content", hourValue);
+    }
+
+    if (config.showMinute) {
+      setValue("minute-select-value", TimeUtils.toPersianNum(current.minute.toString().padStart(2, "0")));
+      markSelected("minute-select-content", current.minute);
+    }
+
+    if (config.showSecond) {
+      setValue("second-select-value", TimeUtils.toPersianNum(current.second.toString().padStart(2, "0")));
+      markSelected("second-select-content", current.second);
+    }
+
+    if (config.showAmPm) {
+      const ampm = TimeUtils.isPm(current.hour) ? "pm" : "am";
+      setValue("ampm-select-value", TimeUtils.AMPM_LABELS[ampm]);
+      markSelected("ampm-select-content", ampm);
+    }
+
+    const timeInput = shadowRoot.getElementById("time-input") as HTMLInputElement | null;
+    if (timeInput && timeInput !== document.activeElement) {
+      timeInput.value = TimeUtils.formatTime(current, config.format);
+    }
+  }
+
+  /**
    * Setup month and year selector dropdowns
    */
   setupMonthYearSelectors(
@@ -326,24 +495,42 @@ export class CalendarRenderer {
     yearSelectContent.appendChild(yearFragment);
     
     // Add toggle event listeners to triggers
-    monthSelectTrigger.addEventListener("click", (e) => {
+    this.bindOnce(monthSelectTrigger, "click", (e) => {
       e.stopPropagation();
       this.toggleDropdown(monthSelectContent, shadowRoot);
     });
-    
-    yearSelectTrigger.addEventListener("click", (e) => {
+
+    this.bindOnce(yearSelectTrigger, "click", (e) => {
       e.stopPropagation();
       this.toggleDropdown(yearSelectContent, shadowRoot);
     });
     
     // Prevent event bubbling from the content containers
-    monthSelectContent.addEventListener("click", (e) => {
+    this.bindOnce(monthSelectContent, "click", (e) => {
       e.stopPropagation();
     });
     
-    yearSelectContent.addEventListener("click", (e) => {
+    this.bindOnce(yearSelectContent, "click", (e) => {
       e.stopPropagation();
     });
+  }
+
+  /**
+   * Attach an event listener only once per element/event combination.
+   * Guards against duplicate listeners when the shadow DOM is re-initialized.
+   */
+  private bindOnce(
+    element: HTMLElement | null,
+    eventName: string,
+    handler: (e: Event) => void
+  ): void {
+    if (!element) return;
+
+    const bound = element.dataset.boundEvents ? element.dataset.boundEvents.split(" ") : [];
+    if (bound.includes(eventName)) return;
+
+    element.addEventListener(eventName, handler);
+    element.dataset.boundEvents = [...bound, eventName].join(" ");
   }
 
   /**

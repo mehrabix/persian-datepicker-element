@@ -51,6 +51,11 @@ The test suite is organized as follows:
 └── ...
 ```
 
+### Time Picker Tests
+
+- `src/__tests__/time-utils.test.ts` — unit tests for `TimeUtils` (format parsing/validation, time formatting, option lists and typed-time parsing).
+- `src/__tests__/time-picker.test.ts` — element-level tests for the `show-time` UI (hour/minute/second/AM-PM dropdowns, typing a time, default time, minute step, the `change` event detail, day-click behaviour and attribute changes).
+
 ## Running Tests
 
 ### Core Tests

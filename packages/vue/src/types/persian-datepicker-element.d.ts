@@ -5,6 +5,14 @@ declare module 'persian-datepicker-element' {
     2: number; // day
   }
 
+  export type TimeTuple = [number, number] | [number, number, number];
+
+  export interface TimeValue {
+    hour: number;
+    minute: number;
+    second: number;
+  }
+
   export interface PersianEvent {
     title: string;
     type: string;
@@ -16,6 +24,15 @@ declare module 'persian-datepicker-element' {
     gregorian: DateTuple;
     isHoliday: boolean;
     events: PersianEvent[];
+    formattedDate?: string;
+    isoString?: string;
+    time?: TimeValue;
+    formattedDateTime?: string;
+    isRange?: boolean;
+    range?: {
+      start: DateTuple | null;
+      end: DateTuple | null;
+    };
   }
 
   export interface PersianDatePickerElementOptions {
@@ -28,5 +45,9 @@ declare module 'persian-datepicker-element' {
     max?: DateTuple;
     disabled?: boolean;
     eventTypes?: string;
+    showTime?: boolean;
+    timeFormat?: string;
+    defaultTime?: TimeTuple;
+    minuteStep?: number;
   }
 } 

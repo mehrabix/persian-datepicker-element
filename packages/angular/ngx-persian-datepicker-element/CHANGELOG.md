@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-10-11
+
+### Added
+- Time picker inputs: `showTime`, `timeFormat`, `defaultTime` and `minuteStep`
+- `setTime` / `getTime` public methods
+- `DateChangeEvent` now includes `time`, `formattedDateTime` and `isoString`
+- `TimeTuple` / `TimeValue` types
+
 ## [1.0.17] - 2024-03-25
 
 ### Added

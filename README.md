@@ -259,6 +259,10 @@ export class AppComponent {
 | tomorrow-button-text | string | "فردا" | Custom text for tomorrow button |
 | today-button-class | string | "" | Additional CSS classes for today button |
 | tomorrow-button-class | string | "" | Additional CSS classes for tomorrow button |
+| show-time | boolean | false | Show the time picker inside the calendar |
+| time-format | string | "HH:mm" | Time format string. Tokens: `HH` (24-hour), `hh` (12-hour), `mm`, `ss`, `A` (AM/PM) |
+| default-time | `[number, number]` \| `[number, number, number]` | `[0,0,0]` | Default selected time as `[hour, minute]` or `[hour, minute, second]` |
+| minute-step | number | 1 | Interval in minutes between options in the minutes dropdown |
 
 ## Events
 
@@ -314,6 +318,8 @@ rangePicker.addEventListener('change', (event) => {
 | isShowingAllTypes | () | boolean | Checks if all holiday types are being shown |
 | isSelectedDateHoliday | () | boolean | Checks if the currently selected date is a holiday |
 | getSelectedDateEvents | () | any[] | Gets events for the currently selected date |
+| setTime | (hour: number, minute: number, second?: number) | void | Sets the time value |
+| getTime | () | `{ hour: number, minute: number, second: number }` | Gets the current time value |
 
 ## Advanced Usage
 
@@ -370,6 +376,41 @@ You can control the visibility of various UI elements:
 
 ```html
 <persian-datepicker-element dark-mode></persian-datepicker-element>
+```
+
+## Time Picker
+
+Enable an optional time-of-day selector next to the calendar with the `show-time`
+attribute. The time can be chosen from the hour/minute (and optional second/AM-PM)
+dropdowns or typed directly into the time field.
+
+```html
+<persian-datepicker-element
+  show-time
+  time-format="HH:mm"
+  default-time="[13, 30]"
+></persian-datepicker-element>
+```
+
+- `time-format` supports `HH` (24-hour), `hh` (12-hour), `mm`, `ss` and `A` (AM/PM).
+  For example `hh:mm A` renders a 12-hour clock with `ق.ظ`/`ب.ظ` labels.
+- `minute-step` controls the interval between minute options (e.g. `15`).
+- When time is enabled, clicking a day keeps the calendar open so the time can be
+  adjusted; the calendar closes when clicking outside.
+- The time is included in the `change` event detail as `time` and `formattedDateTime`,
+  and `isoString` now carries the selected time.
+
+```javascript
+picker.addEventListener('change', (event) => {
+  const { time, formattedDateTime, isoString } = event.detail;
+  console.log(time);              // { hour: 13, minute: 30, second: 0 }
+  console.log(formattedDateTime); // "۱۴۰۴/۰۱/۰۵ ۱۳:۳۰"
+  console.log(isoString);         // "2025-03-25T13:30:00.000Z"
+});
+
+// Programmatic access
+picker.setTime(9, 45, 30);
+picker.getTime(); // { hour: 9, minute: 45, second: 30 }
 ```
 
 ## Disabled Dates

@@ -1,4 +1,4 @@
-import { DateTuple } from "./date-tuple";
+import { DateTuple, TimeTuple } from "./date-tuple";
 
 /**
  * Configuration options for the Persian Date Picker Element
@@ -28,4 +28,12 @@ export interface PersianDatePickerElementOptions {
   showEvents?: boolean;
   /** Types of events to display (e.g. 'Iran', 'Religious') */
   eventTypes?: string[] | string;
+  /** Whether to show the time picker alongside the calendar */
+  showTime?: boolean;
+  /** Format string for displaying the time (e.g. 'HH:mm', 'hh:mm A') */
+  timeFormat?: string;
+  /** Default time to select when the component is initialized */
+  defaultTime?: TimeTuple;
+  /** Interval in minutes between options in the minutes dropdown */
+  minuteStep?: number;
 }

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="احمد مهرابی | Ahmad Mehrabi">
+  <meta name="description" content="Time picker examples of Persian Date Picker Element - Learn how to select a date and time together">
+  <meta name="keywords" content="jalali, shamsi, persian, date, datepicker, calendar, timepicker, time picker, webcomponent, custom-element, rtl, persian-calendar, دیت پیکر, دیت پیکر شمسی, انتخاب ساعت">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Persian Date Picker Element - Time Picker">
+  <meta property="og:description" content="Time picker examples of Persian Date Picker Element - Learn how to select a date and time together">
+  <meta property="og:type" content="website">
+  <meta property="og:author" content="احمد مهرابی | Ahmad Mehrabi">
+  <title>Persian Date Picker Element - Time Picker</title>
+  <!-- Add Vazir Font from CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
+  <style>
+    body {
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
+      direction: rtl;
+      font-weight: 400;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Apply Persian numbers to all elements */
+    * {
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: #0f172a;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 32px 0 16px;
+      color: #334155;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    p {
+      margin-bottom: 16px;
+      transition: color 0.3s;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .example {
+      margin-bottom: 40px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .example-label {
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #f1f5f9;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .button-row {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .action-btn {
+      background-color: #0891b2;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    .action-btn:hover {
+      background-color: #0e7490;
+    }
+
+    pre {
+      background-color: #f1f5f9;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 14px;
+      margin: 20px 0;
+      transition: background-color 0.3s, color 0.3s;
+      direction: ltr;
+      text-align: left;
+    }
+
+    pre code {
+      direction: ltr;
+      text-align: left;
+      white-space: pre;
+      display: block;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      transition: color 0.3s;
+      direction: ltr;
+      display: block;
+      text-align: left;
+      unicode-bidi: embed;
+    }
+
+    .link {
+      display: inline-block;
+      margin-top: 20px;
+      background-color: #0891b2;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .link:hover {
+      background-color: #0e7490;
+    }
+
+    /* Custom element styling */
+    persian-datepicker-element {
+      --jdp-font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --jdp-font-feature-settings: "ss02";
+      --jdp-font-weight: 400;
+      transition: all 0.3s ease;
+    }
+
+    /* Make sure all inputs and form elements also use Persian numbers */
+    input, button, select, textarea {
+      font-family: 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -moz-font-feature-settings: "ss02";
+      -webkit-font-feature-settings: "ss02";
+      font-feature-settings: "ss02";
+      font-weight: 400;
+    }
+
+    /* Dark mode styles */
+    body.dark {
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+
+    body.dark h1 {
+      color: #f8fafc;
+    }
+
+    body.dark h2 {
+      color: #cbd5e1;
+    }
+
+    body.dark .example {
+      background-color: #1e293b;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    body.dark .result,
+    body.dark pre {
+      background-color: #1e1e2f;
+      color: #e2e8f0;
+    }
+
+    body.dark code {
+      color: #f8fafc;
+    }
+
+    body.dark persian-datepicker-element {
+      --jdp-background: #1e1e2f;
+      --jdp-foreground: #e2e8f0;
+      --jdp-muted: #334155;
+      --jdp-muted-foreground: #94a3b8;
+      --jdp-border: #475569;
+      --jdp-day-hover-bg: #334155;
+      --jdp-input-border-color: #475569;
+      --jdp-input-bg: #1e1e2f;
+      --jdp-calendar-bg: #1e1e2f;
+      --jdp-holiday-bg: #3f1e2e;
+    }
+
+    .navigation {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.3s;
+    }
+
+    .navigation h2 {
+      margin-top: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    body.dark .navigation {
+      border-bottom-color: #334155;
+    }
+
+    /* Dark mode toggle */
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin-left: 15px;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #0891b2;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-label {
+      margin-right: 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>نمونه‌های انتخاب تاریخ و ساعت</h1>
+    <p>نمونه‌هایی از نحوه نمایش و استفاده از انتخابگر ساعت (Time Picker) در کنار انتخاب تاریخ.</p>
+
+    <div class="navigation">
+      <div class="nav-links">
+        <a href="index.html" class="link">نمونه‌های پایه</a>
+        <a href="customization.html" class="link">نمونه‌های استایل‌دهی</a>
+        <a href="theme-switcher.html" class="link">تغییردهنده تم</a>
+        <a href="theme-builder.html" class="link">سازنده کامل تم</a>
+        <a href="../../index.html" class="link">دمو</a>
+      </div>
+      <div class="toggle-container">
+        <span class="toggle-label">حالت تاریک</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="dark-mode-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="example">
+      <h2>انتخاب تاریخ و ساعت پایه</h2>
+      <div class="example-label">فعال‌سازی انتخابگر ساعت با ویژگی <code style="display:inline">show-time</code>:</div>
+      <persian-datepicker-element id="basic-time-picker" show-time show-holidays></persian-datepicker-element>
+      <div class="result">
+        تاریخ و ساعت انتخاب شده: <span id="basic-time-result">هیچ</span><br>
+        ساعت (hour/minute/second): <span id="basic-time-parts">-</span><br>
+        رشته ISO: <span id="basic-time-iso">-</span>
+      </div>
+
+      <pre><code>&lt;persian-datepicker-element
+  id="basic-time-picker"
+  show-time
+  show-holidays
+&gt;&lt;/persian-datepicker-element&gt;
+
+// JavaScript
+const picker = document.getElementById('basic-time-picker');
+picker.addEventListener('change', (event) => {
+  const { time, formattedDateTime, isoString } = event.detail;
+  console.log('Time:', time);             // { hour, minute, second }
+  console.log('DateTime:', formattedDateTime);
+  console.log('ISO:', isoString);
+});</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>فرمت ۱۲ ساعته با ثانیه</h2>
+      <div class="example-label">استفاده از فرمت <code style="display:inline">hh:mm:ss A</code> برای نمایش ساعت ۱۲ ساعته همراه با ثانیه و AM/PM:</div>
+      <persian-datepicker-element id="ampm-time-picker" show-time time-format="hh:mm:ss A"></persian-datepicker-element>
+      <div class="result">تاریخ و ساعت انتخاب شده: <span id="ampm-time-result">هیچ</span></div>
+
+      <pre><code>&lt;persian-datepicker-element
+  id="ampm-time-picker"
+  show-time
+  time-format="hh:mm:ss A"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>ساعت پیش‌فرض</h2>
+      <div class="example-label">تنظیم ساعت اولیه با ویژگی <code style="display:inline">default-time</code>:</div>
+      <persian-datepicker-element id="default-time-picker" show-time default-time="[13, 30]"></persian-datepicker-element>
+      <div class="result">ساعت پیش‌فرض: <span id="default-time-result">۱۳:۳۰</span></div>
+
+      <pre><code>&lt;persian-datepicker-element
+  id="default-time-picker"
+  show-time
+  default-time="[13, 30]"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>گام دقیقه</h2>
+      <div class="example-label">نمایش دقایق با گام ۱۵ دقیقه‌ای با ویژگی <code style="display:inline">minute-step</code>:</div>
+      <persian-datepicker-element id="step-time-picker" show-time time-format="HH:mm" minute-step="15"></persian-datepicker-element>
+      <div class="result">تاریخ و ساعت انتخاب شده: <span id="step-time-result">هیچ</span></div>
+
+      <pre><code>&lt;persian-datepicker-element
+  id="step-time-picker"
+  show-time
+  time-format="HH:mm"
+  minute-step="15"
+&gt;&lt;/persian-datepicker-element&gt;</code></pre>
+    </div>
+
+    <div class="example">
+      <h2>تنظیم و خواندن ساعت به صورت برنامه‌ای</h2>
+      <div class="example-label">استفاده از متدهای <code style="display:inline">setTime()</code> و <code style="display:inline">getTime()</code>:</div>
+      <persian-datepicker-element id="method-time-picker" show-time></persian-datepicker-element>
+      <div class="button-row">
+        <button class="action-btn" id="set-time-btn">تنظیم ساعت ۰۹:۴۵:۳۰</button>
+        <button class="action-btn" id="get-time-btn">خواندن ساعت</button>
+      </div>
+      <div class="result">نتیجه: <span id="method-time-result">-</span></div>
+
+      <pre><code>const picker = document.getElementById('method-time-picker');
+
+// تنظیم ساعت
+picker.setValue(1404, 1, 5);
+picker.setTime(9, 45, 30);
+
+// خواندن ساعت
+const time = picker.getTime(); // { hour: 9, minute: 45, second: 30 }</code></pre>
+    </div>
+
+    <div class="link-container">
+      <a href="index.html" class="link">بازگشت به مثال ها</a>
+    </div>
+  </div>
+
+  <script src="../../dist/persian-datepicker-element.min.js"></script>
+  <script>
+    // Dark mode toggle functionality
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+    function applyDarkModeToPickers(isDark) {
+      const allPickers = document.querySelectorAll('persian-datepicker-element');
+      allPickers.forEach(picker => {
+        if (isDark) {
+          picker.setAttribute('darkmode', 'true');
+          picker.style.setProperty('--jdp-background', '#1e1e2f');
+          picker.style.setProperty('--jdp-foreground', '#e2e8f0');
+          picker.style.setProperty('--jdp-muted', '#334155');
+          picker.style.setProperty('--jdp-muted-foreground', '#94a3b8');
+          picker.style.setProperty('--jdp-border', '#475569');
+          picker.style.setProperty('--jdp-day-hover-bg', '#334155');
+          picker.style.setProperty('--jdp-input-border-color', '#475569');
+          picker.style.setProperty('--jdp-input-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-calendar-bg', '#1e1e2f');
+          picker.style.setProperty('--jdp-holiday-bg', '#3f1e2e');
+        } else {
+          picker.removeAttribute('darkmode');
+          picker.style.removeProperty('--jdp-background');
+          picker.style.removeProperty('--jdp-foreground');
+          picker.style.removeProperty('--jdp-muted');
+          picker.style.removeProperty('--jdp-muted-foreground');
+          picker.style.removeProperty('--jdp-border');
+          picker.style.removeProperty('--jdp-day-hover-bg');
+          picker.style.removeProperty('--jdp-input-border-color');
+          picker.style.removeProperty('--jdp-input-bg');
+          picker.style.removeProperty('--jdp-calendar-bg');
+          picker.style.removeProperty('--jdp-holiday-bg');
+        }
+      });
+    }
+
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+      darkModeToggle.checked = true;
+      applyDarkModeToPickers(true);
+    }
+
+    darkModeToggle.addEventListener('change', () => {
+      const isDarkMode = darkModeToggle.checked;
+      if (isDarkMode) {
+        document.body.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+      }
+      applyDarkModeToPickers(isDarkMode);
+    });
+
+    // Helper to convert numbers to Persian digits
+    function toPersianNum(num) {
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return num.toString().replace(/\d/g, x => persianDigits[x]);
+    }
+
+    // Basic time picker
+    const basicTimePicker = document.getElementById('basic-time-picker');
+    basicTimePicker.addEventListener('change', (event) => {
+      const { time, formattedDateTime, isoString } = event.detail;
+      document.getElementById('basic-time-result').textContent = formattedDateTime || '-';
+      document.getElementById('basic-time-parts').textContent = time
+        ? `${toPersianNum(time.hour)}:${toPersianNum(String(time.minute).padStart(2, '0'))}:${toPersianNum(String(time.second).padStart(2, '0'))}`
+        : '-';
+      document.getElementById('basic-time-iso').textContent = isoString || '-';
+    });
+
+    // 12-hour format with seconds
+    const ampmTimePicker = document.getElementById('ampm-time-picker');
+    ampmTimePicker.addEventListener('change', (event) => {
+      document.getElementById('ampm-time-result').textContent = event.detail.formattedDateTime || '-';
+    });
+
+    // Default time
+    const defaultTimePicker = document.getElementById('default-time-picker');
+    defaultTimePicker.setValue(1404, 1, 5);
+    defaultTimePicker.addEventListener('change', (event) => {
+      document.getElementById('default-time-result').textContent = event.detail.formattedDateTime || '-';
+    });
+
+    // Minute step
+    const stepTimePicker = document.getElementById('step-time-picker');
+    stepTimePicker.addEventListener('change', (event) => {
+      document.getElementById('step-time-result').textContent = event.detail.formattedDateTime || '-';
+    });
+
+    // Programmatic setTime / getTime
+    const methodTimePicker = document.getElementById('method-time-picker');
+    methodTimePicker.setValue(1404, 1, 5);
+    document.getElementById('set-time-btn').addEventListener('click', () => {
+      methodTimePicker.setTime(9, 45, 30);
+      document.getElementById('method-time-result').textContent =
+        `ساعت تنظیم شد: ${methodTimePicker.getTime().hour}:${methodTimePicker.getTime().minute}:${methodTimePicker.getTime().second}`;
+    });
+    document.getElementById('get-time-btn').addEventListener('click', () => {
+      const time = methodTimePicker.getTime();
+      document.getElementById('method-time-result').textContent =
+        `${toPersianNum(time.hour)}:${toPersianNum(String(time.minute).padStart(2, '0'))}:${toPersianNum(String(time.second).padStart(2, '0'))}`;
+    });
+  </script>
+</body>
+</html>

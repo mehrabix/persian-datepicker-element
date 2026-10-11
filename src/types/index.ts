@@ -30,6 +30,23 @@ export interface PersianEvent {
 export type DateTuple = [number, number, number];
 
 /**
+ * A time represented as [hour, minute] or [hour, minute, second]
+ */
+export type TimeTuple = [number, number] | [number, number, number];
+
+/**
+ * A normalized time value with hour, minute and second components
+ */
+export interface TimeValue {
+  /** Hour of the day (0-23) */
+  hour: number;
+  /** Minute of the hour (0-59) */
+  minute: number;
+  /** Second of the minute (0-59) */
+  second: number;
+}
+
+/**
  * Options for the Persian date picker element
  */
 
@@ -51,6 +68,10 @@ export interface PersianDateChangeEvent extends CustomEvent {
     formattedDate?: string;
     /** ISO string representation of the date (e.g. "2023-04-01T00:00:00.000Z") */
     isoString?: string;
+    /** Selected time of day (only present when show-time is enabled) */
+    time?: TimeValue;
+    /** Formatted date and time string (e.g. "1404/01/05 14:30") */
+    formattedDateTime?: string;
     /** Whether this is a range selection */
     isRange?: boolean;
     /** Range selection details when in range mode */

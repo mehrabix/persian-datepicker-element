@@ -7,6 +7,8 @@ export type {
   PersianDatePickerElementOptions,
   PersianDateChangeEvent,
   DateTuple,
+  TimeTuple,
+  TimeValue,
   CSSVariableMap,
   PersianEvent
 } from 'persian-datepicker-element';

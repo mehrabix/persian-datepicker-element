@@ -15,6 +15,10 @@
       :range-start="rangeStart"
       :range-end="rangeEnd"
       :default-date="defaultDate"
+      :show-time="showTime"
+      :time-format="timeFormat"
+      :default-time="defaultTime"
+      :minute-step="minuteStep"
       @change="handleChange"
     />
   </div>
@@ -22,7 +26,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick, computed } from 'vue';
-import type { DateTuple, PersianDateChangeEvent } from 'persian-datepicker-element';
+import type { DateTuple, TimeTuple, PersianDateChangeEvent } from 'persian-datepicker-element';
 
 // Define props
 const props = defineProps({
@@ -84,6 +88,22 @@ const props = defineProps({
   },
   defaultDate: {
     type: Array as () => DateTuple,
+    default: undefined
+  },
+  showTime: {
+    type: Boolean,
+    default: false
+  },
+  timeFormat: {
+    type: String,
+    default: ''
+  },
+  defaultTime: {
+    type: Array as () => TimeTuple,
+    default: undefined
+  },
+  minuteStep: {
+    type: Number,
     default: undefined
   }
 });
@@ -194,6 +214,43 @@ watch(() => props.rangeEnd, (newValue) => {
   });
 });
 
+// Watch for time picker props
+watch(() => props.showTime, (newValue) => {
+  nextTick(() => {
+    if (elementRef.value) {
+      elementRef.value.setAttribute('show-time', String(newValue));
+    }
+  });
+});
+
+watch(() => props.timeFormat, (newValue) => {
+  nextTick(() => {
+    if (elementRef.value && newValue) {
+      elementRef.value.setAttribute('time-format', newValue);
+    }
+  });
+});
+
+watch(() => props.defaultTime, (newValue) => {
+  nextTick(() => {
+    if (elementRef.value) {
+      if (newValue) {
+        elementRef.value.setAttribute('default-time', JSON.stringify(newValue));
+      } else {
+        elementRef.value.removeAttribute('default-time');
+      }
+    }
+  });
+});
+
+watch(() => props.minuteStep, (newValue) => {
+  nextTick(() => {
+    if (elementRef.value && newValue !== undefined) {
+      elementRef.value.setAttribute('minute-step', String(newValue));
+    }
+  });
+});
+
 onMounted(() => {
   nextTick(() => {
     if (props.modelValue && elementRef.value) {
@@ -261,6 +318,21 @@ defineExpose({
       (elementRef.value as any)?.clear();
     } catch (error) {
       console.error('Failed to clear datepicker:', error);
+    }
+  },
+  setTime: (hour: number, minute: number, second: number = 0) => {
+    try {
+      (elementRef.value as any)?.setTime(hour, minute, second);
+    } catch (error) {
+      console.error('Failed to set time:', error);
+    }
+  },
+  getTime: () => {
+    try {
+      return (elementRef.value as any)?.getTime() || { hour: 0, minute: 0, second: 0 };
+    } catch (error) {
+      console.error('Failed to get time:', error);
+      return { hour: 0, minute: 0, second: 0 };
     }
   }
 });

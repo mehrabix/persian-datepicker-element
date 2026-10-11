@@ -180,6 +180,10 @@ function App() {
 | rangeMode | boolean | false | Enable range selection mode |
 | rangeStart | [number, number, number] | - | Start date for range selection |
 | rangeEnd | [number, number, number] | - | End date for range selection |
+| showTime | boolean | false | Show the time picker inside the calendar |
+| timeFormat | string | 'HH:mm' | Time format. Tokens: `HH` (24h), `hh` (12h), `mm`, `ss`, `A` (AM/PM) |
+| defaultTime | [number, number] \| [number, number, number] | [0,0,0] | Default selected time |
+| minuteStep | number | 1 | Interval in minutes for the minutes dropdown |
 
 ## Theme Customization
 
@@ -215,6 +219,8 @@ datepickerRef.current.close();
 datepickerRef.current.setRange(startDate, endDate);
 datepickerRef.current.getRange();
 datepickerRef.current.clear();
+datepickerRef.current.setTime(9, 45, 30);
+datepickerRef.current.getTime();
 ```
 
 ## Events
@@ -305,6 +311,10 @@ function App() {
 | rangeMode | boolean | false | فعال‌سازی حالت انتخاب بازه |
 | rangeStart | [number, number, number] | - | تاریخ شروع بازه |
 | rangeEnd | [number, number, number] | - | تاریخ پایان بازه |
+| showTime | boolean | false | نمایش انتخابگر ساعت در کنار تقویم |
+| timeFormat | string | 'HH:mm' | الگوی نمایش ساعت. توکن‌ها: `HH` (۲۴ ساعته)، `hh` (۱۲ ساعته)، `mm`، `ss`، `A` |
+| defaultTime | [number, number] \| [number, number, number] | [0,0,0] | ساعت پیش‌فرض |
+| minuteStep | number | 1 | فاصله بین گزینه‌های دقیقه |
 
 ## شخصی‌سازی ظاهر
 
@@ -340,6 +350,8 @@ datepickerRef.current.close();
 datepickerRef.current.setRange(startDate, endDate);
 datepickerRef.current.getRange();
 datepickerRef.current.clear();
+datepickerRef.current.setTime(9, 45, 30);
+datepickerRef.current.getTime();
 ```
 
 ## رویدادها

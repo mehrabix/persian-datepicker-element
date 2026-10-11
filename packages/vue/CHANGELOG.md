@@ -2,6 +2,14 @@
 
 All notable changes to the `vue-persian-datepicker-element` package will be documented in this file.
 
+## [1.2.0] - 2026-10-11
+
+### Added
+- Time picker support with the `showTime`, `timeFormat`, `defaultTime` and `minuteStep` props
+- `setTime` / `getTime` methods exposed through the component ref
+- `PersianDateChangeEvent` now includes `time` and `formattedDateTime`
+- `TimeTuple` / `TimeValue` types
+
 ## [1.0.17] - 2024-06-21
 
 ### Added

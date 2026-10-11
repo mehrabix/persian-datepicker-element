@@ -29,6 +29,7 @@ The demo demonstrates how to properly display Persian/Arabic numbers using the V
 - Basic usage of the component
 - Theme switching with CSS variables
 - Dark mode support
+- Date and time selection (time picker with 12/24-hour formats, seconds, default time and minute step)
 - Multiple theme options:
   - Default
   - Blue
@@ -44,6 +45,7 @@ The demo demonstrates how to properly display Persian/Arabic numbers using the V
 - استفاده پایه از کامپوننت
 - تغییر تم با متغیرهای CSS
 - پشتیبانی از حالت تاریک
+- انتخاب تاریخ و ساعت (انتخابگر ساعت با فرمت ۱۲/۲۴ ساعته، ثانیه، ساعت پیش‌فرض و گام دقیقه)
 - گزینه‌های تم متعدد:
   - پیش‌فرض
   - آبی

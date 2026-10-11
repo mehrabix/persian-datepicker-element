@@ -1,5 +1,5 @@
-import { defineComponent as p, ref as s, computed as A, watch as o, nextTick as n, onMounted as b, createElementBlock as D, openBlock as S, normalizeStyle as k, normalizeClass as V, createElementVNode as x } from "vue";
-const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date", "max-date", "disabled-dates", "holiday-types", "range-mode", "range-start", "range-end", "default-date"], c = /* @__PURE__ */ p({
+import { defineComponent as A, ref as m, computed as p, watch as o, nextTick as i, onMounted as S, createElementBlock as b, openBlock as D, normalizeStyle as F, normalizeClass as k, createElementVNode as T } from "vue";
+const x = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date", "max-date", "disabled-dates", "holiday-types", "range-mode", "range-start", "range-end", "default-date", "show-time", "time-format", "default-time", "minute-step"], c = /* @__PURE__ */ A({
   __name: "PersianDatepicker",
   props: {
     modelValue: {
@@ -61,16 +61,32 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
     defaultDate: {
       type: Array,
       default: void 0
+    },
+    showTime: {
+      type: Boolean,
+      default: !1
+    },
+    timeFormat: {
+      type: String,
+      default: ""
+    },
+    defaultTime: {
+      type: Array,
+      default: void 0
+    },
+    minuteStep: {
+      type: Number,
+      default: void 0
     }
   },
   emits: ["update:modelValue", "change"],
-  setup(l, { expose: f, emit: m }) {
-    const a = l, u = m, y = s(null), t = s(null), g = A(() => a.modelValue ? Array.isArray(a.modelValue) ? a.modelValue.join("/") : String(a.modelValue) : ""), v = (e) => {
+  setup(l, { expose: f, emit: y }) {
+    const a = l, s = y, v = m(null), t = m(null), g = p(() => a.modelValue ? Array.isArray(a.modelValue) ? a.modelValue.join("/") : String(a.modelValue) : ""), h = (e) => {
       const r = e.detail;
-      u("update:modelValue", r.jalali), u("change", r);
+      s("update:modelValue", r.jalali), s("change", r);
     };
     return o(() => a.modelValue, (e) => {
-      n(() => {
+      i(() => {
         if (t.value)
           if (Array.isArray(e) && e.length === 3)
             try {
@@ -81,31 +97,47 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
           else typeof e == "string" && t.value.setAttribute("value", e);
       });
     }, { immediate: !1 }), o(() => a.minDate, (e) => {
-      n(() => {
+      i(() => {
         t.value && e && t.value.setAttribute("min-date", JSON.stringify(e));
       });
     }), o(() => a.maxDate, (e) => {
-      n(() => {
+      i(() => {
         t.value && e && t.value.setAttribute("max-date", JSON.stringify(e));
       });
     }), o(() => a.disabledDates, (e) => {
-      n(() => {
+      i(() => {
         t.value && (e ? t.value.setAttribute("disabled-dates", JSON.stringify(e)) : t.value.removeAttribute("disabled-dates"));
       });
     }), o(() => a.rangeMode, (e) => {
-      n(() => {
+      i(() => {
         t.value && t.value.setAttribute("range-mode", String(e));
       });
     }), o(() => a.rangeStart, (e) => {
-      n(() => {
+      i(() => {
         t.value && e && t.value.setAttribute("range-start", JSON.stringify(e));
       });
     }), o(() => a.rangeEnd, (e) => {
-      n(() => {
+      i(() => {
         t.value && e && t.value.setAttribute("range-end", JSON.stringify(e));
       });
-    }), b(() => {
-      n(() => {
+    }), o(() => a.showTime, (e) => {
+      i(() => {
+        t.value && t.value.setAttribute("show-time", String(e));
+      });
+    }), o(() => a.timeFormat, (e) => {
+      i(() => {
+        t.value && e && t.value.setAttribute("time-format", e);
+      });
+    }), o(() => a.defaultTime, (e) => {
+      i(() => {
+        t.value && (e ? t.value.setAttribute("default-time", JSON.stringify(e)) : t.value.removeAttribute("default-time"));
+      });
+    }), o(() => a.minuteStep, (e) => {
+      i(() => {
+        t.value && e !== void 0 && t.value.setAttribute("minute-step", String(e));
+      });
+    }), S(() => {
+      i(() => {
         if (a.modelValue && t.value)
           if (Array.isArray(a.modelValue) && a.modelValue.length === 3)
             try {
@@ -124,12 +156,12 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
           return console.error("Failed to get value:", r), null;
         }
       },
-      setValue: (e, r, i) => {
-        var d;
+      setValue: (e, r, u) => {
+        var n;
         try {
-          (d = t.value) == null || d.setValue(e, r, i);
-        } catch (h) {
-          console.error("Failed to set value:", h);
+          (n = t.value) == null || n.setValue(e, r, u);
+        } catch (d) {
+          console.error("Failed to set value:", d);
         }
       },
       open: () => {
@@ -149,11 +181,11 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
         }
       },
       setRange: (e, r) => {
-        var i;
+        var u;
         try {
-          (i = t.value) == null || i.setRange(e, r);
-        } catch (d) {
-          console.error("Failed to set range:", d);
+          (u = t.value) == null || u.setRange(e, r);
+        } catch (n) {
+          console.error("Failed to set range:", n);
         }
       },
       getRange: () => {
@@ -171,14 +203,30 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
         } catch (r) {
           console.error("Failed to clear datepicker:", r);
         }
+      },
+      setTime: (e, r, u = 0) => {
+        var n;
+        try {
+          (n = t.value) == null || n.setTime(e, r, u);
+        } catch (d) {
+          console.error("Failed to set time:", d);
+        }
+      },
+      getTime: () => {
+        var e;
+        try {
+          return ((e = t.value) == null ? void 0 : e.getTime()) || { hour: 0, minute: 0, second: 0 };
+        } catch (r) {
+          return console.error("Failed to get time:", r), { hour: 0, minute: 0, second: 0 };
+        }
       }
-    }), (e, r) => (S(), D("div", {
+    }), (e, r) => (D(), b("div", {
       ref_key: "container",
-      ref: y,
-      class: V(l.className),
-      style: k(l.style)
+      ref: v,
+      class: k(l.className),
+      style: F(l.style)
     }, [
-      x("persian-datepicker-element", {
+      T("persian-datepicker-element", {
         ref_key: "elementRef",
         ref: t,
         value: g.value,
@@ -194,11 +242,15 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
         "range-start": l.rangeStart,
         "range-end": l.rangeEnd,
         "default-date": l.defaultDate,
-        onChange: v
-      }, null, 40, F)
+        "show-time": l.showTime,
+        "time-format": l.timeFormat,
+        "default-time": l.defaultTime,
+        "minute-step": l.minuteStep,
+        onChange: h
+      }, null, 40, x)
     ], 6));
   }
-}), E = {
+}), V = {
   PersianDatepicker: c,
   install: (l) => {
     l.component("PersianDatepicker", c);
@@ -206,5 +258,5 @@ const F = ["value", "placeholder", "format", "show-holidays", "rtl", "min-date",
 };
 export {
   c as PersianDatepicker,
-  E as default
+  V as default
 };
